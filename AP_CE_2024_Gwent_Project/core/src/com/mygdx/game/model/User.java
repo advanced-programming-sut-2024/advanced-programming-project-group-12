@@ -25,6 +25,7 @@ public class User {
         this.securityQuestion.put(questionNumber, answer);
         this.allGamePlayed = new ArrayList<>();
         this.userInfo = new UserInfo();
+        users.add(this);
     }
 
     public static void updateRanking() {
@@ -46,6 +47,14 @@ public class User {
     }
     public void setPassword(String newPassword) {
 
+    }
+    public static void getUserByUsername(String username) {
+        for(User user : users) {
+            if(user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        return null;
     }
 
     public UserInfo getUserInfo() {
