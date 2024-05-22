@@ -1,10 +1,14 @@
 package com.mygdx.game.controller;
 
+import com.mygdx.game.model.SecurityQuestion;
+import com.mygdx.game.model.User;
+import com.mygdx.game.view.screen.ValidInputs;
+
 import java.util.Random;
 
 public class RegisterMenuController {
-    public void register(String username, String password, String PasswordConfirmation, String email, int questionNumber, String answer) {
-        new User(username, password, email, questionNumber, answer);
+    public void register(String username, String password, String PasswordConfirmation, String email, SecurityQuestion question, String answer) {
+        new User(username, password, email, question, answer);
 
     }
 
@@ -73,5 +77,4 @@ public class RegisterMenuController {
         }
         return newUsername;
     }
-
 }

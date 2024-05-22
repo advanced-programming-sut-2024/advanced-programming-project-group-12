@@ -11,18 +11,18 @@ public class User {
     private String username;
     private String password;
     private String email;
-    private HashMap<Integer, String> securityQuestion;
+    private HashMap<SecurityQuestion, String> securityQuestion;
     private ArrayList<Game> allGamePlayed;
     private UserInfo userInfo;
 
 
 
-    public User(String username, String password, String email, int questionNumber, String answer) {
+    public User(String username, String password, String email, SecurityQuestion question, String answer) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.securityQuestion = new HashMap<>();
-        this.securityQuestion.put(questionNumber, answer);
+        this.securityQuestion.put(question, answer);
         this.allGamePlayed = new ArrayList<>();
         this.userInfo = new UserInfo();
         users.add(this);
@@ -48,7 +48,7 @@ public class User {
     public void setPassword(String newPassword) {
 
     }
-    public static void getUserByUsername(String username) {
+    public static User getUserByUsername(String username) {
         for(User user : users) {
             if(user.getUsername().equals(username)) {
                 return user;
