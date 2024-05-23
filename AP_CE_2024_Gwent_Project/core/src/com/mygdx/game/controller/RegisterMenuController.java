@@ -1,5 +1,7 @@
 package com.mygdx.game.controller;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.mygdx.game.model.SecurityQuestion;
 import com.mygdx.game.model.User;
 import com.mygdx.game.view.screen.ValidInputs;
@@ -7,24 +9,18 @@ import com.mygdx.game.view.screen.ValidInputs;
 import java.util.Random;
 
 public class RegisterMenuController {
-    public void register(String username, String nickname, String password, String PasswordConfirmation, String email, SecurityQuestion question, String answer) {
+    public static void register(String username, String nickname, String password, String email, SecurityQuestion question, String answer) {
         new User(username, nickname, password, email, question, answer);
 
     }
 
-    public String isUsernameValid(String username) {
-        if(!ValidInputs.USERNAME.isMatch(username)) {
-            return "Username must contain only letters, numbers, and hyphens";
-        } else if(username.length() < 3) {
-            return "Username must be at least 3 characters long";
-        } else if(User.getUserByUsername(username) != null) {
-            return "Username already exists";
-        } else {
-            return "Valid username";
-        }
+    public static boolean isUsernameValid(String username) {
+        return ValidInputs.USERNAME.isMatch(username);
     }
-
-    public String isPasswordValid(String password, String PasswordConfirmation) {
+    public static boolean isUsernameTaken(String username) {
+        return User.getUserByUsername(username) != null;
+    }
+    public static String isPasswordValid(String password, String PasswordConfirmation) {
         if (!ValidInputs.LOWERCASE.isFind(password)) {
             return "Password must contain at least one lowercase letter";
         } else if (!ValidInputs.UPPERCASE.isFind(password)) {
@@ -42,11 +38,11 @@ public class RegisterMenuController {
         }
     }
 
-    public boolean isEmailValid(String email) {
+    public static boolean isEmailValid(String email) {
         return ValidInputs.EMAIL.isMatch(email);
     }
 
-    public String randomPasswordGenerator() {
+    public static String randomPasswordGenerator() {
         String lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
         String upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String numbers = "0123456789";
@@ -68,24 +64,42 @@ public class RegisterMenuController {
 
         return password.toString();
     }
-    public String generateNewUsername(String username) {
-        int i = 1;
+    public static String generateNewUsername(String username) {
+        Random random = new Random();
+        int i = Math.abs(random.nextInt() % 100);
         String newUsername = username;
         while(User.getUserByUsername(newUsername) != null) {
-            newUsername = username + i;
-            i++;
+            newUsername = username + String.valueOf(i);
+            i = Math.abs(random.nextInt() % 100);
         }
         return newUsername;
     }
     public static int calculatePasswordStrength(String password) {
-        if (password.length() < 6) {
+        if (password.length() < 4 || !ValidInputs.UPPERCASE.isFind(password)) {
             return 0; // weak
-        } else if (password.length() <= 8) {
+        } else if (password.length() <= 8 || !ValidInputs.NUMBER.isFind(password)) {
             return 1; // normal
-        } else if (password.length() <= 12) {
+        } else if (!ValidInputs.SPECIAL_CHARACTER.isFind(password)) {
             return 2; // good
         } else {
             return 3; // strong
         }
     }
+    public static void updatePasswordStrength(String password, Label passwordStateLabel) {
+        passwordStateLabel.setText("");
+        if(calculatePasswordStrength(password) == 0) {
+            passwordStateLabel.setText("Password is too weak");
+            passwordStateLabel.setColor(Color.RED);
+        } else if(calculatePasswordStrength(password) == 1) {
+            passwordStateLabel.setText("Password is normal");
+            passwordStateLabel.setColor(Color.YELLOW);
+        } else if(calculatePasswordStrength(password) == 2) {
+            passwordStateLabel.setText("Password is medium");
+            passwordStateLabel.setColor(Color.ORANGE);
+        } else if(calculatePasswordStrength(password) == 3) {
+            passwordStateLabel.setText("Password is strong");
+            passwordStateLabel.setColor(Color.GREEN);
+        }
+    }
+
 }

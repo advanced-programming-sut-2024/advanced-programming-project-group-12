@@ -5,20 +5,25 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.RegisterMenuController;
 import com.mygdx.game.controller.ScreenManager;
+import com.mygdx.game.model.SecurityQuestion;
+
+import java.util.HashMap;
 
 public class RegisterMenuScreen implements Screen {
+    private static final float FIELD_WIDTH = 400;
+    private static final float FIELD_HEIGHT = 80;
     //
     private Stage stage;
     private Table table;
+    private Window errorWindow;
     // Buttons
     private TextButton registerButton;
     private TextButton randomPasswordButton;
@@ -29,6 +34,8 @@ public class RegisterMenuScreen implements Screen {
     private TextField confirmPasswordField;
     private TextField emailField;
     private TextField nicknameField;
+    //Labels
+    private Label passwordStateLabel;
 
     public RegisterMenuScreen() {
         stage = new Stage();
@@ -37,6 +44,13 @@ public class RegisterMenuScreen implements Screen {
         table.setFillParent(true);
         stage.addActor(table);
         buttonAndFieldInit();
+        passwordField.addListener(new InputListener() {
+            @Override
+            public boolean keyTyped(InputEvent event, char character) {
+                RegisterMenuController.updatePasswordStrength(passwordField.getText(), passwordStateLabel);
+                return super.keyTyped(event, character);
+            }
+        });
     }
     @Override
     public void show() {
@@ -45,6 +59,17 @@ public class RegisterMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 dispose();
                 ScreenManager.setLoginScreen();
+            }
+        });
+        registerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String username = usernameField.getText();
+                String nickname = nicknameField.getText();
+                String password = passwordField.getText();
+                String confirmPassword = confirmPasswordField.getText();
+                String email = emailField.getText();
+                registerHandler(username, nickname, password, confirmPassword, email);
             }
         });
     }
@@ -57,6 +82,7 @@ public class RegisterMenuScreen implements Screen {
         Gwent.singleton.getBatch().end();
         stage.act();
         stage.draw();
+
     }
 
     @Override
@@ -101,29 +127,122 @@ public class RegisterMenuScreen implements Screen {
         passwordField.setPasswordCharacter('*');
         emailField = new TextField("", Gwent.singleton.getSkin());
         emailField.setMessageText("Email");
+        passwordStateLabel = new Label("", Gwent.singleton.getSkin());
         //set color
-        usernameField.setColor(Color.BLUE);
-        nicknameField.setColor(Color.BLUE);
-        passwordField.setColor(Color.BLUE);
-        confirmPasswordField.setColor(Color.BLUE);
-        emailField.setColor(Color.BLUE);
+        usernameField.setColor(Color.ROYAL);
+        nicknameField.setColor(Color.ROYAL);
+        passwordField.setColor(Color.ROYAL);
+        confirmPasswordField.setColor(Color.ROYAL);
+        emailField.setColor(Color.ROYAL);
+        //set size
+        backButton.setSize(300, 100);
+        registerButton.setSize(400, 100);
+        randomPasswordButton.setSize(500, 100);
 
 
-        table.add(usernameField).width(400).height(50);
+        //set position
+        table.add(usernameField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
+        table.add(nicknameField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.row().pad(10);
-        table.add(nicknameField).width(400).height(50);
+        table.add(passwordField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
+        table.add(confirmPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.row().pad(10);
-        table.add(passwordField).width(400).height(50);
+        table.add(passwordStateLabel);
         table.row().pad(10);
-        table.add(confirmPasswordField).width(400).height(50);
+        table.add(emailField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.row().pad(10);
-        table.add(emailField).width(400).height(50);
-        table.row().pad(10);
-        registerButton.setPosition(Gwent.WIDTH / 2 - registerButton.getWidth() / 2 - 150, Gwent.HEIGHT / 2 - 250);
-        randomPasswordButton.setPosition(Gwent.WIDTH / 2 - randomPasswordButton.getWidth() / 2 + 100, Gwent.HEIGHT / 2 - 250);
-        backButton.setPosition(0, Gwent.HEIGHT - 50);
+        table.add(registerButton);
+        table.add(randomPasswordButton);
+        backButton.setPosition(0, Gwent.HEIGHT - 100);
+
         stage.addActor(backButton);
-        stage.addActor(registerButton);
-        stage.addActor(randomPasswordButton);
+
     }
+    private void registerHandler(String username, String nickname, String password, String confirmPassword, String email) {
+        if(username.isEmpty() || nickname.isEmpty() || password.isEmpty() ||
+                confirmPassword.isEmpty() || email.isEmpty()) {
+            showError("Please fill all fields");
+            return;
+        } else if(!RegisterMenuController.isUsernameValid(username)) {
+            showError("Invalid username");
+            return;
+        } else if(!RegisterMenuController.isPasswordValid(password, confirmPassword).equals("Valid password")) {
+            showError(RegisterMenuController.isPasswordValid(password, confirmPassword));
+            return;
+        } else if(!RegisterMenuController.isEmailValid(email)) {
+            showError("Invalid email");
+            return;
+        } else if(!password.equals(confirmPassword)) {
+            showError("Passwords do not match");
+            return;
+        } else if(RegisterMenuController.isUsernameTaken(username)) {
+            showError("Username is already taken");
+            return;
+        }else {
+            showChooseSecurityQuestionWindow();
+        }
+    }
+    private void clearFields() {
+        usernameField.setText("");
+        nicknameField.setText("");
+        passwordField.setText("");
+        confirmPasswordField.setText("");
+        emailField.setText("");
+    }
+    private void showError(String message) {
+        errorWindow = new Window("Error", Gwent.singleton.getSkin());
+        errorWindow.setMovable(false);
+        errorWindow.setColor(Color.RED);
+        errorWindow.setSize(600, 400);
+        errorWindow.setPosition((float) Gwent.WIDTH / 2 - 300, (float) Gwent.HEIGHT / 2 - 200);
+        Label errorLabel = new Label(message, Gwent.singleton.getSkin());
+        TextButton okButton = new TextButton("OK", Gwent.singleton.getSkin());
+        okButton.setSize(200, 100);
+        okButton.setPosition(100, 0);
+        okButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                errorWindow.setVisible(false);
+
+            }
+        });
+        errorWindow.add(errorLabel);
+        errorWindow.add(okButton);
+        stage.addActor(errorWindow);
+    }
+    private void showChooseSecurityQuestionWindow() {
+        Window chooseSecurityQuestionWindow = new Window("Choose Security Question", Gwent.singleton.getSkin());
+        TextField answerField = new TextField("", Gwent.singleton.getSkin());
+        answerField.setMessageText("Answer");
+        chooseSecurityQuestionWindow.setMovable(false);
+        chooseSecurityQuestionWindow.setSize(600, 400);
+        chooseSecurityQuestionWindow.setPosition((float) Gwent.WIDTH / 2 - 300, (float) Gwent.HEIGHT / 2 - 200);
+        Label questionLabel = new Label("Choose a security question", Gwent.singleton.getSkin());
+        SelectBox<SecurityQuestion> questionSelectBox = new SelectBox<>(Gwent.singleton.getSkin());
+        questionSelectBox.setItems(SecurityQuestion.values());
+        TextButton okButton = new TextButton("OK", Gwent.singleton.getSkin());
+        okButton.setSize(200, 100);
+        okButton.setPosition(200, 0);
+        okButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(answerField.getText().isEmpty()) {
+                    showError("Please fill the answer field");
+                    return;
+                }
+                SecurityQuestion question = questionSelectBox.getSelected();
+                String answer = answerField.getText();
+                RegisterMenuController.register(usernameField.getText(), nicknameField.getText(), passwordField.getText(), emailField.getText(), question, answer);
+                clearFields();
+                chooseSecurityQuestionWindow.setVisible(false);
+                dispose();
+                ScreenManager.setLoginScreen();
+            }
+        });
+        chooseSecurityQuestionWindow.add(questionLabel);
+        chooseSecurityQuestionWindow.add(questionSelectBox);
+        chooseSecurityQuestionWindow.add(okButton);
+        stage.addActor(chooseSecurityQuestionWindow);
+    }
+
 }

@@ -12,12 +12,12 @@ public class Gwent extends Game {
 	SpriteBatch batch;
 	public Skin skin;
 	public static final int WIDTH = 1280;
-	public static final int HEIGHT = 720;
+	public static final int HEIGHT = 840;
 	
 	@Override
 	public void create () {
 		singleton = this;
-        skin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
+        skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
 		batch = new SpriteBatch();
 		ScreenManager.setLoginScreen();
     }

@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum ValidInputs {
-    USERNAME("[a-zA-Z0-9\\-]+"),
+    USERNAME("[a-zA-Z0-9\\-]{6,}"),
     EMAIL("[a-zA-Z0-9_.]+@[a-zA-Z]+\\.com"),
     LOWERCASE("[a-z]+"),
     UPPERCASE("[A-Z]+"),

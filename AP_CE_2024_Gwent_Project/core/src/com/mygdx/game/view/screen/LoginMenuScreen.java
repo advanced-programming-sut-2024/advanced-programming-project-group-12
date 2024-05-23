@@ -2,6 +2,7 @@ package com.mygdx.game.view.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -84,9 +85,15 @@ public class LoginMenuScreen implements Screen {
         loginButton = new TextButton("Login", Gwent.singleton.getSkin());
         forgotPasswordButton = new TextButton("Forgot Password", Gwent.singleton.getSkin());
         donNotHaveAnAccountButton = new TextButton("Don't have an account?", Gwent.singleton.getSkin());
-        loginButton.setPosition((float) Gwent.WIDTH / 2 - loginButton.getWidth() / 2, (float) Gwent.HEIGHT / 2);
-        forgotPasswordButton.setPosition((float) Gwent.WIDTH / 2 - forgotPasswordButton.getWidth() / 2, (float) Gwent.HEIGHT / 2 - 50);
-        donNotHaveAnAccountButton.setPosition((float) Gwent.WIDTH / 2 - donNotHaveAnAccountButton.getWidth() / 2, (float) Gwent.HEIGHT / 2 - 100);
+        //set position
+        loginButton.setPosition((float) Gwent.WIDTH / 2 - loginButton.getWidth() / 2 - 200, (float) Gwent.HEIGHT / 2 - 200);
+        forgotPasswordButton.setPosition((float) Gwent.WIDTH / 2 - forgotPasswordButton.getWidth() / 2 + 200, (float) Gwent.HEIGHT / 2 - 200);
+        donNotHaveAnAccountButton.setPosition((float) Gwent.WIDTH / 2 - donNotHaveAnAccountButton.getWidth() / 2, (float) Gwent.HEIGHT / 2 - 300);
+        //set size
+        loginButton.setSize(250, 100);
+        forgotPasswordButton.setSize(450, 100);
+        donNotHaveAnAccountButton.setSize(600, 100);
+
         stage.addActor(loginButton);
         stage.addActor(forgotPasswordButton);
         stage.addActor(donNotHaveAnAccountButton);
