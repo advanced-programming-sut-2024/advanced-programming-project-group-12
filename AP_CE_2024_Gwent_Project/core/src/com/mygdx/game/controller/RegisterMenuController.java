@@ -7,8 +7,8 @@ import com.mygdx.game.view.screen.ValidInputs;
 import java.util.Random;
 
 public class RegisterMenuController {
-    public void register(String username, String password, String PasswordConfirmation, String email, SecurityQuestion question, String answer) {
-        new User(username, password, email, question, answer);
+    public void register(String username, String nickname, String password, String PasswordConfirmation, String email, SecurityQuestion question, String answer) {
+        new User(username, nickname, password, email, question, answer);
 
     }
 
@@ -76,5 +76,16 @@ public class RegisterMenuController {
             i++;
         }
         return newUsername;
+    }
+    public static int calculatePasswordStrength(String password) {
+        if (password.length() < 6) {
+            return 0; // weak
+        } else if (password.length() <= 8) {
+            return 1; // normal
+        } else if (password.length() <= 12) {
+            return 2; // good
+        } else {
+            return 3; // strong
+        }
     }
 }

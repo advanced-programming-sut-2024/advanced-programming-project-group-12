@@ -10,8 +10,8 @@ public class Player extends User {
 
 
 
-    public Player(String username, String password, String email, int questionNumber, String answer, CommanderCard leader, ArrayList<AbstractCard> deck, Faction faction, int roundsLost) {
-        super(username, password, email, questionNumber, answer);
+    public Player(String username, String nickname, String password, String email, SecurityQuestion question, String answer, CommanderCard leader, ArrayList<AbstractCard> deck, Faction faction, int roundsLost) {
+        super(username, nickname,password, email, question, answer);
 
 
     }}

@@ -9,6 +9,7 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(120);
 		config.setTitle("Gwent");
+		config.setWindowedMode(Gwent.WIDTH, Gwent.HEIGHT);
 		new Lwjgl3Application(new Gwent(), config);
 	}
 }

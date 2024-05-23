@@ -14,6 +14,6 @@ public class LoginMenuController {
         ScreenManager.setRegisterScreen();
     }
     public static void goToMainMenu() {
-        ScreenManager.setMainMenuScreen();
+        //ScreenManager.setMainMenuScreen();
     }
 }

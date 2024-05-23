@@ -9,6 +9,7 @@ public class User {
 
 
     private String username;
+    private String nickname;
     private String password;
     private String email;
     private HashMap<SecurityQuestion, String> securityQuestion;
@@ -17,8 +18,9 @@ public class User {
 
 
 
-    public User(String username, String password, String email, SecurityQuestion question, String answer) {
+    public User(String username, String nickname, String password, String email, SecurityQuestion question, String answer) {
         this.username = username;
+        this.nickname = nickname;
         this.password = password;
         this.email = email;
         this.securityQuestion = new HashMap<>();
