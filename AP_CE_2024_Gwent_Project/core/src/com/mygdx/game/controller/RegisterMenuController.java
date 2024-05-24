@@ -9,8 +9,8 @@ import com.mygdx.game.view.screen.ValidInputs;
 import java.util.Random;
 
 public class RegisterMenuController {
-    public static void register(String username, String nickname, String password, String email, SecurityQuestion question, String answer) {
-        new User(username, nickname, password, email, question, answer);
+    public static void register(String username, String nickname, String password, String email) {
+        new User(username, nickname, password, email);
 
     }
 
@@ -101,5 +101,11 @@ public class RegisterMenuController {
             passwordStateLabel.setColor(Color.GREEN);
         }
     }
-
+    public static void setQuestionAndAnswerForUser(SecurityQuestion question, String answer) {
+        User user = User.getUsers().getLast();
+        user.setSecurityQuestion(question, answer);
+    }
+    public static void removeUser() {
+        User.getUsers().removeLast();
+    }
 }

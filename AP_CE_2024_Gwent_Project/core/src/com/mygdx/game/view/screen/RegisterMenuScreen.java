@@ -19,6 +19,7 @@ public class RegisterMenuScreen implements Screen {
     //
     private Stage stage;
     private Table table;
+    private Window chooseSecurityQuestionWindow;
     private Window errorWindow;
     // Buttons
     private TextButton registerButton;
@@ -124,6 +125,7 @@ public class RegisterMenuScreen implements Screen {
 
     @Override
     public void dispose() {
+        stage.dispose();
 
     }
     private void buttonAndFieldInit() {
@@ -197,7 +199,8 @@ public class RegisterMenuScreen implements Screen {
             showError("Username is already taken");
             return;
         }else {
-            showChooseSecurityQuestionWindow();
+            RegisterMenuController.register(username, nickname, password, email);
+            ScreenManager.setChooseSecurityQuestionScreen();
         }
     }
     private void clearFields() {
@@ -228,39 +231,4 @@ public class RegisterMenuScreen implements Screen {
         errorWindow.add(okButton);
         stage.addActor(errorWindow);
     }
-    private void showChooseSecurityQuestionWindow() {
-        Window chooseSecurityQuestionWindow = new Window("Choose Security Question", Gwent.singleton.getSkin());
-        TextField answerField = new TextField("", Gwent.singleton.getSkin());
-        answerField.setMessageText("Answer");
-        chooseSecurityQuestionWindow.setMovable(false);
-        chooseSecurityQuestionWindow.setSize(600, 400);
-        chooseSecurityQuestionWindow.setPosition((float) Gwent.WIDTH / 2 - 300, (float) Gwent.HEIGHT / 2 - 200);
-        Label questionLabel = new Label("Choose a security question", Gwent.singleton.getSkin());
-        SelectBox<SecurityQuestion> questionSelectBox = new SelectBox<>(Gwent.singleton.getSkin());
-        questionSelectBox.setItems(SecurityQuestion.values());
-        TextButton okButton = new TextButton("OK", Gwent.singleton.getSkin());
-        okButton.setSize(200, 100);
-        okButton.setPosition(200, 0);
-        okButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if(answerField.getText().isEmpty()) {
-                    showError("Please fill the answer field");
-                    return;
-                }
-                SecurityQuestion question = questionSelectBox.getSelected();
-                String answer = answerField.getText();
-                RegisterMenuController.register(usernameField.getText(), nicknameField.getText(), passwordField.getText(), emailField.getText(), question, answer);
-                clearFields();
-                chooseSecurityQuestionWindow.setVisible(false);
-                dispose();
-                ScreenManager.setLoginScreen();
-            }
-        });
-        chooseSecurityQuestionWindow.add(questionLabel);
-        chooseSecurityQuestionWindow.add(questionSelectBox);
-        chooseSecurityQuestionWindow.add(okButton);
-        stage.addActor(chooseSecurityQuestionWindow);
-    }
-
 }

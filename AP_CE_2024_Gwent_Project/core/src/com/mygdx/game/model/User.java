@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class User {
+    //static fields
     private static User loggedInUser;
-    private static ArrayList<User> users;
+    private static ArrayList<User> users = new ArrayList<>();
 
-
+    //instance fields
     private String username;
     private String nickname;
     private String password;
@@ -17,23 +18,33 @@ public class User {
     private UserInfo userInfo;
 
 
-
-    public User(String username, String nickname, String password, String email, SecurityQuestion question, String answer) {
+    //constructors
+    public User(String username, String nickname, String password, String email) {
         this.username = username;
         this.nickname = nickname;
         this.password = password;
         this.email = email;
         this.securityQuestion = new HashMap<>();
-        this.securityQuestion.put(question, answer);
         this.allGamePlayed = new ArrayList<>();
         this.userInfo = new UserInfo();
         users.add(this);
     }
-
-    public static void updateRanking() {
-
+    //static methods
+    public static ArrayList<User> getUsers() {
+        return users;
     }
-
+    public static User getUserByUsername(String username) {
+        for(User user : users) {
+            if(user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        return null;
+    }
+    //getter and setter methods
+    public void setSecurityQuestion(SecurityQuestion question, String answer) {
+        this.securityQuestion.put(question, answer);
+    }
     public String getUsername() {
         return username;
     }
@@ -50,16 +61,12 @@ public class User {
     public void setPassword(String newPassword) {
 
     }
-    public static User getUserByUsername(String username) {
-        for(User user : users) {
-            if(user.getUsername().equals(username)) {
-                return user;
-            }
-        }
-        return null;
-    }
-
     public UserInfo getUserInfo() {
         return userInfo;
     }
+    //instance methods
+    public static void updateRanking() {
+
+    }
+
 }
