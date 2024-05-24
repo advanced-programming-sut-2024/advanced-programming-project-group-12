@@ -85,6 +85,7 @@ public class LoginMenuScreen implements Screen {
         loginButton = new TextButton("Login", Gwent.singleton.getSkin());
         forgotPasswordButton = new TextButton("Forgot Password", Gwent.singleton.getSkin());
         donNotHaveAnAccountButton = new TextButton("Don't have an account?", Gwent.singleton.getSkin());
+
         //set position
         loginButton.setPosition((float) Gwent.WIDTH / 2 - loginButton.getWidth() / 2 - 200, (float) Gwent.HEIGHT / 2 - 200);
         forgotPasswordButton.setPosition((float) Gwent.WIDTH / 2 - forgotPasswordButton.getWidth() / 2 + 200, (float) Gwent.HEIGHT / 2 - 200);

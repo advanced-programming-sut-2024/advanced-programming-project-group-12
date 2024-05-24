@@ -62,4 +62,20 @@ public class User {
     public UserInfo getUserInfo() {
         return userInfo;
     }
+
+    public static User getLoggedInUser() {
+        return loggedInUser;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setNickname(String newNickname) {
+        nickname = newNickname;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
 }
