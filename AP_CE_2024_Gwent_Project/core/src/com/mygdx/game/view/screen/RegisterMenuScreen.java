@@ -3,19 +3,15 @@ package com.mygdx.game.view.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.RegisterMenuController;
 import com.mygdx.game.controller.ScreenManager;
 import com.mygdx.game.model.SecurityQuestion;
-
-import java.util.HashMap;
 
 public class RegisterMenuScreen implements Screen {
     private static final float FIELD_WIDTH = 400;
@@ -28,6 +24,7 @@ public class RegisterMenuScreen implements Screen {
     private TextButton registerButton;
     private TextButton randomPasswordButton;
     private TextButton backButton;
+    private TextButton showPasswordButton;
     //TextFields
     private TextField usernameField;
     private TextField passwordField;
@@ -36,7 +33,6 @@ public class RegisterMenuScreen implements Screen {
     private TextField nicknameField;
     //Labels
     private Label passwordStateLabel;
-
     public RegisterMenuScreen() {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -54,6 +50,20 @@ public class RegisterMenuScreen implements Screen {
     }
     @Override
     public void show() {
+        showPasswordButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(passwordField.isPasswordMode()) {
+                    passwordField.setPasswordMode(false);
+                    confirmPasswordField.setPasswordMode(false);
+                    showPasswordButton.setText("Hide");
+                } else {
+                    passwordField.setPasswordMode(true);
+                    confirmPasswordField.setPasswordMode(true);
+                    showPasswordButton.setText("Show");
+                }
+            }
+        });
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -72,11 +82,18 @@ public class RegisterMenuScreen implements Screen {
                 registerHandler(username, nickname, password, confirmPassword, email);
             }
         });
+        randomPasswordButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                passwordField.setText(RegisterMenuController.randomPasswordGenerator());
+                confirmPasswordField.setText(passwordField.getText());
+            }
+        });
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(0.5f, 0.5f, 0, 0);
         Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
         Gwent.singleton.getBatch().begin();
         Gwent.singleton.getBatch().end();
@@ -110,6 +127,7 @@ public class RegisterMenuScreen implements Screen {
 
     }
     private void buttonAndFieldInit() {
+        showPasswordButton = new TextButton("Show" , Gwent.singleton.getSkin());
         registerButton = new TextButton("Register", Gwent.singleton.getSkin());
         randomPasswordButton = new TextButton("Random Password", Gwent.singleton.getSkin());
         backButton = new TextButton("Back", Gwent.singleton.getSkin());
@@ -123,8 +141,8 @@ public class RegisterMenuScreen implements Screen {
         passwordField.setPasswordCharacter('*');
         confirmPasswordField = new TextField("", Gwent.singleton.getSkin());
         confirmPasswordField.setMessageText("Confirm Password");
-        passwordField.setPasswordMode(true);
-        passwordField.setPasswordCharacter('*');
+        confirmPasswordField.setPasswordMode(true);
+        confirmPasswordField.setPasswordCharacter('*');
         emailField = new TextField("", Gwent.singleton.getSkin());
         emailField.setMessageText("Email");
         passwordStateLabel = new Label("", Gwent.singleton.getSkin());
@@ -135,7 +153,7 @@ public class RegisterMenuScreen implements Screen {
         confirmPasswordField.setColor(Color.ROYAL);
         emailField.setColor(Color.ROYAL);
         //set size
-        backButton.setSize(300, 100);
+        backButton.setSize(200, 100);
         registerButton.setSize(400, 100);
         randomPasswordButton.setSize(500, 100);
 
@@ -147,6 +165,7 @@ public class RegisterMenuScreen implements Screen {
         table.add(passwordField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.add(confirmPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.row().pad(10);
+        table.add(showPasswordButton).width(150).height(100);
         table.add(passwordStateLabel);
         table.row().pad(10);
         table.add(emailField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
@@ -156,7 +175,6 @@ public class RegisterMenuScreen implements Screen {
         backButton.setPosition(0, Gwent.HEIGHT - 100);
 
         stage.addActor(backButton);
-
     }
     private void registerHandler(String username, String nickname, String password, String confirmPassword, String email) {
         if(username.isEmpty() || nickname.isEmpty() || password.isEmpty() ||
@@ -193,12 +211,12 @@ public class RegisterMenuScreen implements Screen {
         errorWindow = new Window("Error", Gwent.singleton.getSkin());
         errorWindow.setMovable(false);
         errorWindow.setColor(Color.RED);
-        errorWindow.setSize(600, 400);
+        errorWindow.setSize(800, 400);
         errorWindow.setPosition((float) Gwent.WIDTH / 2 - 300, (float) Gwent.HEIGHT / 2 - 200);
         Label errorLabel = new Label(message, Gwent.singleton.getSkin());
         TextButton okButton = new TextButton("OK", Gwent.singleton.getSkin());
         okButton.setSize(200, 100);
-        okButton.setPosition(100, 0);
+        okButton.setPosition(errorWindow.getWidth() - 50, 0);
         okButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
