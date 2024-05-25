@@ -107,7 +107,8 @@ public class ChooseSecurityQuestionScreen implements Screen {
 
     @Override
     public void dispose() {
-        stage.dispose();
+        stage.clear();
+//        stage.dispose();
     }
 
     private void showWelcomeMessage() {

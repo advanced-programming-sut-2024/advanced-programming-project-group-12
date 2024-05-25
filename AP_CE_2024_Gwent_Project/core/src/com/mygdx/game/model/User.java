@@ -41,6 +41,12 @@ public class User {
         }
         return null;
     }
+    public static void setLoggedInUser(User user) {
+        loggedInUser = user;
+    }
+    public static User getLoggedInUser() {
+        return loggedInUser;
+    }
     //getter and setter methods
     public void setSecurityQuestion(SecurityQuestion question, String answer) {
         this.securityQuestion.put(question, answer);
@@ -48,7 +54,6 @@ public class User {
     public String getUsername() {
         return username;
     }
-
     public String getEmail() {
         return email;
     }
@@ -64,9 +69,16 @@ public class User {
     public UserInfo getUserInfo() {
         return userInfo;
     }
+    public HashMap<SecurityQuestion, String> getSecurityQuestion() {
+        return securityQuestion;
+    }
     //instance methods
     public static void updateRanking() {
 
+    }
+
+    public boolean doesPasswordMatch(String password) {
+        return this.password.equals(password);
     }
 
 }

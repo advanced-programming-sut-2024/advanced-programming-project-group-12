@@ -196,7 +196,10 @@ public class RegisterMenuScreen implements Screen {
             showError("Passwords do not match");
             return;
         } else if(RegisterMenuController.isUsernameTaken(username)) {
-            showError("Username is already taken");
+            String newUsername = RegisterMenuController.generateNewUsername(username);
+            showError("this username is already taken\n you can choose this username: " + newUsername + " instead");
+            usernameField.setText(newUsername);
+
             return;
         }else {
             RegisterMenuController.register(username, nickname, password, email);
