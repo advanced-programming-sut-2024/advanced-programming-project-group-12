@@ -43,7 +43,6 @@ public class LoginMenuScreen implements Screen {
                 LoginMenuController.goToRegisterMenu();
             }
         });
-
     }
 
     @Override

@@ -9,9 +9,9 @@ public class ProfileMenuController {
     public ArrayList<String> showProfile() {
         User loggedInUser = User.getLoggedInUser();
         return new ArrayList<String>() {{
-            add(loggedInUser.getUsername());
-            add(loggedInUser.getNickname());
-            add(loggedInUser.getEmail());
+            add(loggedInUser.getUsername() == null ? loggedInUser.getUsername() : "No username");
+            add(loggedInUser.getNickname() == null ? loggedInUser.getNickname() : "No nickname");
+            add(loggedInUser.getEmail() == null ? loggedInUser.getEmail() : "No email");
         }};
     }
 
