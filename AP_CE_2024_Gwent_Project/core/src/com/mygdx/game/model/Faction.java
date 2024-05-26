@@ -6,7 +6,8 @@ public enum Faction {
     NORTHERN_REALMS("Northern Realms"),
     SCOIATAEL("Scoiatael"),
     EMPIRE_NILFGAARD("Empire Nilfgaard"),
-    SKELLIGE("Skellige")
+    SKELLIGE("Skellige"),
+    NEUTRAL("Neutral")
     ;
     private String name;
     private Runnable Action;
