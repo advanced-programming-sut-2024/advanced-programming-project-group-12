@@ -2,38 +2,49 @@ package com.mygdx.game.view.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.LoginMenuController;
-import com.mygdx.game.controller.ScreenManager;
+import com.mygdx.game.model.SecurityQuestion;
+import com.mygdx.game.model.User;
 
 public class LoginMenuScreen implements Screen {
-    //TODO : complete login menu after register menu is done
-    private  TextButton loginButton;
+    private Stage stage;
+    private Table table;
+    private Dialog errorDialog;
+    // Buttons
+    private TextButton loginButton;
     private TextButton forgotPasswordButton;
     private TextButton donNotHaveAnAccountButton;
-    private Stage stage;
+    // TextFields
+    private TextField usernameField;
+    private TextField passwordField;
+
     public LoginMenuScreen() {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-        createButtons();
+        createFields();
     }
+
     @Override
     public void show() {
         loginButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //TODO : implement login
+                loginHandler();
             }
         });
         forgotPasswordButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //TODO : implement forgot password
+                forgotPasswordHandler();
             }
         });
         donNotHaveAnAccountButton.addListener(new ClickListener() {
@@ -81,22 +92,77 @@ public class LoginMenuScreen implements Screen {
     public void dispose() {
         stage.dispose();
     }
-    public void createButtons() {
+
+    public void createFields() {
+        table = new Table();
+        table.setFillParent(true);
+        // Center the fields
+
+        table.align(2);
+        table.padTop(100);
+        usernameField = new TextField("", Gwent.singleton.getSkin());
+        usernameField.setMessageText("Username");
+        passwordField = new TextField("", Gwent.singleton.getSkin());
+        passwordField.setMessageText("Password");
+        passwordField.setPasswordMode(true);
+        passwordField.setPasswordCharacter('*');
+
         loginButton = new TextButton("Login", Gwent.singleton.getSkin());
         forgotPasswordButton = new TextButton("Forgot Password", Gwent.singleton.getSkin());
         donNotHaveAnAccountButton = new TextButton("Don't have an account?", Gwent.singleton.getSkin());
-        //set position
-        loginButton.setPosition((float) Gwent.WIDTH / 2 - loginButton.getWidth() / 2 - 200, (float) Gwent.HEIGHT / 2 - 200);
-        forgotPasswordButton.setPosition((float) Gwent.WIDTH / 2 - forgotPasswordButton.getWidth() / 2 + 200, (float) Gwent.HEIGHT / 2 - 200);
-        donNotHaveAnAccountButton.setPosition((float) Gwent.WIDTH / 2 - donNotHaveAnAccountButton.getWidth() / 2, (float) Gwent.HEIGHT / 2 - 300);
-        //set size
-        loginButton.setSize(250, 100);
-        forgotPasswordButton.setSize(450, 100);
-        donNotHaveAnAccountButton.setSize(600, 100);
 
-        stage.addActor(loginButton);
-        stage.addActor(forgotPasswordButton);
-        stage.addActor(donNotHaveAnAccountButton);
+        table.add(usernameField).width(600).height(100).pad(10).row();
+        table.add(passwordField).width(600).height(100).pad(10).row();
+        table.add(loginButton).width(250).height(120).pad(10).row();
+        table.add(forgotPasswordButton).width(500).height(120).row(); // Decrease padding
+        table.add(donNotHaveAnAccountButton).width(600).height(120).pad(10).row();
 
+        stage.addActor(table);
     }
+    private void showError(String message) {
+        errorDialog = new Dialog("Error", Gwent.singleton.getSkin());
+        errorDialog.text(message);
+        errorDialog.button("OK");
+        errorDialog.show(stage);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                errorDialog.hide();
+            }
+        }, 4); // Delay in seconds
+    }
+    private void loginHandler() {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        if (username.isEmpty() || password.isEmpty()) {
+            showError("Please fill all fields");
+            return;
+        }
+        if(!LoginMenuController.doesThisUserExist(username)) {
+            showError("User does not exist");
+            return;
+        }
+        if(!LoginMenuController.doesThisPasswordMatch(username, password)) {
+            showError("Incorrect password");
+            return;
+        }
+        LoginMenuController.Login(username, password);
+        dispose();
+        LoginMenuController.goToMainMenu();
+    }
+    private void forgotPasswordHandler() {
+        String username = usernameField.getText();
+        if (username.isEmpty()) {
+            showError("Please fill the username field");
+            return;
+        }
+        if(!LoginMenuController.doesThisUserExist(username)) {
+            showError("User does not exist");
+            return;
+        }
+        LoginMenuController.setUsernameForForgotPassword(username);
+        dispose();
+        LoginMenuController.goToForgotPasswordScreen();
+    }
+
 }

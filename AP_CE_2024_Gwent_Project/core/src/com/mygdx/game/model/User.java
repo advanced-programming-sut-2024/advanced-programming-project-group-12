@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class User {
+    //static fields
     private static User loggedInUser;
-    private static ArrayList<User> users;
+    private static ArrayList<User> users = new ArrayList<>();
 
-
+    //instance fields
     private String username;
     private String nickname;
     private String password;
@@ -17,38 +18,20 @@ public class User {
     private UserInfo userInfo;
 
 
-
-    public User(String username, String nickname, String password, String email, SecurityQuestion question, String answer) {
+    //constructors
+    public User(String username, String nickname, String password, String email) {
         this.username = username;
         this.nickname = nickname;
         this.password = password;
         this.email = email;
         this.securityQuestion = new HashMap<>();
-        this.securityQuestion.put(question, answer);
         this.allGamePlayed = new ArrayList<>();
         this.userInfo = new UserInfo();
         users.add(this);
     }
-
-    public static void updateRanking() {
-
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-    public void setUsername(String newUsername) {
-
-    }
-    public void setEmail(String newEmail) {
-
-    }
-    public void setPassword(String newPassword) {
-
+    //static methods
+    public static ArrayList<User> getUsers() {
+        return users;
     }
     public static User getUserByUsername(String username) {
         for(User user : users) {
@@ -58,8 +41,56 @@ public class User {
         }
         return null;
     }
+    public static void setLoggedInUser(User user) {
+        loggedInUser = user;
+    }
+    public static User getLoggedInUser() {
+        return loggedInUser;
+    }
 
+
+    //getter and setter methods
+    public void setSecurityQuestion(SecurityQuestion question, String answer) {
+        this.securityQuestion.put(question, answer);
+    }
+    public String getPassword() {
+        return password;
+    }
+    public String getUsername() {
+        return username;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setUsername(String newUsername) {
+        this.username = newUsername;
+    }
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+    public void setEmail(String newEmail) {
+        this.email = newEmail;
+    }
+    public void setPassword(String newPassword) {
+        this.password = newPassword;
+    }
     public UserInfo getUserInfo() {
         return userInfo;
     }
+    public HashMap<SecurityQuestion, String> getSecurityQuestion() {
+        return securityQuestion;
+    }
+    //instance methods
+    public static void updateRanking() {
+
+    }
+
+    public boolean doesPasswordMatch(String password) {
+        return this.password.equals(password);
+    }
+
 }
