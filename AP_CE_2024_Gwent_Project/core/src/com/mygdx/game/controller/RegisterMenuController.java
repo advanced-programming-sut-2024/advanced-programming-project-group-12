@@ -116,4 +116,6 @@ public class RegisterMenuController {
     public static void removeUser() {
         User.removeUser(User.getAllUsers().getLast());
     }
+
+
 }

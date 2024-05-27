@@ -22,6 +22,7 @@ public class MainMenuScreen implements Screen {
     // Buttons
     private TextButton startGameButton;
     private TextButton showProfileButton;
+    private TextButton exitButton;
 
     public MainMenuScreen() {
         controller = new MainMenuController();
@@ -43,6 +44,12 @@ public class MainMenuScreen implements Screen {
                 controller.showProfile();
             }
         });
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.exit();
+            }
+        });
 
 
     }
@@ -55,6 +62,11 @@ public class MainMenuScreen implements Screen {
         showProfileButton = new TextButton("Show Profile", Gwent.singleton.skin);
         showProfileButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
         table.add(showProfileButton).padBottom(20);
+        table.row();
+        exitButton = new TextButton("Exit", Gwent.singleton.skin);
+        exitButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
+        table.add(exitButton).padBottom(20);
+
     }
 
     @Override

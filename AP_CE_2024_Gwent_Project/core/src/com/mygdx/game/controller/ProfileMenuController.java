@@ -62,4 +62,6 @@ public class ProfileMenuController {
     public void logout() {
         User.setLoggedInUser(null);
     }
+
+
 }
