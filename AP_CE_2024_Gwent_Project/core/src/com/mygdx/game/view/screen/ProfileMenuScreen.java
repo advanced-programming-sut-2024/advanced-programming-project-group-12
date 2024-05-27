@@ -31,6 +31,7 @@ public class ProfileMenuScreen implements Screen {
     private TextButton changeNicknameButton;
     private TextButton changeEmailButton;
     private TextButton backButton;
+    private TextButton logoutButton;
     // Text Fields
     private TextField oldPasswordField;
     private TextField newPasswordField;
@@ -108,19 +109,28 @@ public class ProfileMenuScreen implements Screen {
                 ScreenManager.setMainMenuScreen();
             }
         });
+        logoutButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.logout();
+                dispose();
+                ScreenManager.setLoginScreen();
+            }
+        });
     }
 
     private void buttonAndFieldInit() {
         ArrayList<String> profileInfo = controller.showProfile();
-        currentUsernameLabel = new Label("Current Username: " + profileInfo.get(0), Gwent.singleton.getSkin());
-        currentEmailLabel = new Label("Current Email: " + profileInfo.get(1), Gwent.singleton.getSkin());
-        currentNicknameLabel = new Label("Current Nickname: " + profileInfo.get(2), Gwent.singleton.getSkin());
+        currentUsernameLabel = new Label("Username: " + profileInfo.get(0), Gwent.singleton.getSkin());
+        currentEmailLabel = new Label("Email: " + profileInfo.get(2), Gwent.singleton.getSkin());
+        currentNicknameLabel = new Label("Nickname: " + profileInfo.get(1), Gwent.singleton.getSkin());
 
         changePasswordButton = new TextButton("Change Password", Gwent.singleton.getSkin());
         changeUsernameButton = new TextButton("Change Username", Gwent.singleton.getSkin());
         changeNicknameButton = new TextButton("Change Nickname", Gwent.singleton.getSkin());
         changeEmailButton = new TextButton("Change Email", Gwent.singleton.getSkin());
         backButton = new TextButton("Back", Gwent.singleton.getSkin());
+        logoutButton = new TextButton("Logout", Gwent.singleton.getSkin());
 
         oldPasswordField = new TextField("", Gwent.singleton.getSkin());
         oldPasswordField.setMessageText("Old Password");
@@ -147,7 +157,6 @@ public class ProfileMenuScreen implements Screen {
         newEmailField.setMessageText("New Email");
 
         table.add(currentUsernameLabel).colspan(2);
-        table.row().pad(10);
         table.add(currentEmailLabel).colspan(2);
         table.row().pad(10);
         table.add(currentNicknameLabel).colspan(2);
@@ -157,9 +166,8 @@ public class ProfileMenuScreen implements Screen {
         table.add(newPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.row().pad(10);
         table.add(confirmPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
+        table.add(changePasswordButton).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.row().pad(10);
-        table.add(changePasswordButton).colspan(2).width(FIELD_WIDTH).height(FIELD_HEIGHT);
-        table.row().pad(20);
 
         table.add(newUsernameField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.add(changeUsernameButton).width(FIELD_WIDTH).height(FIELD_HEIGHT);
@@ -170,15 +178,15 @@ public class ProfileMenuScreen implements Screen {
         table.add(newEmailField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.add(changeEmailButton).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.row().pad(20);
-
-        table.add(backButton).colspan(2).width(FIELD_WIDTH).height(FIELD_HEIGHT);
+        table.add(logoutButton).width(FIELD_WIDTH).height(FIELD_HEIGHT);
+        table.add(backButton).width(FIELD_WIDTH).height(FIELD_HEIGHT);
     }
 
     private void updateLabels() {
         ArrayList<String> profileInfo = controller.showProfile();
         currentUsernameLabel.setText("Current Username: " + profileInfo.get(0));
-        currentEmailLabel.setText("Current Email: " + profileInfo.get(1));
-        currentNicknameLabel.setText("Current Nickname: " + profileInfo.get(2));
+        currentEmailLabel.setText("Current Email: " + profileInfo.get(2));
+        currentNicknameLabel.setText("Current Nickname: " + profileInfo.get(1));
     }
 
     private void showError(String message) {
