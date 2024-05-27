@@ -156,10 +156,10 @@ public class ProfileMenuScreen implements Screen {
         newEmailField = new TextField("", Gwent.singleton.getSkin());
         newEmailField.setMessageText("New Email");
 
-        table.add(currentUsernameLabel).colspan(2);
-        table.add(currentEmailLabel).colspan(2);
+        table.add(currentUsernameLabel);
+        table.add(currentEmailLabel);
         table.row().pad(10);
-        table.add(currentNicknameLabel).colspan(2);
+        table.add(currentNicknameLabel);
         table.row().pad(20);
 
         table.add(oldPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
@@ -184,9 +184,9 @@ public class ProfileMenuScreen implements Screen {
 
     private void updateLabels() {
         ArrayList<String> profileInfo = controller.showProfile();
-        currentUsernameLabel.setText("Current Username: " + profileInfo.get(0));
-        currentEmailLabel.setText("Current Email: " + profileInfo.get(2));
-        currentNicknameLabel.setText("Current Nickname: " + profileInfo.get(1));
+        currentUsernameLabel.setText("Username: " + profileInfo.get(0));
+        currentEmailLabel.setText("Email: " + profileInfo.get(2));
+        currentNicknameLabel.setText("Nickname: " + profileInfo.get(1));
     }
 
     private void showError(String message) {
