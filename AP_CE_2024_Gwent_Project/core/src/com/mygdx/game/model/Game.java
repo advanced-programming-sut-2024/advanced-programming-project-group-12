@@ -1,5 +1,7 @@
 package com.mygdx.game.model;
 
+import com.mygdx.game.model.gameBoard.GameBoard;
+
 import java.util.ArrayList;
 import java.util.Date;
 
