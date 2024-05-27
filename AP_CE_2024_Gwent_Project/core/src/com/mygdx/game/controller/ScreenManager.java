@@ -2,7 +2,7 @@ package com.mygdx.game.controller;
 
 import com.mygdx.game.Gwent;
 import com.mygdx.game.view.screen.ChooseSecurityQuestionScreen;
-import com.mygdx.game.view.screen.ForgotPasswordScreen;
+import com.mygdx.game.view.screen.ForgetPasswordScreen;
 import com.mygdx.game.view.screen.LoginMenuScreen;
 import com.mygdx.game.view.screen.RegisterMenuScreen;
 
@@ -26,6 +26,6 @@ public class ScreenManager {
     }
     public static void setForgotPasswordScreen() {
         // Set the forgot password screen
-        Gwent.singleton.setScreen(new ForgotPasswordScreen());
+        Gwent.singleton.setScreen(new ForgetPasswordScreen());
     }
 }

@@ -49,7 +49,6 @@ public class LoginMenuController {
     }
     public static void changePassword(String newPassword) {
         User user = User.getUserByUsername(LoginMenuController.getUsernameForForgotPassword());
-        assert user != null;
         user.setPassword(newPassword);
     }
 

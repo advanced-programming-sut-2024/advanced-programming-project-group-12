@@ -58,13 +58,13 @@ public class User {
         return email;
     }
     public void setUsername(String newUsername) {
-
+        this.username = newUsername;
     }
     public void setEmail(String newEmail) {
-
+        this.email = newEmail;
     }
     public void setPassword(String newPassword) {
-
+        this.password = newPassword;
     }
     public UserInfo getUserInfo() {
         return userInfo;

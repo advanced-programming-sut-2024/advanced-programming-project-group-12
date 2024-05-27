@@ -12,7 +12,7 @@ import com.mygdx.game.controller.RegisterMenuController;
 import com.mygdx.game.controller.ScreenManager;
 import com.mygdx.game.model.SecurityQuestion;
 
-public class ForgotPasswordScreen implements Screen {
+public class ForgetPasswordScreen implements Screen {
     private Stage stage;
     private Table table;
     // TextFields
@@ -28,7 +28,7 @@ public class ForgotPasswordScreen implements Screen {
     private Dialog finalMessageDialog;
     private SelectBox<String> questionSelectBox;
 
-    public ForgotPasswordScreen() {
+    public ForgetPasswordScreen() {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
@@ -158,9 +158,16 @@ public class ForgotPasswordScreen implements Screen {
             showError(RegisterMenuController.isPasswordValid(newPassword, confirmPassword));
         }
         else {
-            //showChangePasswordDialog(newPassword);
+            showChangePasswordDialog(newPassword);
             LoginMenuController.changePassword(newPassword);
         }
+    }
+
+    private void showChangePasswordDialog(String newPassword) {
+        finalMessageDialog = new Dialog("Password Changed", Gwent.singleton.getSkin());
+        finalMessageDialog.text("Your password has been changed to " + newPassword);
+        finalMessageDialog.button("OK");
+        finalMessageDialog.show(stage);
     }
 
     private void showError(String message) {
