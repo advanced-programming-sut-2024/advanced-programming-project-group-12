@@ -5,9 +5,11 @@ import com.mygdx.game.Gwent;
 import com.mygdx.game.model.SecurityQuestion;
 import com.mygdx.game.model.User;
 
+import java.util.Objects;
+
 public class LoginMenuController {
     private static String usernameForForgotPassword;
-    public static void Login(String username, String password) {
+    public static void Login(String username) {
         User.setLoggedInUser(User.getUserByUsername(username));
     }
 
@@ -30,7 +32,7 @@ public class LoginMenuController {
     }
 
     public static boolean doesThisPasswordMatch(String username, String password) {
-        return User.getUserByUsername(username).doesPasswordMatch(password);
+        return Objects.requireNonNull(User.getUserByUsername(username)).doesPasswordMatch(password);
     }
     public static void setUsernameForForgotPassword(String username) {
         usernameForForgotPassword = username;
@@ -49,7 +51,9 @@ public class LoginMenuController {
     }
     public static void changePassword(String newPassword) {
         User user = User.getUserByUsername(LoginMenuController.getUsernameForForgotPassword());
+        assert user != null;
         user.setPassword(newPassword);
+        user.updateInfo();
     }
 
     public static void removeUsernameForForgotPassword() {

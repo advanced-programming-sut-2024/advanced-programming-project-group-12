@@ -212,12 +212,11 @@ public class ProfileMenuScreen implements Screen {
         Label successLabel = new Label(message, Gwent.singleton.getSkin());
         TextButton okButton = new TextButton("OK", Gwent.singleton.getSkin());
         okButton.setSize(200, 100);
-        okButton.setPosition(errorWindow.getWidth() - 50, 0);
+        okButton.setPosition(successWindow.getWidth() - 50, 0);
         okButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                errorWindow.setVisible(false);
-
+                successWindow.setVisible(false);
             }
         });
         successWindow.add(successLabel);

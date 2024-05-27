@@ -17,9 +17,11 @@ public class RegisterMenuController {
     public static boolean isUsernameValid(String username) {
         return ValidInputs.USERNAME.isMatch(username);
     }
+
     public static boolean isUsernameTaken(String username) {
         return User.getUserByUsername(username) != null;
     }
+
     public static String isPasswordValid(String password, String PasswordConfirmation) {
         if (!ValidInputs.LOWERCASE.isFind(password)) {
             return "Password must contain at least one lowercase letter";
@@ -64,16 +66,18 @@ public class RegisterMenuController {
 
         return password.toString();
     }
+
     public static String generateNewUsername(String username) {
         Random random = new Random();
         int i = Math.abs(random.nextInt() % 100);
         String newUsername = username;
-        while(User.getUserByUsername(newUsername) != null) {
+        while (User.getUserByUsername(newUsername) != null) {
             newUsername = username + String.valueOf(i);
             i = Math.abs(random.nextInt() % 100);
         }
         return newUsername;
     }
+
     public static int calculatePasswordStrength(String password) {
         if (password.length() < 4 || !ValidInputs.UPPERCASE.isFind(password)) {
             return 0; // weak
@@ -85,27 +89,31 @@ public class RegisterMenuController {
             return 3; // strong
         }
     }
+
     public static void updatePasswordStrength(String password, Label passwordStateLabel) {
         passwordStateLabel.setText("");
-        if(calculatePasswordStrength(password) == 0) {
+        if (calculatePasswordStrength(password) == 0) {
             passwordStateLabel.setText("Password is too weak");
             passwordStateLabel.setColor(Color.RED);
-        } else if(calculatePasswordStrength(password) == 1) {
+        } else if (calculatePasswordStrength(password) == 1) {
             passwordStateLabel.setText("Password is normal");
             passwordStateLabel.setColor(Color.YELLOW);
-        } else if(calculatePasswordStrength(password) == 2) {
+        } else if (calculatePasswordStrength(password) == 2) {
             passwordStateLabel.setText("Password is medium");
             passwordStateLabel.setColor(Color.ORANGE);
-        } else if(calculatePasswordStrength(password) == 3) {
+        } else if (calculatePasswordStrength(password) == 3) {
             passwordStateLabel.setText("Password is strong");
             passwordStateLabel.setColor(Color.GREEN);
         }
     }
+
     public static void setQuestionAndAnswerForUser(SecurityQuestion question, String answer) {
-        User user = User.getUsers().getLast();
+        User user = User.getAllUsers().getLast();
         user.setSecurityQuestion(question, answer);
+        user.updateInfo();
     }
+
     public static void removeUser() {
-        User.getUsers().removeLast();
+        User.removeUser(User.getAllUsers().getLast());
     }
 }

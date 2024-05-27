@@ -22,6 +22,7 @@ public class ProfileMenuController {
         }
         if (newPassword.equals(newPasswordConfirmation) && RegisterMenuController.isPasswordValid(newPassword, newPasswordConfirmation).equals("Valid password")) {
             loggedInUser.setPassword(newPassword);
+            loggedInUser.updateInfo();
             return true;
         } else {
             return false;
@@ -32,15 +33,18 @@ public class ProfileMenuController {
         if (RegisterMenuController.isUsernameValid(newUsername) && !RegisterMenuController.isUsernameTaken(newUsername)) {
             User loggedInUser = User.getLoggedInUser();
             loggedInUser.setUsername(newUsername);
+            loggedInUser.updateInfo();
             return true;
         } else {
             return false;
         }
+
     }
 
     public boolean changeNickname(String newNickname) {
         User loggedInUser = User.getLoggedInUser();
         loggedInUser.setNickname(newNickname);
+        loggedInUser.updateInfo();
         return true;
     }
 
@@ -48,6 +52,7 @@ public class ProfileMenuController {
         if (RegisterMenuController.isEmailValid(newEmail)) {
             User loggedInUser = User.getLoggedInUser();
             loggedInUser.setEmail(newEmail);
+            loggedInUser.updateInfo();
             return true;
         } else {
             return false;

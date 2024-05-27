@@ -146,8 +146,8 @@ public class LoginMenuScreen implements Screen {
             showError("Incorrect password");
             return;
         }
-        LoginMenuController.Login(username, password);
         dispose();
+        LoginMenuController.Login(username);
         LoginMenuController.goToMainMenu();
     }
     private void forgotPasswordHandler() {
