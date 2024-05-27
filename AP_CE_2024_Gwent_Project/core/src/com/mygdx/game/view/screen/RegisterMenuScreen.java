@@ -26,13 +26,13 @@ public class RegisterMenuScreen implements Screen {
     private TextButton randomPasswordButton;
     private TextButton backButton;
     private TextButton showPasswordButton;
-    //TextFields
+    // TextFields
     private TextField usernameField;
     private TextField passwordField;
     private TextField confirmPasswordField;
     private TextField emailField;
     private TextField nicknameField;
-    //Labels
+    // Labels
     private Label passwordStateLabel;
     public RegisterMenuScreen() {
         stage = new Stage();
