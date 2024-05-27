@@ -47,9 +47,14 @@ public class User {
     public static User getLoggedInUser() {
         return loggedInUser;
     }
+
+
     //getter and setter methods
     public void setSecurityQuestion(SecurityQuestion question, String answer) {
         this.securityQuestion.put(question, answer);
+    }
+    public String getPassword() {
+        return password;
     }
     public String getUsername() {
         return username;
@@ -59,6 +64,13 @@ public class User {
     }
     public void setUsername(String newUsername) {
         this.username = newUsername;
+    }
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
     public void setEmail(String newEmail) {
         this.email = newEmail;

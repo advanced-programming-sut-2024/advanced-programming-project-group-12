@@ -1,10 +1,7 @@
 package com.mygdx.game.controller;
 
 import com.mygdx.game.Gwent;
-import com.mygdx.game.view.screen.ChooseSecurityQuestionScreen;
-import com.mygdx.game.view.screen.ForgetPasswordScreen;
-import com.mygdx.game.view.screen.LoginMenuScreen;
-import com.mygdx.game.view.screen.RegisterMenuScreen;
+import com.mygdx.game.view.screen.*;
 
 public class ScreenManager {
     public static void setRegisterScreen() {
@@ -15,10 +12,9 @@ public class ScreenManager {
         // Set the login screen
         Gwent.singleton.setScreen(new LoginMenuScreen());
     }
-
     public static void setMainMenuScreen() {
         // Set the main menu screen
-        //Gwent.singleton.setScreen(new MainMenuScreen());
+        Gwent.singleton.setScreen(new MainMenuScreen());
     }
     public static void setChooseSecurityQuestionScreen() {
         // Set the choose security question screen
@@ -27,5 +23,9 @@ public class ScreenManager {
     public static void setForgotPasswordScreen() {
         // Set the forgot password screen
         Gwent.singleton.setScreen(new ForgetPasswordScreen());
+    }
+    public static void setProfileMenuScreen() {
+        // Set the profile menu screen
+        Gwent.singleton.setScreen(new ProfileMenuScreen());
     }
 }
