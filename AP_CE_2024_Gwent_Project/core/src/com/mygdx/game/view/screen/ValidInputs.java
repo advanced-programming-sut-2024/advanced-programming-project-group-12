@@ -4,12 +4,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum ValidInputs {
-    USERNAME("[a-zA-Z0-9\\-]{6,}"),
+    USERNAME("[a-zA-Z0-9\\-]{5,}"),
     EMAIL("[a-zA-Z0-9_.]+@[a-zA-Z]+\\.com"),
     LOWERCASE("[a-z]+"),
     UPPERCASE("[A-Z]+"),
     NUMBER("[0-9]+"),
-    SPECIAL_CHARACTER("[!@#$%^&*()_+]"),
+    SPECIAL_CHARACTER("[!@#$%^&*()_+.]"),
     ;
     final String regex;
     ValidInputs(String regex) {
