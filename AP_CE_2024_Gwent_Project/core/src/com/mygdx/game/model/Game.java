@@ -39,4 +39,8 @@ public class Game {
     public Player getOpposition() {
         return opposition;
     }
+
+    public GameBoard getGameBoard() {
+        return gameBoard;
+    }
 }

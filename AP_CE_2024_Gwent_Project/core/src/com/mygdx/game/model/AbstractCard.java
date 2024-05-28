@@ -16,4 +16,6 @@ public abstract class AbstractCard {
     public String getDescription() {
         return description;
     }
+
+    public abstract void kill();
 }

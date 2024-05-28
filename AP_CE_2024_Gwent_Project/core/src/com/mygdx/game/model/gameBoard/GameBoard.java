@@ -3,7 +3,6 @@ package com.mygdx.game.model.gameBoard;
 import com.mygdx.game.model.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 public class GameBoard {
@@ -17,8 +16,8 @@ public class GameBoard {
         rows.get(row.getPosition()).addPlayableCard(player,card);
     }
 
-    public ArrayList<AbstractCard> allPlayerPlayableCards(Player player) {
-        ArrayList<AbstractCard> cards = new ArrayList<>();
+    public ArrayList<PlayableCard> allPlayerPlayableCards(Player player) {
+        ArrayList<PlayableCard> cards = new ArrayList<>();
         for(TwoSideRow i: rows) {
             cards.addAll(i.getAllCards(player));
         }
