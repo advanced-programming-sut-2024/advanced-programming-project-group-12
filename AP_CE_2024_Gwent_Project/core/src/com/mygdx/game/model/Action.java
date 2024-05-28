@@ -31,6 +31,32 @@ public enum Action {
             i.kill();
         }
     }),
+
+    //faction actions
+    NORTHERN_REALMS(() -> {
+        Player player1 = Game.getCurrentGame().getCurrentPlayer();
+        Player player2 = Game.getCurrentGame().getOpposition();
+        if(player1.isWon() && player1.getFaction().equals(Faction.NORTHERN_REALMS)) {
+            player1.drawCard();
+        } else if (player2.isWon() && player2.getFaction().equals(Faction.NORTHERN_REALMS)) {
+            player2.drawCard();
+        }
+    }),
+    NILFGAARD(() -> {
+        Player player1 = Game.getCurrentGame().getCurrentPlayer();
+        Player player2 = Game.getCurrentGame().getOpposition();
+        if(player1.getFaction().equals(Faction.EMPIRE_NILFGAARD) && player2.getFaction().equals(Faction.EMPIRE_NILFGAARD)) {
+            return;
+        }
+
+        if(!player1.isWon() && !player2.isWon()) {
+            if(player1.getFaction().equals(Faction.NORTHERN_REALMS) ) {
+                player1.setWon(true);
+            } else if (player2.getFaction().equals(Faction.NORTHERN_REALMS)) {
+                player2.setWon(true);
+            }
+        }
+    }),
     NO_ACTION(() -> {}),
     ;
     private Runnable action;
