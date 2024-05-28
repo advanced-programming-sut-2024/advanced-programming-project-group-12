@@ -55,13 +55,13 @@ public class MainMenuScreen implements Screen {
     }
 
     private void buttonAndFieldInit() {
-        startGameButton = new TextButton("Start Game", Gwent.singleton.skin);
-        startGameButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
-        table.add(startGameButton).padBottom(20);
-        table.row();
         showProfileButton = new TextButton("Show Profile", Gwent.singleton.skin);
         showProfileButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
         table.add(showProfileButton).padBottom(20);
+        table.row();
+        startGameButton = new TextButton("Start Game", Gwent.singleton.skin);
+        startGameButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
+        table.add(startGameButton).padBottom(20);
         table.row();
         exitButton = new TextButton("Exit", Gwent.singleton.skin);
         exitButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
