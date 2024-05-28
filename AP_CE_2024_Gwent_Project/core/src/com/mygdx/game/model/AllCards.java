@@ -1,7 +1,9 @@
 package com.mygdx.game.model;
 
 public enum AllCards {
-    COMMANDER_HORN(null),
+    //spell cards
+    COMMANDER_HORN(new SpellCard("commander horn", "", Action.NO_ACTION)),
+    SCORCH(new SpellCard("scorch", "", Action.SCORCH))
     ;
     private AbstractCard abstractCard;
 

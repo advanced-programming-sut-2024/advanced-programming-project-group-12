@@ -30,7 +30,8 @@ public enum Action {
         for(PlayableCard i: cardsToBeScorched) {
             i.kill();
         }
-    })
+    }),
+    NO_ACTION(() -> {}),
     ;
     private Runnable action;
 

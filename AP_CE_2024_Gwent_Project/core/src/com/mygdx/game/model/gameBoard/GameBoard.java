@@ -32,6 +32,7 @@ public class GameBoard {
         spellCards.add(spellCard);
         rows.get(row).addSpellCard(player, spellCard);
     }
+
 }
 
 class TwoSideRow {
