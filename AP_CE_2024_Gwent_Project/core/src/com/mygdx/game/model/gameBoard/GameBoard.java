@@ -1,15 +1,13 @@
 package com.mygdx.game.model.gameBoard;
 
-import com.mygdx.game.model.AllCards;
-import com.mygdx.game.model.PlayableCard;
-import com.mygdx.game.model.Player;
-import com.mygdx.game.model.SpellCard;
+import com.mygdx.game.model.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 public class GameBoard {
-    private ArrayList<twoSideRow> rows;
+    private ArrayList<TwoSideRow> rows;
 
     public GameBoard() {
         rows = new ArrayList<>(3);
@@ -18,13 +16,21 @@ public class GameBoard {
     public void addPlayableToBoard(Player player, Rows row, PlayableCard card) {
         rows.get(row.getPosition()).addPlayableCard(player,card);
     }
+
+    public ArrayList<AbstractCard> allPlayerPlayableCards(Player player) {
+        ArrayList<AbstractCard> cards = new ArrayList<>();
+        for(TwoSideRow i: rows) {
+            cards.addAll(i.getAllCards(player));
+        }
+        return cards;
+    }
 }
 
-class twoSideRow {
+class TwoSideRow {
     private HashMap<Player,Row> subRows;
     private SpellCard spellCard;
 
-    public twoSideRow() {
+    public TwoSideRow() {
         this.subRows = new HashMap<>();
         this.spellCard = null;
     }
@@ -38,17 +44,25 @@ class twoSideRow {
     public void addPlayableCard(Player player, PlayableCard playableCard) {
         subRows.get(player).addCard(playableCard);
     }
+
+    public ArrayList<PlayableCard> getAllCards(Player player) {
+        return subRows.get(player).getCards();
+    }
 }
 
 class Row {
-    ArrayList<PlayableCard> cards;
-    boolean isCommanderHornPresent;
+    private ArrayList<PlayableCard> cards;
+    private boolean isCommanderHornPresent;
 
     public void addCard(PlayableCard card) {
         cards.add(card);
     }
     public void addCommanderHorn() {
         isCommanderHornPresent = true;
+    }
+
+    public ArrayList<PlayableCard> getCards() {
+        return cards;
     }
 }
 
