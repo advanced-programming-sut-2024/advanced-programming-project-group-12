@@ -17,7 +17,7 @@ public class Round {
     public boolean isOver() {
         return isOver;
     }
-    public void setOver(boolean over) {
-        isOver = over;
-    }
+
+    public void startRound() {}
+    public void endRound() {}
 }

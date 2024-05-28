@@ -1,11 +1,71 @@
 package com.mygdx.game.model;
 
-public enum Action {
+import com.mygdx.game.model.gameBoard.GameBoard;
 
+import java.util.ArrayList;
+
+public enum Action {
+    SCORCH(() -> {
+        Player opposition = Game.getCurrentGame().getOpposition();
+        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        ArrayList<PlayableCard> allOppositionPlayableCards = gameBoard.allPlayerPlayableCards(opposition);
+
+        if(allOppositionPlayableCards.size() == 0) {
+            return;
+        }
+
+        allOppositionPlayableCards.sort(null);
+
+        ArrayList<PlayableCard> cardsToBeScorched = new ArrayList<>();
+        int maxPower = allOppositionPlayableCards.get(0).getPower();
+        for(PlayableCard i: allOppositionPlayableCards) {
+            if(i.getPower() == maxPower) {
+                cardsToBeScorched.add(i);
+            }
+            else {
+                break;
+            }
+        }
+
+        for(PlayableCard i: cardsToBeScorched) {
+            i.kill();
+        }
+    }),
+
+    //faction actions
+    NORTHERN_REALMS(() -> {
+        Player player1 = Game.getCurrentGame().getCurrentPlayer();
+        Player player2 = Game.getCurrentGame().getOpposition();
+        if(player1.isWon() && player1.getFaction().equals(Faction.NORTHERN_REALMS)) {
+            player1.drawCard();
+        } else if (player2.isWon() && player2.getFaction().equals(Faction.NORTHERN_REALMS)) {
+            player2.drawCard();
+        }
+    }),
+    NILFGAARD(() -> {
+        Player player1 = Game.getCurrentGame().getCurrentPlayer();
+        Player player2 = Game.getCurrentGame().getOpposition();
+        if(player1.getFaction().equals(Faction.EMPIRE_NILFGAARD) && player2.getFaction().equals(Faction.EMPIRE_NILFGAARD)) {
+            return;
+        }
+
+        if(!player1.isWon() && !player2.isWon()) {
+            if(player1.getFaction().equals(Faction.NORTHERN_REALMS) ) {
+                player1.setWon(true);
+            } else if (player2.getFaction().equals(Faction.NORTHERN_REALMS)) {
+                player2.setWon(true);
+            }
+        }
+    }),
+    NO_ACTION(() -> {}),
     ;
     private Runnable action;
 
     Action(Runnable action) {
         this.action = action;
+    }
+
+    public void execute() {
+        action.run();
     }
 }
