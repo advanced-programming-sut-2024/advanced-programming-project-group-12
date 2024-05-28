@@ -60,6 +60,9 @@ public class User {
     }
 
     //getter and setter methods
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
     public void setSecurityQuestion(SecurityQuestion question, String answer) {
         this.securityQuestion.put(question, answer);
     }
@@ -129,7 +132,6 @@ public class User {
         Gson gson = new Gson();
         if(file.exists()) {
             file.delete();
-
         } else {
             file.getParentFile().mkdirs();
         }

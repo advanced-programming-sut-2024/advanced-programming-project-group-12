@@ -32,6 +32,7 @@ public class ProfileMenuScreen implements Screen {
     private TextButton changeEmailButton;
     private TextButton backButton;
     private TextButton logoutButton;
+    private TextButton gameHistoryButton;
     // Text Fields
     private TextField oldPasswordField;
     private TextField newPasswordField;
@@ -117,6 +118,13 @@ public class ProfileMenuScreen implements Screen {
                 ScreenManager.setLoginScreen();
             }
         });
+        gameHistoryButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                dispose();
+                ScreenManager.setUserInfoScreen();
+            }
+        });
     }
 
     private void buttonAndFieldInit() {
@@ -131,6 +139,7 @@ public class ProfileMenuScreen implements Screen {
         changeEmailButton = new TextButton("Change Email", Gwent.singleton.getSkin());
         backButton = new TextButton("Back", Gwent.singleton.getSkin());
         logoutButton = new TextButton("Logout", Gwent.singleton.getSkin());
+        gameHistoryButton = new TextButton("Game History", Gwent.singleton.getSkin());
 
         oldPasswordField = new TextField("", Gwent.singleton.getSkin());
         oldPasswordField.setMessageText("Old Password");
@@ -179,6 +188,7 @@ public class ProfileMenuScreen implements Screen {
         table.add(changeEmailButton).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.row().pad(20);
         table.add(logoutButton).width(FIELD_WIDTH).height(FIELD_HEIGHT);
+        table.add(gameHistoryButton).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.add(backButton).width(FIELD_WIDTH).height(FIELD_HEIGHT);
     }
 
