@@ -18,7 +18,7 @@ public class Game {
         players = new ArrayList<User>();
         date = new Date();
         rounds = new ArrayList<Round>();
-        gameBoard = new GameBoard();
+        gameBoard = new GameBoard(player, opposition);
         currentGame = this;
         this.currentPlayer = player;
         this.opposition = opposition;

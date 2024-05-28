@@ -37,4 +37,8 @@ public enum Action {
     Action(Runnable action) {
         this.action = action;
     }
+
+    public void execute() {
+        action.run();
+    }
 }
