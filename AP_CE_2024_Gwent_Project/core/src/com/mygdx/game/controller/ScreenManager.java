@@ -28,4 +28,7 @@ public class ScreenManager {
         // Set the profile menu screen
         Gwent.singleton.setScreen(new ProfileMenuScreen());
     }
+    public static void setPreGameMenuScreen(){
+        Gwent.singleton.setScreen(new PreGameMenuScreen());
+    }
 }
