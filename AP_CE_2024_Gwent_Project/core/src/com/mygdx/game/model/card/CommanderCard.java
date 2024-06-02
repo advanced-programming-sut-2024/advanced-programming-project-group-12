@@ -1,0 +1,23 @@
+package com.mygdx.game.model.card;
+
+import com.mygdx.game.model.Action;
+
+import java.util.List;
+
+public class CommanderCard extends AbstractCard{
+
+    public CommanderCard(String name, String description, Action action, List<Integer> rows) {
+        super(name, description, action, rows);
+    }
+
+    @Override
+    public void kill() {
+
+    }
+
+    @Override
+    public void place(int row) {
+
+    }
+
+}

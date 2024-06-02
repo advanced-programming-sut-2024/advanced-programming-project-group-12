@@ -2,12 +2,15 @@ package com.mygdx.game.view.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.PreGameMenuController;
+import com.mygdx.game.controller.ScreenManager;
 
 public class PreGameMenuScreen implements Screen {
     private static final float FIELD_WIDTH = 400;
@@ -28,6 +31,7 @@ public class PreGameMenuScreen implements Screen {
     public PreGameMenuScreen() {
         controller = new PreGameMenuController();
         stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
         mainTable = new Table();
         mainTable.setFillParent(true);
         stage.addActor(mainTable);
@@ -38,22 +42,42 @@ public class PreGameMenuScreen implements Screen {
         deck = new Table();
         mainTable.add(deck).expand().fill();
 
+        dashboardInit();
+
+        deck = new Table();
+        mainTable.add(deck).expand().fill();
+    }
+    private void dashboardInit(){
         dashboard = new Table();
         changeFactionButton = new TextButton("Change Faction", Gwent.singleton.skin);
         changeFactionButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
         dashboard.add(changeFactionButton).padBottom(20);
         dashboard.row();
+
         startGameButton = new TextButton("Start Game", Gwent.singleton.skin);
         startGameButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
         dashboard.add(startGameButton).padBottom(20);
+        startGameButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                controller.startGame();
+            }
+        });
         dashboard.row();
+
+
         backButton = new TextButton("Back", Gwent.singleton.skin);
         backButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
         dashboard.add(backButton).padBottom(20);
-        mainTable.add(dashboard).expand().fill();
+        backButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                dispose();
+                controller.gotoMainMenu();
+            }
+        });
 
-        deck = new Table();
-        mainTable.add(deck).expand().fill();
+        dashboard.setFillParent(true);
+        mainTable.add(dashboard).expand().fill();
     }
     @Override
     public void show() {
@@ -92,6 +116,5 @@ public class PreGameMenuScreen implements Screen {
 
     @Override
     public void dispose() {
-
     }
 }

@@ -2,23 +2,28 @@ package com.mygdx.game.model;
 
 import com.mygdx.game.model.gameBoard.GameBoard;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class Game {
     private static Game currentGame;
-    private ArrayList<User> players;
-    private Date date;
-    private ArrayList<Round> rounds;
-    private GameBoard gameBoard;
+    private final List<Player> players;
+    private final LocalDate date;
+    private final ArrayList<Round> rounds;
+    private final GameBoard gameBoard;
     private Player currentPlayer;
     private Player opposition;
 
     public Game(Player player, Player opposition) {
-        players = new ArrayList<User>();
-        date = new Date();
-        rounds = new ArrayList<Round>();
+        players = Arrays.asList(player, opposition);
+
+        date = LocalDate.now();
+        rounds = new ArrayList<>();
         gameBoard = new GameBoard(player, opposition);
+
         currentGame = this;
         this.currentPlayer = player;
         this.opposition = opposition;
@@ -26,10 +31,6 @@ public class Game {
 
     public static Game getCurrentGame() {
         return currentGame;
-    }
-
-    public static void setCurrentGame(Game currentGame) {
-        Game.currentGame = currentGame;
     }
 
     public Player getCurrentPlayer() {

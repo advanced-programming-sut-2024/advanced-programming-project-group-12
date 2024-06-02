@@ -1,6 +1,10 @@
 package com.mygdx.game.model;
 
+import com.mygdx.game.model.card.AbstractCard;
+import com.mygdx.game.model.card.AllCards;
+import com.mygdx.game.model.card.SpellCard;
 import com.mygdx.game.model.gameBoard.GameBoard;
+import com.mygdx.game.model.card.PlayableCard;
 
 import java.util.ArrayList;
 
@@ -31,6 +35,18 @@ public enum Action {
             i.kill();
         }
     }),
+    TIGHT_BOND(() -> {
+    }),
+    MEDIC(() -> {
+        // should open a menu in game screen to choose from one card of the below list
+        Player player = Game.getCurrentGame().getCurrentPlayer();
+        ArrayList<AbstractCard> discard = Game.getCurrentGame().getGameBoard().getDiscard(player);
+        AbstractCard chosenCard;
+//        chosenCard.place();
+    }),
+    SPY(() -> {
+
+    }),
 
     //faction actions
     NORTHERN_REALMS(() -> {
@@ -56,6 +72,11 @@ public enum Action {
                 player2.setWon(true);
             }
         }
+    }),
+
+    //leader actions
+    FOLTEST1(() -> {
+        AllCards.COMMANDER_HORN.getAbstractCard().place(2);
     }),
     NO_ACTION(() -> {}),
     ;
