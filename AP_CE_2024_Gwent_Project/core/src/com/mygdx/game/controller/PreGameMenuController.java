@@ -13,11 +13,20 @@ public class PreGameMenuController {
     }
 
     public void startGame() {
+        //hard coding a deck
         CommanderCard commanderCard = (CommanderCard) AllCards.FOLTEST1.getAbstractCard();
         ArrayList<AbstractCard> deck = new ArrayList<>();
+        deck.add(AllCards.COMMANDER_HORN.getAbstractCard());
+        deck.add(AllCards.SCORCH.getAbstractCard());
+        deck.add(AllCards.YENNEFER_OF_VENGENBERG.getAbstractCard());
+        deck.add(AllCards.KIERA_METZ.getAbstractCard());
+        deck.add(AllCards.POOR_FUCKING_INFANTRY.getAbstractCard());
+        deck.add(AllCards.CIRILLA_FIONA_ELEN_RIANNON.getAbstractCard());
+
 
         Faction faction = Faction.NORTHERN_REALMS;
         Player player = new Player(User.getLoggedInUser(), commanderCard, deck, faction);
         new Game(player, player);
+        ScreenManager.setGameMenuScreen();
     }
 }

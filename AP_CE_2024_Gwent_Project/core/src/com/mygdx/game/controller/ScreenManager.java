@@ -31,4 +31,8 @@ public class ScreenManager {
     public static void setPreGameMenuScreen(){
         Gwent.singleton.setScreen(new PreGameMenuScreen());
     }
+
+    public static void setGameMenuScreen() {
+        //TODO voila
+    }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 public class Game {
     private static Game currentGame;
     private final List<Player> players;
-    private final LocalDate date;
+//    private final LocalDate date;
     private final ArrayList<Round> rounds;
     private final GameBoard gameBoard;
     private Player currentPlayer;
@@ -20,7 +20,7 @@ public class Game {
     public Game(Player player, Player opposition) {
         players = Arrays.asList(player, opposition);
 
-        date = LocalDate.now();
+//        date = LocalDate.now();
         rounds = new ArrayList<>();
         gameBoard = new GameBoard(player, opposition);
 

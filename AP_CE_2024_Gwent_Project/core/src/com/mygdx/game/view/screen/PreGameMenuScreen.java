@@ -59,6 +59,7 @@ public class PreGameMenuScreen implements Screen {
         dashboard.add(startGameButton).padBottom(20);
         startGameButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
+                dispose();
                 controller.startGame();
             }
         });
