@@ -10,7 +10,7 @@ public class MainMenuController {
 
 
     public void startGame() {
-        Gwent.singleton.setScreen(new GameScreen());
+        ScreenManager.setPreGameMenuScreen();
     }
 
 
