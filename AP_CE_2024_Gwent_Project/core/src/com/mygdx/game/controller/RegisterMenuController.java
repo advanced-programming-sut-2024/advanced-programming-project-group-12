@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.mygdx.game.model.SecurityQuestion;
 import com.mygdx.game.model.User;
-import com.mygdx.game.view.screen.ValidInputs;
+import com.mygdx.game.view.ValidInputs;
 
 import java.util.Random;
 

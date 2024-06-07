@@ -12,11 +12,6 @@ public class LoginMenuController {
     public static void Login(String username) {
         User.setLoggedInUser(User.getUserByUsername(username));
     }
-
-    public static void forgetPassword(String username) {
-
-    }
-
     public static void goToRegisterMenu() {
         ScreenManager.setRegisterScreen();
     }

@@ -1,7 +1,6 @@
 package com.mygdx.game.controller;
 
 import com.mygdx.game.model.User;
-import com.mygdx.game.view.screen.ValidInputs;
 
 import java.util.ArrayList;
 

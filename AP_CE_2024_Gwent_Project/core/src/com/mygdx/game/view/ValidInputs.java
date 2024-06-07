@@ -1,4 +1,4 @@
-package com.mygdx.game.view.screen;
+package com.mygdx.game.view;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
