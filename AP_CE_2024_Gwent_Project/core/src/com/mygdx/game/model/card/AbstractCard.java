@@ -9,12 +9,14 @@ public abstract class AbstractCard implements Cloneable{
     private String name;
     private String description;
     Action action;
+    private Integer typeNumber;
 
-    public AbstractCard(String name, String description, Action action, List<Integer> rows) {
+    public AbstractCard(String name, String description, Action action, List<Integer> rows, Integer typeNumber) {
         allowableRows = rows;
         this.name = name;
         this.description = description;
         this.action = action;
+        this.typeNumber = typeNumber;
     }
 
     public String getName() {

@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.PreGameMenuController;
-import com.mygdx.game.controller.ScreenManager;
 
 public class PreGameMenuScreen implements Screen {
     private static final float FIELD_WIDTH = 400;

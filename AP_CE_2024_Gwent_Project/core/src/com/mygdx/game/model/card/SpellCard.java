@@ -7,8 +7,8 @@ import com.mygdx.game.model.Player;
 import java.util.List;
 
 public class SpellCard extends AbstractCard {
-    public SpellCard(String name, String description, Action action, List<Integer> rows) {
-        super(name, description, action, rows);
+    public SpellCard(String name, String description, Action action, List<Integer> rows, Integer typeNumber) {
+        super(name, description, action, rows, typeNumber);
     }
 
     @Override

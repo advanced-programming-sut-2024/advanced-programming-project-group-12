@@ -10,8 +10,8 @@ import java.util.List;
 public class PlayableCard extends AbstractCard {
     private int power;
     private int row;
-    public PlayableCard(String name, String description, Action action, List<Integer> rows , int power) {
-        super(name, description, action, rows);
+    public PlayableCard(String name, String description, Action action, List<Integer> rows , int power, Integer typeNumber) {
+        super(name, description, action, rows, typeNumber);
         this.power = power;
     }
 
