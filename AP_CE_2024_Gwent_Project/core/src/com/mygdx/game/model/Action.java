@@ -73,12 +73,15 @@ public enum Action {
         }
     }),
     MORALE(() -> {}),
+    COW(null), HORN(null),
+    MUSKET(null),
 
     //leader actions,
     FOLTEST1(() -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(2);
     }),
-    NO_ACTION(() -> {}), COW(null), HORN(null);
+    NO_ACTION(() -> {})
+    ;
     private Runnable action;
 
     Action(Runnable action) {
