@@ -1,6 +1,7 @@
 package com.mygdx.game.model.card;
 
 import com.mygdx.game.model.Action;
+import com.mygdx.game.model.Faction;
 
 import java.util.List;
 
@@ -9,14 +10,16 @@ public abstract class AbstractCard implements Cloneable{
     private String name;
     private String description;
     Action action;
-    private Integer typeNumber;
+    private String  typeNumber;
+    private Faction faction;
 
-    public AbstractCard(String name, String description, Action action, List<Integer> rows, Integer typeNumber) {
+    public AbstractCard(String name, String description, Action action, List<Integer> rows, Integer typeNumber, Faction faction) {
         allowableRows = rows;
         this.name = name;
         this.description = description;
         this.action = action;
-        this.typeNumber = typeNumber;
+        this.typeNumber = typeNumber == null? "" : typeNumber.toString();
+        this.faction = faction;
     }
 
     public String getName() {
@@ -48,5 +51,10 @@ public abstract class AbstractCard implements Cloneable{
     public boolean equals(Object obj) {
         if(!(obj instanceof AbstractCard)) return false;
         return name.equals(((AbstractCard) obj).name);
+    }
+
+
+    private String getAssetName() {
+        return faction.getName()+ "_" + name + "_"+ typeNumber;
     }
 }

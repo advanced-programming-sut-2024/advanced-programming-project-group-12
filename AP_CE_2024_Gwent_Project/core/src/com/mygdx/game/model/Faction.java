@@ -2,12 +2,14 @@ package com.mygdx.game.model;
 
 
 public enum Faction {
-    MONSTERS("Monsters"),
-    NORTHERN_REALMS("Northern Realms"),
-    SCOIATAEL("Scoiatael"),
-    EMPIRE_NILFGAARD("Empire Nilfgaard"),
-    SKELLIGE("Skellige"),
-    NEUTRAL("Neutral")
+    MONSTERS("monsters"),
+    NORTHERN_REALMS("realms"),
+    SCOIATAEL("scoiatael"),
+    EMPIRE_NILFGAARD("nilfgaard"),
+    SKELLIGE("skellige"),
+    NEUTRAL("neutral"),
+    SPECIAL("special"),
+    WEATHER("weather")
     ;
     private String name;
     private Runnable Action;
@@ -19,5 +21,7 @@ public enum Faction {
     public String getName() {
         return name;
     }
-
+    public String getAssetFileName() {
+        return "faction_" + name;
+    }
 }

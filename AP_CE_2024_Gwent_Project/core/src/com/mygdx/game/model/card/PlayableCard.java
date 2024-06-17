@@ -1,17 +1,17 @@
 package com.mygdx.game.model.card;
 
 import com.mygdx.game.model.Action;
+import com.mygdx.game.model.Faction;
 import com.mygdx.game.model.Game;
 import com.mygdx.game.model.Player;
-import com.mygdx.game.model.card.AbstractCard;
 
 import java.util.List;
 
 public class PlayableCard extends AbstractCard {
     private int power;
     private int row;
-    public PlayableCard(String name, String description, Action action, List<Integer> rows , int power, Integer typeNumber) {
-        super(name, description, action, rows, typeNumber);
+    public PlayableCard(String name, String description, Action action, List<Integer> rows , int power, Integer typeNumber, Faction faction) {
+        super(name, description, action, rows, typeNumber, faction);
         this.power = power;
     }
 
