@@ -2,7 +2,6 @@ package com.mygdx.game.model;
 
 import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.card.AllCards;
-import com.mygdx.game.model.card.SpellCard;
 import com.mygdx.game.model.gameBoard.GameBoard;
 import com.mygdx.game.model.card.PlayableCard;
 
@@ -61,7 +60,7 @@ public enum Action {
     NILFGAARD(() -> {
         Player player1 = Game.getCurrentGame().getCurrentPlayer();
         Player player2 = Game.getCurrentGame().getOpposition();
-        if(player1.getFaction().equals(Faction.EMPIRE_NILFGAARD) && player2.getFaction().equals(Faction.EMPIRE_NILFGAARD)) {
+        if(player1.getFaction().equals(Faction.NILFGAARD) && player2.getFaction().equals(Faction.NILFGAARD)) {
             return;
         }
 
@@ -73,13 +72,13 @@ public enum Action {
             }
         }
     }),
+    MORALE(() -> {}),
 
-    //leader actions
+    //leader actions,
     FOLTEST1(() -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(2);
     }),
-    NO_ACTION(() -> {}),
-    ;
+    NO_ACTION(() -> {}), COW(null), HORN(null);
     private Runnable action;
 
     Action(Runnable action) {

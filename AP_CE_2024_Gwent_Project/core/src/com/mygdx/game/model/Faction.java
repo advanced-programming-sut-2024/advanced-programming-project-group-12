@@ -5,7 +5,7 @@ public enum Faction {
     MONSTERS("monsters"),
     NORTHERN_REALMS("realms"),
     SCOIATAEL("scoiatael"),
-    EMPIRE_NILFGAARD("nilfgaard"),
+    NILFGAARD("nilfgaard"),
     SKELLIGE("skellige"),
     NEUTRAL("neutral"),
     SPECIAL("special"),
