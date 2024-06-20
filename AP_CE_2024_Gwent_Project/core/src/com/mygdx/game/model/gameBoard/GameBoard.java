@@ -20,7 +20,7 @@ public class GameBoard {
         spellCards = new ArrayList<>();
     }
 
-    public void addCard(Player player, int row, PlayableCard card) {
+    public void addCard(Player player, int row, AbstractCard card) {
         rows.get(row).addCard(player,card);
     }
 
