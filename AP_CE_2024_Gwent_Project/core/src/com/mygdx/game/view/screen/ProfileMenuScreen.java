@@ -26,6 +26,7 @@ public class ProfileMenuScreen implements Screen {
     private Label currentUsernameLabel;
     private Label currentEmailLabel;
     private Label currentNicknameLabel;
+    private Label factionLabel;
     // Buttons
     private TextButton changePasswordButton;
     private TextButton changeUsernameButton;
@@ -126,6 +127,8 @@ public class ProfileMenuScreen implements Screen {
         currentUsernameLabel = new Label("Username: " + profileInfo.get(0), Gwent.singleton.getSkin());
         currentEmailLabel = new Label("Email: " + profileInfo.get(2), Gwent.singleton.getSkin());
         currentNicknameLabel = new Label("Nickname: " + profileInfo.get(1), Gwent.singleton.getSkin());
+        factionLabel = new Label("Faction: " + profileInfo.get(3), Gwent.singleton.getSkin());
+
 
         changePasswordButton = new TextButton("Change Password", Gwent.singleton.getSkin());
         changeUsernameButton = new TextButton("Change Username", Gwent.singleton.getSkin());
@@ -162,7 +165,8 @@ public class ProfileMenuScreen implements Screen {
         table.add(currentEmailLabel);
         table.row().pad(10);
         table.add(currentNicknameLabel);
-        table.row().pad(20);
+        table.add(factionLabel);
+        table.row().pad(10);
 
         table.add(oldPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.add(newPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
