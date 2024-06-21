@@ -220,9 +220,6 @@ public enum AllCards {
     YOUNG_BERSERKER(new PlayableCard("young berseker", "", Action.BEAR, Arrays.asList(1), 2, null, Faction.SKELLIGE)),
     YOUNG_VILDKAARL(new PlayableCard("young vildkaarl", "", Action.TIGHT_BOND, Arrays.asList(1), 8, null, Faction.SKELLIGE)),
 
-
-    //leader cards
-    FOLTEST1(new CommanderCard("foltest king of temeria", "" , Action.FOLTEST1, null)),
     ;
     private final AbstractCard abstractCard;
     private final static HashMap<Faction, ArrayList<AbstractCard>> faction = new HashMap<>();
@@ -239,14 +236,14 @@ public enum AllCards {
         }
     }
 
+    public static ArrayList<AbstractCard> getFactionCardByFaction(Faction faction) {
+        return AllCards.faction.get(faction);
+    }
+
     private AbstractCard getCard() {return abstractCard;}
 
     public AbstractCard getAbstractCard() {
         return abstractCard.clone();
-    }
-
-    public ArrayList<AbstractCard> getFactionCardByFaction(Faction faction) {
-        return AllCards.faction.get(faction);
     }
 
 }

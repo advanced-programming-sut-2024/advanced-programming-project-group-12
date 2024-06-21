@@ -4,6 +4,7 @@ import com.mygdx.game.model.*;
 import com.mygdx.game.model.card.AllCards;
 import com.mygdx.game.model.card.CommanderCard;
 import com.mygdx.game.model.card.AbstractCard;
+import com.mygdx.game.model.card.CommanderCards;
 
 import java.util.ArrayList;
 
@@ -14,7 +15,7 @@ public class PreGameMenuController {
 
     public void startGame() {
         //hard coding a deck
-        CommanderCard commanderCard = (CommanderCard) AllCards.FOLTEST1.getAbstractCard();
+        CommanderCard commanderCard = (CommanderCard) CommanderCards.FOLTEST1.getAbstractCard();
         ArrayList<AbstractCard> deck = new ArrayList<>();
         deck.add(AllCards.COMMANDER_HORN.getAbstractCard());
         deck.add(AllCards.SCORCH.getAbstractCard());
