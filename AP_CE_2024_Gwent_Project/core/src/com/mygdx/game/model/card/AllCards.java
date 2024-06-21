@@ -12,7 +12,10 @@ import java.util.HashMap;
 public enum AllCards {
     //special cards
     COMMANDER_HORN(new SpellCard("commander horn", "", Action.HORN, Arrays.asList(0,1,2), null, Faction.SPECIAL)),
-    SCORCH(new SpellCard("scorch", "", Action.SCORCH, null, null, Faction.SPECIAL)),
+    SCORCH(new SpellCard("scorch", "", Action.SCORCH, null, null, Faction.SPECIAL) {
+        @Override
+        public void place(int row) {}
+    }),
     DECOY(new Decoy("decoy", "", Action.DECOY, Arrays.asList(0,1,2), null, Faction.SPECIAL)),
     MARDROEME(new SpellCard("mardroeme", "", Action.MUSHROOM, Arrays.asList(0,1,2), null, Faction.SPECIAL)),
 
@@ -25,7 +28,7 @@ public enum AllCards {
 
 
     //northern realms
-    KIERA_METZ(new PlayableCard("kiera metz", "", Action.NO_ACTION, Arrays.asList(1), 5, null, Faction.NORTHERN_REALMS)),
+    KEIRA_METZ(new PlayableCard("keira metz", "", Action.NO_ACTION, Arrays.asList(1), 5, null, Faction.NORTHERN_REALMS)),
     POOR_FUCKING_INFANTRY(new PlayableCard("poor fucking infantry", "", Action.TIGHT_BOND, Arrays.asList(0), 1, null, Faction.NORTHERN_REALMS)),
     BALLISTA(new PlayableCard("ballista", "", Action.NO_ACTION, Arrays.asList(2), 6, null, Faction.NORTHERN_REALMS)),
     BLUE_STRIPES_COMMANDO(new PlayableCard("blue stripes commando", "", Action.TIGHT_BOND, Arrays.asList(0), 4, null, Faction.NORTHERN_REALMS)),

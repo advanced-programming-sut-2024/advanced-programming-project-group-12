@@ -18,7 +18,7 @@ public abstract class AbstractCard implements Cloneable{
         this.name = name;
         this.description = description;
         this.action = action;
-        this.typeNumber = typeNumber == null? "" : typeNumber.toString();
+        this.typeNumber = typeNumber == null? "" :"_"+ typeNumber.toString();
         this.faction = faction;
     }
 
@@ -56,8 +56,7 @@ public abstract class AbstractCard implements Cloneable{
         return name.equals(((AbstractCard) obj).name);
     }
 
-
     private String getAssetName() {
-        return faction.getName()+ "_" + name + "_"+ typeNumber;
+        return "cards/" + faction.getName()+ "_" + name + typeNumber + ".jpg";
     }
 }

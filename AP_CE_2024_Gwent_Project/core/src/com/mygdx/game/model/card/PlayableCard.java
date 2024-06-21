@@ -29,7 +29,6 @@ public class PlayableCard extends AbstractCard {
 
     @Override
     public void place(int row) {
-        doAction();
         Player player;
         if(action.equals(Action.SPY)) {
             player = Game.getCurrentGame().getOpposition();
@@ -37,6 +36,7 @@ public class PlayableCard extends AbstractCard {
         else {
             player = Game.getCurrentGame().getCurrentPlayer();
         }
+        doAction();
         Game.getCurrentGame().getGameBoard().addCard(player, row, this);
     }
 }

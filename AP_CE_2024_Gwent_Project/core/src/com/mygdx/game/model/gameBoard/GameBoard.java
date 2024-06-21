@@ -2,7 +2,6 @@ package com.mygdx.game.model.gameBoard;
 
 import com.mygdx.game.model.*;
 import com.mygdx.game.model.card.AbstractCard;
-import com.mygdx.game.model.card.AllCards;
 import com.mygdx.game.model.card.PlayableCard;
 import com.mygdx.game.model.card.SpellCard;
 
@@ -38,6 +37,28 @@ public class GameBoard {
         return cards;
     }
 
+    public ArrayList<PlayableCard> getRow(Player player, int row) {
+        /**
+         * returns all cards associated with a row of index row and for the player.
+         */
+        if(row < 3 && row >= 0) {
+            return rows.get(player).get(row).getCards();
+        }
+        else {
+            System.err.println("Inalid row input");
+            return null;
+        }
+    }
+
+    public ArrayList<SpellCard> getWeatherCards() {
+        return weatherCards;
+    }
+
+    public int getRowStrength(int row) {
+        //todo
+        return 0;
+    }
+
     public ArrayList<AbstractCard> getDiscard(Player player) {
         return discard.getDiscard(player);
     }
@@ -60,6 +81,7 @@ class Row {
         } else if(card instanceof SpellCard) {
             spellCards.add((SpellCard) card);
         }
+        cards.sort(null);
     }
 
     public ArrayList<PlayableCard> getCards() {

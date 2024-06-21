@@ -21,7 +21,7 @@ public enum Faction {
 
     private static final HashMap<String, Faction> allFactions = new HashMap<>();
 
-    private Faction(String name) {
+    Faction(String name) {
         this.name = name;
     }
 
@@ -36,7 +36,7 @@ public enum Faction {
     }
 
     public String getAssetFileName() {
-        return "faction_" + name;
+        return "cards/" + "faction_" + name + ".jpg";
     }
 
     public static Faction getFactionByName(String name) {

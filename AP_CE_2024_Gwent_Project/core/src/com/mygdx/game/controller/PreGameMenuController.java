@@ -18,7 +18,7 @@ public class PreGameMenuController {
 
     public void startGame() {
         //hard coding a deck
-        CommanderCard commanderCard = (CommanderCard) CommanderCards.FOLTEST1.getAbstractCard();
+        CommanderCard commanderCard = CommanderCards.FOLTEST_SIEGE.getAbstractCard();
         ArrayList<AbstractCard> deck = new ArrayList<>();
         deck.add(AllCards.COMMANDER_HORN.getAbstractCard());
         deck.add(AllCards.SCORCH.getAbstractCard());

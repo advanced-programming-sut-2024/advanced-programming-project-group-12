@@ -17,7 +17,7 @@ public enum Action {
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
         ArrayList<PlayableCard> allOppositionPlayableCards = gameBoard.allPlayerPlayableCards(opposition);
 
-        if(allOppositionPlayableCards.size() == 0) {
+        if(allOppositionPlayableCards.isEmpty()) {
             return;
         }
 
@@ -35,6 +35,66 @@ public enum Action {
         }
 
         for(PlayableCard i: cardsToBeScorched) {
+            i.kill();
+        }
+    }),
+    SCORCH_S(() -> {
+        Player opposition = Game.getCurrentGame().getOpposition();
+        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        ArrayList<PlayableCard> row = gameBoard.getRow(opposition, 2);
+        if(gameBoard.getRowStrength(2)  < 10) return;
+
+        row.sort(null); //sort cards based on power
+        ArrayList<PlayableCard> cardsToBeKilled = new ArrayList<>();
+        for(PlayableCard i: row) {
+            if(i.getPower() == row.get(0).getPower()) {
+                cardsToBeKilled.add(i);
+            } else {
+                break;
+            }
+        }
+
+        for(PlayableCard i: cardsToBeKilled) {
+            i.kill();
+        }
+    }),
+    SCORCH_R(() -> {
+        Player opposition = Game.getCurrentGame().getOpposition();
+        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        ArrayList<PlayableCard> row = gameBoard.getRow(opposition, 1);
+        if(gameBoard.getRowStrength(1)  < 10) return;
+
+        row.sort(null); //sort cards based on power
+        ArrayList<PlayableCard> cardsToBeKilled = new ArrayList<>();
+        for(PlayableCard i: row) {
+            if(i.getPower() == row.get(0).getPower()) {
+                cardsToBeKilled.add(i);
+            } else {
+                break;
+            }
+        }
+
+        for(PlayableCard i: cardsToBeKilled) {
+            i.kill();
+        }
+    }),
+    SCORCH_C(() -> {
+        Player opposition = Game.getCurrentGame().getOpposition();
+        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        ArrayList<PlayableCard> row = gameBoard.getRow(opposition, 0);
+        if(gameBoard.getRowStrength(0)  < 10) return;
+
+        row.sort(null); //sort cards based on power
+        ArrayList<PlayableCard> cardsToBeKilled = new ArrayList<>();
+        for(PlayableCard i: row) {
+            if(i.getPower() == row.get(0).getPower()) {
+                cardsToBeKilled.add(i);
+            } else {
+                break;
+            }
+        }
+
+        for(PlayableCard i: cardsToBeKilled) {
             i.kill();
         }
     }),
@@ -88,9 +148,16 @@ public enum Action {
     RAIN(null),
     STORM(null),
     //leader actions,
-    FOLTEST1(() -> {
+    FOLTEST_SIEGE(() -> {
+        AllCards.FOG.getAbstractCard().place(3);
+    }),
+    FOLTEST_STEEL(() -> {
+        AllCards.CLEAR.getAbstractCard().place(3);
+    }),
+    FOLTEST_KING(() -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(2);
     }),
+
     NO_ACTION(() -> {}),
     ;
     private Runnable action;
