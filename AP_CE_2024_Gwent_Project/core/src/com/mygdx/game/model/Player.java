@@ -6,8 +6,6 @@ import com.mygdx.game.model.card.AbstractCard;
 import java.util.ArrayList;
 
 public class Player {
-    private static Player currentPlayer;
-
     private User user;
     private CommanderCard leader;
     private ArrayList<AbstractCard> deck;
@@ -21,17 +19,6 @@ public class Player {
         this.deck = deck;
         this.faction = faction;
         this.roundsLost = 0;
-    }
-
-    public static Player getCurrentPlayer() {
-        if (currentPlayer == null){
-            currentPlayer = new Player(User.getLoggedInUser(), null, null, null);
-        }
-        return currentPlayer;
-    }
-
-    public static void setCurrentPlayer(Player player) {
-        currentPlayer = player;
     }
 
     public boolean isWon() {

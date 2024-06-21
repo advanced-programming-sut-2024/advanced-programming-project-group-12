@@ -37,8 +37,16 @@ public class Game {
         return currentPlayer;
     }
 
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
     public Player getOpposition() {
         return opposition;
+    }
+
+    public void setOpposition(Player opposition) {
+        this.opposition = opposition;
     }
 
     public GameBoard getGameBoard() {

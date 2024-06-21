@@ -7,6 +7,7 @@ import com.mygdx.game.model.card.SpellCard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class GameBoard {
     private HashMap<Player, ArrayList<Row>> rows;
@@ -27,6 +28,10 @@ public class GameBoard {
 
     public void addCard(Player player, int row, SpellCard spellCard) {
         rows.get(player).get(row).addCard(spellCard);
+    }
+
+    public void removeCard(AbstractCard abstractCard, int row, Player player) {
+        rows.get(player).get(row).getCards().remove(abstractCard);
     }
 
     public ArrayList<PlayableCard> allPlayerPlayableCards(Player player) {

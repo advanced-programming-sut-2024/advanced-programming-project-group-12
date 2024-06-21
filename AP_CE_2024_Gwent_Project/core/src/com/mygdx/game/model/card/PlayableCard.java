@@ -24,7 +24,7 @@ public class PlayableCard extends AbstractCard {
 
     @Override
     public void kill() {
-
+        Player player = Player.getCurrentPlayer();
     }
 
     @Override
@@ -36,6 +36,7 @@ public class PlayableCard extends AbstractCard {
         else {
             player = Game.getCurrentGame().getCurrentPlayer();
         }
+        this.row = row;
         doAction();
         Game.getCurrentGame().getGameBoard().addCard(player, row, this);
     }

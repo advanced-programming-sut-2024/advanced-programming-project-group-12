@@ -9,7 +9,7 @@ import com.mygdx.game.model.card.CommanderCards;
 import java.util.ArrayList;
 
 public class PreGameMenuController {
-    Player player = Player.getCurrentPlayer();
+    Player player = Game.getCurrentGame().getCurrentPlayer();
     User user = User.getLoggedInUser();
 
     public void gotoMainMenu() {
@@ -23,14 +23,16 @@ public class PreGameMenuController {
         deck.add(AllCards.COMMANDER_HORN.getAbstractCard());
         deck.add(AllCards.SCORCH.getAbstractCard());
         deck.add(AllCards.YENNEFER_OF_VENGENBERG.getAbstractCard());
-        deck.add(AllCards.KIERA_METZ.getAbstractCard());
+        deck.add(AllCards.KEIRA_METZ.getAbstractCard());
         deck.add(AllCards.POOR_FUCKING_INFANTRY.getAbstractCard());
         deck.add(AllCards.CIRILLA_FIONA_ELEN_RIANNON.getAbstractCard());
 
         Faction faction = Faction.NORTHERN_REALMS;
         Player player = new Player(User.getLoggedInUser(), commanderCard, deck, faction);
-        Player.setCurrentPlayer(player); // Set the current player
+
         new Game(player, player);
+        Game.getCurrentGame().setCurrentPlayer(player); // Set the current player
+        Game.getCurrentGame().setOpposition(player);
         ScreenManager.setGameMenuScreen();
     }
 
