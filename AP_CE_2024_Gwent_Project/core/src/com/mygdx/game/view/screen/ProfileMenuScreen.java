@@ -3,6 +3,9 @@ package com.mygdx.game.view.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -22,6 +25,7 @@ public class ProfileMenuScreen implements Screen {
     private final Table table;
     private Window errorWindow;
     private Window successWindow;
+    private TextureRegion backgroundTexture; // Texture for background image
     // Labels
     private Label currentUsernameLabel;
     private Label currentEmailLabel;
@@ -45,7 +49,6 @@ public class ProfileMenuScreen implements Screen {
     private final ProfileMenuController controller;
 
     public ProfileMenuScreen() {
-
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         table = new Table();
@@ -54,72 +57,13 @@ public class ProfileMenuScreen implements Screen {
 
         controller = new ProfileMenuController();
 
+        // Load background image
+        backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("backgrounds/main_background.png")));
+
         buttonAndFieldInit();
 
-        changePasswordButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if(controller.changePassword(oldPasswordField.getText(), newPasswordField.getText(), confirmPasswordField.getText())) {
-                    showSuccess("Password changed successfully");
-                }
-                else {
-                    showError("Passwords should match and be valid! ");
-                }
-                updateLabels();
-            }
-        });
-
-        changeUsernameButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (controller.changeUsername(newUsernameField.getText())){
-                    showSuccess("Username changed successfully");
-                }
-                else {
-                    showError("Username is either invalid or already taken");
-                }
-                updateLabels();
-            }
-        });
-
-        changeNicknameButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (controller.changeNickname(newNicknameField.getText())) {
-                    showSuccess("Nickname changed successfully");
-                }
-                updateLabels();
-            }
-        });
-
-        changeEmailButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (controller.changeEmail(newEmailField.getText())){
-                    showSuccess("Email changed successfully");
-                }
-                else {
-                    showError("Email is invalid");
-                };
-                updateLabels();
-            }
-        });
-
-        backButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                dispose();
-                ScreenManager.setMainMenuScreen();
-            }
-        });
-        logoutButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                controller.logout();
-                dispose();
-                ScreenManager.setLoginScreen();
-            }
-        });
+        // Listeners for buttons
+        setupListeners();
     }
 
     private void buttonAndFieldInit() {
@@ -128,7 +72,6 @@ public class ProfileMenuScreen implements Screen {
         currentEmailLabel = new Label("Email: " + profileInfo.get(2), Gwent.singleton.getSkin());
         currentNicknameLabel = new Label("Nickname: " + profileInfo.get(1), Gwent.singleton.getSkin());
         factionLabel = new Label("Faction: " + profileInfo.get(3), Gwent.singleton.getSkin());
-
 
         changePasswordButton = new TextButton("Change Password", Gwent.singleton.getSkin());
         changeUsernameButton = new TextButton("Change Username", Gwent.singleton.getSkin());
@@ -161,6 +104,7 @@ public class ProfileMenuScreen implements Screen {
         newEmailField = new TextField("", Gwent.singleton.getSkin());
         newEmailField.setMessageText("New Email");
 
+        // Add components to table
         table.add(currentUsernameLabel);
         table.add(currentEmailLabel);
         table.row().pad(10);
@@ -188,11 +132,77 @@ public class ProfileMenuScreen implements Screen {
         table.add(backButton).width(FIELD_WIDTH).height(FIELD_HEIGHT);
     }
 
+    private void setupListeners() {
+        changePasswordButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (controller.changePassword(oldPasswordField.getText(), newPasswordField.getText(), confirmPasswordField.getText())) {
+                    showSuccess("Password changed successfully");
+                } else {
+                    showError("Passwords should match and be valid! ");
+                }
+                updateLabels();
+            }
+        });
+
+        changeUsernameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (controller.changeUsername(newUsernameField.getText())) {
+                    showSuccess("Username changed successfully");
+                } else {
+                    showError("Username is either invalid or already taken");
+                }
+                updateLabels();
+            }
+        });
+
+        changeNicknameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (controller.changeNickname(newNicknameField.getText())) {
+                    showSuccess("Nickname changed successfully");
+                }
+                updateLabels();
+            }
+        });
+
+        changeEmailButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (controller.changeEmail(newEmailField.getText())) {
+                    showSuccess("Email changed successfully");
+                } else {
+                    showError("Email is invalid");
+                }
+                updateLabels();
+            }
+        });
+
+        backButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                dispose();
+                ScreenManager.setMainMenuScreen();
+            }
+        });
+
+        logoutButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.logout();
+                dispose();
+                ScreenManager.setLoginScreen();
+            }
+        });
+    }
+
     private void updateLabels() {
         ArrayList<String> profileInfo = controller.showProfile();
         currentUsernameLabel.setText("Username: " + profileInfo.get(0));
         currentEmailLabel.setText("Email: " + profileInfo.get(2));
         currentNicknameLabel.setText("Nickname: " + profileInfo.get(1));
+        factionLabel.setText("Faction: " + profileInfo.get(3));
     }
 
     private void showError(String message) {
@@ -209,7 +219,6 @@ public class ProfileMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 errorWindow.setVisible(false);
-
             }
         });
         errorWindow.add(errorLabel);
@@ -247,8 +256,13 @@ public class ProfileMenuScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
-        Gwent.singleton.getBatch().begin();
-        Gwent.singleton.getBatch().end();
+
+        // Draw background
+        SpriteBatch batch = Gwent.singleton.getBatch();
+        batch.begin();
+        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.end();
+
         stage.act();
         stage.draw();
     }

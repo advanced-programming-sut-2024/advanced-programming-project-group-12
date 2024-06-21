@@ -23,7 +23,7 @@ public class PreGameMenuController {
         deck.add(AllCards.COMMANDER_HORN.getAbstractCard());
         deck.add(AllCards.SCORCH.getAbstractCard());
         deck.add(AllCards.YENNEFER_OF_VENGENBERG.getAbstractCard());
-        deck.add(AllCards.KIERA_METZ.getAbstractCard());
+        deck.add(AllCards.KEIRA_METZ.getAbstractCard());
         deck.add(AllCards.POOR_FUCKING_INFANTRY.getAbstractCard());
         deck.add(AllCards.CIRILLA_FIONA_ELEN_RIANNON.getAbstractCard());
 
@@ -37,5 +37,6 @@ public class PreGameMenuController {
     public void setFaction(String factionName) {
         Faction faction = Faction.getFactionByName(factionName);
         user.setFaction(faction);
+        user.updateInfo();
     }
 }
