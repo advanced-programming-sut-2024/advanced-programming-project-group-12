@@ -10,28 +10,30 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GameBoard {
-    private ArrayList<TwoSideRow> rows;
+    private HashMap<Player, ArrayList<Row>> rows;
     private Discard discard;
-    private ArrayList<SpellCard> spellCards;
+    private ArrayList<SpellCard> weatherCards;
 
     public GameBoard(Player player1, Player player2) {
-        rows = new ArrayList<>(3);
+        rows = new HashMap<>(2);
+        rows.put(player1, new ArrayList<>());
+        rows.put(player2, new ArrayList<>());
         discard = new Discard(player1, player2);
-        spellCards = new ArrayList<>();
+        weatherCards = new ArrayList<>();
     }
 
-    public void addCard(Player player, int row, AbstractCard card) {
-        rows.get(row).addCard(player,card);
+    public void addCard(Player player, int row, PlayableCard card) {
+        rows.get(player).get(row).addCard(card);
     }
 
     public void addCard(Player player, int row, SpellCard spellCard) {
-        rows.get(row).addCard(player, spellCard);
+        rows.get(player).get(row).addCard(spellCard);
     }
 
     public ArrayList<PlayableCard> allPlayerPlayableCards(Player player) {
         ArrayList<PlayableCard> cards = new ArrayList<>();
-        for(TwoSideRow i: rows) {
-            cards.addAll(i.getAllCards(player));
+        for(Row i: rows.get(player)) {
+            cards.addAll(i.getCards());
         }
         return cards;
     }
@@ -42,43 +44,22 @@ public class GameBoard {
 
 }
 
-class TwoSideRow {
-    private HashMap<Player,Row> subRows;
-    private SpellCard weatherCard;
-    public TwoSideRow(Player player1, Player player2) {
-        this.subRows = new HashMap<>(2);
-        subRows.put(player1,new Row());
-        subRows.put(player2,new Row());
-    }
-    public void addCard(Player player, SpellCard spellCard) {
-        if(AllCards.COMMANDER_HORN.getAbstractCard().equals(spellCard)) {
-            subRows.get(player).addCommanderHorn();
-            return;
-        }
-        this.weatherCard = spellCard;
-    }
-    public void addCard(Player player, PlayableCard playableCard) {
-        subRows.get(player).addCard(playableCard);
-    }
-
-    public ArrayList<PlayableCard> getAllCards(Player player) {
-        return subRows.get(player).getCards();
-    }
-}
 
 class Row {
     private ArrayList<PlayableCard> cards;
-    private boolean isCommanderHornPresent;
+    private ArrayList<SpellCard> spellCards;
 
     public Row() {
         this.cards = new ArrayList<>();
+        spellCards = new ArrayList<>();
     }
 
-    public void addCard(PlayableCard card) {
-        cards.add(card);
-    }
-    public void addCommanderHorn() {
-        isCommanderHornPresent = true;
+    public void addCard(AbstractCard card) {
+        if(card instanceof PlayableCard) {
+            cards.add((PlayableCard) card);
+        } else if(card instanceof SpellCard) {
+            spellCards.add((SpellCard) card);
+        }
     }
 
     public ArrayList<PlayableCard> getCards() {

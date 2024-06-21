@@ -8,6 +8,10 @@ import com.mygdx.game.model.card.PlayableCard;
 import java.util.ArrayList;
 
 public enum Action {
+    /**
+     * these constants contain runnables that are executed after each turn is complete and also right
+     * after being placed
+     */
     SCORCH(() -> {
         Player opposition = Game.getCurrentGame().getOpposition();
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();

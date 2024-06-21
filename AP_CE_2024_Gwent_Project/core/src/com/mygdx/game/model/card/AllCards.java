@@ -7,6 +7,7 @@ import com.mygdx.game.model.card.AbstractCard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public enum AllCards {
     //special cards
@@ -224,15 +225,28 @@ public enum AllCards {
     FOLTEST1(new CommanderCard("foltest king of temeria", "" , Action.FOLTEST1, null)),
     ;
     private final AbstractCard abstractCard;
+    private final static HashMap<Faction, ArrayList<AbstractCard>> faction = new HashMap<>();
 
     //commander cards
-
     AllCards(AbstractCard abstractCard) {
         this.abstractCard = abstractCard;
     }
 
+    static {
+        for(AllCards i: AllCards.values()) {
+            AbstractCard card = i.getCard();
+            faction.get(card.getFaction()).add(card);
+        }
+    }
+
+    private AbstractCard getCard() {return abstractCard;}
+
     public AbstractCard getAbstractCard() {
         return abstractCard.clone();
+    }
+
+    public ArrayList<AbstractCard> getFactionCardByFaction(Faction faction) {
+        return AllCards.faction.get(faction);
     }
 
 }

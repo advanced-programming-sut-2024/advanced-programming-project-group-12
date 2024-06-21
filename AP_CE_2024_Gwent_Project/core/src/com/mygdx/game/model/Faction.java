@@ -3,7 +3,7 @@ package com.mygdx.game.model;
 
 public enum Faction {
     MONSTERS("monsters"),
-    NORTHERN_REALMS("realms"),
+    NORTHERN_REALMS("northern realms"),
     SCOIATAEL("scoiatael"),
     NILFGAARD("nilfgaard"),
     SKELLIGE("skellige"),
