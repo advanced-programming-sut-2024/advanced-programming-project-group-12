@@ -3,9 +3,8 @@ package com.mygdx.game.model;
 import java.util.HashMap;
 
 public enum Faction {
-
-    NORTHERN_REALMS("realms"),
-
+    MONSTERS("monsters"),
+    NORTHERN_REALMS("northern realms"),
     SCOIATAEL("scoiatael"),
 
     NILFGAARD("nilfgaard"),
@@ -16,19 +15,7 @@ public enum Faction {
 
     SPECIAL("special"),
 
-    WEATHER("weather"),
-    MONSTERS("Monsters"),
-
-    NORTHERN_REALMS("Northern Realms"),
-
-    SCOIATAEL("Scoiatael"),
-
-    EMPIRE_NILFGAARD("Empire Nilfgaard"),
-
-    SKELLIGE("Skellige"),
-
-    NEUTRAL("Neutral");
-
+    WEATHER("weather");
 
     private String name;
 

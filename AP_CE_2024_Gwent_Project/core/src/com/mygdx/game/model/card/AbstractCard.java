@@ -30,6 +30,10 @@ public abstract class AbstractCard implements Cloneable{
         return description;
     }
 
+    public Faction getFaction() {
+        return faction;
+    }
+
     public abstract void kill();
     public abstract void place(int row);
     public void doAction() {

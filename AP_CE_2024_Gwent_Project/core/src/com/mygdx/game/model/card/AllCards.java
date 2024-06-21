@@ -5,12 +5,24 @@ import com.mygdx.game.model.Faction;
 import com.mygdx.game.model.card.SpellCard;
 import com.mygdx.game.model.card.AbstractCard;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public enum AllCards {
-    //spell cards
-    COMMANDER_HORN(new SpellCard("commander horn", "", Action.NO_ACTION, Arrays.asList(0,1,2), null, Faction.NORTHERN_REALMS)),
+    //special cards
+    COMMANDER_HORN(new SpellCard("commander horn", "", Action.HORN, Arrays.asList(0,1,2), null, Faction.SPECIAL)),
     SCORCH(new SpellCard("scorch", "", Action.SCORCH, null, null, Faction.SPECIAL)),
+    DECOY(new Decoy("decoy", "", Action.DECOY, Arrays.asList(0,1,2), null, Faction.SPECIAL)),
+    MARDROEME(new SpellCard("mardroeme", "", Action.MUSHROOM, Arrays.asList(0,1,2), null, Faction.SPECIAL)),
+
+    //weather cards
+    CLEAR(new SpellCard("clear", "", Action.CLEAR, Arrays.asList(3), null, Faction.WEATHER)),
+    FOG(new SpellCard("fog", "", Action.FOG, Arrays.asList(3), null, Faction.WEATHER)),
+    FROST(new SpellCard("frost", "", Action.FROST, Arrays.asList(3), null, Faction.WEATHER)),
+    RAIN(new SpellCard("rain", "", Action.RAIN, Arrays.asList(3), null, Faction.WEATHER)),
+    STORM(new SpellCard("storm", "", Action.STORM, Arrays.asList(3), null, Faction.WEATHER)),
+
 
     //northern realms
     KIERA_METZ(new PlayableCard("kiera metz", "", Action.NO_ACTION, Arrays.asList(1), 5, null, Faction.NORTHERN_REALMS)),
@@ -178,19 +190,63 @@ public enum AllCards {
     VRIHEDD_CADET(new PlayableCard("vrihedd cadet", "", Action.NO_ACTION, Arrays.asList(1), 4, null, Faction.SCOIATAEL)),
     YAEVINN(new PlayableCard("yaevinn", "", Action.NO_ACTION, Arrays.asList(0,1), 6, null, Faction.SCOIATAEL)),
 
+    //skellige
+    BERSERKER(new PlayableCard("berserker", "", Action.BEAR, Arrays.asList(0), 4, null, Faction.SKELLIGE)),
+    BIRNA(new PlayableCard("birna", "", Action.MEDIC, Arrays.asList(0), 2, null, Faction.SKELLIGE)),
+    BLUEBOY(new PlayableCard("blueboy", "", Action.NO_ACTION, Arrays.asList(0), 6, null, Faction.SKELLIGE)),
+    BROKVA_ARCHER(new PlayableCard("brokva archer", "", Action.NO_ACTION, Arrays.asList(1), 6, null, Faction.SKELLIGE)),
+    CERYS(new Hero("cerys", "", Action.MUSKET, Arrays.asList(0), 10, null, Faction.SKELLIGE)),
+    CRAITE_WARRIOR(new PlayableCard("craite warrior", "", Action.TIGHT_BOND, Arrays.asList(0), 6, null, Faction.SKELLIGE)),
+    DUMUN_PIRATE(new PlayableCard("dumun pirate", "", Action.SCORCH, Arrays.asList(0), 6, null, Faction.SKELLIGE)),
+    DONAR(new PlayableCard("donar", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.SKELLIGE)),
+    DRAIG(new PlayableCard("draig", "", Action.HORN, Arrays.asList(0), 2, null, Faction.SKELLIGE)),
+    ERMION(new Hero("ermion", "", Action.MUSHROOM, Arrays.asList(1), 8, null, Faction.SKELLIGE)),
+    HEMDALL(new PlayableCard("hemdall", "", Action.NO_ACTION, Arrays.asList(0), 11, null, Faction.SKELLIGE)),
+    HEYMAEY(new PlayableCard("heymaey", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.SKELLIGE)),
+    HJALMAR(new PlayableCard("hjalmar", "", Action.NO_ACTION, Arrays.asList(1), 10, null, Faction.SKELLIGE)),
+    HOLGER(new PlayableCard("holger", "", Action.NO_ACTION, Arrays.asList(2), 4, null, Faction.SKELLIGE)),
+    KAMBI(new PlayableCard("kambi", "", Action.COW, Arrays.asList(0), 0, null, Faction.SKELLIGE)),
+    LIGHT_LONGSHIP(new PlayableCard("light longship", "", Action.MUSKET, Arrays.asList(1), 4, null, Faction.SKELLIGE)),
+    MADMAN_LUGOS(new PlayableCard("madman lugos", "", Action.NO_ACTION, Arrays.asList(0), 6, null, Faction.SKELLIGE)),
+    OLAF(new PlayableCard("olaf", "", Action.MORALE, Arrays.asList(0,1), 12, null, Faction.SKELLIGE)),
+    SHIELD_MAIDEN_1(new PlayableCard("shield maiden", "", Action.TIGHT_BOND, Arrays.asList(0), 4, null, Faction.SKELLIGE)),
+    SHIELD_MAIDEN_2(new PlayableCard("shield maiden", "", Action.TIGHT_BOND, Arrays.asList(0), 4, null, Faction.SKELLIGE)),
+    SHIELD_MAIDEN_3(new PlayableCard("shield maiden", "", Action.TIGHT_BOND, Arrays.asList(0), 4, null, Faction.SKELLIGE)),
+    SVANRIGE(new PlayableCard("svanrige", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.SKELLIGE)),
+    TORDARROCH(new PlayableCard("tordarroch", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.SKELLIGE)),
+    UDALRYK(new PlayableCard("udalryk", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.SKELLIGE)),
+    VILDKAARL(new PlayableCard("vildkaarl", "", Action.MORALE, Arrays.asList(0), 14, null, Faction.SKELLIGE)),
+    WAR_LONGSHIP(new PlayableCard("war longship", "", Action.TIGHT_BOND, Arrays.asList(2), 6, null, Faction.SKELLIGE)),
+    YOUNG_BERSERKER(new PlayableCard("young berseker", "", Action.BEAR, Arrays.asList(1), 2, null, Faction.SKELLIGE)),
+    YOUNG_VILDKAARL(new PlayableCard("young vildkaarl", "", Action.TIGHT_BOND, Arrays.asList(1), 8, null, Faction.SKELLIGE)),
+
+
     //leader cards
     FOLTEST1(new CommanderCard("foltest king of temeria", "" , Action.FOLTEST1, null)),
     ;
-    private AbstractCard abstractCard;
+    private final AbstractCard abstractCard;
+    private final static HashMap<Faction, ArrayList<AbstractCard>> faction = new HashMap<>();
 
     //commander cards
-
     AllCards(AbstractCard abstractCard) {
         this.abstractCard = abstractCard;
     }
 
+    static {
+        for(AllCards i: AllCards.values()) {
+            AbstractCard card = i.getCard();
+            faction.get(card.getFaction()).add(card);
+        }
+    }
+
+    private AbstractCard getCard() {return abstractCard;}
+
     public AbstractCard getAbstractCard() {
         return abstractCard.clone();
+    }
+
+    public ArrayList<AbstractCard> getFactionCardByFaction(Faction faction) {
+        return AllCards.faction.get(faction);
     }
 
 }

@@ -8,6 +8,10 @@ import com.mygdx.game.model.card.PlayableCard;
 import java.util.ArrayList;
 
 public enum Action {
+    /**
+     * these constants contain runnables that are executed after each turn is complete and also right
+     * after being placed
+     */
     SCORCH(() -> {
         Player opposition = Game.getCurrentGame().getOpposition();
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
@@ -75,12 +79,19 @@ public enum Action {
     MORALE(() -> {}),
     COW(null), HORN(null),
     MUSKET(null),
+    BEAR(null), MUSHROOM(null), DECOY(null),
 
+    //wather actions
+    CLEAR(null),
+    FOG(null),
+    FROST(null),
+    RAIN(null),
+    STORM(null),
     //leader actions,
     FOLTEST1(() -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(2);
     }),
-    NO_ACTION(() -> {})
+    NO_ACTION(() -> {}),
     ;
     private Runnable action;
 
