@@ -11,8 +11,8 @@ public class Gwent extends Game {
 	public static Gwent singleton;
 	SpriteBatch batch;
 	public Skin skin;
-	public static final int WIDTH = 1380;
-	public static final int HEIGHT = 840;
+	public static final int WIDTH = 1600;
+	public static final int HEIGHT = 980;
 	
 	@Override
 	public void create () {

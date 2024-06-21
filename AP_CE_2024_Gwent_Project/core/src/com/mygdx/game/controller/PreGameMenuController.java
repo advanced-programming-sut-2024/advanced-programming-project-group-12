@@ -17,7 +17,7 @@ public class PreGameMenuController {
     }
 
     public void startGame() {
-        //hard coding a deck
+        // Hard coding a deck
         CommanderCard commanderCard = (CommanderCard) CommanderCards.FOLTEST1.getAbstractCard();
         ArrayList<AbstractCard> deck = new ArrayList<>();
         deck.add(AllCards.COMMANDER_HORN.getAbstractCard());
@@ -37,5 +37,6 @@ public class PreGameMenuController {
     public void setFaction(String factionName) {
         Faction faction = Faction.getFactionByName(factionName);
         user.setFaction(faction);
+        user.updateInfo();
     }
 }

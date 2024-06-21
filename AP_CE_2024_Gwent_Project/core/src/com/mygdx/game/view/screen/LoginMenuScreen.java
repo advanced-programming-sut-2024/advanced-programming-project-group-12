@@ -2,6 +2,8 @@ package com.mygdx.game.view.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -12,13 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.LoginMenuController;
-import com.mygdx.game.model.SecurityQuestion;
-import com.mygdx.game.model.User;
 
 public class LoginMenuScreen implements Screen {
     private Stage stage;
     private Table table;
     private Dialog errorDialog;
+    private SpriteBatch batch;
     // Buttons
     private TextButton loginButton;
     private TextButton forgotPasswordButton;
@@ -26,9 +27,13 @@ public class LoginMenuScreen implements Screen {
     // TextFields
     private TextField usernameField;
     private TextField passwordField;
+    // background
+    private Texture background;
 
     public LoginMenuScreen() {
         stage = new Stage();
+        batch = new SpriteBatch();
+        background = new Texture(Gdx.files.internal("backgrounds/main_background.png"));
         Gdx.input.setInputProcessor(stage);
         createFields();
     }
@@ -54,19 +59,17 @@ public class LoginMenuScreen implements Screen {
                 LoginMenuController.goToRegisterMenu();
             }
         });
-
-
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.25f, 0.5f, 0.75f, 1);
         Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
-        Gwent.singleton.getBatch().begin();
-        Gwent.singleton.getBatch().end();
+        batch.begin();
+        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.end();
         stage.act(delta);
         stage.draw();
-
     }
 
     @Override
@@ -92,6 +95,8 @@ public class LoginMenuScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        batch.dispose();
+        background.dispose();
     }
 
     public void createFields() {
@@ -165,5 +170,4 @@ public class LoginMenuScreen implements Screen {
         dispose();
         LoginMenuController.goToForgotPasswordScreen();
     }
-
 }

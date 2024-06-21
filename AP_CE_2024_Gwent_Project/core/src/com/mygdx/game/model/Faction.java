@@ -36,7 +36,7 @@ public enum Faction {
     }
 
     public String getAssetFileName() {
-        return "faction_" + name;
+        return "cards/" + "faction_" + name + ".jpg";
     }
 
     public static Faction getFactionByName(String name) {
