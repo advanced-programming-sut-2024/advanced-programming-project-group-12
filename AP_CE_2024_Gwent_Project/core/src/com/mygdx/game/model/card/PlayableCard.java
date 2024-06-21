@@ -4,6 +4,7 @@ import com.mygdx.game.model.Action;
 import com.mygdx.game.model.Faction;
 import com.mygdx.game.model.Game;
 import com.mygdx.game.model.Player;
+import com.mygdx.game.model.gameBoard.GameBoard;
 
 import java.util.List;
 
@@ -24,7 +25,9 @@ public class PlayableCard extends AbstractCard {
 
     @Override
     public void kill() {
-        Player player = Player.getCurrentPlayer();
+        Player player = Game.getCurrentGame().getCurrentPlayer();
+        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        gameBoard.removeCard(this, row, player);
     }
 
     @Override
