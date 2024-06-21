@@ -9,6 +9,9 @@ import com.mygdx.game.model.card.CommanderCards;
 import java.util.ArrayList;
 
 public class PreGameMenuController {
+    Player player = Player.getCurrentPlayer();
+    User user = User.getLoggedInUser();
+
     public void gotoMainMenu() {
         ScreenManager.setMainMenuScreen();
     }
@@ -24,10 +27,15 @@ public class PreGameMenuController {
         deck.add(AllCards.POOR_FUCKING_INFANTRY.getAbstractCard());
         deck.add(AllCards.CIRILLA_FIONA_ELEN_RIANNON.getAbstractCard());
 
-
         Faction faction = Faction.NORTHERN_REALMS;
         Player player = new Player(User.getLoggedInUser(), commanderCard, deck, faction);
+        Player.setCurrentPlayer(player); // Set the current player
         new Game(player, player);
         ScreenManager.setGameMenuScreen();
+    }
+
+    public void setFaction(String factionName) {
+        Faction faction = Faction.getFactionByName(factionName);
+        user.setFaction(faction);
     }
 }

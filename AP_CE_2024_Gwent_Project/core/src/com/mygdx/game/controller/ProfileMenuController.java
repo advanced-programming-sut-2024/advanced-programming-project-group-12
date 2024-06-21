@@ -11,6 +11,7 @@ public class ProfileMenuController {
             add(loggedInUser.getUsername());
             add(loggedInUser.getNickname());
             add(loggedInUser.getEmail());
+            add(loggedInUser.getFaction().getName());
         }};
     }
 
