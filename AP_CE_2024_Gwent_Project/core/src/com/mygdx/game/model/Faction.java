@@ -1,5 +1,6 @@
 package com.mygdx.game.model;
 
+import java.util.HashMap;
 
 public enum Faction {
     MONSTERS("Monsters"),
@@ -7,17 +8,26 @@ public enum Faction {
     SCOIATAEL("Scoiatael"),
     EMPIRE_NILFGAARD("Empire Nilfgaard"),
     SKELLIGE("Skellige"),
-    NEUTRAL("Neutral")
-    ;
+    NEUTRAL("Neutral");
+
     private String name;
-    private Runnable Action;
+
+    private static final HashMap<String, Faction> allFactions = new HashMap<>();
 
     private Faction(String name) {
         this.name = name;
+    }
+    static {
+        for (Faction faction : Faction.values()) {
+            allFactions.put(faction.getName(), faction);
+        }
     }
 
     public String getName() {
         return name;
     }
 
+    public static Faction getFactionByName(String name) {
+        return allFactions.get(name);
+    }
 }

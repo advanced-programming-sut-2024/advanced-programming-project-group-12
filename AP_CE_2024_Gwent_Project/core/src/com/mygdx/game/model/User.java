@@ -24,6 +24,7 @@ public class User {
     private String nickname;
     private String password;
     private String email;
+    private Faction faction;
     private HashMap<SecurityQuestion, String> securityQuestion;
     private ArrayList<Game> allGamePlayed;
     private UserInfo userInfo;
@@ -35,6 +36,7 @@ public class User {
         this.nickname = nickname;
         this.password = password;
         this.email = email;
+        this.faction = Faction.NEUTRAL;
         this.securityQuestion = new HashMap<>();
         this.allGamePlayed = new ArrayList<>();
         this.userInfo = new UserInfo();
@@ -163,5 +165,13 @@ public class User {
             return;
         User.removeUser(this);
         this.save();
+    }
+
+    public Faction getFaction() {
+        return userInfo.getFaction();
+    }
+
+    public void setFaction(Faction faction) {
+        userInfo.setFaction(faction);
     }
 }
