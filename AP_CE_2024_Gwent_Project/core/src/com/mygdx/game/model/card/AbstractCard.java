@@ -2,6 +2,8 @@ package com.mygdx.game.model.card;
 
 import com.mygdx.game.model.Action;
 import com.mygdx.game.model.Faction;
+import com.mygdx.game.model.Game;
+import com.mygdx.game.model.Player;
 
 import java.util.List;
 
@@ -35,9 +37,12 @@ public abstract class AbstractCard implements Cloneable{
     }
 
     public abstract void kill();
-    public abstract void place(int row);
+    public void place(int row) {
+        Player player = Game.getCurrentGame().getCurrentPlayer();
+        player.getHand().remove(this);
+    }
     public void doAction() {
-        action.execute();
+        action.execute(this);
     }
 
     @Override

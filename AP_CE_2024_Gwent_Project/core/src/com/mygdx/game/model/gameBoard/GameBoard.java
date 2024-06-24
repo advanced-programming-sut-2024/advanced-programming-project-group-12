@@ -65,6 +65,11 @@ public class GameBoard {
         return 0;
     }
 
+    public void increaseMorale(int row) {
+        Player player = Game.getCurrentGame().getCurrentPlayer();
+        rows.get(player).get(row).increaseMorale();
+    }
+
     public ArrayList<AbstractCard> getDiscard(Player player) {
         return discard.getDiscard(player);
     }
@@ -93,6 +98,10 @@ class Row {
 
     public ArrayList<PlayableCard> getCards() {
         return cards;
+    }
+
+    public void increaseMorale() {
+        morale++;
     }
 }
 

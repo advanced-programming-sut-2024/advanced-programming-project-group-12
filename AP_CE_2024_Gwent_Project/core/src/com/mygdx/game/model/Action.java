@@ -6,13 +6,16 @@ import com.mygdx.game.model.gameBoard.GameBoard;
 import com.mygdx.game.model.card.PlayableCard;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.function.Consumer;
 
 public enum Action {
     /**
      * these constants contain runnables that are executed after each turn is complete and also right
      * after being placed
      */
-    SCORCH(() -> {
+    SCORCH(card -> {
         Player opposition = Game.getCurrentGame().getOpposition();
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
         ArrayList<PlayableCard> allOppositionPlayableCards = gameBoard.allPlayerPlayableCards(opposition);
@@ -38,7 +41,7 @@ public enum Action {
             i.kill();
         }
     }),
-    SCORCH_S(() -> {
+    SCORCH_S(card -> {
         Player opposition = Game.getCurrentGame().getOpposition();
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
         ArrayList<PlayableCard> row = gameBoard.getRow(opposition, 2);
@@ -58,7 +61,7 @@ public enum Action {
             i.kill();
         }
     }),
-    SCORCH_R(() -> {
+    SCORCH_R(card -> {
         Player opposition = Game.getCurrentGame().getOpposition();
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
         ArrayList<PlayableCard> row = gameBoard.getRow(opposition, 1);
@@ -78,7 +81,7 @@ public enum Action {
             i.kill();
         }
     }),
-    SCORCH_C(() -> {
+    SCORCH_C(card -> {
         Player opposition = Game.getCurrentGame().getOpposition();
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
         ArrayList<PlayableCard> row = gameBoard.getRow(opposition, 0);
@@ -98,26 +101,41 @@ public enum Action {
             i.kill();
         }
     }),
-    TIGHT_BOND(() -> {
+    TIGHT_BOND(card -> {
     }),
-    MEDIC(() -> {
+    MEDIC(card -> {
         // should open a menu in game screen to choose from one card of the below list
         Player player = Game.getCurrentGame().getCurrentPlayer();
         ArrayList<AbstractCard> discard = Game.getCurrentGame().getGameBoard().getDiscard(player);
         AbstractCard chosenCard;
 //        chosenCard.place();
     }),
-    SPY(() -> {
+    SPY(card -> {
         Player player = Game.getCurrentGame().getCurrentPlayer();
         player.drawCard().drawCard();
     }),
-    MORALE(() -> {
+    MORALE(card -> {
         Player player = Game.getCurrentGame().getCurrentPlayer();
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
-
+        gameBoard.increaseMorale(((PlayableCard) card).getRow());
     }),
-    COW(null), HORN(null),
-    MUSKET(null),
+    COW(card -> {
+        if(((PlayableCard) card).isDead()) {
+            //avenger.place(row);
+        }
+    }),
+    HORN(card -> {
+        AllCards.COMMANDER_HORN.getAbstractCard().place(((PlayableCard) card).getRow());
+    }),
+    MUSKET(card -> {
+        Player player = Game.getCurrentGame().getCurrentPlayer();
+        ArrayList<AbstractCard> deck = player.getDeck();
+        Iterator<AbstractCard> it = deck.iterator();
+        while (it.hasNext()) {
+            if(it)
+        }
+        LinkedList<AbstractCard> hand = player.getHand();
+    }),
     BEAR(null), MUSHROOM(null), DECOY(null),
 
     //weather actions
@@ -127,7 +145,7 @@ public enum Action {
     RAIN(null),
     STORM(null),
     //faction actions
-    NORTHERN_REALMS(() -> {
+    NORTHERN_REALMS(card -> {
         Player player1 = Game.getCurrentGame().getCurrentPlayer();
         Player player2 = Game.getCurrentGame().getOpposition();
         if(player1.isWon() && player1.getFaction().equals(Faction.NORTHERN_REALMS)) {
@@ -136,7 +154,7 @@ public enum Action {
             player2.drawCard();
         }
     }),
-    NILFGAARD(() -> {
+    NILFGAARD(card -> {
         Player player1 = Game.getCurrentGame().getCurrentPlayer();
         Player player2 = Game.getCurrentGame().getOpposition();
         if(player1.getFaction().equals(Faction.NILFGAARD) && player2.getFaction().equals(Faction.NILFGAARD)) {
@@ -153,25 +171,25 @@ public enum Action {
     }),
 
     //leader actions,
-    FOLTEST_SIEGE(() -> {
+    FOLTEST_SIEGE(card -> {
         AllCards.FOG.getAbstractCard().place(3);
     }),
-    FOLTEST_STEEL(() -> {
+    FOLTEST_STEEL(card -> {
         AllCards.CLEAR.getAbstractCard().place(3);
     }),
-    FOLTEST_KING(() -> {
+    FOLTEST_KING(card -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(2);
     }),
 
-    NO_ACTION(() -> {}),
+    NO_ACTION(card -> {}),
     ;
-    private Runnable action;
+    private Consumer<AbstractCard> action;
 
-    Action(Runnable action) {
+    Action(Consumer<AbstractCard> action) {
         this.action = action;
     }
 
-    public void execute() {
-        action.run();
+    public void execute(AbstractCard card) {
+        action.accept(card);
     }
 }

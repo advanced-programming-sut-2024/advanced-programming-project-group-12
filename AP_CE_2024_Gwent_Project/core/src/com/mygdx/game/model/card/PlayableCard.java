@@ -12,9 +12,11 @@ import java.util.List;
 public class PlayableCard extends AbstractCard {
     private int power;
     private int row;
+    private boolean isDead;
     public PlayableCard(String name, String description, Action action, List<Integer> rows , int power, Integer typeNumber, Faction faction) {
         super(name, description, action, rows, typeNumber, faction);
         this.power = power;
+        this.isDead = false;
     }
 
     public static void updatePowers() {
@@ -24,15 +26,25 @@ public class PlayableCard extends AbstractCard {
         return power;
     }
 
+    public int getRow() {
+        return row;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
     @Override
     public void kill() {
         Player player = Game.getCurrentGame().getCurrentPlayer();
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
         gameBoard.removeCard(this, row, player);
+        isDead = true;
     }
 
     @Override
     public void place(int row) {
+        super.place(row);
         Player player;
         if(action.equals(Action.SPY)) {
             player = Game.getCurrentGame().getOpposition();

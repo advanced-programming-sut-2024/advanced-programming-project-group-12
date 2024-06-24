@@ -4,11 +4,13 @@ import com.mygdx.game.model.card.CommanderCard;
 import com.mygdx.game.model.card.AbstractCard;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Player {
     private User user;
     private CommanderCard leader;
     private ArrayList<AbstractCard> deck;
+    private LinkedList<AbstractCard> hand;
     private Faction faction;
     private int roundsLost;
     private boolean won;
@@ -18,7 +20,16 @@ public class Player {
         this.leader = leader;
         this.deck = deck;
         this.faction = faction;
+        hand = new LinkedList<>();
         this.roundsLost = 0;
+    }
+
+    public ArrayList<AbstractCard> getDeck() {
+        return deck;
+    }
+
+    public LinkedList<AbstractCard> getHand() {
+        return hand;
     }
 
     public boolean isWon() {

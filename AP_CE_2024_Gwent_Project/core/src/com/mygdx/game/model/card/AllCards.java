@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public enum AllCards {
     //special cards
-    COMMANDER_HORN(new SpellCard("commander horn", "", Action.HORN, Arrays.asList(0,1,2), null, Faction.SPECIAL)),
+    COMMANDER_HORN(new SpellCard("commander horn", "", Action.NO_ACTION, Arrays.asList(0,1,2), null, Faction.SPECIAL)),
     SCORCH(new SpellCard("scorch", "", Action.SCORCH, null, null, Faction.SPECIAL) {
         @Override
         public void place(int row) {}
