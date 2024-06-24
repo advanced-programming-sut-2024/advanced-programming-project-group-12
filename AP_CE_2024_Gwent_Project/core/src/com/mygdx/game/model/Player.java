@@ -37,7 +37,9 @@ public class Player {
         this.faction = faction;
     }
 
-    public void drawCard() {
+    public Player drawCard() {
+        Player player = Game.getCurrentGame().getCurrentPlayer();
         // Implement card drawing logic
+        return player;
     }
 }

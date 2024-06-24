@@ -7,19 +7,20 @@ import com.mygdx.game.model.card.SpellCard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class GameBoard {
     private HashMap<Player, ArrayList<Row>> rows;
     private Discard discard;
-    private ArrayList<SpellCard> weatherCards;
+    private HashSet<SpellCard> weatherCards;
 
     public GameBoard(Player player1, Player player2) {
         rows = new HashMap<>(2);
         rows.put(player1, new ArrayList<>());
         rows.put(player2, new ArrayList<>());
         discard = new Discard(player1, player2);
-        weatherCards = new ArrayList<>();
+        weatherCards = new HashSet<>();
     }
 
     public void addCard(Player player, int row, PlayableCard card) {
@@ -55,7 +56,7 @@ public class GameBoard {
         }
     }
 
-    public ArrayList<SpellCard> getWeatherCards() {
+    public HashSet<SpellCard> getWeatherCards() {
         return weatherCards;
     }
 
@@ -73,11 +74,12 @@ public class GameBoard {
 
 class Row {
     private ArrayList<PlayableCard> cards;
-    private ArrayList<SpellCard> spellCards;
+    private HashSet<SpellCard> spellCards;
+    private int morale;
 
     public Row() {
         this.cards = new ArrayList<>();
-        spellCards = new ArrayList<>();
+        spellCards = new HashSet<>();
     }
 
     public void addCard(AbstractCard card) {

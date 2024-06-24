@@ -108,9 +108,24 @@ public enum Action {
 //        chosenCard.place();
     }),
     SPY(() -> {
+        Player player = Game.getCurrentGame().getCurrentPlayer();
+        player.drawCard().drawCard();
+    }),
+    MORALE(() -> {
+        Player player = Game.getCurrentGame().getCurrentPlayer();
+        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
 
     }),
+    COW(null), HORN(null),
+    MUSKET(null),
+    BEAR(null), MUSHROOM(null), DECOY(null),
 
+    //weather actions
+    CLEAR(null),
+    FOG(null),
+    FROST(null),
+    RAIN(null),
+    STORM(null),
     //faction actions
     NORTHERN_REALMS(() -> {
         Player player1 = Game.getCurrentGame().getCurrentPlayer();
@@ -136,17 +151,7 @@ public enum Action {
             }
         }
     }),
-    MORALE(() -> {}),
-    COW(null), HORN(null),
-    MUSKET(null),
-    BEAR(null), MUSHROOM(null), DECOY(null),
 
-    //wather actions
-    CLEAR(null),
-    FOG(null),
-    FROST(null),
-    RAIN(null),
-    STORM(null),
     //leader actions,
     FOLTEST_SIEGE(() -> {
         AllCards.FOG.getAbstractCard().place(3);

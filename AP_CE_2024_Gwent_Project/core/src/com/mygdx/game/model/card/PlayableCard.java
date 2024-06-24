@@ -6,6 +6,7 @@ import com.mygdx.game.model.Game;
 import com.mygdx.game.model.Player;
 import com.mygdx.game.model.gameBoard.GameBoard;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayableCard extends AbstractCard {
@@ -42,5 +43,7 @@ public class PlayableCard extends AbstractCard {
         this.row = row;
         doAction();
         Game.getCurrentGame().getGameBoard().addCard(player, row, this);
+        ArrayList<PlayableCard> boardRow = Game.getCurrentGame().getGameBoard().getRow(player, row);
+        boardRow.sort(null);
     }
 }
