@@ -67,7 +67,7 @@ public class PlayableCard extends AbstractCard {
         this.row = row;
         doAction();
         Game.getCurrentGame().getGameBoard().addCard(player, row, this);
-        ArrayList<PlayableCard> boardRow = Game.getCurrentGame().getGameBoard().getRow(player, row);
+        ArrayList<PlayableCard> boardRow = Game.getCurrentGame().getGameBoard().getRowCards(player, row);
         boardRow.sort(null);
     }
 }

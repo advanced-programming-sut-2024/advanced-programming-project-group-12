@@ -8,7 +8,6 @@ import com.mygdx.game.model.card.SpellCard;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 public class GameBoard {
     private HashMap<Player, ArrayList<Row>> rows;
@@ -43,7 +42,7 @@ public class GameBoard {
         return cards;
     }
 
-    public ArrayList<PlayableCard> getRow(Player player, int row) {
+    public ArrayList<PlayableCard> getRowCards(Player player, int row) {
         /**
          * returns all cards associated with a row of index row and for the player.
          */
@@ -55,7 +54,7 @@ public class GameBoard {
             return null;
         }
     }
-    public Row getRow(int row) {
+    public Row getRowForCurrentPlayer(int row) {
         /**
          * returns a row object of the current player based on the int row provided;
          */

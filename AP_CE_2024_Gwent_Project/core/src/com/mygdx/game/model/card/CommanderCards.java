@@ -20,7 +20,7 @@ public enum CommanderCards {
     EMHYR_INVADER(new CommanderCard("emhyr the invader of the north", "", Action.EMHYR_INVADER, null, 1,Faction.NILFGAARD)),
 
     ERIDIN_COMMANDER(new CommanderCard("eridin commander of the red riders", "", Action.ERIDIN_COMMANDER, null, 1,Faction.MONSTERS)),
-    ERIDIN_BRINGER(new CommanderCard("eridin bringer of death", "", Action.ERIDIN_COMMANDER, null, 1,Faction.MONSTERS)
+    ERIDIN_BRINGER(new CommanderCard("eridin bringer of death", "", Action.ERIDIN_COMMANDER, null, 1,Faction.MONSTERS))
     ;
 
 

@@ -7,7 +7,6 @@ import com.mygdx.game.model.card.PlayableCard;
 import com.mygdx.game.model.gameBoard.Row;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 
@@ -45,7 +44,7 @@ public enum Action {
     SCORCH_S(card -> {
         Player opposition = Game.getCurrentGame().getOpposition();
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
-        ArrayList<PlayableCard> row = gameBoard.getRow(opposition, 2);
+        ArrayList<PlayableCard> row = gameBoard.getRowCards(opposition, 2);
         if(gameBoard.getRowStrength(2)  < 10) return;
 
         row.sort(null); //sort cards based on power
@@ -65,7 +64,7 @@ public enum Action {
     SCORCH_R(card -> {
         Player opposition = Game.getCurrentGame().getOpposition();
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
-        ArrayList<PlayableCard> row = gameBoard.getRow(opposition, 1);
+        ArrayList<PlayableCard> row = gameBoard.getRowCards(opposition, 1);
         if(gameBoard.getRowStrength(1)  < 10) return;
 
         row.sort(null); //sort cards based on power
@@ -85,7 +84,7 @@ public enum Action {
     SCORCH_C(card -> {
         Player opposition = Game.getCurrentGame().getOpposition();
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
-        ArrayList<PlayableCard> row = gameBoard.getRow(opposition, 0);
+        ArrayList<PlayableCard> row = gameBoard.getRowCards(opposition, 0);
         if(gameBoard.getRowStrength(0)  < 10) return;
 
         row.sort(null); //sort cards based on power
@@ -158,7 +157,7 @@ public enum Action {
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
         Player player = Game.getCurrentGame().getCurrentPlayer();
         int rowNumber = ((PlayableCard) card).getRow();
-        Row row = gameBoard.getRow(rowNumber);
+        Row row = gameBoard.getRowForCurrentPlayer(rowNumber);
         if(row.hasMushroom()) {
             card.kill();
             ((PlayableCard) card).getLegacyCard().place(card.getDefaultRow());
@@ -167,7 +166,7 @@ public enum Action {
     MUSHROOM(card -> {
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
         int rowNumber = ((PlayableCard) card).getRow();
-        Row row = gameBoard.getRow(rowNumber);
+        Row row = gameBoard.getRowForCurrentPlayer(rowNumber);
         row.setHasMushroom();
         ArrayList<PlayableCard> rowCards = row.getCards();
         for(PlayableCard i : rowCards) {
@@ -182,14 +181,14 @@ public enum Action {
     CLEAR(card -> {
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
         for(int i = 0; i< 3; i++ ){
-            Row row = gameBoard.getRow(i);
+            Row row = gameBoard.getRowForCurrentPlayer(i);
             row.setWeatherBuffer(false);
         }
     }),
-    FOG(card -> Game.getCurrentGame().getGameBoard().getRow(1).setWeatherBuffer(true)
+    FOG(card -> Game.getCurrentGame().getGameBoard().getRowForCurrentPlayer(1).setWeatherBuffer(true)
     ),
-    FROST(card -> Game.getCurrentGame().getGameBoard().getRow(0).setWeatherBuffer(true)),
-    RAIN(card -> Game.getCurrentGame().getGameBoard().getRow(2).setWeatherBuffer(true)),
+    FROST(card -> Game.getCurrentGame().getGameBoard().getRowForCurrentPlayer(0).setWeatherBuffer(true)),
+    RAIN(card -> Game.getCurrentGame().getGameBoard().getRowForCurrentPlayer(2).setWeatherBuffer(true)),
     STORM(card -> {
         FOG.action.accept(null);
         RAIN.action.accept(null);
