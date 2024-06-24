@@ -13,8 +13,14 @@ public enum CommanderCards {
     FOLTEST_LORD(new CommanderCard("foltest lord commander of the north", "", Action.SCORCH_S, null, 1,Faction.NORTHERN_REALMS)),
     FOLTEST_SON(new CommanderCard("foltest son of medell", "", Action.SCORCH_R, null, 1,Faction.NORTHERN_REALMS)),
 
-    EMHYR1(new CommanderCard("foltest son of medell", "", null, null, 1,Faction.NORTHERN_REALMS)),
+    EMHYR_EMPEROR(new CommanderCard("emhyr emperor of nilfgaard", "", Action.EMHYR_EMPEROR, null, 1,Faction.NILFGAARD)),
+    EMHYR_EMPERIAL(new CommanderCard("emhyr his imperial majesty", "", Action.EMHYR_EMPERIAL, null, 1,Faction.NILFGAARD)),
+    EMHYR_WHITEFLAME(new CommanderCard("emhyr the white flame", "", Action.EMHYR_WHITEFLAME, null, 1,Faction.NILFGAARD)),
+    EMHYR_RELENTLESS(new CommanderCard("emhyr the relentless", "", Action.EMHYR_RELENTLESS, null, 1,Faction.NILFGAARD)),
+    EMHYR_INVADER(new CommanderCard("emhyr the invader of the north", "", Action.EMHYR_INVADER, null, 1,Faction.NILFGAARD)),
 
+    ERIDIN_COMMANDER(new CommanderCard("eridin commander of the red riders", "", Action.ERIDIN_COMMANDER, null, 1,Faction.MONSTERS)),
+    ERIDIN_BRINGER(new CommanderCard("eridin bringer of death", "", Action.ERIDIN_COMMANDER, null, 1,Faction.MONSTERS)
     ;
 
 

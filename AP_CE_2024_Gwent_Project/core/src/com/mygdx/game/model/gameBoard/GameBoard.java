@@ -55,6 +55,13 @@ public class GameBoard {
             return null;
         }
     }
+    public Row getRow(int row) {
+        /**
+         * returns a row object of the current player based on the int row provided;
+         */
+        Player player = Game.getCurrentGame().getCurrentPlayer();
+        return rows.get(player).get(row);
+    }
 
     public HashSet<SpellCard> getWeatherCards() {
         return weatherCards;
@@ -70,40 +77,13 @@ public class GameBoard {
         rows.get(player).get(row).increaseMorale();
     }
 
+
     public ArrayList<AbstractCard> getDiscard(Player player) {
         return discard.getDiscard(player);
     }
 
 }
 
-
-class Row {
-    private ArrayList<PlayableCard> cards;
-    private HashSet<SpellCard> spellCards;
-    private int morale;
-
-    public Row() {
-        this.cards = new ArrayList<>();
-        spellCards = new HashSet<>();
-    }
-
-    public void addCard(AbstractCard card) {
-        if(card instanceof PlayableCard) {
-            cards.add((PlayableCard) card);
-        } else if(card instanceof SpellCard) {
-            spellCards.add((SpellCard) card);
-        }
-        cards.sort(null);
-    }
-
-    public ArrayList<PlayableCard> getCards() {
-        return cards;
-    }
-
-    public void increaseMorale() {
-        morale++;
-    }
-}
 
 class Discard {
     private HashMap<Player, ArrayList<AbstractCard>> discard;

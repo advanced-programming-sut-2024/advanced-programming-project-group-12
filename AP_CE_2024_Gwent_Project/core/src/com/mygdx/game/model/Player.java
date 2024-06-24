@@ -24,6 +24,10 @@ public class Player {
         this.roundsLost = 0;
     }
 
+    public CommanderCard getLeader() {
+        return leader;
+    }
+
     public LinkedList<AbstractCard> getDeck() {
         return deck;
     }

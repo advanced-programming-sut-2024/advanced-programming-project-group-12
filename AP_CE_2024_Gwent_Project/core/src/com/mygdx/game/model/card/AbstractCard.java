@@ -36,6 +36,17 @@ public abstract class AbstractCard implements Cloneable{
         return faction;
     }
 
+    public List<Integer> getAllowableRows() {
+        return allowableRows;
+    }
+    public int getDefaultRow() {
+        return allowableRows.get(0);
+    }
+
+    public Action getAction() {
+        return action;
+    }
+
     public abstract void kill();
     public void place(int row) {
         Player player = Game.getCurrentGame().getCurrentPlayer();

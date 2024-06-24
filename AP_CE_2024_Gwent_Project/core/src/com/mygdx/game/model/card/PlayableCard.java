@@ -13,10 +13,18 @@ public class PlayableCard extends AbstractCard {
     private int power;
     private int row;
     private boolean isDead;
+    private AbstractCard legacyCard;
     public PlayableCard(String name, String description, Action action, List<Integer> rows , int power, Integer typeNumber, Faction faction) {
         super(name, description, action, rows, typeNumber, faction);
         this.power = power;
+        legacyCard = null;
         this.isDead = false;
+    }
+    public PlayableCard(String name, String description, Action action, List<Integer> rows , int power, Integer typeNumber, Faction faction, PlayableCard legacyCard) {
+        super(name, description, action, rows, typeNumber, faction);
+        this.power = power;
+        this.isDead = false;
+        this.legacyCard = legacyCard;
     }
 
     public static void updatePowers() {
@@ -32,6 +40,10 @@ public class PlayableCard extends AbstractCard {
 
     public boolean isDead() {
         return isDead;
+    }
+
+    public AbstractCard getLegacyCard() {
+        return legacyCard.clone();
     }
 
     @Override
