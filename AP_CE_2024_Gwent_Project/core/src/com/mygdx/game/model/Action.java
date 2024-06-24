@@ -129,11 +129,8 @@ public enum Action {
     }),
     MUSKET(card -> {
         Player player = Game.getCurrentGame().getCurrentPlayer();
-        ArrayList<AbstractCard> deck = player.getDeck();
-        Iterator<AbstractCard> it = deck.iterator();
-        while (it.hasNext()) {
-            if(it)
-        }
+        LinkedList<AbstractCard> deck = player.getDeck();
+
         LinkedList<AbstractCard> hand = player.getHand();
     }),
     BEAR(null), MUSHROOM(null), DECOY(null),

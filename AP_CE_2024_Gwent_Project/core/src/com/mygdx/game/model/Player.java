@@ -9,13 +9,13 @@ import java.util.LinkedList;
 public class Player {
     private User user;
     private CommanderCard leader;
-    private ArrayList<AbstractCard> deck;
+    private LinkedList<AbstractCard> deck;
     private LinkedList<AbstractCard> hand;
     private Faction faction;
     private int roundsLost;
     private boolean won;
 
-    public Player(User user, CommanderCard leader, ArrayList<AbstractCard> deck, Faction faction) {
+    public Player(User user, CommanderCard leader, LinkedList<AbstractCard> deck, Faction faction) {
         this.user = user;
         this.leader = leader;
         this.deck = deck;
@@ -24,7 +24,7 @@ public class Player {
         this.roundsLost = 0;
     }
 
-    public ArrayList<AbstractCard> getDeck() {
+    public LinkedList<AbstractCard> getDeck() {
         return deck;
     }
 

@@ -7,6 +7,7 @@ import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.card.CommanderCards;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class PreGameMenuController {
     Player player = Game.getCurrentGame().getCurrentPlayer();
@@ -19,7 +20,7 @@ public class PreGameMenuController {
     public void startGame() {
         //hard coding a deck
         CommanderCard commanderCard = CommanderCards.FOLTEST_SIEGE.getAbstractCard();
-        ArrayList<AbstractCard> deck = new ArrayList<>();
+        LinkedList<AbstractCard> deck = new LinkedList<>();
         deck.add(AllCards.COMMANDER_HORN.getAbstractCard());
         deck.add(AllCards.SCORCH.getAbstractCard());
         deck.add(AllCards.YENNEFER_OF_VENGENBERG.getAbstractCard());
