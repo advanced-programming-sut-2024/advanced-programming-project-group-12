@@ -12,7 +12,8 @@ public abstract class AbstractCard implements Cloneable{
     private String name;
     private String description;
     Action action;
-    private String  typeNumber;
+    protected int row;
+    protected String  typeNumber;
     private Faction faction;
 
     public AbstractCard(String name, String description, Action action, List<Integer> rows, Integer typeNumber, Faction faction) {
@@ -20,7 +21,7 @@ public abstract class AbstractCard implements Cloneable{
         this.name = name;
         this.description = description;
         this.action = action;
-        this.typeNumber = typeNumber == null? "" :"_"+ typeNumber.toString();
+        this.typeNumber = typeNumber == null? "" :"_"+ typeNumber;
         this.faction = faction;
     }
 
@@ -47,10 +48,15 @@ public abstract class AbstractCard implements Cloneable{
         return action;
     }
 
+    public int getRow() {
+        return row;
+    }
+
     public abstract void kill();
     public void place(int row) {
         Player player = Game.getCurrentGame().getCurrentPlayer();
         player.getHand().remove(this);
+        this.row = row;
     }
     public void doAction() {
         action.execute(this);

@@ -117,7 +117,7 @@ public enum Action {
     MORALE(card -> {
         Player player = Game.getCurrentGame().getCurrentPlayer();
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
-        gameBoard.increaseMorale(((PlayableCard) card).getRow());
+        gameBoard.increaseMorale(card.getRow());
     }),
     COW(card -> {
         if(((PlayableCard) card).isDead()) {
@@ -125,12 +125,16 @@ public enum Action {
         }
     }),
     HORN(card -> {
-        AllCards.COMMANDER_HORN.getAbstractCard().place(((PlayableCard) card).getRow());
+        Row row = Game.getCurrentGame().getGameBoard().getRowForCurrentPlayer(card.getRow());
+        row.setHorn(true);
+    }),
+    HORN_CARD(card -> {
+        AllCards.COMMANDER_HORN.getAbstractCard().place(card.getRow());
     }),
     MUSKET(card -> {
         Player player = Game.getCurrentGame().getCurrentPlayer();
         LinkedList<AbstractCard> deck = player.getDeck();
-        int row = ((PlayableCard)card ).getRow();
+        int row = card.getRow();
         for (AbstractCard i : deck) {
             if (i.getName().equals(card.getName())) {
                 deck.remove(i);
@@ -156,7 +160,7 @@ public enum Action {
     BEAR(card -> {
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
         Player player = Game.getCurrentGame().getCurrentPlayer();
-        int rowNumber = ((PlayableCard) card).getRow();
+        int rowNumber = card.getRow();
         Row row = gameBoard.getRowForCurrentPlayer(rowNumber);
         if(row.hasMushroom()) {
             card.kill();
@@ -165,7 +169,7 @@ public enum Action {
     }),
     MUSHROOM(card -> {
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
-        int rowNumber = ((PlayableCard) card).getRow();
+        int rowNumber = card.getRow();
         Row row = gameBoard.getRowForCurrentPlayer(rowNumber);
         row.setHasMushroom();
         ArrayList<PlayableCard> rowCards = row.getCards();
@@ -265,6 +269,54 @@ public enum Action {
     ERIDIN_BRINGER(abstractCard -> {
         //todo
     }),
+    ERIDIN_DESTROYER(abstractCard -> {
+
+    }),
+    ERIDIN_KING(abstractCard -> {
+
+    }),
+    ERIDIN_TREACHEROUS(abstractCard -> {
+        Game.getCurrentGame().getGameBoard().setDoubleSpyPower(true);
+    }),
+
+    FRANCESCA_QUEEN(abstractCard -> SCORCH_C.execute(null)),
+    FRANCESCA_BEAUTIFUL(abstractCard -> AllCards.COMMANDER_HORN.getAbstractCard().place(1)),
+    FRANCESCA_DAISY(abstractCard -> {
+        //probably has to be hardcoded
+    }),
+    FRANCESCA_PUREBLOOD(abstractCard -> AllCards.FROST.getAbstractCard().place(3)),
+    FRANCESCA_HOPE(abstractCard -> {
+        Player player = Game.getCurrentGame().getCurrentPlayer();
+        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        ArrayList<PlayableCard> allPlayablePlayedCards = gameBoard.allPlayerPlayableCards(player);
+        ArrayList<Row> allRows = gameBoard.getAllRowsForPlayer(player);
+
+        for(PlayableCard card : allPlayablePlayedCards) {
+            if(!card.canBeReplaced()) {
+                continue;
+            }
+
+            int maxPower = 0;
+            int maxRow = -1;
+            for(int allowableRow: card.getAllowableRows()) {
+                int rowPower = allRows.get(allowableRow).calculatePowerOfPlayableCard(card);
+                if(rowPower > maxPower) {
+                    maxPower = rowPower;
+                    maxRow = allowableRow;
+                }
+            }
+
+            card.replace(maxRow);
+        }
+    }),
+
+    CRACH_AN_CRAITE(abstractCard -> {
+        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+
+        Player player = Game.getCurrentGame().getCurrentPlayer();
+
+    }),
+
 
     NO_ACTION(card -> {}),
     ;

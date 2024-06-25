@@ -1,6 +1,8 @@
 package com.mygdx.game.model.gameBoard;
 
+import com.mygdx.game.model.Action;
 import com.mygdx.game.model.card.AbstractCard;
+import com.mygdx.game.model.card.Hero;
 import com.mygdx.game.model.card.PlayableCard;
 import com.mygdx.game.model.card.SpellCard;
 
@@ -11,6 +13,7 @@ public class Row {
     private ArrayList<PlayableCard> cards;
     private HashSet<SpellCard> spellCards;
     private int morale;
+    private boolean hasHorn;
     private boolean hasMushroom;
     private boolean hasWeatherBuffer;
 
@@ -35,6 +38,13 @@ public class Row {
         return cards;
     }
 
+    public void removeCard(PlayableCard playableCard) {
+        cards.remove(playableCard);
+    }
+    public void removeCard(SpellCard spellCard) {
+        spellCards.remove(spellCard);
+    }
+
     public void increaseMorale() {
         morale++;
     }
@@ -52,5 +62,33 @@ public class Row {
 
     public void setWeatherBuffer(boolean hasWeatherBuffer) {
         this.hasWeatherBuffer = hasWeatherBuffer;
+    }
+
+    public boolean hasHorn() {
+        return hasHorn;
+    }
+
+    public void setHorn(boolean hasHorn) {
+        this.hasHorn = hasHorn;
+    }
+
+    public int calculatePowerOfPlayableCard(PlayableCard playableCard) {
+        int power = playableCard.getPower();
+        if(playableCard instanceof Hero) {
+            return power;
+        }
+        if(hasWeatherBuffer) {
+            power = 1;
+        }
+        if(hasHorn) {
+            power *= 2;
+        }
+        if(playableCard.getAction().equals(Action.MORALE)) {
+            power += morale -1;
+        }
+        else {
+            power += morale;
+        }
+        return power;
     }
 }

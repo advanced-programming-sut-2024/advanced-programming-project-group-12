@@ -13,6 +13,7 @@ public class GameBoard {
     private HashMap<Player, ArrayList<Row>> rows;
     private Discard discard;
     private HashSet<SpellCard> weatherCards;
+    private boolean doubleSpyPower;
 
     public GameBoard(Player player1, Player player2) {
         rows = new HashMap<>(2);
@@ -22,16 +23,16 @@ public class GameBoard {
         weatherCards = new HashSet<>();
     }
 
+    public void setDoubleSpyPower(boolean doubleSpyPower) {
+        this.doubleSpyPower = doubleSpyPower;
+    }
+
     public void addCard(Player player, int row, PlayableCard card) {
         rows.get(player).get(row).addCard(card);
     }
 
     public void addCard(Player player, int row, SpellCard spellCard) {
         rows.get(player).get(row).addCard(spellCard);
-    }
-
-    public void removeCard(AbstractCard abstractCard, int row, Player player) {
-        rows.get(player).get(row).getCards().remove(abstractCard);
     }
 
     public ArrayList<PlayableCard> allPlayerPlayableCards(Player player) {
@@ -54,6 +55,11 @@ public class GameBoard {
             return null;
         }
     }
+
+    public ArrayList<Row> getAllRowsForPlayer(Player player) {
+        return rows.get(player);
+    }
+
     public Row getRowForCurrentPlayer(int row) {
         /**
          * returns a row object of the current player based on the int row provided;
@@ -77,23 +83,10 @@ public class GameBoard {
     }
 
 
-    public ArrayList<AbstractCard> getDiscard(Player player) {
-        return discard.getDiscard(player);
+    public Discard getDiscard(Player player) {
+        return discard;
     }
 
 }
 
-
-class Discard {
-    private HashMap<Player, ArrayList<AbstractCard>> discard;
-    public Discard(Player player1, Player player2) {
-        discard = new HashMap<>(2);
-        discard.put(player1, new ArrayList<>());
-        discard.put(player2, new ArrayList<>());
-    }
-
-    public ArrayList<AbstractCard> getDiscard(Player player) {
-        return discard.get(player);
-    }
-}
 

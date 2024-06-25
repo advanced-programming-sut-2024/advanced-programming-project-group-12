@@ -2,8 +2,6 @@ package com.mygdx.game.model.card;
 
 import com.mygdx.game.model.Action;
 import com.mygdx.game.model.Faction;
-import com.mygdx.game.model.card.SpellCard;
-import com.mygdx.game.model.card.AbstractCard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +9,7 @@ import java.util.HashMap;
 
 public enum AllCards {
     //special cards
-    COMMANDER_HORN(new SpellCard("commander horn", "", Action.NO_ACTION, Arrays.asList(0,1,2), null, Faction.SPECIAL)),
+    COMMANDER_HORN(new SpellCard("commander horn", "", Action.HORN, Arrays.asList(0,1,2), null, Faction.SPECIAL)),
     SCORCH(new SpellCard("scorch", "", Action.SCORCH, null, null, Faction.SPECIAL) {
         @Override
         public void place(int row) {}
@@ -64,7 +62,7 @@ public enum AllCards {
     AVALLACH(new PlayableCard("avallach", "", Action.SPY, Arrays.asList(0), 0, null, Faction.NEUTRAL)),
     BOVINE_DEFENSE_FORCE(new PlayableCard("bovine defense force", "", Action.NO_ACTION, Arrays.asList(0), 8, null, Faction.NEUTRAL)),
     COW(new PlayableCard("cow", "", Action.COW, Arrays.asList(1), 0, null, Faction.NEUTRAL)),
-    DANDELION(new PlayableCard("dandelion", "", Action.HORN, Arrays.asList(0), 2, null, Faction.NEUTRAL)),
+    DANDELION(new PlayableCard("dandelion", "", Action.HORN_CARD, Arrays.asList(0), 2, null, Faction.NEUTRAL)),
     EMIEL(new PlayableCard("emiel", "", Action.NO_ACTION, Arrays.asList(0), 5, null, Faction.NEUTRAL)),
     GAUNTER_ODIMM_DARKNESS_1(new PlayableCard("gaunter odimm", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.NEUTRAL)),
     GAUNTER_ODIMM(new PlayableCard("gaunter odimm", "", Action.MUSKET, Arrays.asList(2), 2, null, Faction.NEUTRAL)),
@@ -203,7 +201,7 @@ public enum AllCards {
     CRAITE_WARRIOR(new PlayableCard("craite warrior", "", Action.TIGHT_BOND, Arrays.asList(0), 6, null, Faction.SKELLIGE)),
     DUMUN_PIRATE(new PlayableCard("dumun pirate", "", Action.SCORCH, Arrays.asList(0), 6, null, Faction.SKELLIGE)),
     DONAR(new PlayableCard("donar", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.SKELLIGE)),
-    DRAIG(new PlayableCard("draig", "", Action.HORN, Arrays.asList(0), 2, null, Faction.SKELLIGE)),
+    DRAIG(new PlayableCard("draig", "", Action.HORN_CARD, Arrays.asList(0), 2, null, Faction.SKELLIGE)),
     ERMION(new Hero("ermion", "", Action.MUSHROOM, Arrays.asList(1), 8, null, Faction.SKELLIGE)),
     HEMDALL(new PlayableCard("hemdall", "", Action.NO_ACTION, Arrays.asList(0), 11, null, Faction.SKELLIGE)),
     HEYMAEY(new PlayableCard("heymaey", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.SKELLIGE)),

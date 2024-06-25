@@ -10,6 +10,7 @@ public class CommanderCard extends AbstractCard{
 
     public CommanderCard(String name, String description, Action action, List<Integer> rows, Integer typeNumber, Faction faction) {
         super(name, description, action, rows, typeNumber, faction);
+        super.typeNumber = "";
         hasPlayedAction = false;
     }
 
