@@ -11,20 +11,34 @@ import java.util.HashSet;
 
 public class GameBoard {
     private HashMap<Player, ArrayList<Row>> rows;
-    private Discard discard;
+    private HashMap<Player,ArrayList<AbstractCard>> discard;
     private HashSet<SpellCard> weatherCards;
-    private boolean doubleSpyPower;
+
 
     public GameBoard(Player player1, Player player2) {
         rows = new HashMap<>(2);
-        rows.put(player1, new ArrayList<>());
-        rows.put(player2, new ArrayList<>());
-        discard = new Discard(player1, player2);
+        rows.put(player1, new ArrayList<>(3));
+        rows.put(player2, new ArrayList<>(3));
+        discard = new HashMap<>(2);
+        discard.put(player1, new ArrayList<>());
+        discard.put(player2, new ArrayList<>());
         weatherCards = new HashSet<>();
     }
 
-    public void setDoubleSpyPower(boolean doubleSpyPower) {
-        this.doubleSpyPower = doubleSpyPower;
+    public void setDoubleSpyPower() {
+        for(Player i : rows.keySet()) {
+            for(Row j : rows.get(i)) {
+                j.setDoubleSpyPower(true);
+            }
+        }
+    }
+
+    public void setHalfAttrition() {
+        for(Player i : rows.keySet()) {
+            for(Row j : rows.get(i)) {
+                j.setHalfAttrition(true);
+            }
+        }
     }
 
     public void addCard(Player player, int row, PlayableCard card) {
@@ -83,8 +97,12 @@ public class GameBoard {
     }
 
 
-    public Discard getDiscard(Player player) {
-        return discard;
+    public ArrayList<AbstractCard> getDiscard(Player player) {
+        return discard.get(player);
+    }
+
+    public void resetDiscard(Player player) {
+        discard.put(player, new ArrayList<>());
     }
 
 }

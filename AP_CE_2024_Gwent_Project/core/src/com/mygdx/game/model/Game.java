@@ -1,5 +1,6 @@
 package com.mygdx.game.model;
 
+import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.gameBoard.GameBoard;
 
 import java.time.LocalDate;

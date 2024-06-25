@@ -17,12 +17,17 @@ public class Row {
     private boolean hasMushroom;
     private boolean hasWeatherBuffer;
 
+    private boolean doubleSpyPower;
+    private boolean halfAttrition;
+
     public Row() {
         this.cards = new ArrayList<>();
         spellCards = new HashSet<>();
         hasMushroom = false;
         morale = 0;
         hasWeatherBuffer = false;
+        doubleSpyPower = false;
+        halfAttrition = false;
     }
 
     public void addCard(AbstractCard card) {
@@ -43,6 +48,14 @@ public class Row {
     }
     public void removeCard(SpellCard spellCard) {
         spellCards.remove(spellCard);
+    }
+
+    public void setDoubleSpyPower(boolean doubleSpyPower) {
+        this.doubleSpyPower = doubleSpyPower;
+    }
+
+    public void setHalfAttrition(boolean halfAttrition) {
+        this.halfAttrition = halfAttrition;
     }
 
     public void increaseMorale() {
@@ -74,11 +87,18 @@ public class Row {
 
     public int calculatePowerOfPlayableCard(PlayableCard playableCard) {
         int power = playableCard.getPower();
+        if(doubleSpyPower && playableCard.getAction().equals(Action.SPY)) {
+            power *= 2;
+        }
         if(playableCard instanceof Hero) {
             return power;
         }
         if(hasWeatherBuffer) {
-            power = 1;
+            if (halfAttrition) {
+                power /= 2;
+            } else {
+                power = 1;
+            }
         }
         if(hasHorn) {
             power *= 2;

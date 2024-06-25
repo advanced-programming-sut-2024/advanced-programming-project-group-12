@@ -4,6 +4,7 @@ import com.mygdx.game.model.card.CommanderCard;
 import com.mygdx.game.model.card.AbstractCard;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 
 public class Player {
@@ -18,6 +19,7 @@ public class Player {
     public Player(User user, CommanderCard leader, LinkedList<AbstractCard> deck, Faction faction) {
         this.user = user;
         this.leader = leader;
+        Collections.shuffle((ArrayList)deck.clone());
         this.deck = deck;
         this.faction = faction;
         hand = new LinkedList<>();
@@ -53,8 +55,14 @@ public class Player {
     }
 
     public Player drawCard() {
-        Player player = Game.getCurrentGame().getCurrentPlayer();
-        // Implement card drawing logic
-        return player;
+        if(!deck.isEmpty()) {
+            hand.add(deck.get(0));
+            deck.remove(0);
+        }
+        return this;
+    }
+
+    public void addCardsToDeck(ArrayList<AbstractCard> cards) {
+        deck.addAll(cards);
     }
 }

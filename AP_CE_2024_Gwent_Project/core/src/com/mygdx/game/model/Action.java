@@ -8,6 +8,7 @@ import com.mygdx.game.model.card.PlayableCard;
 import com.mygdx.game.model.gameBoard.Row;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 
@@ -107,7 +108,7 @@ public enum Action {
     MEDIC(card -> {
         // should open a menu in game screen to choose from one card of the below list
         Player player = Game.getCurrentGame().getCurrentPlayer();
-        Discard discard = Game.getCurrentGame().getGameBoard().getDiscard(player);
+        ArrayList<AbstractCard> discard = Game.getCurrentGame().getGameBoard().getDiscard(player);
         AbstractCard chosenCard;
 //        chosenCard.place();
     }),
@@ -277,7 +278,7 @@ public enum Action {
 
     }),
     ERIDIN_TREACHEROUS(abstractCard -> {
-        Game.getCurrentGame().getGameBoard().setDoubleSpyPower(true);
+        Game.getCurrentGame().getGameBoard().setDoubleSpyPower();
     }),
 
     FRANCESCA_QUEEN(abstractCard -> SCORCH_C.execute(null)),
@@ -312,16 +313,27 @@ public enum Action {
     }),
 
     CRACH_AN_CRAITE(abstractCard -> {
-        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        Game currentGame = Game.getCurrentGame();
+        GameBoard gameBoard = currentGame.getGameBoard();
 
-        Player player = Game.getCurrentGame().getCurrentPlayer();
+        ArrayList<Player> players = new ArrayList<>(2);
+        players.add(Game.getCurrentGame().getCurrentPlayer());
+        players.add(Game.getCurrentGame().getOpposition());
 
+        for(Player i : players) {
+            ArrayList<AbstractCard> discard = gameBoard.getDiscard(i);
+            Collections.shuffle(discard);
+            i.addCardsToDeck(discard);
+            gameBoard.resetDiscard(i);
+        }
     }),
+    KING_BRAN(abstractCard -> Game.getCurrentGame().getGameBoard().setHalfAttrition()
+    ),
 
 
     NO_ACTION(card -> {}),
     ;
-    private Consumer<AbstractCard> action;
+    private final Consumer<AbstractCard> action;
 
     Action(Consumer<AbstractCard> action) {
         this.action = action;
