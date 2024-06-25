@@ -120,7 +120,7 @@ public class PreGameMenuScreen implements Screen {
         factionWindow.add(nilfgaardianButton).padBottom(20).center().padTop(100);
         nilfgaardianButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                controller.setFaction(Faction.EMPIRE_NILFGAARD.getName());
+                controller.setFaction(Faction.NILFGAARD.getName());
                 factionWindow.setVisible(false);
             }
         });

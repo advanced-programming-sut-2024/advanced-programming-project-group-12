@@ -7,6 +7,7 @@ import com.mygdx.game.model.card.PlayableCard;
 import com.mygdx.game.model.card.SpellCard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class GameBoard {
@@ -41,7 +42,15 @@ public class GameBoard {
     public ArrayList<AbstractCard> getDiscard(Player player) {
         return discard.getDiscard(player);
     }
-
+    public ArrayList<SpellCard> getWeatherCards() {
+        return weatherCards;
+    }
+    public ArrayList<PlayableCard> getCardsByRow(Player player, int row) {
+        return rows.get(player).get(row).getCards();
+    }
+    public ArrayList<SpellCard> getSpellCardsByRow(Player player, int row) {
+        return rows.get(player).get(row).getSpellCards();
+    }
 }
 
 
@@ -64,6 +73,9 @@ class Row {
 
     public ArrayList<PlayableCard> getCards() {
         return cards;
+    }
+    public ArrayList<SpellCard> getSpellCards() {
+        return spellCards;
     }
 }
 

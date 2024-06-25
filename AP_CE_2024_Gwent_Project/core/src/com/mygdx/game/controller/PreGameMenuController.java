@@ -1,10 +1,7 @@
 package com.mygdx.game.controller;
 
 import com.mygdx.game.model.*;
-import com.mygdx.game.model.card.AllCards;
-import com.mygdx.game.model.card.CommanderCard;
-import com.mygdx.game.model.card.AbstractCard;
-import com.mygdx.game.model.card.CommanderCards;
+import com.mygdx.game.model.card.*;
 
 import java.util.ArrayList;
 
@@ -31,7 +28,8 @@ public class PreGameMenuController {
         Player player = new Player(User.getLoggedInUser(), commanderCard, deck, faction);
         Player.setCurrentPlayer(player); // Set the current player
         new Game(player, player);
-        ScreenManager.setGameMenuScreen();
+        Game.getCurrentGame().getGameBoard().addCard(player, 0, ((PlayableCard)AllCards.BIRNA.getAbstractCard()));
+        ScreenManager.setGameScreen();
     }
 
     public void setFaction(String factionName) {

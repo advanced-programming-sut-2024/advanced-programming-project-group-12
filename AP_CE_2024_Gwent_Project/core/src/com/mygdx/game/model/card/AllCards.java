@@ -25,7 +25,7 @@ public enum AllCards {
 
 
     //northern realms
-    KIERA_METZ(new PlayableCard("kiera metz", "", Action.NO_ACTION, Arrays.asList(1), 5, null, Faction.NORTHERN_REALMS)),
+    KIERA_METZ(new PlayableCard("keira metz", "", Action.NO_ACTION, Arrays.asList(1), 5, null, Faction.NORTHERN_REALMS)),
     POOR_FUCKING_INFANTRY(new PlayableCard("poor fucking infantry", "", Action.TIGHT_BOND, Arrays.asList(0), 1, null, Faction.NORTHERN_REALMS)),
     BALLISTA(new PlayableCard("ballista", "", Action.NO_ACTION, Arrays.asList(2), 6, null, Faction.NORTHERN_REALMS)),
     BLUE_STRIPES_COMMANDO(new PlayableCard("blue stripes commando", "", Action.TIGHT_BOND, Arrays.asList(0), 4, null, Faction.NORTHERN_REALMS)),
@@ -230,6 +230,9 @@ public enum AllCards {
     }
 
     static {
+        for(Faction i: Faction.values()) {
+            faction.put(i, new ArrayList<>());
+        }
         for(AllCards i: AllCards.values()) {
             AbstractCard card = i.getCard();
             faction.get(card.getFaction()).add(card);

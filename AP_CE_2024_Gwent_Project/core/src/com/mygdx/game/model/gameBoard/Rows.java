@@ -5,7 +5,7 @@ public enum Rows {
     RANGED_WEAPON(1),
     SIEGE_WEAPON(2)
     ;
-    private int position;
+    private final int position;
 
     Rows(int position) {
         this.position = position;

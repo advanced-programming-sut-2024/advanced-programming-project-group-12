@@ -57,7 +57,7 @@ public abstract class AbstractCard implements Cloneable{
     }
 
 
-    private String getAssetName() {
-        return faction.getName()+ "_" + name + "_"+ typeNumber;
+    public String getAssetName() {
+        return "cards/" + faction.getName()+ "_" + name + typeNumber + ".jpg";
     }
 }

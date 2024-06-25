@@ -50,7 +50,18 @@ public class Player {
         this.faction = faction;
     }
 
+    public ArrayList<AbstractCard> getDeck() {
+        return deck;
+    }
+
     public void drawCard() {
-        // Implement card drawing logic
+
+    }
+
+    public void removeCardFromDeck(AbstractCard card) {
+        deck.remove(card);
+    }
+    public CommanderCard getLeader() {
+        return leader;
     }
 }

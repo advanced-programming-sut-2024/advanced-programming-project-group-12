@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public enum Faction {
     MONSTERS("monsters"),
-    NORTHERN_REALMS("northern realms"),
+    NORTHERN_REALMS("realms"),
     SCOIATAEL("scoiatael"),
 
     NILFGAARD("nilfgaard"),

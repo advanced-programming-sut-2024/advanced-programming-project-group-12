@@ -17,6 +17,9 @@ public enum CommanderCards {
     }
 
     static {
+        for(Faction i: Faction.values()) {
+            factions.put(i, new ArrayList<>());
+        }
         for(CommanderCards i: CommanderCards.values()) {
             CommanderCard card = i.getCard();
             factions.get(card.getFaction()).add(card);
@@ -30,7 +33,7 @@ public enum CommanderCards {
     private CommanderCard getCard() {return commanderCard;}
 
     public CommanderCard getAbstractCard() {
-        return (CommanderCard) commanderCard.clone();
+        return (CommanderCard) commanderCard;
     }
 
 }
