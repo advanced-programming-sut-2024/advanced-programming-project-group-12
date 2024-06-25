@@ -40,5 +40,6 @@ public class PreGameMenuController {
     public void setFaction(String factionName) {
         Faction faction = Faction.getFactionByName(factionName);
         user.setFaction(faction);
+        user.updateInfo();
     }
 }

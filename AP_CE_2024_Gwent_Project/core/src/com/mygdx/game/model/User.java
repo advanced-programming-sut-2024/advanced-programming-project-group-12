@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Random;
 
 public class User {
     //static fields
@@ -36,7 +37,7 @@ public class User {
         this.nickname = nickname;
         this.password = password;
         this.email = email;
-        this.faction = Faction.NEUTRAL;
+        this.faction = Faction.getFactionByName(Faction.getFactionByName("neutral").getName());
         this.securityQuestion = new HashMap<>();
         this.allGamePlayed = new ArrayList<>();
         this.userInfo = new UserInfo();
@@ -168,10 +169,11 @@ public class User {
     }
 
     public Faction getFaction() {
-        return userInfo.getFaction();
+        return this.faction;
     }
 
     public void setFaction(Faction faction) {
-        userInfo.setFaction(faction);
+        this.faction = faction;
+//        userInfo.setFaction(faction);
     }
 }

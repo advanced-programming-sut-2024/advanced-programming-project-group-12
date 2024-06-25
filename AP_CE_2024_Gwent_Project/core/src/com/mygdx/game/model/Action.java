@@ -2,6 +2,7 @@ package com.mygdx.game.model;
 
 import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.card.AllCards;
+import com.mygdx.game.model.gameBoard.Discard;
 import com.mygdx.game.model.gameBoard.GameBoard;
 import com.mygdx.game.model.card.PlayableCard;
 import com.mygdx.game.model.gameBoard.Row;
@@ -106,7 +107,7 @@ public enum Action {
     MEDIC(card -> {
         // should open a menu in game screen to choose from one card of the below list
         Player player = Game.getCurrentGame().getCurrentPlayer();
-        ArrayList<AbstractCard> discard = Game.getCurrentGame().getGameBoard().getDiscard(player);
+        Discard discard = Game.getCurrentGame().getGameBoard().getDiscard(player);
         AbstractCard chosenCard;
 //        chosenCard.place();
     }),
