@@ -231,6 +231,9 @@ public enum AllCards {
     }
 
     static {
+        for(Faction i: Faction.values()) {
+            faction.put(i , new ArrayList<>());
+        }
         for(AllCards i: AllCards.values()) {
             AbstractCard card = i.getCard();
             faction.get(card.getFaction()).add(card);

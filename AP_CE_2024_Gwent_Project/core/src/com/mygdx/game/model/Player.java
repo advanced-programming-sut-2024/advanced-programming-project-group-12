@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 public class Player {
-    private User user;
+    private final User user;
     private CommanderCard leader;
     private LinkedList<AbstractCard> deck;
     private LinkedList<AbstractCard> hand;

@@ -38,20 +38,23 @@ public enum CommanderCards {
 
 
     private final static HashMap<Faction, ArrayList<CommanderCard>> factions = new HashMap<>();
-    private CommanderCard commanderCard;
+    private final CommanderCard commanderCard;
 
     CommanderCards(CommanderCard commanderCard) {
         this.commanderCard = commanderCard;
     }
 
     static {
+        for(Faction i: Faction.values()) {
+            factions.put(i , new ArrayList<>());
+        }
         for(CommanderCards i: CommanderCards.values()) {
             CommanderCard card = i.getCard();
             factions.get(card.getFaction()).add(card);
         }
     }
 
-    public static ArrayList<CommanderCard> getFactionCardByFaction(Faction faction) {
+    public static ArrayList<CommanderCard> getFactionCardsByFaction(Faction faction) {
         return factions.get(faction);
     }
 

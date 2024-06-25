@@ -2,7 +2,6 @@ package com.mygdx.game.model;
 
 import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.card.AllCards;
-import com.mygdx.game.model.gameBoard.Discard;
 import com.mygdx.game.model.gameBoard.GameBoard;
 import com.mygdx.game.model.card.PlayableCard;
 import com.mygdx.game.model.gameBoard.Row;
