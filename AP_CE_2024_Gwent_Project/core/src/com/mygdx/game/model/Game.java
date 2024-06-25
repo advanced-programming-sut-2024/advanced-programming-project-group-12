@@ -1,12 +1,9 @@
 package com.mygdx.game.model;
 
-import com.mygdx.game.model.card.AbstractCard;
-import com.mygdx.game.model.gameBoard.GameBoard;
+import com.mygdx.game.model.gameboard.GameBoard;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class Game {

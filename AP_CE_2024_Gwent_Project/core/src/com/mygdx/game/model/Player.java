@@ -19,11 +19,15 @@ public class Player {
     public Player(User user, CommanderCard leader, LinkedList<AbstractCard> deck, Faction faction) {
         this.user = user;
         this.leader = leader;
-        Collections.shuffle((ArrayList)deck.clone());
-        this.deck = deck;
         this.faction = faction;
         hand = new LinkedList<>();
         this.roundsLost = 0;
+
+        Collections.shuffle((ArrayList)deck.clone());
+        this.deck = deck;
+        for(int i = 0; i< 10 ; i++) {
+            drawCard();
+        }
     }
 
     public CommanderCard getLeader() {

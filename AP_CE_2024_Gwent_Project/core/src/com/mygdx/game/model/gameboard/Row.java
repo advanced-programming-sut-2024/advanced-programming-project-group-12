@@ -1,4 +1,4 @@
-package com.mygdx.game.model.gameBoard;
+package com.mygdx.game.model.gameboard;
 
 import com.mygdx.game.model.Action;
 import com.mygdx.game.model.card.AbstractCard;

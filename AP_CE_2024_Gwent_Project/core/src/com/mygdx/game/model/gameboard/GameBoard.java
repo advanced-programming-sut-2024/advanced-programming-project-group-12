@@ -1,4 +1,4 @@
-package com.mygdx.game.model.gameBoard;
+package com.mygdx.game.model.gameboard;
 
 import com.mygdx.game.model.*;
 import com.mygdx.game.model.card.AbstractCard;
@@ -86,9 +86,14 @@ public class GameBoard {
         return weatherCards;
     }
 
-    public int getRowStrength(int row) {
-        //todo
-        return 0;
+    public int getRowStrength(Player player, int rowNumber) {
+        ArrayList<PlayableCard> cards = getRowCards(player, rowNumber);
+        Row row = rows.get(player).get(rowNumber);
+        int totalStrength = 0;
+        for(PlayableCard i: cards) {
+            totalStrength += row.calculatePowerOfPlayableCard(i);
+        }
+        return totalStrength;
     }
 
     public void increaseMorale(int row) {

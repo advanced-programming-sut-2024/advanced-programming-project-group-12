@@ -1,10 +1,9 @@
-package com.mygdx.game.model.gameBoard;
+package com.mygdx.game.model.gameboard;
 
 import com.mygdx.game.model.Player;
 import com.mygdx.game.model.card.AbstractCard;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Discard {
     private ArrayList<AbstractCard> cards;

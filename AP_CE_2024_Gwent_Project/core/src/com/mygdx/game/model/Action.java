@@ -2,9 +2,9 @@ package com.mygdx.game.model;
 
 import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.card.AllCards;
-import com.mygdx.game.model.gameBoard.GameBoard;
+import com.mygdx.game.model.gameboard.GameBoard;
 import com.mygdx.game.model.card.PlayableCard;
-import com.mygdx.game.model.gameBoard.Row;
+import com.mygdx.game.model.gameboard.Row;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +46,7 @@ public enum Action {
         Player opposition = Game.getCurrentGame().getOpposition();
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
         ArrayList<PlayableCard> row = gameBoard.getRowCards(opposition, 2);
-        if(gameBoard.getRowStrength(2)  < 10) return;
+        if(gameBoard.getRowStrength(opposition, 2)  < 10) return;
 
         row.sort(null); //sort cards based on power
         ArrayList<PlayableCard> cardsToBeKilled = new ArrayList<>();
@@ -66,7 +66,7 @@ public enum Action {
         Player opposition = Game.getCurrentGame().getOpposition();
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
         ArrayList<PlayableCard> row = gameBoard.getRowCards(opposition, 1);
-        if(gameBoard.getRowStrength(1)  < 10) return;
+        if(gameBoard.getRowStrength(opposition,1)  < 10) return;
 
         row.sort(null); //sort cards based on power
         ArrayList<PlayableCard> cardsToBeKilled = new ArrayList<>();
@@ -86,7 +86,7 @@ public enum Action {
         Player opposition = Game.getCurrentGame().getOpposition();
         GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
         ArrayList<PlayableCard> row = gameBoard.getRowCards(opposition, 0);
-        if(gameBoard.getRowStrength(0)  < 10) return;
+        if(gameBoard.getRowStrength(opposition, 0)  < 10) return;
 
         row.sort(null); //sort cards based on power
         ArrayList<PlayableCard> cardsToBeKilled = new ArrayList<>();
