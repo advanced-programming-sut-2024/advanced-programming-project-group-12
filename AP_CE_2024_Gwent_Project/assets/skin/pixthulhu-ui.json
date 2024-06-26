@@ -1,5 +1,5 @@
  {
-com.badlogic.gdx.graphics.g2d.BitmapFont: {
+"com.badlogic.gdx.graphics.g2d.BitmapFont": {
 	font: {
 		file: font-export.fnt
 	}
@@ -230,6 +230,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		up: button-arcade
 		down: button-arcade-pressed
 	}
+
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 	default: {

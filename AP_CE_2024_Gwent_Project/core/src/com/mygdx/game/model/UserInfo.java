@@ -16,7 +16,7 @@ public class UserInfo {
         gamesWon = 0;
         gamesDrawn = 0;
         gamesLost = 0;
-        faction = Faction.NEUTRAL;
+//        faction = null;
     }
 
     public int getTotalScore() {
@@ -67,11 +67,11 @@ public class UserInfo {
         this.gamesDrawn = gamesDrawn;
     }
 
-    public Faction getFaction() {
-        return faction;
-    }
+//    public Faction getFaction() {
+//        return faction;
+//    }
 
-    public void setFaction(Faction faction) {
-        this.faction = faction;
-    }
+//    public void setFaction(Faction faction) {
+//        this.faction = faction;
+//    }
 }

@@ -2,6 +2,8 @@ package com.mygdx.game.model.card;
 
 import com.mygdx.game.model.Action;
 import com.mygdx.game.model.Faction;
+import com.mygdx.game.model.Game;
+import com.mygdx.game.model.Player;
 
 import java.util.List;
 
@@ -10,7 +12,8 @@ public abstract class AbstractCard implements Cloneable{
     private String name;
     private String description;
     Action action;
-    private String  typeNumber;
+    protected int row;
+    protected String  typeNumber;
     private Faction faction;
 
     public AbstractCard(String name, String description, Action action, List<Integer> rows, Integer typeNumber, Faction faction) {
@@ -18,7 +21,7 @@ public abstract class AbstractCard implements Cloneable{
         this.name = name;
         this.description = description;
         this.action = action;
-        this.typeNumber = typeNumber == null? "" : typeNumber.toString();
+        this.typeNumber = typeNumber == null? "" :"_"+ typeNumber;
         this.faction = faction;
     }
 
@@ -34,10 +37,29 @@ public abstract class AbstractCard implements Cloneable{
         return faction;
     }
 
+    public List<Integer> getAllowableRows() {
+        return allowableRows;
+    }
+    public int getDefaultRow() {
+        return allowableRows.get(0);
+    }
+
+    public Action getAction() {
+        return action;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
     public abstract void kill();
-    public abstract void place(int row);
+    public void place(int row) {
+        Player player = Game.getCurrentGame().getCurrentPlayer();
+        player.getHand().remove(this);
+        this.row = row;
+    }
     public void doAction() {
-        action.execute();
+        action.execute(this);
     }
 
     @Override
@@ -55,7 +77,6 @@ public abstract class AbstractCard implements Cloneable{
         if(!(obj instanceof AbstractCard)) return false;
         return name.equals(((AbstractCard) obj).name);
     }
-
 
     public String getAssetName() {
         return "cards/" + faction.getName()+ "_" + name + typeNumber + ".jpg";

@@ -4,34 +4,48 @@ import com.mygdx.game.model.card.CommanderCard;
 import com.mygdx.game.model.card.AbstractCard;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 
 public class Player {
-    private static Player currentPlayer;
-
-    private User user;
+    private final User user;
     private CommanderCard leader;
-    private ArrayList<AbstractCard> deck;
+    private LinkedList<AbstractCard> deck;
+    private LinkedList<AbstractCard> hand;
     private Faction faction;
     private int roundsLost;
     private boolean won;
+    private boolean isPassed;
 
-    public Player(User user, CommanderCard leader, ArrayList<AbstractCard> deck, Faction faction) {
+    public Player(User user, CommanderCard leader, LinkedList<AbstractCard> deck, Faction faction) {
         this.user = user;
         this.leader = leader;
-        this.deck = deck;
         this.faction = faction;
+        hand = new LinkedList<>();
         this.roundsLost = 0;
-    }
+        isPassed = false;
 
-    public static Player getCurrentPlayer() {
-        if (currentPlayer == null){
-            currentPlayer = new Player(User.getLoggedInUser(), null, null, null);
+        Collections.shuffle((LinkedList)deck.clone());
+        this.deck = deck;
+        for(int i = 0; i< 10 ; i++) {
+            drawCard();
         }
-        return currentPlayer;
     }
 
-    public static void setCurrentPlayer(Player player) {
-        currentPlayer = player;
+    public CommanderCard getLeader() {
+        return leader;
+    }
+
+    public LinkedList<AbstractCard> getDeck() {
+        return deck;
+    }
+
+    public LinkedList<AbstractCard> getHand() {
+        return hand;
+    }
+
+    public void reDraw(int cardIndex) {
+        deck.add(hand.remove(cardIndex));
     }
 
     public boolean isWon() {
@@ -42,6 +56,14 @@ public class Player {
         this.won = won;
     }
 
+    public boolean isPassed() {
+        return isPassed;
+    }
+
+    public void setPassed(boolean passed) {
+        isPassed = passed;
+    }
+
     public Faction getFaction() {
         return faction;
     }
@@ -50,18 +72,19 @@ public class Player {
         this.faction = faction;
     }
 
-    public ArrayList<AbstractCard> getDeck() {
-        return deck;
+    public Player drawCard() {
+        if(!deck.isEmpty()) {
+            hand.add(deck.get(0));
+            deck.remove(0);
+        }
+        return this;
     }
 
-    public void drawCard() {
-
+    public void addCardsToDeck(ArrayList<AbstractCard> cards) {
+        deck.addAll(cards);
     }
 
-    public void removeCardFromDeck(AbstractCard card) {
-        deck.remove(card);
-    }
-    public CommanderCard getLeader() {
-        return leader;
+    public void loseRound() {
+        roundsLost++;
     }
 }

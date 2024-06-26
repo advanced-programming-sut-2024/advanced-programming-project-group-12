@@ -2,25 +2,55 @@ package com.mygdx.game.model.gameBoard;
 
 import com.mygdx.game.model.*;
 import com.mygdx.game.model.card.AbstractCard;
-import com.mygdx.game.model.card.AllCards;
 import com.mygdx.game.model.card.PlayableCard;
 import com.mygdx.game.model.card.SpellCard;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 
 public class GameBoard {
     private HashMap<Player, ArrayList<Row>> rows;
-    private Discard discard;
-    private ArrayList<SpellCard> weatherCards;
+    private HashMap<Player,ArrayList<AbstractCard>> discard;
+    private HashSet<SpellCard> weatherCards;
+
 
     public GameBoard(Player player1, Player player2) {
         rows = new HashMap<>(2);
-        rows.put(player1, new ArrayList<>());
-        rows.put(player2, new ArrayList<>());
-        discard = new Discard(player1, player2);
-        weatherCards = new ArrayList<>();
+        rows.put(player1, new ArrayList<>(3));
+        rows.put(player2, new ArrayList<>(3));
+        discard = new HashMap<>(2);
+        discard.put(player1, new ArrayList<>());
+        discard.put(player2, new ArrayList<>());
+        weatherCards = new HashSet<>();
+    }
+
+    public GameBoard(HashMap<Player, ArrayList<Row>> rows, HashMap<Player, ArrayList<AbstractCard>> discard, HashSet<SpellCard> weatherCards) {
+        this.rows = new HashMap<>();
+        for(Player p: rows.keySet()) {
+            this.rows.put(p, rows.get(p));
+        }
+
+        this.discard = new HashMap<>();
+        for(Player p: rows.keySet()) {
+            this.discard.put(p, new ArrayList<>(discard.get(p)));
+        }
+
+        this.weatherCards = weatherCards;
+    }
+
+    public void setDoubleSpyPower() {
+        for(Player i : rows.keySet()) {
+            for(Row j : rows.get(i)) {
+                j.setDoubleSpyPower(true);
+            }
+        }
+    }
+
+    public void setHalfAttrition() {
+        for(Player i : rows.keySet()) {
+            for(Row j : rows.get(i)) {
+                j.setHalfAttrition(true);
+            }
+        }
     }
 
     public void addCard(Player player, int row, PlayableCard card) {
@@ -39,56 +69,100 @@ public class GameBoard {
         return cards;
     }
 
-    public ArrayList<AbstractCard> getDiscard(Player player) {
-        return discard.getDiscard(player);
-    }
-    public ArrayList<SpellCard> getWeatherCards() {
-        return weatherCards;
-    }
-    public ArrayList<PlayableCard> getCardsByRow(Player player, int row) {
-        return rows.get(player).get(row).getCards();
-    }
-    public ArrayList<SpellCard> getSpellCardsByRow(Player player, int row) {
-        return rows.get(player).get(row).getSpellCards();
-    }
-}
-
-
-class Row {
-    private ArrayList<PlayableCard> cards;
-    private ArrayList<SpellCard> spellCards;
-
-    public Row() {
-        this.cards = new ArrayList<>();
-        spellCards = new ArrayList<>();
-    }
-
-    public void addCard(AbstractCard card) {
-        if(card instanceof PlayableCard) {
-            cards.add((PlayableCard) card);
-        } else if(card instanceof SpellCard) {
-            spellCards.add((SpellCard) card);
+    public ArrayList<PlayableCard> getRowCards(Player player, int row) {
+        /**
+         * returns all cards associated with a row of index row and for the player.
+         */
+        if(row < 3 && row >= 0) {
+            return rows.get(player).get(row).getCards();
+        }
+        else {
+            System.err.println("Inalid row input");
+            return null;
         }
     }
 
-    public ArrayList<PlayableCard> getCards() {
-        return cards;
+    public ArrayList<Row> getAllRowsForPlayer(Player player) {
+        return rows.get(player);
     }
-    public ArrayList<SpellCard> getSpellCards() {
-        return spellCards;
-    }
-}
 
-class Discard {
-    private HashMap<Player, ArrayList<AbstractCard>> discard;
-    public Discard(Player player1, Player player2) {
-        discard = new HashMap<>(2);
-        discard.put(player1, new ArrayList<>());
-        discard.put(player2, new ArrayList<>());
+    public Row getRowForCurrentPlayer(int row) {
+        /**
+         * returns a row object of the current player based on the int row provided;
+         */
+        Player player = Game.getCurrentGame().getCurrentPlayer();
+        return rows.get(player).get(row);
     }
+
+    public HashSet<SpellCard> getWeatherCards() {
+        return weatherCards;
+    }
+
+    public int getRowStrength(Player player, int rowNumber) {
+        ArrayList<PlayableCard> cards = getRowCards(player, rowNumber);
+        Row row = rows.get(player).get(rowNumber);
+        int totalStrength = 0;
+        for(PlayableCard i: cards) {
+            totalStrength += row.calculatePowerOfPlayableCard(i);
+        }
+        return totalStrength;
+    }
+    public int getRowStrength(Row row) {
+        ArrayList<PlayableCard> cards = row.getCards();
+        int totalStrength = 0;
+        for(PlayableCard i: cards) {
+            totalStrength += row.calculatePowerOfPlayableCard(i);
+        }
+        return totalStrength;
+    }
+
+    public int getPlayerStrength(Player player) {
+        int totalStrength = 0;
+        for(Row r: rows.get(player)) {
+            totalStrength += getRowStrength(r);
+        }
+        return totalStrength;
+    }
+
+    public void increaseMorale(int row) {
+        Player player = Game.getCurrentGame().getCurrentPlayer();
+        rows.get(player).get(row).increaseMorale();
+    }
+
 
     public ArrayList<AbstractCard> getDiscard(Player player) {
         return discard.get(player);
     }
+
+    public void resetDiscard(Player player) {
+        discard.put(player, new ArrayList<>());
+    }
+
+    public void reset() {
+        weatherCards = new HashSet<>();
+
+        ArrayList<PlayableCard> cowCards = new ArrayList<>();
+
+        for(Player p: rows.keySet()) {
+            for(Row r: rows.get(p)) {
+                for(PlayableCard c: r.getCards()) {
+                    if(c.getAction().equals(Action.COW)) {
+                        cowCards.add(c);
+                    }
+                    c.kill();
+                }
+            }
+            rows.put(p, new ArrayList<>(Arrays.asList(new Row(), new Row(), new Row())));
+        }
+
+        for(PlayableCard c: cowCards) {
+            c.doAction();
+        }
+    }
+
+    public GameBoard copy() {
+        return new GameBoard(rows, discard, weatherCards);
+    }
 }
+
 

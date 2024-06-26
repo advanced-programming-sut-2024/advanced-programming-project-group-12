@@ -2,6 +2,8 @@ package com.mygdx.game.view.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -10,15 +12,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.MainMenuController;
 
-
 public class MainMenuScreen implements Screen {
     private static final float FIELD_WIDTH = 400;
     private static final float FIELD_HEIGHT = 80;
 
     private MainMenuController controller;
-    //
     private Stage stage;
     private Table table;
+    private SpriteBatch batch;
+    private Texture background;
     // Buttons
     private TextButton startGameButton;
     private TextButton showProfileButton;
@@ -27,6 +29,8 @@ public class MainMenuScreen implements Screen {
     public MainMenuScreen() {
         controller = new MainMenuController();
         stage = new Stage();
+        batch = new SpriteBatch();
+        background = new Texture(Gdx.files.internal("backgrounds/main_background.png"));
         Gdx.input.setInputProcessor(stage);
         table = new Table();
         table.setFillParent(true);
@@ -50,8 +54,6 @@ public class MainMenuScreen implements Screen {
                 controller.exit();
             }
         });
-
-
     }
 
     private void buttonAndFieldInit() {
@@ -66,7 +68,6 @@ public class MainMenuScreen implements Screen {
         exitButton = new TextButton("Exit", Gwent.singleton.skin);
         exitButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
         table.add(exitButton).padBottom(20);
-
     }
 
     @Override
@@ -78,11 +79,11 @@ public class MainMenuScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
-        Gwent.singleton.getBatch().begin();
-        Gwent.singleton.getBatch().end();
-        stage.act();
+        batch.begin();
+        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.end();
+        stage.act(delta);
         stage.draw();
-
     }
 
     @Override
@@ -107,6 +108,8 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
+        batch.dispose();
+        background.dispose();
     }
 }
