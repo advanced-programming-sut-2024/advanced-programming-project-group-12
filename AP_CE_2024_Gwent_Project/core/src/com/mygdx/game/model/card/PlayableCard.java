@@ -4,8 +4,8 @@ import com.mygdx.game.model.Action;
 import com.mygdx.game.model.Faction;
 import com.mygdx.game.model.Game;
 import com.mygdx.game.model.Player;
-import com.mygdx.game.model.gameboard.GameBoard;
-import com.mygdx.game.model.gameboard.Row;
+import com.mygdx.game.model.gameBoard.GameBoard;
+import com.mygdx.game.model.Row;
 
 import java.util.ArrayList;
 import java.util.List;

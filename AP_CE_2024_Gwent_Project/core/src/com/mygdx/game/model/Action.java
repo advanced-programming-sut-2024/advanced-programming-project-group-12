@@ -2,9 +2,8 @@ package com.mygdx.game.model;
 
 import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.card.AllCards;
-import com.mygdx.game.model.gameboard.GameBoard;
+import com.mygdx.game.model.gameBoard.GameBoard;
 import com.mygdx.game.model.card.PlayableCard;
-import com.mygdx.game.model.gameboard.Row;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -122,7 +121,7 @@ public enum Action {
     }),
     COW(card -> {
         if(((PlayableCard) card).isDead()) {
-            //avenger.place(row);
+            ((PlayableCard) card).getLegacyCard().place(card.getRow());
         }
     }),
     HORN(card -> {

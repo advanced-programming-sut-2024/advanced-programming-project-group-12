@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class PreGameMenuController {
-    Player player = Game.getCurrentGame().getCurrentPlayer();
     User user = User.getLoggedInUser();
 
     public void gotoMainMenu() {

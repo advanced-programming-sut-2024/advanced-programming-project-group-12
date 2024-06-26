@@ -57,11 +57,12 @@ public enum AllCards {
     YARPEN(new PlayableCard("yarpen", "", Action.NO_ACTION, Arrays.asList(0), 2, null, Faction.NORTHERN_REALMS)),
 
     //neutral cards
+    BOVINE_DEFENSE_FORCE(new PlayableCard("bovine defense force", "", Action.NO_ACTION, Arrays.asList(0), 8, null, Faction.UNUSABLE)),
+
     CIRILLA_FIONA_ELEN_RIANNON(new Hero("ciri", "", Action.NO_ACTION, Arrays.asList(0), 15, null, Faction.NEUTRAL)),
     YENNEFER_OF_VENGENBERG(new Hero("yennefer", "" , Action.MEDIC, Arrays.asList(1),7, null, Faction.NEUTRAL)),
     AVALLACH(new PlayableCard("avallach", "", Action.SPY, Arrays.asList(0), 0, null, Faction.NEUTRAL)),
-    BOVINE_DEFENSE_FORCE(new PlayableCard("bovine defense force", "", Action.NO_ACTION, Arrays.asList(0), 8, null, Faction.NEUTRAL)),
-    COW(new PlayableCard("cow", "", Action.COW, Arrays.asList(1), 0, null, Faction.NEUTRAL)),
+    COW(new PlayableCard("cow", "", Action.COW, Arrays.asList(1), 0, null, Faction.NEUTRAL,(PlayableCard) BOVINE_DEFENSE_FORCE.getCard())),
     DANDELION(new PlayableCard("dandelion", "", Action.HORN, Arrays.asList(0), 2, null, Faction.NEUTRAL)),
     EMIEL(new PlayableCard("emiel", "", Action.NO_ACTION, Arrays.asList(0), 5, null, Faction.NEUTRAL)),
     GAUNTER_ODIMM_DARKNESS_1(new PlayableCard("gaunter odimm", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.NEUTRAL)),
@@ -192,6 +193,8 @@ public enum AllCards {
     YAEVINN(new PlayableCard("yaevinn", "", Action.NO_ACTION, Arrays.asList(0,1), 6, null, Faction.SCOIATAEL)),
 
     //skellige
+    HEMDALL(new PlayableCard("hemdall", "", Action.NO_ACTION, Arrays.asList(0), 11, null, Faction.UNUSABLE)),
+
     VILDKAARL(new PlayableCard("vildkaarl", "", Action.MORALE, Arrays.asList(0), 14, null, Faction.SKELLIGE)),
     BERSERKER(new PlayableCard("berserker", "", Action.BEAR, Arrays.asList(0), 4, null, Faction.SKELLIGE,(PlayableCard) VILDKAARL.getCard())),
     BIRNA(new PlayableCard("birna", "", Action.MEDIC, Arrays.asList(0), 2, null, Faction.SKELLIGE)),
@@ -203,11 +206,10 @@ public enum AllCards {
     DONAR(new PlayableCard("donar", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.SKELLIGE)),
     DRAIG(new PlayableCard("draig", "", Action.HORN, Arrays.asList(0), 2, null, Faction.SKELLIGE)),
     ERMION(new Hero("ermion", "", Action.MUSHROOM, Arrays.asList(1), 8, null, Faction.SKELLIGE)),
-    HEMDALL(new PlayableCard("hemdall", "", Action.NO_ACTION, Arrays.asList(0), 11, null, Faction.SKELLIGE)),
     HEYMAEY(new PlayableCard("heymaey", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.SKELLIGE)),
     HJALMAR(new PlayableCard("hjalmar", "", Action.NO_ACTION, Arrays.asList(1), 10, null, Faction.SKELLIGE)),
     HOLGER(new PlayableCard("holger", "", Action.NO_ACTION, Arrays.asList(2), 4, null, Faction.SKELLIGE)),
-    KAMBI(new PlayableCard("kambi", "", Action.COW, Arrays.asList(0), 0, null, Faction.SKELLIGE)),
+    KAMBI(new PlayableCard("kambi", "", Action.COW, Arrays.asList(0), 0, null, Faction.SKELLIGE,(PlayableCard) HEMDALL.getCard())),
     LIGHT_LONGSHIP(new PlayableCard("light longship", "", Action.MUSKET, Arrays.asList(1), 4, null, Faction.SKELLIGE)),
     MADMAN_LUGOS(new PlayableCard("madman lugos", "", Action.NO_ACTION, Arrays.asList(0), 6, null, Faction.SKELLIGE)),
     OLAF(new PlayableCard("olaf", "", Action.MORALE, Arrays.asList(0,1), 12, null, Faction.SKELLIGE)),

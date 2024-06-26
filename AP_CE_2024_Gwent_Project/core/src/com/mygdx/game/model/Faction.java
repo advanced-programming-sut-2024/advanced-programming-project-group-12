@@ -15,7 +15,8 @@ public enum Faction {
 
     SPECIAL("special"),
 
-    WEATHER("weather");
+    WEATHER("weather"),
+    UNUSABLE("revenge");
 
     private String name;
 

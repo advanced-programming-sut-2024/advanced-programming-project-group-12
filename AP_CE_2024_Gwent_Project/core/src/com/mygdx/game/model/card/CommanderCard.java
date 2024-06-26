@@ -36,4 +36,7 @@ public class CommanderCard extends AbstractCard{
 
     }
 
+    public boolean HasPlayedAction() {
+        return hasPlayedAction;
+    }
 }

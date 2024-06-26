@@ -1,13 +1,11 @@
-package com.mygdx.game.model.gameboard;
+package com.mygdx.game.model.gameBoard;
 
 import com.mygdx.game.model.*;
 import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.card.PlayableCard;
 import com.mygdx.game.model.card.SpellCard;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 public class GameBoard {
     private HashMap<Player, ArrayList<Row>> rows;
@@ -23,6 +21,20 @@ public class GameBoard {
         discard.put(player1, new ArrayList<>());
         discard.put(player2, new ArrayList<>());
         weatherCards = new HashSet<>();
+    }
+
+    public GameBoard(HashMap<Player, ArrayList<Row>> rows, HashMap<Player, ArrayList<AbstractCard>> discard, HashSet<SpellCard> weatherCards) {
+        this.rows = new HashMap<>();
+        for(Player p: rows.keySet()) {
+            this.rows.put(p, rows.get(p));
+        }
+
+        this.discard = new HashMap<>();
+        for(Player p: rows.keySet()) {
+            this.discard.put(p, new ArrayList<>(discard.get(p)));
+        }
+
+        this.weatherCards = weatherCards;
     }
 
     public void setDoubleSpyPower() {
@@ -95,6 +107,22 @@ public class GameBoard {
         }
         return totalStrength;
     }
+    public int getRowStrength(Row row) {
+        ArrayList<PlayableCard> cards = row.getCards();
+        int totalStrength = 0;
+        for(PlayableCard i: cards) {
+            totalStrength += row.calculatePowerOfPlayableCard(i);
+        }
+        return totalStrength;
+    }
+
+    public int getPlayerStrength(Player player) {
+        int totalStrength = 0;
+        for(Row r: rows.get(player)) {
+            totalStrength += getRowStrength(r);
+        }
+        return totalStrength;
+    }
 
     public void increaseMorale(int row) {
         Player player = Game.getCurrentGame().getCurrentPlayer();
@@ -110,6 +138,31 @@ public class GameBoard {
         discard.put(player, new ArrayList<>());
     }
 
+    public void reset() {
+        weatherCards = new HashSet<>();
+
+        ArrayList<PlayableCard> cowCards = new ArrayList<>();
+
+        for(Player p: rows.keySet()) {
+            for(Row r: rows.get(p)) {
+                for(PlayableCard c: r.getCards()) {
+                    if(c.getAction().equals(Action.COW)) {
+                        cowCards.add(c);
+                    }
+                    c.kill();
+                }
+            }
+            rows.put(p, new ArrayList<>(Arrays.asList(new Row(), new Row(), new Row())));
+        }
+
+        for(PlayableCard c: cowCards) {
+            c.doAction();
+        }
+    }
+
+    public GameBoard copy() {
+        return new GameBoard(rows, discard, weatherCards);
+    }
 }
 
 

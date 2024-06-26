@@ -15,6 +15,7 @@ public class Player {
     private Faction faction;
     private int roundsLost;
     private boolean won;
+    private boolean isPassed;
 
     public Player(User user, CommanderCard leader, LinkedList<AbstractCard> deck, Faction faction) {
         this.user = user;
@@ -22,6 +23,7 @@ public class Player {
         this.faction = faction;
         hand = new LinkedList<>();
         this.roundsLost = 0;
+        isPassed = false;
 
         Collections.shuffle((LinkedList)deck.clone());
         this.deck = deck;
@@ -54,6 +56,14 @@ public class Player {
         this.won = won;
     }
 
+    public boolean isPassed() {
+        return isPassed;
+    }
+
+    public void setPassed(boolean passed) {
+        isPassed = passed;
+    }
+
     public Faction getFaction() {
         return faction;
     }
@@ -72,5 +82,9 @@ public class Player {
 
     public void addCardsToDeck(ArrayList<AbstractCard> cards) {
         deck.addAll(cards);
+    }
+
+    public void loseRound() {
+        roundsLost++;
     }
 }
