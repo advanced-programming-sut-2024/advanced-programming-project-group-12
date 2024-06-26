@@ -6,6 +6,7 @@ import com.mygdx.game.model.card.AbstractCard;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Player {
     private final User user;
@@ -21,11 +22,11 @@ public class Player {
         this.user = user;
         this.leader = leader;
         this.faction = faction;
-        hand = new LinkedList<>();
+        hand = new LinkedList<>(deck.subList(0, 4));
         this.roundsLost = 0;
         isPassed = false;
 
-        Collections.shuffle((LinkedList)deck.clone());
+        Collections.shuffle((List<?>) deck.clone());
         this.deck = deck;
         for(int i = 0; i< 10 ; i++) {
             drawCard();

@@ -5,7 +5,7 @@ import com.mygdx.game.Gwent;
 import com.mygdx.game.view.screen.*;
 
 public class ScreenManager {
-    private static Screen onScreen = new RegisterMenuScreen();
+    private static Screen onScreen;
     public static void setRegisterScreen() {
         // Set the register screen
         onScreen = new RegisterMenuScreen();
@@ -51,5 +51,8 @@ public class ScreenManager {
     }
     public static void updateScreen() {
         Gwent.singleton.setScreen(onScreen);
+    }
+    public static void setOnScreen(Screen screen) {
+        onScreen = screen;
     }
 }

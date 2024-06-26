@@ -33,7 +33,8 @@ public class PreGameMenuController {
         new Game(player, player);
         Game.getCurrentGame().setCurrentPlayer(player); // Set the current player
         Game.getCurrentGame().setOpposition(player);
-        ScreenManager.setGameMenuScreen();
+
+        ScreenManager.setGameScreen();
     }
 
     public void setFaction(String factionName) {

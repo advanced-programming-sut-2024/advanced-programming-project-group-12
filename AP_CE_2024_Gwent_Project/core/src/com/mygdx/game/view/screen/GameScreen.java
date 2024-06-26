@@ -2,49 +2,128 @@ package com.mygdx.game.view.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.GameController;
+import com.mygdx.game.controller.ScreenManager;
 import com.mygdx.game.model.Game;
-import com.mygdx.game.model.Player;
-import com.mygdx.game.model.card.AbstractCard;
-import com.mygdx.game.model.card.CardActor;
-import jdk.javadoc.internal.doclets.formats.html.Table;
+import com.mygdx.game.model.Row;
+import com.mygdx.game.model.actors.CardActor;
+import com.mygdx.game.model.actors.HandActor;
+import com.mygdx.game.model.actors.RowActor;
+import com.mygdx.game.model.card.PlayableCard;
+
+import java.util.ArrayList;
 
 public class GameScreen implements Screen {
     //
     private Stage stage;
     private Texture background;
     //Buttons for veto, pass round, end round, end game
+    private TextButton passButton;
     private GameController controller;
+    //
+    private ArrayList<RowActor> playerRowActors;
+    private ArrayList<RowActor> oppositionRowActors;
+    private HandActor handActor;
+
     public GameScreen() {
         stage = new Stage();
         background = new Texture("bg/board.jpg");
+        passButton = new TextButton("Pass", Gwent.singleton.skin);
+        passButton.setPosition(220, 120);
+        passButton.setSize(150, 80);
+        stage.addActor(passButton);
+        playerRowActors = new ArrayList<>();
+        oppositionRowActors = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            RowActor rowActor = new RowActor(i, new ArrayList<>(), new ArrayList<>());
+            rowActor.setPosition(stage);
+            playerRowActors.add(rowActor);
+        }
+
+//        for (int i = 0; i < 3; i++) {
+//            RowActor rowActor = new RowActor(i, new ArrayList<>(), new ArrayList<>());
+//            rowActor.setPosition(stage);
+//            oppositionRowActors.add(rowActor);
+//        }
+        handActor = new HandActor(Game.getCurrentGame().getOpposition().getHand());
+        handActor.setPosition(stage);
+        stage.addActor(handActor.getTable());
         controller = new GameController();
+
+        passButton.addListener(new com.badlogic.gdx.scenes.scene2d.utils.ClickListener() {
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                controller.passRound();
+            }
+        });
+
+        for (RowActor rowActor : playerRowActors) {
+            stage.addActor(rowActor.getTable());
+
+            // Add a click listener to the row
+            rowActor.getTable().addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    // Get the selected card from the hand actor
+                    CardActor selectedCard = handActor.getSelectedCard();
+
+                    if (selectedCard != null) {
+                        // Add the selected card to the row
+                        if(selectedCard.getCard() instanceof PlayableCard) {
+                            rowActor.addPlayableCard((PlayableCard) selectedCard.getCard());
+                        } else {
+                            rowActor.addSpellCard(selectedCard.getCard());
+                        }
+
+                        // Remove the selected card from the hand
+                        handActor.removeCard(selectedCard.getCard());
+
+                        // Reset the selected card in the hand actor
+                        handActor.setSelectedCard(null);
+                    }
+                }
+            });
+        }
+        for (RowActor rowActor : oppositionRowActors) {
+            stage.addActor(rowActor.getTable());
+        }
         Gdx.input.setInputProcessor(stage);
     }
+
     @Override
     public void show() {
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // This will clear the screen
-        Gdx.gl.glClearColor(0, 0, 0, 1); // This will set the clear color to black
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
 
-        // Draw the background
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.getBatch().end();
 
-        stage.act(delta);
-        controller.displayDeck(Player.getCurrentPlayer().getDeck(), stage);
-        if(controller.getSelectedCard() != null) {
-            showCardOnRightSide();
+        CardActor selectedCard = handActor.getSelectedCard();
+        if (selectedCard != null) {
+            // Draw a larger version of the selected card in the center of the screen
+            Texture cardTexture = new Texture(selectedCard.getCard().getAssetName());
+            float cardWidth = (float) (cardTexture.getWidth() / 1.7); // Adjust the scale factor as needed
+            float cardHeight = (float) cardTexture.getHeight() / 2; // Adjust the scale factor as needed
+            float cardX = 1300;
+            float cardY = 340;
+            stage.getBatch().begin();
+            stage.getBatch().draw(cardTexture, cardX, cardY, cardWidth, cardHeight);
+            stage.getBatch().end();
         }
-        displayLeaderCards();
+        stage.act(delta);
         stage.draw();
     }
 
@@ -72,34 +151,12 @@ public class GameScreen implements Screen {
     public void dispose() {
 
     }
-    public void showCardOnRightSide() {
-        // Create a new CardActor for the card
-        CardActor cardActor = new CardActor(controller.getSelectedCard(), false);
-        cardActor.setSize(225, 330); // set the size of the card actor
 
-        // Set the position of the card actor on the right side of the screen
-        cardActor.setPosition(Gdx.graphics.getWidth() - cardActor.getWidth() - 60, (float) Gdx.graphics.getHeight() / 2 - cardActor.getHeight() / 2 + 50);
-
-        // Add the card actor to the stage
-        stage.addActor(cardActor);
-    }
-    public void displayLeaderCards() {
-        AbstractCard playerCommander = Player.getCurrentPlayer().getLeader();
-        AbstractCard opponentCommander = Game.getCurrentGame().getOpposition().getLeader();
-        // Create a new CardActor for the player's commander card
-        CardActor playerCommanderActor = new CardActor(playerCommander, false);
-        playerCommanderActor.setSize(85, 120); // set the size of the card actor
-        playerCommanderActor.setPosition(90, (float) 75);
-        // Add the player's commander card actor to the stage
-        stage.addActor(playerCommanderActor);
-        // Create a new CardActor for the opponent's commander card
-        CardActor opponentCommanderActor = new CardActor(opponentCommander, false);
-        opponentCommanderActor.setSize(85, 120); // set the size of the card actor
-        opponentCommanderActor.setPosition(90, (float)  660);
-        // Add the opponent's commander card actor to the stage
-        stage.addActor(opponentCommanderActor);
-    }
     public GameController getController() {
         return controller;
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 }
