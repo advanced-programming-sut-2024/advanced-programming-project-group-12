@@ -58,6 +58,13 @@ public class PlayableCard extends AbstractCard {
         gameBoard.addCard(player, rowNumber, this);
     }
 
+    public void revive() {
+        if(isDead) {
+            isDead = false;
+            place(super.row);
+        }
+    }
+
     @Override
     public void kill() {
         Player player = Game.getCurrentGame().getCurrentPlayer();

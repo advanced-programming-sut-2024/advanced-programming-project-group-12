@@ -23,7 +23,7 @@ public class Player {
         hand = new LinkedList<>();
         this.roundsLost = 0;
 
-        Collections.shuffle((ArrayList)deck.clone());
+        Collections.shuffle((LinkedList)deck.clone());
         this.deck = deck;
         for(int i = 0; i< 10 ; i++) {
             drawCard();
@@ -40,6 +40,10 @@ public class Player {
 
     public LinkedList<AbstractCard> getHand() {
         return hand;
+    }
+
+    public void reDraw(int cardIndex) {
+        deck.add(hand.remove(cardIndex));
     }
 
     public boolean isWon() {
