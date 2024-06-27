@@ -43,7 +43,7 @@ public class GameScreen implements Screen {
         playerRowActors = new ArrayList<>();
         oppositionRowActors = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            RowActor rowActor = new RowActor(i, new ArrayList<>(), new ArrayList<>());
+            RowActor rowActor = new RowActor(i);
             rowActor.setPosition(stage);
             playerRowActors.add(rowActor);
         }
@@ -66,10 +66,10 @@ public class GameScreen implements Screen {
         });
 
         for (RowActor rowActor : playerRowActors) {
-            stage.addActor(rowActor.getTable());
+            stage.addActor(rowActor.getTableContainer());
 
             // Add a click listener to the row
-            rowActor.getTable().addListener(new ClickListener() {
+            rowActor.getTableContainer().addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     // Get the selected card from the hand actor
