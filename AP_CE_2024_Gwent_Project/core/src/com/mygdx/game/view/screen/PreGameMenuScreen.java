@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -21,16 +20,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PreGameMenuScreen implements Screen {
-    private static final float FIELD_WIDTH = 400;
+    private static final float FIELD_WIDTH = 100;
     private static final float FIELD_HEIGHT = 80;
-    private static final float CARD_WIDTH = 150; // Set the card width
-    private static final float CARD_HEIGHT = 200; // Set the card height
+    private static final float CARD_WIDTH = 170; // Adjust the width as needed
+    private static final float CARD_HEIGHT = 300;  // Set the card height
 
     private PreGameMenuController controller;
 
     private Stage stage;
     private Table mainTable;
     private Table dashboard;
+    private Table unselectedCardsTable;
+    private Table selectedCardsTable;
     private SpriteBatch batch;
     private Texture background;
 
@@ -53,6 +54,7 @@ public class PreGameMenuScreen implements Screen {
 
     // List of selected cards
     private List<AbstractCard> selectedCards;
+    private List<AbstractCard> unselectedCards;
 
     // Label for current faction
     private Label currentFactionLabel;
@@ -65,6 +67,7 @@ public class PreGameMenuScreen implements Screen {
         mainTable.setFillParent(true);
         stage.addActor(mainTable);
         selectedCards = new ArrayList<>();
+        unselectedCards = new ArrayList<>();
 
         // Load background image
         batch = new SpriteBatch();
@@ -86,7 +89,7 @@ public class PreGameMenuScreen implements Screen {
         dashboard.add(deckButton).padBottom(20).center().row();
         deckButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                initializeDeckButtons();
+                initializeDecks();
                 deckWindow.setVisible(true);
             }
         });
@@ -134,11 +137,9 @@ public class PreGameMenuScreen implements Screen {
         factionWindow.background(new TextureRegionDrawable(new Texture("backgrounds/faction_window_background.png")));
         setWindowSize(factionWindow);
 
-        // Add the current faction label to the factionWindow
         currentFactionLabel = new Label("Current Faction: ", Gwent.singleton.skin);
         factionWindow.add(currentFactionLabel).center().padBottom(20).row();
 
-        // Initialize faction buttons
         initializeFactionButtons();
 
         factionWindow.padBottom(20);
@@ -210,93 +211,116 @@ public class PreGameMenuScreen implements Screen {
         factionWindow.add(factionButtonTable).center();
     }
 
-    private void initializeDeckButtons() {
+    private void initializeDecks() {
         deckWindow.clear();
+        deckWindow.pad(20);
 
-        Table unselectedCardsTable = new Table();
-        Table selectedCardsTable = new Table();
+        ScrollPane unselectedScrollPane = new ScrollPane(unselectedCardsTable = new Table());
+        ScrollPane selectedScrollPane = new ScrollPane(selectedCardsTable = new Table());
 
-        unselectedCardsTable.setSize((Gdx.graphics.getWidth() / 2) - 100, Gdx.graphics.getHeight() - 100);
-        selectedCardsTable.setSize((Gdx.graphics.getWidth() / 2) - 100, Gdx.graphics.getHeight() - 100);
+        // Add ScrollPanes to the window
+        deckWindow.add(unselectedScrollPane).width(750).height((CARD_HEIGHT * 2)+20).padRight(20);
+        deckWindow.add(selectedScrollPane).width(750).height((CARD_HEIGHT*2)+20).padLeft(20);
 
-        Faction currentFaction = User.getLoggedInUser().getFaction();
-        addFactionCardsToTable(currentFaction, unselectedCardsTable, selectedCardsTable);
-        Faction neutralFaction = Faction.getFactionByName("neutral");
-        addFactionCardsToTable(neutralFaction, unselectedCardsTable, selectedCardsTable);
+        // Add cards to unselected cards table
+        addFactionAndNeutralCardsToTable(User.getLoggedInUser().getFaction(), unselectedCardsTable);
 
-        ScrollPane unselectedScrollPane = new ScrollPane(unselectedCardsTable);
-        ScrollPane selectedScrollPane = new ScrollPane(selectedCardsTable);
+        // Add cards to selected cards table
+        addSelectedCardsToTable();
 
-        // Set scrolling to the X direction
-        unselectedScrollPane.setScrollingDisabled(true, false);
-        selectedScrollPane.setScrollingDisabled(true, false);
-
-        // Add the ScrollPanes side by side
-        deckWindow.add(selectedScrollPane).right();
-        deckWindow.add(unselectedScrollPane).left();
+        stage.addActor(deckWindow);
     }
 
-    private void addFactionCardsToTable(Faction faction, Table unselectedCardsTable, Table selectedCardsTable) {
+    private void addFactionAndNeutralCardsToTable(Faction faction, Table table) {
         int columnCounter = 0;
-
         for (AbstractCard card : AllCards.getFactionCardsByFaction(faction)) {
-            ImageButton button = new ImageButton(new TextureRegionDrawable(new Texture(card.getAssetName())));
-            button.setSize(CARD_WIDTH, CARD_HEIGHT);
-
-            if (selectedCards.contains(card)) {
-                selectedCardsTable.add(button).size(CARD_WIDTH, CARD_HEIGHT).padBottom(20).center().padRight(20);
-            } else {
-                unselectedCardsTable.add(button).size(CARD_WIDTH, CARD_HEIGHT).padBottom(20).center().padRight(20);
-            }
-
-            // Increment column counter and wrap to next row if needed
-            if (columnCounter == 2) {
-                columnCounter = 0;
-                // Set the maximum table size (optional, adjust as needed)
-                unselectedCardsTable.row().maxWidth(3 * CARD_WIDTH + 2 * 20); // Account for padding
-                selectedCardsTable.row().maxWidth(3 * CARD_WIDTH + 2 * 20);
-            }
-            columnCounter++;
-
-
-            button.addListener(new ClickListener() {
-                public void clicked(InputEvent event, float x, float y) {
-                    if (selectedCards.contains(card)) {
-                        selectedCards.remove(card);
-                        unselectedCardsTable.add(button).size(CARD_WIDTH, CARD_HEIGHT).padBottom(20).center().padRight(20);
-                        selectedCardsTable.removeActor(button);
-
-                        // Reposition remaining buttons in the selected cards table
-                        float xPos = 20; // Starting x-position for buttons
-                        float yPos = selectedCardsTable.getHeight() - CARD_HEIGHT - 20; // Starting y-position (from bottom)
-                        int count = 0;
-                        for (Actor actor : selectedCardsTable.getChildren()) {
-                            actor.setPosition(xPos, yPos);
-                            count++;
-                            if (count % 3 == 0) { // Move to next row after 3 buttons
-                                yPos -= CARD_HEIGHT + 20;
-                                xPos = 20;
-                            } else {
-                                xPos += CARD_WIDTH + 20;
-                            }
-                        }
-                    } else {
-                        selectedCards.add(card);
-                        selectedCardsTable.add(button).size(CARD_WIDTH, CARD_HEIGHT).padBottom(20).center().padRight(20);
-                        unselectedCardsTable.removeActor(button);
-                    }
-                    unselectedCardsTable.pack();
-                    selectedCardsTable.pack();
-                }
-            });
-
-            columnCounter++;
             if (columnCounter == 3) {
+                table.row();
                 columnCounter = 0;
-                selectedCardsTable.row();
             }
+            addCardToTable(card, table, false); // Added false to indicate unselected
+            unselectedCards.add(card);
+            columnCounter++;
+        }
+        for (AbstractCard card : AllCards.getNeutralCards()) {
+            if (columnCounter == 3) {
+                table.row();
+                columnCounter = 0;
+            }
+            addCardToTable(card, table, false); // Added false to indicate unselected
+            unselectedCards.add(card);
+            columnCounter++;
         }
     }
+
+
+
+    private void addSelectedCardsToTable() {
+        int columnCounter = 0;
+        selectedCardsTable.clearChildren();
+        for (AbstractCard card : selectedCards) {
+            if (columnCounter == 3) {
+                selectedCardsTable.row();
+                columnCounter = 0;
+            }
+            unselectedCards.add(card);
+            addCardToTable(card, selectedCardsTable, true); // Added true to indicate selected
+            columnCounter++;
+        }
+    }
+
+
+    private void updateCardPositions() {
+        unselectedCardsTable.clearChildren();
+        selectedCardsTable.clearChildren();
+        for (AbstractCard card : unselectedCards) {
+            addCardToTable(card, unselectedCardsTable, false);
+        }
+        for (AbstractCard card : selectedCards) {
+            addCardToTable(card, selectedCardsTable, true);
+        }
+    }
+
+
+    private void addCardToTable(AbstractCard card, Table table, boolean isSelected) {
+        // Create the ImageButton for the card
+        TextureRegionDrawable drawable = new TextureRegionDrawable(new Texture(card.getAssetName()));
+        ImageButton cardButton = new ImageButton(drawable);
+        cardButton.setTransform(true); // Enable scaling
+
+        float originalWidth = drawable.getMinWidth();
+        float originalHeight = drawable.getMinHeight();
+
+        float scale = Math.min(CARD_WIDTH / originalWidth, CARD_HEIGHT / originalHeight);
+        cardButton.getImageCell().size(originalWidth * scale, originalHeight * scale);
+
+        // Add a listener to handle clicks
+        cardButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                if (isSelected) {
+                    selectedCards.remove(card);
+                    unselectedCards.add(card);
+                    selectedCardsTable.removeActor(cardButton);
+                    addCardToTable(card, unselectedCardsTable, false);
+                } else {
+                    selectedCards.add(card);
+                    unselectedCards.remove(card);
+                    unselectedCardsTable.removeActor(cardButton);
+                    addCardToTable(card, selectedCardsTable, true);
+                }
+                updateCardPositions();
+            }
+        });
+
+        // Check if adding the card exceeds the maximum cards per row
+        if (table.getCells().size % 3 == 0) {
+            table.row(); // Add a new row if the current row is full
+        }
+
+        // Add the card button to the table with padding and size
+        table.add(cardButton).pad(10).size(CARD_WIDTH, CARD_HEIGHT);
+    }
+
 
     private void updateCurrentFactionLabel() {
         currentFactionLabel.setText("Current Faction: " + User.getLoggedInUser().getFaction().getName());
@@ -317,6 +341,7 @@ public class PreGameMenuScreen implements Screen {
 
         stage.act();
         stage.draw();
+
     }
 
     @Override

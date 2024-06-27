@@ -134,9 +134,9 @@ public enum AllCards {
     FROST_GIANT(new PlayableCard("frost giant", "", Action.NO_ACTION, Arrays.asList(1), 5, null, Faction.MONSTERS)),
     GARGOYLE(new PlayableCard("gargoyle", "", Action.NO_ACTION, Arrays.asList(1), 2, null, Faction.MONSTERS)),
     GARKAIN(new PlayableCard("vampire garkain", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
-    GOUL_1(new PlayableCard("goul", "", Action.MUSKET, Arrays.asList(0), 1, 1, Faction.MONSTERS)),
-    GOUL_2(new PlayableCard("goul", "", Action.MUSKET, Arrays.asList(0), 1, 2, Faction.MONSTERS)),
-    GOUL_3(new PlayableCard("goul", "", Action.MUSKET, Arrays.asList(0), 1, 3, Faction.MONSTERS)),
+    GOUL_1(new PlayableCard("ghoul", "", Action.MUSKET, Arrays.asList(0), 1, 1, Faction.MONSTERS)),
+    GOUL_2(new PlayableCard("ghoul", "", Action.MUSKET, Arrays.asList(0), 1, 2, Faction.MONSTERS)),
+    GOUL_3(new PlayableCard("ghoul", "", Action.MUSKET, Arrays.asList(0), 1, 3, Faction.MONSTERS)),
     GRAVEHAG(new PlayableCard("gravehag", "", Action.NO_ACTION, Arrays.asList(1), 5, null, Faction.MONSTERS)),
     GRYFFIN(new PlayableCard("gryffin", "", Action.NO_ACTION, Arrays.asList(0), 5, null, Faction.MONSTERS)),
     HARPY(new PlayableCard("harpy", "", Action.NO_ACTION, Arrays.asList(0,1), 2, null, Faction.MONSTERS)),
@@ -144,9 +144,9 @@ public enum AllCards {
     KATAKAN(new PlayableCard("vampire katakan", "", Action.MUSKET, Arrays.asList(0), 5, null, Faction.MONSTERS)),
     KAYRAN(new Hero("kayran", "", Action.MORALE, Arrays.asList(0,1), 8, null, Faction.MONSTERS)),
     LESHEN(new Hero("leshen", "", Action.NO_ACTION, Arrays.asList(1), 10, null, Faction.MONSTERS)),
-    NEKKER_1(new PlayableCard("nekker", "", Action.MUSKET, Arrays.asList(0), 2, null, Faction.MONSTERS)),
-    NEKKER_2(new PlayableCard("nekker", "", Action.MUSKET, Arrays.asList(0), 2, null, Faction.MONSTERS)),
-    NEKKER_3(new PlayableCard("nekker", "", Action.MUSKET, Arrays.asList(0), 2, null, Faction.MONSTERS)),
+    NEKKER_1(new PlayableCard("nekker", "", Action.MUSKET, Arrays.asList(0), 2, 1, Faction.MONSTERS)),
+    NEKKER_2(new PlayableCard("nekker", "", Action.MUSKET, Arrays.asList(0), 2, 2, Faction.MONSTERS)),
+    NEKKER_3(new PlayableCard("nekker", "", Action.MUSKET, Arrays.asList(0), 2, 3, Faction.MONSTERS)),
     PLAGUE_MAIDEN(new PlayableCard("plague maiden", "", Action.NO_ACTION, Arrays.asList(0), 5, null, Faction.MONSTERS)),
     TOAD(new PlayableCard("toad", "", Action.SCORCH, Arrays.asList(1), 7, null, Faction.MONSTERS)),
     WEREWOLF(new PlayableCard("werewolf", "", Action.NO_ACTION, Arrays.asList(0), 5, null, Faction.MONSTERS)),
@@ -202,7 +202,7 @@ public enum AllCards {
     BROKVA_ARCHER(new PlayableCard("brokva archer", "", Action.NO_ACTION, Arrays.asList(1), 6, null, Faction.SKELLIGE)),
     CERYS(new Hero("cerys", "", Action.MUSKET, Arrays.asList(0), 10, null, Faction.SKELLIGE)),
     CRAITE_WARRIOR(new PlayableCard("craite warrior", "", Action.TIGHT_BOND, Arrays.asList(0), 6, null, Faction.SKELLIGE)),
-    DUMUN_PIRATE(new PlayableCard("dumun pirate", "", Action.SCORCH, Arrays.asList(0), 6, null, Faction.SKELLIGE)),
+    DUMUN_PIRATE(new PlayableCard("dimun pirate", "", Action.SCORCH, Arrays.asList(0), 6, null, Faction.SKELLIGE)),
     DONAR(new PlayableCard("donar", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.SKELLIGE)),
     DRAIG(new PlayableCard("draig", "", Action.HORN, Arrays.asList(0), 2, null, Faction.SKELLIGE)),
     ERMION(new Hero("ermion", "", Action.MUSHROOM, Arrays.asList(1), 8, null, Faction.SKELLIGE)),
@@ -221,7 +221,7 @@ public enum AllCards {
     UDALRYK(new PlayableCard("udalryk", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.SKELLIGE)),
     WAR_LONGSHIP(new PlayableCard("war longship", "", Action.TIGHT_BOND, Arrays.asList(2), 6, null, Faction.SKELLIGE)),
     YOUNG_VILDKAARL(new PlayableCard("young vildkaarl", "", Action.TIGHT_BOND, Arrays.asList(1), 8, null, Faction.SKELLIGE)),
-    YOUNG_BERSERKER(new PlayableCard("young berseker", "", Action.BEAR, Arrays.asList(1), 2, null, Faction.SKELLIGE,(PlayableCard) YOUNG_VILDKAARL.getCard())),
+    YOUNG_BERSERKER(new PlayableCard("young berserker", "", Action.BEAR, Arrays.asList(1), 2, null, Faction.SKELLIGE,(PlayableCard) YOUNG_VILDKAARL.getCard())),
 
     ;
     private final AbstractCard abstractCard;
@@ -245,6 +245,11 @@ public enum AllCards {
     public static ArrayList<AbstractCard> getFactionCardsByFaction(Faction faction) {
         return AllCards.faction.get(faction);
     }
+
+    public static ArrayList<AbstractCard> getNeutralCards() {
+        return AllCards.faction.get(Faction.NEUTRAL);
+    }
+
 
     private AbstractCard getCard() {return abstractCard;}
 
