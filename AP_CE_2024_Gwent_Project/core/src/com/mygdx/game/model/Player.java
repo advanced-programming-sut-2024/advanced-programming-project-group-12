@@ -1,5 +1,6 @@
 package com.mygdx.game.model;
 
+import com.mygdx.game.model.card.AllCards;
 import com.mygdx.game.model.card.CommanderCard;
 import com.mygdx.game.model.card.AbstractCard;
 
@@ -22,7 +23,10 @@ public class Player {
         this.user = user;
         this.leader = leader;
         this.faction = faction;
-        hand = new LinkedList<>(deck.subList(0, 4));
+        hand = new LinkedList<>();
+        hand.add(AllCards.ASSIRE.getAbstractCard());
+        hand.add(AllCards.AVALLACH.getAbstractCard());
+        hand.add(AllCards.ARACHAS_1.getAbstractCard());
         this.roundsLost = 0;
         isPassed = false;
 
@@ -87,5 +91,13 @@ public class Player {
 
     public void loseRound() {
         roundsLost++;
+    }
+
+    public String getUsername() {
+        return user.getUsername();
+    }
+
+    public int getHealth() {
+        return 2 - roundsLost;
     }
 }

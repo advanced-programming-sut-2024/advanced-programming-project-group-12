@@ -111,9 +111,9 @@ public enum AllCards {
 
     //monsters
     ARACHAS_BEHEMOTH(new PlayableCard("arachas", "", Action.MUSKET, Arrays.asList(2), 6, null, Faction.MONSTERS)),
-    ARACHAS_1(new PlayableCard("arachas", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
-    ARACHAS_2(new PlayableCard("arachas", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
-    ARACHAS_3(new PlayableCard("arachas", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
+    ARACHAS_1(new PlayableCard("arachas_1", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
+    ARACHAS_2(new PlayableCard("arachas_2", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
+    ARACHAS_3(new PlayableCard("arachas_3", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
     BOTCHLING(new PlayableCard("botchling", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.MONSTERS)),
     BRUXA(new PlayableCard("vampire", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
     CELAENO_HARPY(new PlayableCard("celaeno harpy", "", Action.NO_ACTION, Arrays.asList(0,1), 2, null, Faction.MONSTERS)),

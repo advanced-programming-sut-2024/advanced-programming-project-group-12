@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.mygdx.game.model.card.AbstractCard;
-import com.mygdx.game.model.card.AllCards;
 import com.mygdx.game.model.card.PlayableCard;
 
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class RowActor extends Actor {
 
     public void addPlayableCard(PlayableCard card) {
         CardActor cardActor = new CardActor(card);
-        cardActor.setTouchable(Touchable.disabled);
+        //cardActor.setTouchable(Touchable.disabled);
         cardActor.setSize(70, 110);
         playableCards.add(cardActor);
         table.add(cardActor).pad(5);
@@ -59,7 +58,7 @@ public class RowActor extends Actor {
 
     public void addSpellCard(AbstractCard card) {
         CardActor cardActor = new CardActor(card);
-        cardActor.setTouchable(Touchable.disabled);
+        //cardActor.setTouchable(Touchable.disabled);
         cardActor.setSize(70, 110);
         spellCards.add(cardActor);
         table.add(cardActor).pad(5);
@@ -67,12 +66,6 @@ public class RowActor extends Actor {
     }
 
     public void setPosition(Stage stage) {
-        if(rowNumber != 1) {
-            addPlayableCard(((PlayableCard) AllCards.BROKVA_ARCHER.getAbstractCard()));
-            addPlayableCard(((PlayableCard) AllCards.BARCLAY.getAbstractCard()));
-            addPlayableCard(((PlayableCard) AllCards.AVALLACH.getAbstractCard()));
-            addSpellCard(AllCards.SCORCH.getAbstractCard());
-        }
         table.setClip(true);
         table.center();
 
@@ -84,9 +77,9 @@ public class RowActor extends Actor {
         float tableX = stageCenterX - table.getWidth() / 2;
 
         if (rowNumber == 0) {
-            table.setPosition(tableX, 220);
+            table.setPosition(tableX, 240);
         } else if (rowNumber == 1) {
-            table.setPosition(tableX, 350);
+            table.setPosition(tableX, 360);
         } else if (rowNumber == 2) {
             table.setPosition(tableX, 480);
         }
