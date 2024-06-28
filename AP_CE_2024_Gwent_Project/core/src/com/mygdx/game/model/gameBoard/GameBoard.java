@@ -24,7 +24,7 @@ public class GameBoard {
         weatherCards = new HashSet<>();
     }
 
-    public GameBoard(HashMap<Player, ArrayList<Row>> rows, HashMap<Player, ArrayList<AbstractCard>> discard, HashSet<SpellCard> weatherCards) {
+    public GameBoard(HashMap<Player, ArrayList<Row>> rows, HashMap<Player, Discard> discard, HashSet<SpellCard> weatherCards) {
         this.rows = new HashMap<>();
         for(Player p: rows.keySet()) {
             this.rows.put(p, rows.get(p));
@@ -32,7 +32,7 @@ public class GameBoard {
 
         this.discard = new HashMap<>();
         for(Player p: rows.keySet()) {
-            this.discard.put(p, new Discard());
+            this.discard.put(p, new Discard(discard.get(p)));
         }
 
         this.weatherCards = weatherCards;
@@ -139,10 +139,6 @@ public class GameBoard {
         return discard.get(player).getPlayableCards();
     }
 
-    public void resetDiscard(Player player) {
-        discard.put(player, new ArrayList<>());
-    }
-
     public void reset() {
         weatherCards = new HashSet<>();
 
@@ -163,6 +159,10 @@ public class GameBoard {
         for(PlayableCard c: cowCards) {
             c.doAction();
         }
+    }
+
+    public void resetDiscard(Player player) {
+        discard.put(player, new Discard(discard.get(player)));
     }
 
     public GameBoard copy() {

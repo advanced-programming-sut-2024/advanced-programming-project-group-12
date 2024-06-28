@@ -11,6 +11,10 @@ public class Discard {
         cards = new ArrayList<>();
         playableCards = new ArrayList<>();
     }
+    public Discard(Discard discard) {
+        cards = new ArrayList<>(discard.cards);
+        playableCards = new ArrayList<>(discard.playableCards);
+    }
 
     public void addCard(AbstractCard abstractCard) {
         cards.add(abstractCard);
