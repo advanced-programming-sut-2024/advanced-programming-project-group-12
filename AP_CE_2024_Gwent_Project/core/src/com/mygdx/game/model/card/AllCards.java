@@ -250,11 +250,28 @@ public enum AllCards {
         return AllCards.faction.get(Faction.NEUTRAL);
     }
 
+    public static ArrayList<AbstractCard> getSpecialCards() {
+        return AllCards.faction.get(Faction.SPECIAL);
+    }
+
+    public static ArrayList<AbstractCard> getWeatherCards() {
+        return AllCards.faction.get(Faction.WEATHER);
+    }
+
 
     private AbstractCard getCard() {return abstractCard;}
 
     public AbstractCard getAbstractCard() {
         return abstractCard.clone();
+    }
+
+    public static AbstractCard getCardByCardName(String cardName) {
+        for(AllCards i: AllCards.values()) {
+            if(i.getCard().getName().equals(cardName)) {
+                return i.getCard();
+            }
+        }
+        return null;
     }
 
 

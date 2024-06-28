@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.PreGameMenuController;
+import com.mygdx.game.controller.ScreenManager;
 import com.mygdx.game.model.Faction;
 import com.mygdx.game.model.User;
 import com.mygdx.game.model.card.AbstractCard;
@@ -40,6 +41,9 @@ public class PreGameMenuScreen implements Screen {
     private Button changeFactionButton;
     private Button startGameButton;
     private Button deckButton;
+    private Button saveDeckButton;
+    private Button downloadDeckButton;
+    private Button uploadDeckButton;
 
     // Faction buttons
     private ImageButton northernRealmsButton;
@@ -56,8 +60,9 @@ public class PreGameMenuScreen implements Screen {
     private List<AbstractCard> selectedCards;
     private List<AbstractCard> unselectedCards;
 
-    // Label for current faction
+    // Labels
     private Label currentFactionLabel;
+    private Label totalCardsInDeck;
 
     public PreGameMenuScreen() {
         controller = new PreGameMenuController();
@@ -66,7 +71,7 @@ public class PreGameMenuScreen implements Screen {
         mainTable = new Table();
         mainTable.setFillParent(true);
         stage.addActor(mainTable);
-        selectedCards = new ArrayList<>();
+        selectedCards = selectedCardsExtractedByCardNames(User.getLoggedInUser().getDeck()==null?new ArrayList<>():User.getLoggedInUser().getDeck());
         unselectedCards = new ArrayList<>();
 
         // Load background image
@@ -81,18 +86,27 @@ public class PreGameMenuScreen implements Screen {
         mainTable.add(dashboard).center().expand().fill();
     }
 
+    private List<AbstractCard> selectedCardsExtractedByCardNames (ArrayList<String> deck) {
+        List<AbstractCard> selectedCards = new ArrayList<>();
+        for (String cardName : deck) {
+            selectedCards.add(AllCards.getCardByCardName(cardName));
+        }
+        return selectedCards;
+    }
+
     private void dashboardInit() {
         dashboard = new Table();
 
-        deckButton = new TextButton("Deck", Gwent.singleton.getSkin());
-        deckButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
-        dashboard.add(deckButton).padBottom(20).center().row();
-        deckButton.addListener(new ClickListener() {
+        startGameButton = new TextButton("Start Game", Gwent.singleton.skin);
+        startGameButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
+        dashboard.add(startGameButton).padBottom(20).center();
+        startGameButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                initializeDecks();
-                deckWindow.setVisible(true);
+                dispose();
+                controller.startGame();
             }
         });
+        dashboard.row();
 
         changeFactionButton = new TextButton("Change Faction", Gwent.singleton.skin);
         changeFactionButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
@@ -105,13 +119,13 @@ public class PreGameMenuScreen implements Screen {
         });
         dashboard.row();
 
-        startGameButton = new TextButton("Start Game", Gwent.singleton.skin);
-        startGameButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
-        dashboard.add(startGameButton).padBottom(20).center();
-        startGameButton.addListener(new ClickListener() {
+        deckButton = new TextButton("Deck", Gwent.singleton.getSkin());
+        deckButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
+        dashboard.add(deckButton).width(200).padBottom(20).center().row();
+        deckButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                dispose();
-                controller.startGame();
+                initializeDecks();
+                deckWindow.setVisible(true);
             }
         });
         dashboard.row();
@@ -140,6 +154,9 @@ public class PreGameMenuScreen implements Screen {
         currentFactionLabel = new Label("Current Faction: ", Gwent.singleton.skin);
         factionWindow.add(currentFactionLabel).center().padBottom(20).row();
 
+        totalCardsInDeck = new Label("Total Cards in Deck: \n" + selectedCards.size(), Gwent.singleton.skin);
+        deckWindow.add(totalCardsInDeck);
+
         initializeFactionButtons();
 
         factionWindow.padBottom(20);
@@ -153,6 +170,10 @@ public class PreGameMenuScreen implements Screen {
         );
         window.setVisible(false);
         stage.addActor(window);
+    }
+
+    private void saveDeck(){
+        User.getLoggedInUser().setDeck(selectedCards);
     }
 
     private void initializeFactionButtons() {
@@ -214,79 +235,101 @@ public class PreGameMenuScreen implements Screen {
     private void initializeDecks() {
         deckWindow.clear();
         deckWindow.pad(20);
+        selectedCards = selectedCardsExtractedByCardNames(User.getLoggedInUser().getDeck()==null?new ArrayList<>():User.getLoggedInUser().getDeck());
+
+        saveDeckButton = new TextButton("Save Deck", Gwent.singleton.skin);
+        saveDeckButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
+        deckWindow.add(saveDeckButton).width(300).height(100).padBottom(20).center().row();
 
         ScrollPane unselectedScrollPane = new ScrollPane(unselectedCardsTable = new Table());
         ScrollPane selectedScrollPane = new ScrollPane(selectedCardsTable = new Table());
 
         // Add ScrollPanes to the window
-        deckWindow.add(unselectedScrollPane).width(750).height((CARD_HEIGHT * 2)+20).padRight(20);
-        deckWindow.add(selectedScrollPane).width(750).height((CARD_HEIGHT*2)+20).padLeft(20);
+        deckWindow.add(unselectedScrollPane).width(750).height((CARD_HEIGHT * 2) + 20).padRight(20);
+        deckWindow.add(selectedScrollPane).width(750).height((CARD_HEIGHT * 2) + 20).padLeft(20);
 
         // Add cards to unselected cards table
-        addFactionAndNeutralCardsToTable(User.getLoggedInUser().getFaction(), unselectedCardsTable);
+        addFactionCards();
 
         // Add cards to selected cards table
-        addSelectedCardsToTable();
+        addSelectedCardsToTable(selectedCards, selectedCardsTable, true);
+
+        saveDeckButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                saveDeck();
+                ScreenManager.setPreGameMenuScreen();
+            }
+        });
 
         stage.addActor(deckWindow);
     }
 
-    private void addFactionAndNeutralCardsToTable(Faction faction, Table table) {
+    private void addFactionCards() {
+        List<AbstractCard> factionCards = AllCards.getFactionCardsByFaction(User.getLoggedInUser().getFaction());
+        List<AbstractCard> neutralCards = AllCards.getNeutralCards();
+        List<AbstractCard> specialCards = AllCards.getSpecialCards();
+        List<AbstractCard> weatherCards = AllCards.getWeatherCards();
+
+        // Add faction cards
+        for (AbstractCard card : factionCards) {
+            if (!selectedCards.contains(card)) {
+                unselectedCards.add(card);
+            }
+        }
+
+        // Add neutral cards
+        for (AbstractCard card : neutralCards) {
+            if (!selectedCards.contains(card)) {
+                unselectedCards.add(card);
+            }
+        }
+
+        // Add special cards
+        for (AbstractCard card : specialCards) {
+            if (!selectedCards.contains(card)) {
+                unselectedCards.add(card);
+            }
+        }
+
+        // Add weather cards
+        for (AbstractCard card : weatherCards) {
+            if (!selectedCards.contains(card)) {
+                unselectedCards.add(card);
+            }
+        }
+
+        // Add cards to table
+        addUnselectedCardsToTable(unselectedCards, unselectedCardsTable, false);
+    }
+
+    private void addUnselectedCardsToTable(List<AbstractCard> cards, Table table, boolean isSelected) {
         int columnCounter = 0;
-        for (AbstractCard card : AllCards.getFactionCardsByFaction(faction)) {
+        for (AbstractCard card : cards) {
             if (columnCounter == 3) {
                 table.row();
                 columnCounter = 0;
             }
-            addCardToTable(card, table, false); // Added false to indicate unselected
-            unselectedCards.add(card);
+            addCardToTable(card, table, isSelected);
             columnCounter++;
         }
-        for (AbstractCard card : AllCards.getNeutralCards()) {
+    }
+
+    private void addSelectedCardsToTable(List<AbstractCard> cards, Table table, boolean isSelected) {
+        int columnCounter = 0;
+        for (AbstractCard card : cards) {
             if (columnCounter == 3) {
                 table.row();
                 columnCounter = 0;
             }
-            addCardToTable(card, table, false); // Added false to indicate unselected
-            unselectedCards.add(card);
+            addCardToTable(card, table, isSelected);
             columnCounter++;
         }
     }
-
-
-
-    private void addSelectedCardsToTable() {
-        int columnCounter = 0;
-        selectedCardsTable.clearChildren();
-        for (AbstractCard card : selectedCards) {
-            if (columnCounter == 3) {
-                selectedCardsTable.row();
-                columnCounter = 0;
-            }
-            unselectedCards.add(card);
-            addCardToTable(card, selectedCardsTable, true); // Added true to indicate selected
-            columnCounter++;
-        }
-    }
-
-
-    private void updateCardPositions() {
-        unselectedCardsTable.clearChildren();
-        selectedCardsTable.clearChildren();
-        for (AbstractCard card : unselectedCards) {
-            addCardToTable(card, unselectedCardsTable, false);
-        }
-        for (AbstractCard card : selectedCards) {
-            addCardToTable(card, selectedCardsTable, true);
-        }
-    }
-
 
     private void addCardToTable(AbstractCard card, Table table, boolean isSelected) {
-        // Create the ImageButton for the card
         TextureRegionDrawable drawable = new TextureRegionDrawable(new Texture(card.getAssetName()));
         ImageButton cardButton = new ImageButton(drawable);
-        cardButton.setTransform(true); // Enable scaling
+        cardButton.setTransform(true);
 
         float originalWidth = drawable.getMinWidth();
         float originalHeight = drawable.getMinHeight();
@@ -294,54 +337,51 @@ public class PreGameMenuScreen implements Screen {
         float scale = Math.min(CARD_WIDTH / originalWidth, CARD_HEIGHT / originalHeight);
         cardButton.getImageCell().size(originalWidth * scale, originalHeight * scale);
 
-        // Add a listener to handle clicks
         cardButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 if (isSelected) {
                     selectedCards.remove(card);
                     unselectedCards.add(card);
-                    selectedCardsTable.removeActor(cardButton);
-                    addCardToTable(card, unselectedCardsTable, false);
                 } else {
                     selectedCards.add(card);
                     unselectedCards.remove(card);
-                    unselectedCardsTable.removeActor(cardButton);
-                    addCardToTable(card, selectedCardsTable, true);
                 }
                 updateCardPositions();
+                updateTotalCardsInDeckLabel();
             }
         });
 
-        // Check if adding the card exceeds the maximum cards per row
-        if (table.getCells().size % 3 == 0) {
-            table.row(); // Add a new row if the current row is full
-        }
-
-        // Add the card button to the table with padding and size
         table.add(cardButton).pad(10).size(CARD_WIDTH, CARD_HEIGHT);
     }
 
+    private void updateCardPositions() {
+        unselectedCardsTable.clearChildren();
+        selectedCardsTable.clearChildren();
+        addUnselectedCardsToTable(unselectedCards, unselectedCardsTable, false);
+        addSelectedCardsToTable(selectedCards, selectedCardsTable, true);
+    }
+
+    private void updateTotalCardsInDeckLabel() {
+        totalCardsInDeck.setText("Total Cards in Deck: \n" + selectedCards.size());
+    }
 
     private void updateCurrentFactionLabel() {
-        currentFactionLabel.setText("Current Faction: " + User.getLoggedInUser().getFaction().getName());
+        currentFactionLabel.setText("Current Faction: " + User.getLoggedInUser().getFaction());
     }
 
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
-        Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
-
         batch.begin();
-        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(background, 0, 0, Gwent.WIDTH, Gwent.HEIGHT);
         batch.end();
 
-        stage.act();
+        stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
-
     }
 
     @Override
@@ -362,8 +402,8 @@ public class PreGameMenuScreen implements Screen {
 
     @Override
     public void dispose() {
+        stage.dispose();
         batch.dispose();
         background.dispose();
-        stage.dispose();
     }
 }
