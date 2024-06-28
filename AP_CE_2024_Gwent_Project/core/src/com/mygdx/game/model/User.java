@@ -1,6 +1,7 @@
 package com.mygdx.game.model;
 
 import com.google.gson.Gson;
+import com.mygdx.game.model.card.AbstractCard;
 
 import java.io.File;
 import java.io.FileReader;
@@ -10,10 +11,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class User {
     //static fields
@@ -29,6 +27,7 @@ public class User {
     private HashMap<SecurityQuestion, String> securityQuestion;
     private ArrayList<Game> allGamePlayed;
     private UserInfo userInfo;
+    private ArrayList <String> deck;
 
 
     //constructors
@@ -41,6 +40,7 @@ public class User {
         this.securityQuestion = new HashMap<>();
         this.allGamePlayed = new ArrayList<>();
         this.userInfo = new UserInfo();
+        this.deck = new ArrayList<>();
         this.save();
     }
     //static methods
@@ -61,6 +61,7 @@ public class User {
         }
         return users;
     }
+
 
     //getter and setter methods
     public void setSecurityQuestion(SecurityQuestion question, String answer) {
@@ -132,7 +133,6 @@ public class User {
         Gson gson = new Gson();
         if(file.exists()) {
             file.delete();
-
         } else {
             file.getParentFile().mkdirs();
         }
@@ -174,6 +174,21 @@ public class User {
 
     public void setFaction(Faction faction) {
         this.faction = faction;
-//        userInfo.setFaction(faction);
+    }
+
+    public ArrayList<String> getDeck() {
+        return deck;
+    }
+
+    public void setDeck(List<AbstractCard> selectedCards) {
+        deck.clear();
+        for(AbstractCard card : selectedCards) {
+            deck.add(card.getName());
+        }
+        save();
+    }
+    public void resetDeck() {
+        deck.clear();
+        save();
     }
 }

@@ -1,6 +1,5 @@
-package com.mygdx.game.model.gameBoard;
+package com.mygdx.game.model;
 
-import com.mygdx.game.model.*;
 import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.card.Discard;
 import com.mygdx.game.model.card.PlayableCard;

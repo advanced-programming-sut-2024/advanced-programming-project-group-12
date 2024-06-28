@@ -40,9 +40,9 @@ public enum AllCards {
     KAEDWENI_2(new PlayableCard("kaedweni", "", Action.MORALE, Arrays.asList(2), 1, 2, Faction.NORTHERN_REALMS)),
     KAEDWENI_3(new PlayableCard("kaedweni", "", Action.MORALE, Arrays.asList(2), 1, 3, Faction.NORTHERN_REALMS)),
     NATALIS(new Hero("natalis", "", Action.NO_ACTION, Arrays.asList(0), 10, null, Faction.NORTHERN_REALMS)),
-    FILIPPA(new Hero("filippa", "", Action.NO_ACTION, Arrays.asList(1), 10, null, Faction.NORTHERN_REALMS)),
-    RADANIAN_FOOT_SOLDIER1(new PlayableCard("radanian foot soldier1", "", Action.NO_ACTION, Arrays.asList(0), 1, null, Faction.NORTHERN_REALMS)),
-    RADANIAN_FOOT_SOLDIER2(new PlayableCard("radanian foot soldier2", "", Action.NO_ACTION, Arrays.asList(0), 1, null, Faction.NORTHERN_REALMS)),
+    FILIPPA(new Hero("philippa", "", Action.NO_ACTION, Arrays.asList(1), 10, null, Faction.NORTHERN_REALMS)),
+    RADANIAN_FOOT_SOLDIER1(new PlayableCard("redanian foot soldier1", "", Action.NO_ACTION, Arrays.asList(0), 1, null, Faction.NORTHERN_REALMS)),
+    RADANIAN_FOOT_SOLDIER2(new PlayableCard("redanian foot soldier2", "", Action.NO_ACTION, Arrays.asList(0), 1, null, Faction.NORTHERN_REALMS)),
     SABRINA(new PlayableCard("sabrina", "", Action.NO_ACTION, Arrays.asList(1), 4, null, Faction.NORTHERN_REALMS)),
     SHELDON(new PlayableCard("sheldon", "", Action.NO_ACTION, Arrays.asList(1), 4, null, Faction.NORTHERN_REALMS)),
     SIEGE_TOWER(new PlayableCard("siege tower", "", Action.NO_ACTION, Arrays.asList(2), 6, null, Faction.NORTHERN_REALMS)),
@@ -79,11 +79,11 @@ public enum AllCards {
     ALBRICH(new PlayableCard("albrich", "", Action.NO_ACTION, Arrays.asList(1), 2, null, Faction.NILFGAARD)),
     ASSIRE(new PlayableCard("assire", "", Action.NO_ACTION, Arrays.asList(1), 6, null, Faction.NILFGAARD)),
     BLACK_INFANTRY_ARCHER1(new PlayableCard("black infantry archer1", "", Action.NO_ACTION, Arrays.asList(1), 10, null, Faction.NILFGAARD)),
-    BLACK_INFANTRY_ARCHER2(new PlayableCard("infantry archer2", "", Action.NO_ACTION, Arrays.asList(1), 10, null, Faction.NILFGAARD)),
+    BLACK_INFANTRY_ARCHER2(new PlayableCard("black infantry archer2", "", Action.NO_ACTION, Arrays.asList(1), 10, null, Faction.NILFGAARD)),
     CAHIR(new PlayableCard("cahir", "", Action.NO_ACTION, Arrays.asList(0), 6, null, Faction.NILFGAARD)),
     CYNTHIA(new PlayableCard("cynthia", "", Action.NO_ACTION, Arrays.asList(1), 4, null, Faction.NILFGAARD)),
-    ETOLIAN_AUXILIARY_ARCHER1(new PlayableCard("etolian auxiliary archer1", "", Action.MEDIC, Arrays.asList(1), 1, null, Faction.NILFGAARD)),
-    ETOLIAN_AUXILIARY_ARCHER2(new PlayableCard("auxiliary archer2", "", Action.MEDIC, Arrays.asList(1), 1, null, Faction.NILFGAARD)),
+    ETOLIAN_AUXILIARY_ARCHER1(new PlayableCard("etolian auxiliary archers1", "", Action.MEDIC, Arrays.asList(1), 1, null, Faction.NILFGAARD)),
+    ETOLIAN_AUXILIARY_ARCHER2(new PlayableCard("etolian auxiliary archers2", "", Action.MEDIC, Arrays.asList(1), 1, null, Faction.NILFGAARD)),
     FRINGILLA(new PlayableCard("fringilla", "", Action.NO_ACTION, Arrays.asList(1), 6, null, Faction.NILFGAARD)),
     HEAVY_ZERRIKANIAN(new PlayableCard("heavy zerrikanian", "", Action.NO_ACTION, Arrays.asList(1), 10, null, Faction.NILFGAARD)),
     IMPERAL_BRIGADE_GUARD(new PlayableCard("imperal brigade guard", "", Action.TIGHT_BOND, Arrays.asList(0), 3, null, Faction.NILFGAARD)),
@@ -91,9 +91,9 @@ public enum AllCards {
     MENNO(new Hero("menno", "", Action.MEDIC, Arrays.asList(0), 10, null, Faction.NILFGAARD)),
     MOORVRAN(new Hero("moorvran", "", Action.NO_ACTION, Arrays.asList(2), 10, null, Faction.NILFGAARD)),
     MORTEISEN(new PlayableCard("morteisen", "", Action.NO_ACTION, Arrays.asList(0), 3, null, Faction.NILFGAARD)),
-    NAUZICA_CAVALRY_RIDER(new PlayableCard("nauzica cavalry rider", "", Action.TIGHT_BOND, Arrays.asList(0), 2, null, Faction.NILFGAARD)),
+    NAUZICA_CAVALRY_RIDER(new PlayableCard("nauzicaa cavalry rider", "", Action.TIGHT_BOND, Arrays.asList(0), 2, null, Faction.NILFGAARD)),
     PUTTKAMMER(new PlayableCard("puttkammer", "", Action.NO_ACTION, Arrays.asList(1), 3, null, Faction.NILFGAARD)),
-    RAINFAN(new PlayableCard("rainfan", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.NILFGAARD)),
+    RAINFAN(new PlayableCard("rainfarn", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.NILFGAARD)),
     RENUALD(new PlayableCard("renuald", "", Action.NO_ACTION, Arrays.asList(1), 5, null, Faction.NILFGAARD)),
     ROTTEN_MANGONEL(new PlayableCard("rotten mangonel", "", Action.NO_ACTION, Arrays.asList(2), 3, null, Faction.NILFGAARD)),
     SHILARD(new PlayableCard("shilard", "", Action.SPY, Arrays.asList(0), 7, null, Faction.NILFGAARD)),
@@ -105,90 +105,90 @@ public enum AllCards {
     VANHEMAR(new PlayableCard("vanhemar", "", Action.NO_ACTION, Arrays.asList(1), 4, null, Faction.NILFGAARD)),
     VATTIER(new PlayableCard("vattier", "", Action.SPY, Arrays.asList(0), 4, null, Faction.NILFGAARD)),
     VREEMDE(new PlayableCard("vreemde", "", Action.NO_ACTION, Arrays.asList(0), 2, null, Faction.NILFGAARD)),
-    YOUNG_EMISSARY_1(new PlayableCard("young emmissary", "", Action.TIGHT_BOND, Arrays.asList(0), 5, 1, Faction.NILFGAARD)),
-    YOUNG_EMISSARY_2(new PlayableCard("young emmissary", "", Action.TIGHT_BOND, Arrays.asList(0), 5, 2, Faction.NILFGAARD)),
+    YOUNG_EMISSARY_1(new PlayableCard("young emissary", "", Action.TIGHT_BOND, Arrays.asList(0), 5, 1, Faction.NILFGAARD)),
+    YOUNG_EMISSARY_2(new PlayableCard("young emissary", "", Action.TIGHT_BOND, Arrays.asList(0), 5, 2, Faction.NILFGAARD)),
     ZERRIKANIAN(new PlayableCard("zerrikanian", "", Action.NO_ACTION, Arrays.asList(2), 5, null, Faction.NILFGAARD)),
 
     //monsters
-    ARACHAS_BEHEMOTH(new PlayableCard("arachas", "", Action.MUSKET, Arrays.asList(2), 6, null, Faction.MONSTERS)),
-    ARACHAS_1(new PlayableCard("arachas", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
-    ARACHAS_2(new PlayableCard("arachas", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
-    ARACHAS_3(new PlayableCard("arachas", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
+    ARACHAS_BEHEMOTH(new PlayableCard("arachas behemoth", "", Action.MUSKET, Arrays.asList(2), 6, null, Faction.MONSTERS)),
+    ARACHAS_1(new PlayableCard("arachas", "", Action.MUSKET, Arrays.asList(0), 4, 1, Faction.MONSTERS)),
+    ARACHAS_2(new PlayableCard("arachas", "", Action.MUSKET, Arrays.asList(0), 4, 2, Faction.MONSTERS)),
+    ARACHAS_3(new PlayableCard("arachas", "", Action.MUSKET, Arrays.asList(0), 4, 3, Faction.MONSTERS)),
     BOTCHLING(new PlayableCard("botchling", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.MONSTERS)),
-    BRUXA(new PlayableCard("vampire", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
+    BRUXA(new PlayableCard("vampire bruxa", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
     CELAENO_HARPY(new PlayableCard("celaeno harpy", "", Action.NO_ACTION, Arrays.asList(0,1), 2, null, Faction.MONSTERS)),
     COCKATRICE(new PlayableCard("cockatrice", "", Action.NO_ACTION, Arrays.asList(1), 2, null, Faction.MONSTERS)),
-    CRONE_BREWESS(new PlayableCard("crone", "", Action.MUSKET, Arrays.asList(0), 6, null, Faction.MONSTERS)),
-    CRONE_WEAVESS(new PlayableCard("crone", "", Action.MUSKET, Arrays.asList(0), 6, null, Faction.MONSTERS)),
-    CRONE_WHISPESS(new PlayableCard("crone", "", Action.MUSKET, Arrays.asList(0), 6, null, Faction.MONSTERS)),
+    CRONE_BREWESS(new PlayableCard("crone brewess", "", Action.MUSKET, Arrays.asList(0), 6, null, Faction.MONSTERS)),
+    CRONE_WEAVESS(new PlayableCard("crone brewess", "", Action.MUSKET, Arrays.asList(0), 6, null, Faction.MONSTERS)),
+    CRONE_WHISPESS(new PlayableCard("crone brewess", "", Action.MUSKET, Arrays.asList(0), 6, null, Faction.MONSTERS)),
     DRAUG(new Hero("draug", "", Action.NO_ACTION, Arrays.asList(0), 10, null, Faction.MONSTERS)),
     EARTH_ELEMENTAL(new PlayableCard("earth elemental", "", Action.NO_ACTION, Arrays.asList(2), 6, null, Faction.MONSTERS)),
-    EKKIMA(new PlayableCard("vampire", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
+    EKKIMA(new PlayableCard("vampire ekkima", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
     ENDREGA(new PlayableCard("endrega", "", Action.NO_ACTION, Arrays.asList(1), 2, null, Faction.MONSTERS)),
     FIEND(new PlayableCard("fiend", "", Action.NO_ACTION, Arrays.asList(0), 6, null, Faction.MONSTERS)),
     FIRE_ELEMENTAL(new PlayableCard("fire elemental", "", Action.NO_ACTION, Arrays.asList(2), 6, null, Faction.MONSTERS)),
-    FLEDER(new PlayableCard("vampire", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
+    FLEDER(new PlayableCard("vampire fleder", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
     FOGLING(new PlayableCard("fogling", "", Action.NO_ACTION, Arrays.asList(0), 2, null, Faction.MONSTERS)),
     FORKTAIL(new PlayableCard("forktail", "", Action.NO_ACTION, Arrays.asList(0), 5, null, Faction.MONSTERS)),
     FRIGHTENER(new PlayableCard("frightener", "", Action.NO_ACTION, Arrays.asList(0), 5, null, Faction.MONSTERS)),
     FROST_GIANT(new PlayableCard("frost giant", "", Action.NO_ACTION, Arrays.asList(1), 5, null, Faction.MONSTERS)),
     GARGOYLE(new PlayableCard("gargoyle", "", Action.NO_ACTION, Arrays.asList(1), 2, null, Faction.MONSTERS)),
-    GARKAIN(new PlayableCard("vampire", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
-    GOUL_1(new PlayableCard("goul", "", Action.MUSKET, Arrays.asList(0), 1, null, Faction.MONSTERS)),
-    GOUL_2(new PlayableCard("goul", "", Action.MUSKET, Arrays.asList(0), 1, null, Faction.MONSTERS)),
-    GOUL_3(new PlayableCard("goul", "", Action.MUSKET, Arrays.asList(0), 1, null, Faction.MONSTERS)),
+    GARKAIN(new PlayableCard("vampire garkain", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.MONSTERS)),
+    GOUL_1(new PlayableCard("ghoul", "", Action.MUSKET, Arrays.asList(0), 1, 1, Faction.MONSTERS)),
+    GOUL_2(new PlayableCard("ghoul", "", Action.MUSKET, Arrays.asList(0), 1, 2, Faction.MONSTERS)),
+    GOUL_3(new PlayableCard("ghoul", "", Action.MUSKET, Arrays.asList(0), 1, 3, Faction.MONSTERS)),
     GRAVEHAG(new PlayableCard("gravehag", "", Action.NO_ACTION, Arrays.asList(1), 5, null, Faction.MONSTERS)),
     GRYFFIN(new PlayableCard("gryffin", "", Action.NO_ACTION, Arrays.asList(0), 5, null, Faction.MONSTERS)),
     HARPY(new PlayableCard("harpy", "", Action.NO_ACTION, Arrays.asList(0,1), 2, null, Faction.MONSTERS)),
     IMLERITH(new Hero("imlerith", "", Action.NO_ACTION, Arrays.asList(0), 10, null, Faction.MONSTERS)),
-    KATAKAN(new PlayableCard("vampire", "", Action.MUSKET, Arrays.asList(0), 5, null, Faction.MONSTERS)),
+    KATAKAN(new PlayableCard("vampire katakan", "", Action.MUSKET, Arrays.asList(0), 5, null, Faction.MONSTERS)),
     KAYRAN(new Hero("kayran", "", Action.MORALE, Arrays.asList(0,1), 8, null, Faction.MONSTERS)),
     LESHEN(new Hero("leshen", "", Action.NO_ACTION, Arrays.asList(1), 10, null, Faction.MONSTERS)),
-    NEKKER_1(new PlayableCard("nekker", "", Action.MUSKET, Arrays.asList(0), 2, null, Faction.MONSTERS)),
-    NEKKER_2(new PlayableCard("nekker", "", Action.MUSKET, Arrays.asList(0), 2, null, Faction.MONSTERS)),
-    NEKKER_3(new PlayableCard("nekker", "", Action.MUSKET, Arrays.asList(0), 2, null, Faction.MONSTERS)),
+    NEKKER_1(new PlayableCard("nekker", "", Action.MUSKET, Arrays.asList(0), 2, 1, Faction.MONSTERS)),
+    NEKKER_2(new PlayableCard("nekker", "", Action.MUSKET, Arrays.asList(0), 2, 2, Faction.MONSTERS)),
+    NEKKER_3(new PlayableCard("nekker", "", Action.MUSKET, Arrays.asList(0), 2, 3, Faction.MONSTERS)),
     PLAGUE_MAIDEN(new PlayableCard("plague maiden", "", Action.NO_ACTION, Arrays.asList(0), 5, null, Faction.MONSTERS)),
     TOAD(new PlayableCard("toad", "", Action.SCORCH, Arrays.asList(1), 7, null, Faction.MONSTERS)),
     WEREWOLF(new PlayableCard("werewolf", "", Action.NO_ACTION, Arrays.asList(0), 5, null, Faction.MONSTERS)),
     WYVERN(new PlayableCard("wyvern", "", Action.NO_ACTION, Arrays.asList(1), 2, null, Faction.MONSTERS)),
 
     //scoiatael
-    BARCLAY(new PlayableCard("barclay", "", Action.NO_ACTION, Arrays.asList(0,1), 6, null, Faction.SCOIATAEL)),
+    BARCLAY(new PlayableCard("barclay els", "", Action.NO_ACTION, Arrays.asList(0,1), 6, null, Faction.SCOIATAEL)),
     CIARAN(new PlayableCard("ciaran", "", Action.NO_ACTION, Arrays.asList(0,1), 3, null, Faction.SCOIATAEL)),
     DENNIS(new PlayableCard("dennis", "", Action.NO_ACTION, Arrays.asList(0), 6, null, Faction.SCOIATAEL)),
-    DOL_BLATHANNA_INFANTRY_1(new PlayableCard("dol blathanna infantry", "", Action.NO_ACTION, Arrays.asList(0,1), 6, null, Faction.SCOIATAEL)),
-    DOL_BLATHANNA_INFANTRY_2(new PlayableCard("dol blathanna infantry", "", Action.NO_ACTION, Arrays.asList(0,1), 6, null, Faction.SCOIATAEL)),
-    DOL_BLATHANNA_INFANTRY_3(new PlayableCard("dol blathanna infantry", "", Action.NO_ACTION, Arrays.asList(0,1), 6, null, Faction.SCOIATAEL)),
+    DOL_BLATHANNA_INFANTRY_1(new PlayableCard("dol blathanna infantry", "", Action.NO_ACTION, Arrays.asList(0,1), 6, 1, Faction.SCOIATAEL)),
+    DOL_BLATHANNA_INFANTRY_2(new PlayableCard("dol blathanna infantry", "", Action.NO_ACTION, Arrays.asList(0,1), 6, 2, Faction.SCOIATAEL)),
+    DOL_BLATHANNA_INFANTRY_3(new PlayableCard("dol blathanna infantry", "", Action.NO_ACTION, Arrays.asList(0,1), 6, 3, Faction.SCOIATAEL)),
     DOL_BLATHANNA_ARCHER(new PlayableCard("dol blathanna archer", "", Action.NO_ACTION, Arrays.asList(1), 4, null, Faction.SCOIATAEL)),
-    DWARF_1(new PlayableCard("dwarf", "", Action.MUSKET, Arrays.asList(0), 3, null, Faction.SCOIATAEL)),
-    DWARF_2(new PlayableCard("dwarf", "", Action.MUSKET, Arrays.asList(0), 3, null, Faction.SCOIATAEL)),
-    DWARF_3(new PlayableCard("dwarf", "", Action.MUSKET, Arrays.asList(0), 3, null, Faction.SCOIATAEL)),
+    DWARF_1(new PlayableCard("dwarf", "", Action.MUSKET, Arrays.asList(0), 3, 1, Faction.SCOIATAEL)),
+    DWARF_2(new PlayableCard("dwarf", "", Action.MUSKET, Arrays.asList(0), 3, 2, Faction.SCOIATAEL)),
+    DWARF_3(new PlayableCard("dwarf", "", Action.MUSKET, Arrays.asList(0), 3, 3, Faction.SCOIATAEL)),
     EITHNE(new Hero("eithne", "", Action.NO_ACTION, Arrays.asList(1), 10, null, Faction.SCOIATAEL)),
-    ELVEN_SKIRMISHER_1(new PlayableCard("elven skirmisher", "", Action.MUSKET, Arrays.asList(1), 2, null, Faction.SCOIATAEL)),
-    ELVEN_SKIRMISHER_2(new PlayableCard("elven skirmisher", "", Action.MUSKET, Arrays.asList(1), 2, null, Faction.SCOIATAEL)),
-    ELVEN_SKIRMISHER_3(new PlayableCard("elven skirmisher", "", Action.MUSKET, Arrays.asList(1), 2, null, Faction.SCOIATAEL)),
-    SCOIATAEL_FILAVAN(new PlayableCard("scoiatael filavan", "", Action.NO_ACTION, Arrays.asList(0), 6, null, Faction.SCOIATAEL)),
-    HAVEKAR_HEALER_1(new PlayableCard("havekar healer", "", Action.MEDIC, Arrays.asList(1), 0, null, Faction.SCOIATAEL)),
-    HAVEKAR_HEALER_2(new PlayableCard("havekar healer", "", Action.MEDIC, Arrays.asList(1), 0, null, Faction.SCOIATAEL)),
-    HAVEKAR_HEALER_3(new PlayableCard("havekar healer", "", Action.MEDIC, Arrays.asList(1), 0, null, Faction.SCOIATAEL)),
-    HAVEKAR_SMUGGLER_1(new PlayableCard("havekar smuggler", "", Action.MUSKET, Arrays.asList(0), 5, null, Faction.SCOIATAEL)),
-    HAVEKAR_SMUGGLER_2(new PlayableCard("havekar smuggler", "", Action.MUSKET, Arrays.asList(0), 5, null, Faction.SCOIATAEL)),
-    HAVEKAR_SMUGGLER_3(new PlayableCard("havekar smuggler", "", Action.MUSKET, Arrays.asList(0), 5, null, Faction.SCOIATAEL)),
+    ELVEN_SKIRMISHER_1(new PlayableCard("elven skirmisher", "", Action.MUSKET, Arrays.asList(1), 2, 1, Faction.SCOIATAEL)),
+    ELVEN_SKIRMISHER_2(new PlayableCard("elven skirmisher", "", Action.MUSKET, Arrays.asList(1), 2, 2, Faction.SCOIATAEL)),
+    ELVEN_SKIRMISHER_3(new PlayableCard("elven skirmisher", "", Action.MUSKET, Arrays.asList(1), 2, 3, Faction.SCOIATAEL)),
+    SCOIATAEL_FILAVAN(new PlayableCard("filavandrel", "", Action.NO_ACTION, Arrays.asList(0), 6, null, Faction.SCOIATAEL)),
+    HAVEKAR_HEALER_1(new PlayableCard("havekar healer", "", Action.MEDIC, Arrays.asList(1), 0, 1, Faction.SCOIATAEL)),
+    HAVEKAR_HEALER_2(new PlayableCard("havekar healer", "", Action.MEDIC, Arrays.asList(1), 0, 2, Faction.SCOIATAEL)),
+    HAVEKAR_HEALER_3(new PlayableCard("havekar healer", "", Action.MEDIC, Arrays.asList(1), 0, 3, Faction.SCOIATAEL)),
+    HAVEKAR_SMUGGLER_1(new PlayableCard("havekar smuggler", "", Action.MUSKET, Arrays.asList(0), 5, 1, Faction.SCOIATAEL)),
+    HAVEKAR_SMUGGLER_2(new PlayableCard("havekar smuggler", "", Action.MUSKET, Arrays.asList(0), 5, 2, Faction.SCOIATAEL)),
+    HAVEKAR_SMUGGLER_3(new PlayableCard("havekar smuggler", "", Action.MUSKET, Arrays.asList(0), 5, 3, Faction.SCOIATAEL)),
     IDA(new PlayableCard("ida", "", Action.NO_ACTION, Arrays.asList(1), 6, null, Faction.SCOIATAEL)),
     IORVETH(new Hero("iorveth", "", Action.NO_ACTION, Arrays.asList(1), 10, null, Faction.SCOIATAEL)),
     ISENGRIM(new Hero("isengrim", "", Action.MORALE, Arrays.asList(0), 10, null, Faction.SCOIATAEL)),
-    MAHAKAM_1(new PlayableCard("mahakam", "", Action.NO_ACTION, Arrays.asList(0), 5, null, Faction.SCOIATAEL)),
-    MAHAKAM_2(new PlayableCard("mahakam", "", Action.NO_ACTION, Arrays.asList(0), 5, null, Faction.SCOIATAEL)),
-    MAHAKAM_3(new PlayableCard("mahakam", "", Action.NO_ACTION, Arrays.asList(0), 5, null, Faction.SCOIATAEL)),
-    MAHAKAM_4(new PlayableCard("mahakam", "", Action.NO_ACTION, Arrays.asList(0), 5, null, Faction.SCOIATAEL)),
-    MAHAKAM_5(new PlayableCard("mahakam", "", Action.NO_ACTION, Arrays.asList(0), 5, null, Faction.SCOIATAEL)),
+    MAHAKAM_1(new PlayableCard("mahakam", "", Action.NO_ACTION, Arrays.asList(0), 5, 1, Faction.SCOIATAEL)),
+    MAHAKAM_2(new PlayableCard("mahakam", "", Action.NO_ACTION, Arrays.asList(0), 5, 2, Faction.SCOIATAEL)),
+    MAHAKAM_3(new PlayableCard("mahakam", "", Action.NO_ACTION, Arrays.asList(0), 5, 3, Faction.SCOIATAEL)),
+    MAHAKAM_4(new PlayableCard("mahakam", "", Action.NO_ACTION, Arrays.asList(0), 5, 4, Faction.SCOIATAEL)),
+    MAHAKAM_5(new PlayableCard("mahakam", "", Action.NO_ACTION, Arrays.asList(0), 5, 5, Faction.SCOIATAEL)),
     MILVA(new PlayableCard("milva", "", Action.MORALE, Arrays.asList(0), 10, null, Faction.SCOIATAEL)),
     RIORDAIN(new PlayableCard("riordain", "", Action.NO_ACTION, Arrays.asList(1), 1, null, Faction.SCOIATAEL)),
     SAESENTHESSIS(new Hero("saesenthessis", "", Action.NO_ACTION, Arrays.asList(1), 10, null, Faction.SCOIATAEL)),
     SCHIRRU(new PlayableCard("schirru", "", Action.SCORCH, Arrays.asList(2), 8, null, Faction.SCOIATAEL)),
     TORUVIEL(new PlayableCard("toruviel", "", Action.NO_ACTION, Arrays.asList(1), 2, null, Faction.SCOIATAEL)),
-    VRIHEDD_BRIGADE_1(new PlayableCard("vrihedd brigade", "", Action.NO_ACTION, Arrays.asList(0,1), 5, null, Faction.SCOIATAEL)),
-    VRIHEDD_BRIGADE_2(new PlayableCard("vrihedd brigade", "", Action.NO_ACTION, Arrays.asList(0,1), 5, null, Faction.SCOIATAEL)),
+    VRIHEDD_BRIGADE_1(new PlayableCard("vrihedd brigade", "", Action.NO_ACTION, Arrays.asList(0,1), 5, 1, Faction.SCOIATAEL)),
+    VRIHEDD_BRIGADE_2(new PlayableCard("vrihedd brigade", "", Action.NO_ACTION, Arrays.asList(0,1), 5, 2, Faction.SCOIATAEL)),
     VRIHEDD_CADET(new PlayableCard("vrihedd cadet", "", Action.NO_ACTION, Arrays.asList(1), 4, null, Faction.SCOIATAEL)),
     YAEVINN(new PlayableCard("yaevinn", "", Action.NO_ACTION, Arrays.asList(0,1), 6, null, Faction.SCOIATAEL)),
 
@@ -202,7 +202,7 @@ public enum AllCards {
     BROKVA_ARCHER(new PlayableCard("brokva archer", "", Action.NO_ACTION, Arrays.asList(1), 6, null, Faction.SKELLIGE)),
     CERYS(new Hero("cerys", "", Action.MUSKET, Arrays.asList(0), 10, null, Faction.SKELLIGE)),
     CRAITE_WARRIOR(new PlayableCard("craite warrior", "", Action.TIGHT_BOND, Arrays.asList(0), 6, null, Faction.SKELLIGE)),
-    DUMUN_PIRATE(new PlayableCard("dumun pirate", "", Action.SCORCH, Arrays.asList(0), 6, null, Faction.SKELLIGE)),
+    DUMUN_PIRATE(new PlayableCard("dimun pirate", "", Action.SCORCH, Arrays.asList(0), 6, null, Faction.SKELLIGE)),
     DONAR(new PlayableCard("donar", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.SKELLIGE)),
     DRAIG(new PlayableCard("draig", "", Action.HORN, Arrays.asList(0), 2, null, Faction.SKELLIGE)),
     ERMION(new Hero("ermion", "", Action.MUSHROOM, Arrays.asList(1), 8, null, Faction.SKELLIGE)),
@@ -221,7 +221,7 @@ public enum AllCards {
     UDALRYK(new PlayableCard("udalryk", "", Action.NO_ACTION, Arrays.asList(0), 4, null, Faction.SKELLIGE)),
     WAR_LONGSHIP(new PlayableCard("war longship", "", Action.TIGHT_BOND, Arrays.asList(2), 6, null, Faction.SKELLIGE)),
     YOUNG_VILDKAARL(new PlayableCard("young vildkaarl", "", Action.TIGHT_BOND, Arrays.asList(1), 8, null, Faction.SKELLIGE)),
-    YOUNG_BERSERKER(new PlayableCard("young berseker", "", Action.BEAR, Arrays.asList(1), 2, null, Faction.SKELLIGE,(PlayableCard) YOUNG_VILDKAARL.getCard())),
+    YOUNG_BERSERKER(new PlayableCard("young berserker", "", Action.BEAR, Arrays.asList(1), 2, null, Faction.SKELLIGE,(PlayableCard) YOUNG_VILDKAARL.getCard())),
 
     ;
     private final AbstractCard abstractCard;
@@ -246,10 +246,33 @@ public enum AllCards {
         return AllCards.faction.get(faction);
     }
 
+    public static ArrayList<AbstractCard> getNeutralCards() {
+        return AllCards.faction.get(Faction.NEUTRAL);
+    }
+
+    public static ArrayList<AbstractCard> getSpecialCards() {
+        return AllCards.faction.get(Faction.SPECIAL);
+    }
+
+    public static ArrayList<AbstractCard> getWeatherCards() {
+        return AllCards.faction.get(Faction.WEATHER);
+    }
+
+
     private AbstractCard getCard() {return abstractCard;}
 
     public AbstractCard getAbstractCard() {
         return abstractCard.clone();
     }
+
+    public static AbstractCard getCardByCardName(String cardName) {
+        for(AllCards i: AllCards.values()) {
+            if(i.getCard().getName().equals(cardName)) {
+                return i.getCard();
+            }
+        }
+        return null;
+    }
+
 
 }

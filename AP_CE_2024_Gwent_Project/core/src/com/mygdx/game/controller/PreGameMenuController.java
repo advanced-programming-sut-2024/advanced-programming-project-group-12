@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class PreGameMenuController {
+//    Player player = Game.getCurrentGame().getCurrentPlayer();
     User user = User.getLoggedInUser();
 
     public void gotoMainMenu() {
@@ -38,6 +39,9 @@ public class PreGameMenuController {
 
     public void setFaction(String factionName) {
         Faction faction = Faction.getFactionByName(factionName);
+        if (user.getFaction() != faction) {
+            User.getLoggedInUser().resetDeck();
+        }
         user.setFaction(faction);
         user.updateInfo();
     }
