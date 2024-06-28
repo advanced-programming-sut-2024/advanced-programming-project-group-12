@@ -6,6 +6,7 @@ import com.mygdx.game.model.Game;
 import com.mygdx.game.model.Player;
 
 import java.util.List;
+import java.util.Objects;
 
 public abstract class AbstractCard implements Cloneable{
     protected List<Integer> allowableRows;
@@ -79,6 +80,9 @@ public abstract class AbstractCard implements Cloneable{
     }
 
     public String getAssetName() {
+        if (Objects.equals(faction.getName(), "northern realms")) {
+            return "cards/realms" + "_" + name + typeNumber + ".jpg";
+        }
         return "cards/" + faction.getName()+ "_" + name + typeNumber + ".jpg";
     }
 }
