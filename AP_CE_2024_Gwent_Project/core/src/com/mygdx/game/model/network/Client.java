@@ -1,10 +1,19 @@
 package com.mygdx.game.model.network;
 
-import java.net.HttpCookie;
+import com.mygdx.game.model.network.massage.Session;
+import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 
-public class Client {
-    HttpCookie cookie = new HttpCookie("name" , "value");
-    public void test() {
-        cookie.
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.HttpCookie;
+import java.net.Socket;
+
+public class Client extends Thread{
+    Socket server;
+    Session session;
+
+    public void sendRequest(ClientRequest request) {
+        server = new Socket();
+
     }
 }
