@@ -76,6 +76,7 @@ public class PlayableCard extends AbstractCard {
     @Override
     public void place(int row) {
         super.place(row);
+        isDead = false;
         Player player;
         if(action.equals(Action.SPY)) {
             player = Game.getCurrentGame().getOpposition();

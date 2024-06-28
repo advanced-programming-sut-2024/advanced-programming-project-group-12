@@ -106,9 +106,10 @@ public enum Action {
     MEDIC(card -> {
         // should open a menu in game screen to choose from one card of the below list
         Player player = Game.getCurrentGame().getCurrentPlayer();
-        ArrayList<AbstractCard> discard = Game.getCurrentGame().getGameBoard().getDiscard(player);
-        AbstractCard chosenCard;
-//        chosenCard.place();
+        ArrayList<PlayableCard> discard = Game.getCurrentGame().getGameBoard().getDiscardPlayableCards(player);
+        //todo
+        PlayableCard chosenCard = null;
+        chosenCard.revive();
     }),
     SPY(card -> {
         Player player = Game.getCurrentGame().getCurrentPlayer();
@@ -319,7 +320,7 @@ public enum Action {
         players.add(Game.getCurrentGame().getOpposition());
 
         for(Player i : players) {
-            ArrayList<AbstractCard> discard = gameBoard.getDiscard(i);
+            ArrayList<AbstractCard> discard = gameBoard.getDiscardCards(i);
             Collections.shuffle(discard);
             i.addCardsToDeck(discard);
             gameBoard.resetDiscard(i);

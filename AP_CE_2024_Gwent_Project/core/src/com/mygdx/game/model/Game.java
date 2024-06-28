@@ -1,5 +1,6 @@
 package com.mygdx.game.model;
 
+import com.mygdx.game.model.card.PlayableCard;
 import com.mygdx.game.model.gameBoard.GameBoard;
 
 import java.util.ArrayList;
@@ -77,10 +78,32 @@ public class Game {
         currentRound.endRound(gameBoard);
         gameBoard.reset();
         rounds.add(currentRound);
+
+        for(Player p: players) {
+            if(p.getFaction().equals(Faction.MONSTERS)) {
+                ArrayList<PlayableCard> cardsList = currentRound.gameBoardCopy.allPlayerPlayableCards(p);
+                //the deep copied gameBoard means that the card remains in discard and can be revived again
+                PlayableCard playableCard = cardsList.remove((int) (Math.random() * cardsList.size()));
+                playableCard.place(playableCard.getRow());
+            }
+        }
+
+
         if(!isOver) {
             currentRound = new Round(rounds.size() + 1, currentPlayer, opposition);
         } else {
             finishGame();
+            return;
+        }
+
+        for(Player p: players) {
+            if(p.getFaction().equals(Faction.SKELLIGE)) {
+                ArrayList<PlayableCard> cardsList = gameBoard.getDiscardPlayableCards(p);
+                for(int i = 0; i< 2 ; i++) {
+                    PlayableCard playableCard = cardsList.remove((int) (Math.random() * cardsList.size()));
+                    playableCard.place(playableCard.getRow());
+                }
+            }
         }
     }
 

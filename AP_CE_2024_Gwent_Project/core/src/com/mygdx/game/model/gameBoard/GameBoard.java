@@ -2,6 +2,7 @@ package com.mygdx.game.model.gameBoard;
 
 import com.mygdx.game.model.*;
 import com.mygdx.game.model.card.AbstractCard;
+import com.mygdx.game.model.card.Discard;
 import com.mygdx.game.model.card.PlayableCard;
 import com.mygdx.game.model.card.SpellCard;
 
@@ -9,7 +10,7 @@ import java.util.*;
 
 public class GameBoard {
     private HashMap<Player, ArrayList<Row>> rows;
-    private HashMap<Player,ArrayList<AbstractCard>> discard;
+    private HashMap<Player, Discard> discard;
     private HashSet<SpellCard> weatherCards;
 
 
@@ -18,8 +19,8 @@ public class GameBoard {
         rows.put(player1, new ArrayList<>(3));
         rows.put(player2, new ArrayList<>(3));
         discard = new HashMap<>(2);
-        discard.put(player1, new ArrayList<>());
-        discard.put(player2, new ArrayList<>());
+        discard.put(player1, new Discard());
+        discard.put(player2, new Discard());
         weatherCards = new HashSet<>();
     }
 
@@ -31,7 +32,7 @@ public class GameBoard {
 
         this.discard = new HashMap<>();
         for(Player p: rows.keySet()) {
-            this.discard.put(p, new ArrayList<>(discard.get(p)));
+            this.discard.put(p, new Discard());
         }
 
         this.weatherCards = weatherCards;
@@ -130,8 +131,12 @@ public class GameBoard {
     }
 
 
-    public ArrayList<AbstractCard> getDiscard(Player player) {
-        return discard.get(player);
+    public ArrayList<AbstractCard> getDiscardCards(Player player) {
+        return discard.get(player).getDiscardCards();
+    }
+
+    public ArrayList<PlayableCard> getDiscardPlayableCards(Player player) {
+        return discard.get(player).getPlayableCards();
     }
 
     public void resetDiscard(Player player) {
@@ -163,6 +168,7 @@ public class GameBoard {
     public GameBoard copy() {
         return new GameBoard(rows, discard, weatherCards);
     }
+
 }
 
 
