@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Game {
-    private static Game currentGame;
     private final List<Player> players;
 //    private final LocalDate date;
 
@@ -29,31 +28,19 @@ public class Game {
         gameBoard = new GameBoard(player, opposition);
         currentRound = new Round(1, player, opposition);
 
-        currentGame = this;
         this.currentPlayer = player;
         this.opposition = opposition;
 
         isOver = false;
     }
 
-    public static Game getCurrentGame() {
-        return currentGame;
-    }
 
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
-    public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
-    }
-
     public Player getOpposition() {
         return opposition;
-    }
-
-    public void setOpposition(Player opposition) {
-        this.opposition = opposition;
     }
 
     public GameBoard getGameBoard() {
@@ -83,7 +70,7 @@ public class Game {
                 ArrayList<PlayableCard> cardsList = currentRound.gameBoardCopy.allPlayerPlayableCards(p);
                 //the deep copied gameBoard means that the card remains in discard and can be revived again
                 PlayableCard playableCard = cardsList.remove((int) (Math.random() * cardsList.size()));
-                playableCard.place(playableCard.getRow());
+                playableCard.place(playableCard.getRow(), p);
             }
         }
 
@@ -100,7 +87,7 @@ public class Game {
                 ArrayList<PlayableCard> cardsList = gameBoard.getDiscardPlayableCards(p);
                 for(int i = 0; i< 2 ; i++) {
                     PlayableCard playableCard = cardsList.remove((int) (Math.random() * cardsList.size()));
-                    playableCard.place(playableCard.getRow());
+                    playableCard.place(playableCard.getRow(), p);
                 }
             }
         }

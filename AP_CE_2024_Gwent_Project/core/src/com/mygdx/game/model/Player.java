@@ -16,20 +16,26 @@ public class Player {
     private int roundsLost;
     private boolean won;
     private boolean isPassed;
+    private Game game;
 
-    public Player(User user, CommanderCard leader, LinkedList<AbstractCard> deck, Faction faction) {
+    public Player(User user, CommanderCard leader, LinkedList<AbstractCard> deck, Faction faction, Game game) {
         this.user = user;
         this.leader = leader;
         this.faction = faction;
         hand = new LinkedList<>();
         this.roundsLost = 0;
         isPassed = false;
+        this.game = game;
 
         Collections.shuffle((LinkedList)deck.clone());
         this.deck = deck;
         for(int i = 0; i< 10 ; i++) {
             drawCard();
         }
+    }
+
+    public Game getGame() {
+        return game;
     }
 
     public CommanderCard getLeader() {

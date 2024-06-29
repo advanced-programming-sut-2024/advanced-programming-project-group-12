@@ -15,23 +15,23 @@ public enum Action {
      * after being placed
      */
     SCORCH(card -> {
-        Player opposition = Game.getCurrentGame().getOpposition();
-        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
-        ArrayList<PlayableCard> allOppositionPlayableCards = gameBoard.allPlayerPlayableCards(opposition);
+        Player opposition = card.getPlayer().getGame().getOpposition();
+        GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
+        ArrayList<PlayableCard> allPlayableCards = gameBoard.allPlayerPlayableCards(opposition);
+        allPlayableCards.addAll(gameBoard.allPlayerPlayableCards(card.getPlayer()));
 
-        if(allOppositionPlayableCards.isEmpty()) {
+        if(allPlayableCards.isEmpty()) {
             return;
         }
 
-        allOppositionPlayableCards.sort(null);
+        allPlayableCards.sort(null);
 
         ArrayList<PlayableCard> cardsToBeScorched = new ArrayList<>();
-        int maxPower = allOppositionPlayableCards.get(0).getPower();
-        for(PlayableCard i: allOppositionPlayableCards) {
-            if(i.getPower() == maxPower) {
+        int maxPower = allPlayableCards.get(0).getPower();
+        for (PlayableCard i : allPlayableCards) {
+            if (i.getPower() == maxPower) {
                 cardsToBeScorched.add(i);
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -39,10 +39,12 @@ public enum Action {
         for(PlayableCard i: cardsToBeScorched) {
             i.kill();
         }
+
+        card.kill();
     }),
     SCORCH_S(card -> {
-        Player opposition = Game.getCurrentGame().getOpposition();
-        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        Player opposition = card.getPlayer().getGame().getOpposition();
+        GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
         ArrayList<PlayableCard> row = gameBoard.getRowCards(opposition, 2);
         if(gameBoard.getRowStrength(opposition, 2)  < 10) return;
 
@@ -61,8 +63,8 @@ public enum Action {
         }
     }),
     SCORCH_R(card -> {
-        Player opposition = Game.getCurrentGame().getOpposition();
-        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        Player opposition = card.getPlayer().getGame().getOpposition();
+        GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
         ArrayList<PlayableCard> row = gameBoard.getRowCards(opposition, 1);
         if(gameBoard.getRowStrength(opposition,1)  < 10) return;
 
@@ -81,8 +83,8 @@ public enum Action {
         }
     }),
     SCORCH_C(card -> {
-        Player opposition = Game.getCurrentGame().getOpposition();
-        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        Player opposition = card.getPlayer().getGame().getOpposition();
+        GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
         ArrayList<PlayableCard> row = gameBoard.getRowCards(opposition, 0);
         if(gameBoard.getRowStrength(opposition, 0)  < 10) return;
 
@@ -101,47 +103,49 @@ public enum Action {
         }
     }),
     TIGHT_BOND(card -> {
+        //todo
     }),
     MEDIC(card -> {
         // should open a menu in game screen to choose from one card of the below list
-        Player player = Game.getCurrentGame().getCurrentPlayer();
-        ArrayList<PlayableCard> discard = Game.getCurrentGame().getGameBoard().getDiscardPlayableCards(player);
+        Player player = ((PlayableCard)card).getPlayer();
+        ArrayList<PlayableCard> discard = card.getPlayer().getGame().getGameBoard().getDiscardPlayableCards(player);
         //todo
         PlayableCard chosenCard = null;
         chosenCard.revive();
     }),
     SPY(card -> {
-        Player player = Game.getCurrentGame().getCurrentPlayer();
+        Player player = card.getPlayer().getGame().getCurrentPlayer();
         player.drawCard().drawCard();
     }),
     MORALE(card -> {
-        Player player = Game.getCurrentGame().getCurrentPlayer();
-        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        Player player = card.getPlayer().getGame().getCurrentPlayer();
+        GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
         gameBoard.increaseMorale(card.getRow());
     }),
     COW(card -> {
-        if(((PlayableCard) card).isDead()) {
-            ((PlayableCard) card).getLegacyCard().place(card.getRow());
+        PlayableCard playableCard = (PlayableCard) card;
+        if(playableCard.isDead()) {
+            playableCard.getLegacyCard().place(card.getRow(), card.getPlayer());
         }
     }),
     HORN(card -> {
-        Row row = Game.getCurrentGame().getGameBoard().getRowForCurrentPlayer(card.getRow());
+        Row row = card.getPlayer().getGame().getGameBoard().getRowForCurrentPlayer(card.getRow());
         row.setHorn(true);
     }),
     HORN_CARD(card -> {
-        AllCards.COMMANDER_HORN.getAbstractCard().place(card.getRow());
+        AllCards.COMMANDER_HORN.getAbstractCard().place(card.getRow(),card.getPlayer());
     }),
     MUSKET(card -> {
-        Player player = Game.getCurrentGame().getCurrentPlayer();
+        Player player = card.getPlayer().getGame().getCurrentPlayer();
         LinkedList<AbstractCard> deck = player.getDeck();
         int row = card.getRow();
         for (AbstractCard i : deck) {
             if (i.getName().equals(card.getName())) {
                 deck.remove(i);
                 if (i.getAllowableRows().contains(row)) {
-                    i.place(row);
+                    i.place(row, card.getPlayer());
                 } else {
-                    i.place(i.getDefaultRow());
+                    i.place(i.getDefaultRow(), card.getPlayer());
                 }
             }
         }
@@ -150,25 +154,25 @@ public enum Action {
         for (AbstractCard i : hand) {
             if (i.getName().equals(card.getName())) {
                 if (i.getAllowableRows().contains(row)) {
-                    i.place(row);
+                    i.place(row, card.getPlayer());
                 } else {
-                    i.place(i.getDefaultRow());
+                    i.place(i.getDefaultRow(), i.getPlayer());
                 }
             }
         }
     }),
     BEAR(card -> {
-        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
-        Player player = Game.getCurrentGame().getCurrentPlayer();
+        Player player = card.getPlayer();
+        GameBoard gameBoard = player.getGame().getGameBoard();
         int rowNumber = card.getRow();
         Row row = gameBoard.getRowForCurrentPlayer(rowNumber);
         if(row.hasMushroom()) {
             card.kill();
-            ((PlayableCard) card).getLegacyCard().place(card.getDefaultRow());
+            ((PlayableCard) card).getLegacyCard().place(card.getDefaultRow(), player);
         }
     }),
     MUSHROOM(card -> {
-        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
         int rowNumber = card.getRow();
         Row row = gameBoard.getRowForCurrentPlayer(rowNumber);
         row.setHasMushroom();
@@ -179,20 +183,22 @@ public enum Action {
             }
         }
     }),
-    DECOY(null),
+    DECOY(abstractCard -> {
+        //todo
+    }),
 
     //weather actions
     CLEAR(card -> {
-        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
         for(int i = 0; i< 3; i++ ){
             Row row = gameBoard.getRowForCurrentPlayer(i);
             row.setWeatherBuffer(false);
         }
     }),
-    FOG(card -> Game.getCurrentGame().getGameBoard().getRowForCurrentPlayer(1).setWeatherBuffer(true)
+    FOG(card ->card.getPlayer().getGame().getGameBoard().getRowForCurrentPlayer(1).setWeatherBuffer(true)
     ),
-    FROST(card -> Game.getCurrentGame().getGameBoard().getRowForCurrentPlayer(0).setWeatherBuffer(true)),
-    RAIN(card -> Game.getCurrentGame().getGameBoard().getRowForCurrentPlayer(2).setWeatherBuffer(true)),
+    FROST(card -> card.getPlayer().getGame().getGameBoard().getRowForCurrentPlayer(0).setWeatherBuffer(true)),
+    RAIN(card -> card.getPlayer().getGame().getGameBoard().getRowForCurrentPlayer(2).setWeatherBuffer(true)),
     STORM(card -> {
         FOG.action.accept(null);
         RAIN.action.accept(null);
@@ -200,20 +206,20 @@ public enum Action {
 
     //leader actions,
     FOLTEST_SIEGE(card -> {
-        AllCards.FOG.getAbstractCard().place(3);
+        AllCards.FOG.getAbstractCard().place(3, card.getPlayer());
     }),
     FOLTEST_STEEL(card -> {
-        AllCards.CLEAR.getAbstractCard().place(3);
+        AllCards.CLEAR.getAbstractCard().place(3, card.getPlayer());
     }),
     FOLTEST_KING(card -> {
-        AllCards.COMMANDER_HORN.getAbstractCard().place(2);
+        AllCards.COMMANDER_HORN.getAbstractCard().place(2, card.getPlayer());
     }),
 
     EMHYR_EMPERIAL(card -> {
-       AllCards.RAIN.getAbstractCard().place(3);
+       AllCards.RAIN.getAbstractCard().place(3, card.getPlayer());
     }),
     EMHYR_EMPEROR(card -> {
-        Player opponent = Game.getCurrentGame().getOpposition();
+        Player opponent = card.getPlayer().getGame().getOpposition();
         LinkedList<AbstractCard> hand =(LinkedList<AbstractCard>) opponent.getHand().clone();
         ArrayList<AbstractCard> toBeShown = new ArrayList<>(3);
         for(int i = 0; i< 3 ;i++) {
@@ -226,11 +232,11 @@ public enum Action {
         //add mech to show the array list
     }),
     EMHYR_WHITEFLAME(card -> {
-       Player opponent = Game.getCurrentGame().getOpposition();
+       Player opponent = card.getPlayer().getGame().getOpposition();
        opponent.getLeader().setHasPlayedAction(true);
     }),
     EMHYR_RELENTLESS(abstractCard -> {
-        Player opponent = Game.getCurrentGame().getOpposition();
+        Player opponent = abstractCard.getPlayer().getGame().getOpposition();
         //todo
         //sent to secket a request to ask for the choosing card interface
     }),
@@ -239,7 +245,7 @@ public enum Action {
     }),
 
     ERIDIN_COMMANDER(abstractCard -> {
-        AllCards.COMMANDER_HORN.getAbstractCard().place(0);
+        AllCards.COMMANDER_HORN.getAbstractCard().place(0, abstractCard.getPlayer());
     }),
     ERIDIN_BRINGER(abstractCard -> {
         //todo
@@ -251,18 +257,18 @@ public enum Action {
 
     }),
     ERIDIN_TREACHEROUS(abstractCard -> {
-        Game.getCurrentGame().getGameBoard().setDoubleSpyPower();
+        abstractCard.getPlayer().getGame().getGameBoard().setDoubleSpyPower();
     }),
 
     FRANCESCA_QUEEN(abstractCard -> SCORCH_C.execute(null)),
-    FRANCESCA_BEAUTIFUL(abstractCard -> AllCards.COMMANDER_HORN.getAbstractCard().place(1)),
+    FRANCESCA_BEAUTIFUL(abstractCard -> AllCards.COMMANDER_HORN.getAbstractCard().place(1, abstractCard.getPlayer())),
     FRANCESCA_DAISY(abstractCard -> {
         //probably has to be hardcoded
     }),
-    FRANCESCA_PUREBLOOD(abstractCard -> AllCards.FROST.getAbstractCard().place(3)),
+    FRANCESCA_PUREBLOOD(abstractCard -> AllCards.FROST.getAbstractCard().place(3, abstractCard.getPlayer())),
     FRANCESCA_HOPE(abstractCard -> {
-        Player player = Game.getCurrentGame().getCurrentPlayer();
-        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        Player player = abstractCard.getPlayer().getGame().getCurrentPlayer();
+        GameBoard gameBoard = abstractCard.getPlayer().getGame().getGameBoard();
         ArrayList<PlayableCard> allPlayablePlayedCards = gameBoard.allPlayerPlayableCards(player);
         ArrayList<Row> allRows = gameBoard.getAllRowsForPlayer(player);
 
@@ -286,12 +292,12 @@ public enum Action {
     }),
 
     CRACH_AN_CRAITE(abstractCard -> {
-        Game currentGame = Game.getCurrentGame();
+        Game currentGame = abstractCard.getPlayer().getGame();
         GameBoard gameBoard = currentGame.getGameBoard();
 
         ArrayList<Player> players = new ArrayList<>(2);
-        players.add(Game.getCurrentGame().getCurrentPlayer());
-        players.add(Game.getCurrentGame().getOpposition());
+        players.add(currentGame.getCurrentPlayer());
+        players.add(currentGame.getOpposition());
 
         for(Player i : players) {
             ArrayList<AbstractCard> discard = gameBoard.getDiscardCards(i);
@@ -300,7 +306,7 @@ public enum Action {
             gameBoard.resetDiscard(i);
         }
     }),
-    KING_BRAN(abstractCard -> Game.getCurrentGame().getGameBoard().setHalfAttrition()
+    KING_BRAN(abstractCard -> abstractCard.getPlayer().getGame().getGameBoard().setHalfAttrition()
     ),
 
 

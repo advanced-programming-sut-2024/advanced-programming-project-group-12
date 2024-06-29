@@ -1,7 +1,5 @@
 package com.mygdx.game.model;
 
-import com.mygdx.game.model.gameBoard.GameBoard;
-
 public class Round {
     private Player player1;
     private Player player2;

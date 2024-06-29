@@ -13,13 +13,10 @@ public class SpellCard extends AbstractCard {
     }
 
     @Override
-    public void place(int row) {
-        Player player = Game.getCurrentGame().getCurrentPlayer();
+    public void place(int row, Player player) {
         doAction();
-        if(allowableRows!= null && allowableRows.contains(row)) {
-            Game.getCurrentGame().getGameBoard().addCard(player, row, this);
-        }
-        PlayableCard.updatePowers();
+        player.getGame().getGameBoard().addCard(player, row, this);
+
     }
 
     @Override

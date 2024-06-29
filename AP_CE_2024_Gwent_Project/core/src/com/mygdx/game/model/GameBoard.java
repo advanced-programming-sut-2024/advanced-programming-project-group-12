@@ -58,7 +58,12 @@ public class GameBoard {
     }
 
     public void addCard(Player player, int row, SpellCard spellCard) {
-        rows.get(player).get(row).addCard(spellCard);
+        if(row == 3) {
+            weatherCards.add(spellCard);
+        }
+        else {
+            rows.get(player).get(row).addCard(spellCard);
+        }
     }
 
     public ArrayList<PlayableCard> allPlayerPlayableCards(Player player) {

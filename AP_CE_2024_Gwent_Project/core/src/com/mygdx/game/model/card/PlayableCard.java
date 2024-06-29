@@ -30,9 +30,6 @@ public class PlayableCard extends AbstractCard {
         this.legacyCard = legacyCard;
     }
 
-    public static void updatePowers() {
-    }
-
     public int getPower() {
         return power;
     }
@@ -50,43 +47,40 @@ public class PlayableCard extends AbstractCard {
     }
 
     public void replace(int rowNumber) {
-        Player player = Game.getCurrentGame().getCurrentPlayer();
-        Row row = Game.getCurrentGame().getGameBoard().getRowForCurrentPlayer(rowNumber);
+        Row row = player.getGame().getGameBoard().getRowForCurrentPlayer(rowNumber);
         row.removeCard(this);
 
-        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        GameBoard gameBoard = player.getGame().getGameBoard();
         gameBoard.addCard(player, rowNumber, this);
     }
 
     public void revive() {
         if(isDead) {
             isDead = false;
-            place(super.row);
+            place(super.row, player);
         }
     }
 
     @Override
     public void kill() {
-        Player player = Game.getCurrentGame().getCurrentPlayer();
-        Row row = Game.getCurrentGame().getGameBoard().getRowForCurrentPlayer(super.row);
+        Row row = player.getGame().getGameBoard().getRowForCurrentPlayer(super.row);
         row.removeCard(this);
         isDead = true;
     }
 
     @Override
-    public void place(int row) {
-        super.place(row);
-        isDead = false;
-        Player player;
+    public void place(int row, Player player) {
+        super.place(row, player);
+        this.isDead = false;
+
+        Game game = player.getGame();
+
         if(action.equals(Action.SPY)) {
-            player = Game.getCurrentGame().getOpposition();
-        }
-        else {
-            player = Game.getCurrentGame().getCurrentPlayer();
+            this.player = game.getOpposition();
         }
         doAction();
-        Game.getCurrentGame().getGameBoard().addCard(player, row, this);
-        ArrayList<PlayableCard> boardRow = Game.getCurrentGame().getGameBoard().getRowCards(player, row);
+        player.getGame().getGameBoard().addCard(player, row, this);
+        ArrayList<PlayableCard> boardRow = player.getGame().getGameBoard().getRowCards(player, row);
         boardRow.sort(null);
     }
 }

@@ -2,6 +2,7 @@ package com.mygdx.game.model.card;
 
 import com.mygdx.game.model.Action;
 import com.mygdx.game.model.Faction;
+import com.mygdx.game.model.Player;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class CommanderCard extends AbstractCard{
     }
 
     @Override
-    public void place(int row) {
+    public void place(int row, Player player) {
 
     }
 
