@@ -6,7 +6,6 @@ import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.LoginRequest;
 import com.mygdx.game.model.network.massage.clientRequest.SignInRequest;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
-import com.mygdx.game.model.network.massage.serverResponse.ServerResponseType;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -18,12 +17,15 @@ import java.util.LinkedList;
 
 public class Server extends Thread {
     private static final int THREAD_NUMBER = 10;
-
     private static final LinkedList<Socket> clients = new LinkedList<>();
     private static ServerSocket serverSocket;
-
     private static final GsonBuilder builder = new GsonBuilder();
+
     private final Gson gson;
+    private Socket socket;
+    private DataOutputStream dataOutputStream;
+    private DataInputStream dataInputStream;
+
 
     static {
         try {
@@ -68,7 +70,6 @@ public class Server extends Thread {
     @Override
     public void run() {
         while(true) {
-            Socket socket;
             synchronized (clients) {
                 while (clients.isEmpty()) {
                     try {
@@ -79,7 +80,13 @@ public class Server extends Thread {
                 }
                 socket = clients.removeFirst();
                 try {
-                    handleConnection(socket);
+                    dataInputStream = new DataInputStream(socket.getInputStream());
+                    dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    handleConnection();
                 } catch (IOException e) {
                     System.err.println("failure in connection");
                 }
@@ -87,10 +94,7 @@ public class Server extends Thread {
         }
     }
 
-    private void handleConnection(Socket client) throws IOException {
-        DataInputStream dataInputStream = new DataInputStream(client.getInputStream());
-        DataOutputStream dataOutputStream = new DataOutputStream(client.getOutputStream());
-
+    private void handleConnection() throws IOException {
         ClientRequest clientMassage = extractMassage(dataInputStream.readUTF());
 
         //might want to take this to a whole new controller class
@@ -104,10 +108,6 @@ public class Server extends Thread {
         };
 
         dataOutputStream.writeUTF(gson.toJson(serverResponse));
-
-        dataInputStream.close();
-        dataOutputStream.close();
-        client.close();
     }
 
     private ClientRequest extractMassage(String request) {
