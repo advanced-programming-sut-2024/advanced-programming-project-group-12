@@ -4,22 +4,28 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.GameController;
 import com.mygdx.game.model.Game;
+import com.mygdx.game.model.Player;
+import com.mygdx.game.model.Row;
 import com.mygdx.game.model.actors.CardActor;
-import com.mygdx.game.model.actors.HandActor;
 import com.mygdx.game.model.actors.PlayerInfoBox;
 import com.mygdx.game.model.actors.RowActor;
+import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.card.PlayableCard;
+import com.mygdx.game.model.gameBoard.GameBoard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class GameScreen implements Screen {
     //
@@ -28,10 +34,7 @@ public class GameScreen implements Screen {
     //Buttons for veto, pass round, end round, end game
     private TextButton passButton;
     private GameController controller;
-    //
-    private ArrayList<RowActor> playerRowActors;
-    private ArrayList<RowActor> oppositionRowActors;
-    private HandActor handActor;
+    private Actor weatherBox;
     // info boxes
     private PlayerInfoBox playerInfoBox;
     private PlayerInfoBox oppositionInfoBox;
@@ -41,33 +44,25 @@ public class GameScreen implements Screen {
         passButton = new TextButton("Pass", Gwent.singleton.skin);
         passButton.setPosition(220, 120);
         passButton.setSize(150, 80);
+        stage.addActor(passButton);
+        controller = new GameController();
+        weatherBox = new Actor();
+        weatherBox.setSize(200,100);
+        weatherBox.setPosition(70, 420);
+        weatherBoxListener();
         displayInfo();
 
-        stage.addActor(passButton);
-        playerRowActors = new ArrayList<>();
-        oppositionRowActors = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            RowActor rowActor = new RowActor(i);
-            rowActor.setPosition(stage);
-            playerRowActors.add(rowActor);
-        }
 
-        handActor = new HandActor(Game.getCurrentGame().getCurrentPlayer().getHand());
-        handActor.setPosition(stage);
-        stage.addActor(handActor.getTable());
-        controller = new GameController();
-
-        passButton.addListener(new com.badlogic.gdx.scenes.scene2d.utils.ClickListener() {
-            @Override
-            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                controller.passRound();
-            }
-        });
 
         handleAddCardToRows();
         displayLeaderCard();
-
+        displayRows();
+        displayHand();
         Gdx.input.setInputProcessor(stage);
+    }
+
+    private void weatherBoxListener() {
+
     }
 
     private void displayInfo() {
@@ -80,50 +75,7 @@ public class GameScreen implements Screen {
     }
 
     private void handleAddCardToRows() {
-        for (RowActor rowActor : playerRowActors) {
-            stage.addActor(rowActor.getTableContainer());
 
-            // Add a click listener to the row
-            rowActor.getTableContainer().addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    // Get the selected card from the hand actor
-                    CardActor selectedCard = handActor.getSelectedCard();
-
-                    if (selectedCard != null) {
-                        // Calculate the initial position of the card
-                        float initialX = selectedCard.getX();
-                        float initialY = selectedCard.getY();
-
-                        // Calculate the final position of the card
-                        float finalX = rowActor.getTable().getX() + rowActor.getTable().getWidth() / 2;
-                        float finalY = rowActor.getTable().getY() + rowActor.getTable().getHeight() / 2;
-
-                        // Create a MoveToAction that moves the card to the final position
-                        Action moveAction = Actions.moveTo(finalX, finalY, 1f); // Adjust the duration as needed
-
-                        // Add the MoveToAction to the card
-                        selectedCard.addAction(moveAction);
-
-                        // Add the card to the row after the move animation
-                        selectedCard.addAction(Actions.sequence(
-                                Actions.delay(1f), // Delay for the movement to complete
-                                Actions.run(() -> {
-                                    if(selectedCard.getCard() instanceof PlayableCard) {
-                                        rowActor.addPlayableCard((PlayableCard) selectedCard.getCard());
-                                    } else {
-                                        rowActor.addSpellCard(selectedCard.getCard());
-                                    }
-                                    // Remove the card from the hand
-                                    handActor.removeCard(selectedCard.getCard());
-                                    // Reset the selected card in the hand actor
-                                    handActor.setSelectedCard(null);
-                                })
-                        ));
-                    }
-                }
-            });
-        }
     }
     @Override
     public void show() {
@@ -145,23 +97,6 @@ public class GameScreen implements Screen {
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.getBatch().end();
-
-        CardActor selectedCard = handActor.getSelectedCard();
-        if (selectedCard != null) {
-            // Draw a larger version of the selected card in the center of the screen
-            Texture cardTexture = new Texture(selectedCard.getCard().getAssetName());
-            float cardWidth = (float) (cardTexture.getWidth() / 1.7); // Adjust the scale factor as needed
-            float cardHeight = (float) cardTexture.getHeight() / 2; // Adjust the scale factor as needed
-            float cardX = 1300;
-            float cardY = 340;
-            stage.getBatch().begin();
-            stage.getBatch().draw(cardTexture, cardX, cardY, cardWidth, cardHeight);
-            stage.getBatch().end();
-            playerInfoBox.updatePlayerInfo(Game.getCurrentGame().getCurrentPlayer().getHand().size());
-            oppositionInfoBox.updatePlayerInfo(Game.getCurrentGame().getOpposition().getHand().size());
-        }
-
-
         stage.act(delta);
         stage.draw();
     }
@@ -199,13 +134,55 @@ public class GameScreen implements Screen {
         return stage;
     }
     public void displayLeaderCard() {
-        CardActor leaderCard = new CardActor(Game.getCurrentGame().getCurrentPlayer().getLeader());
+        CardActor leaderCard = new CardActor(Game.getCurrentGame().getCurrentPlayer().getLeader(), controller);
         leaderCard.setWidth((float) (leaderCard.getWidth() * 1.25));
         leaderCard.setPosition(115, 100);
         stage.addActor(leaderCard);
-        CardActor oppositeLeaderCard = new CardActor(Game.getCurrentGame().getOpposition().getLeader());
+        CardActor oppositeLeaderCard = new CardActor(Game.getCurrentGame().getOpposition().getLeader(), controller);
         oppositeLeaderCard.setWidth((float) (oppositeLeaderCard.getWidth() * 1.25));
         oppositeLeaderCard.setPosition(115, 780);
         stage.addActor(oppositeLeaderCard);
     }
+    public void displayRows() {
+        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        List<Player> players = Arrays.asList(Game.getCurrentGame().getCurrentPlayer(),
+                Game.getCurrentGame().getOpposition());
+        for (int playerIndex = 0; playerIndex < players.size(); playerIndex++) {
+            Player player = players.get(playerIndex);
+            ArrayList<Row> rows = gameBoard.getAllRowsForPlayer(player);
+
+            for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
+                Row row = rows.get(rowIndex);
+                RowActor rowActor = new RowActor(row, controller);
+
+                // Set the position of the row actor based on the row and player
+                // This is just an example, adjust the values to suit your needs
+                float x = 50;
+                float y = (playerIndex * rows.size() + rowIndex) * rowActor.getHeight() + 50;
+                rowActor.setPosition(x, y);
+
+                // Add the row actor to the stage
+                stage.addActor(rowActor);
+            }
+        }
+    }
+    public void displayHand() {
+        Player player = Game.getCurrentGame().getCurrentPlayer();
+        LinkedList<AbstractCard> hand = player.getHand();
+
+        for (int cardIndex = 0; cardIndex < hand.size(); cardIndex++) {
+            AbstractCard card = hand.get(cardIndex);
+            CardActor cardActor = new CardActor(card, controller);
+
+            // Set the position of the card actor based on the card index
+            // This is just an example, adjust the values to suit your needs
+            float x = (cardIndex * cardActor.getWidth() + 10) + 300;
+            float y = 200;
+            cardActor.setPosition(x, y);
+
+            // Add the card actor to the stage
+            stage.addActor(cardActor);
+        }
+    }
+
 }
