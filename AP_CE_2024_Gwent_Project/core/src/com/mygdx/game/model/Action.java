@@ -322,7 +322,7 @@ public enum Action {
             ArrayList<AbstractCard> discard = gameBoard.getDiscardCards(i);
             Collections.shuffle(discard);
             i.addCardsToDeck(discard);
-            gameBoard.resetDiscard(i);
+//            gameBoard.resetDiscard(i);
         }
     }),
     KING_BRAN(abstractCard -> Game.getCurrentGame().getGameBoard().setHalfAttrition()
