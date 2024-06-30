@@ -35,4 +35,9 @@ public class ScreenManager {
     public static void setGameMenuScreen() {
         //TODO voila
     }
+    public static void setLeaderBoardScreen() {
+        // Set the leaderboard screen
+        Gwent.singleton.setScreen(new LeaderBoardMenuScreen());
+    }
+
 }

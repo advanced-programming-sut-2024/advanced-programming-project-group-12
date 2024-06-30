@@ -12,6 +12,8 @@ public class UserInfo {
     private int gamesLost;
     private int gamesDrawn;
     private Faction faction;
+    private User user;
+
 
     public UserInfo() {
         highestScore = 0;
@@ -20,6 +22,7 @@ public class UserInfo {
         gamesWon = 0;
         gamesDrawn = 0;
         gamesLost = 0;
+        user = User.getLoggedInUser();
     }
 
     public int getTotalScore() {
@@ -68,6 +71,9 @@ public class UserInfo {
 
     public void setGamesDrawn(int gamesDrawn) {
         this.gamesDrawn = gamesDrawn;
+    }
+    public User getUser() {
+        return user;
     }
 
 }

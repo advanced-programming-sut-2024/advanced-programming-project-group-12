@@ -30,6 +30,7 @@ public class User {
     private ArrayList <String> deck;
 
 
+
     //constructors
     public User(String username, String nickname, String password, String email) {
         this.username = username;
