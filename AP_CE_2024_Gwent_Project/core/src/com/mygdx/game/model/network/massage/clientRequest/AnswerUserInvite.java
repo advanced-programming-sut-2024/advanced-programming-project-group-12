@@ -1,0 +1,14 @@
+package com.mygdx.game.model.network.massage.clientRequest;
+
+import com.mygdx.game.model.network.session.Session;
+
+public class AnswerUserInvite extends ClientRequest{
+    private boolean accept;
+    public AnswerUserInvite(ClientRequestType type, Session session) {
+        super(type, session);
+    }
+
+    public boolean isAccept() {
+        return accept;
+    }
+}

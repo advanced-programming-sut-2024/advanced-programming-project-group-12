@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.RegisterMenuController;
 import com.mygdx.game.controller.ScreenManager;
-import com.mygdx.game.model.SecurityQuestion;
 
 public class RegisterMenuScreen implements Screen {
     private static final float FIELD_WIDTH = 400;

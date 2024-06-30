@@ -1,8 +1,8 @@
 package com.mygdx.game.model.network.massage.serverResponse;
 
-import com.mygdx.game.model.network.massage.Session;
+import com.mygdx.game.model.network.session.Session;
 
-public abstract class ServerResponse {
+public class ServerResponse {
     private ServerResponseType type;
     Session session;
 
@@ -13,5 +13,9 @@ public abstract class ServerResponse {
         this(type);
         session.renewSession();
         this.session = session;
+    }
+
+    public ServerResponseType getType() {
+        return type;
     }
 }

@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.RegisterMenuController;
 import com.mygdx.game.controller.ScreenManager;
-import com.mygdx.game.model.SecurityQuestion;
+import com.mygdx.game.model.user.SecurityQuestion;
 
 public class ChooseSecurityQuestionScreen implements Screen {
     //

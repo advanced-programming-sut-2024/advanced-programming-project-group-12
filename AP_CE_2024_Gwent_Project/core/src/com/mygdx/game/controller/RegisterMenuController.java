@@ -2,8 +2,8 @@ package com.mygdx.game.controller;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.mygdx.game.model.SecurityQuestion;
-import com.mygdx.game.model.User;
+import com.mygdx.game.model.user.SecurityQuestion;
+import com.mygdx.game.model.user.User;
 import com.mygdx.game.view.ValidInputs;
 
 import java.util.Random;

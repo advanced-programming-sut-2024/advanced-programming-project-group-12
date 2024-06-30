@@ -1,9 +1,8 @@
 package com.mygdx.game.controller;
 
 
-import com.mygdx.game.Gwent;
-import com.mygdx.game.model.SecurityQuestion;
-import com.mygdx.game.model.User;
+import com.mygdx.game.model.user.SecurityQuestion;
+import com.mygdx.game.model.user.User;
 
 import java.util.Objects;
 

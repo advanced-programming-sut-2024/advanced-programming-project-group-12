@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.ProfileMenuController;
 import com.mygdx.game.controller.ScreenManager;
-import com.mygdx.game.model.User;
 
 import java.util.ArrayList;
 

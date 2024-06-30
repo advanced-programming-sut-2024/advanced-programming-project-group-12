@@ -1,6 +1,6 @@
 package com.mygdx.game.controller;
 
-import com.mygdx.game.model.User;
+import com.mygdx.game.model.user.User;
 
 import java.util.ArrayList;
 

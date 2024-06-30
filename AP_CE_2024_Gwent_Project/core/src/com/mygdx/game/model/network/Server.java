@@ -2,30 +2,36 @@ package com.mygdx.game.model.network;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
-import com.mygdx.game.model.network.massage.clientRequest.LoginRequest;
-import com.mygdx.game.model.network.massage.clientRequest.SignInRequest;
-import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
+import com.mygdx.game.model.user.User;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 
 public class Server extends Thread {
-    private static final int THREAD_NUMBER = 10;
+    /**
+     * launcher ond listener threads of the game;
+     * they launch a handler thread that becomes the game's main thread
+     */
+    public static final int THREAD_NUMBER = 10;
+
     private static final LinkedList<Socket> clients = new LinkedList<>();
     private static ServerSocket serverSocket;
     private static final GsonBuilder builder = new GsonBuilder();
 
     private final Gson gson;
     private Socket socket;
-    private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
 
+    private User user;
+    private RequestHandler requestHandler;
+    final ArrayList<String> clientRequests;
+    private boolean listen;
 
     static {
         try {
@@ -35,11 +41,14 @@ public class Server extends Thread {
         }
     }
 
-    private Server() {
+    Server() {
         gson = builder.create();
+        clientRequests = new ArrayList<>();
+        requestHandler = new RequestHandler(this, builder.create());
+        requestHandler.start();
     }
 
-    public static void setupServer() {
+    public static void main(String[] args) {
         Server listener = new Server();
 
         Server[] threads = new Server[THREAD_NUMBER];
@@ -79,13 +88,9 @@ public class Server extends Thread {
                     }
                 }
                 socket = clients.removeFirst();
+                listen = true;
                 try {
-                    dataInputStream = new DataInputStream(socket.getInputStream());
-                    dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                try {
+                    requestHandler.setDataOutputStream(new DataOutputStream(socket.getOutputStream()));
                     handleConnection();
                 } catch (IOException e) {
                     System.err.println("failure in connection");
@@ -95,27 +100,24 @@ public class Server extends Thread {
     }
 
     private void handleConnection() throws IOException {
-        ClientRequest clientMassage = extractMassage(dataInputStream.readUTF());
+        while(listen) {
+            String request = dataInputStream.readUTF();
+            synchronized (clientRequests) {
+                clientRequests.add(request);
+                clientRequests.notify();
+            }
+        }
+        try {
+            dataInputStream.close();
+        }catch (IOException e) {
 
-        //might want to take this to a whole new controller class
-        ServerResponse serverResponse =
-        switch (clientMassage.getType()) {
-            case SIGN_IN -> null;//handle the shit
-            case LOGIN -> null;
-            case ADD_TO_FRIEND -> null;
-            case ACCEPT_FRIEND_REQUEST -> null;
-            case START_GAME -> null;
-        };
-
-        dataOutputStream.writeUTF(gson.toJson(serverResponse));
+        }
+        socket.close();
+        dataInputStream.close();
     }
 
-    private ClientRequest extractMassage(String request) {
-        ClientRequest clientRequest = gson.fromJson(request, ClientRequest.class);
-        switch (clientRequest.getType()) {
-            case SIGN_IN -> clientRequest = gson.fromJson(request, SignInRequest.class);
-            case LOGIN -> clientRequest = gson.fromJson(request, LoginRequest.class);
-        }
-        return clientRequest;
+    public void terminate() {
+        listen = false;
+        requestHandler.terminate();
     }
 }

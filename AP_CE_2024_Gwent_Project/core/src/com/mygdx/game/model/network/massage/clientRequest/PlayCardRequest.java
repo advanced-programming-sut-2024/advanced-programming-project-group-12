@@ -1,11 +1,7 @@
 package com.mygdx.game.model.network.massage.clientRequest;
 
-import com.mygdx.game.model.Action;
-import com.mygdx.game.model.card.AbstractCard;
-import com.mygdx.game.model.network.massage.CardPlayAnimation;
-import com.mygdx.game.model.network.massage.Session;
-import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
-import com.mygdx.game.model.network.massage.serverResponse.ServerResponseType;
+import com.mygdx.game.model.game.card.AbstractCard;
+import com.mygdx.game.model.network.session.Session;
 
 public class PlayCardRequest extends ClientRequest {
     AbstractCard card;

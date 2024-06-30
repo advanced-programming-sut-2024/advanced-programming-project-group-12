@@ -1,6 +1,6 @@
 package com.mygdx.game.model.network.massage.clientRequest;
 
-import com.mygdx.game.model.network.massage.Session;
+import com.mygdx.game.model.network.session.Session;
 
 public class ClientRequest {
     private ClientRequestType type;
@@ -13,5 +13,9 @@ public class ClientRequest {
 
     public ClientRequestType getType() {
         return type;
+    }
+
+    public Session getSession() {
+        return session;
     }
 }

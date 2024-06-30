@@ -1,6 +1,6 @@
 package com.mygdx.game.model.network.massage.clientRequest;
 
-import com.mygdx.game.model.network.massage.Session;
+import com.mygdx.game.model.network.session.Session;
 
 public class LoginRequest extends ClientRequest{
     private String username;

@@ -1,6 +1,6 @@
 package com.mygdx.game.model.network.massage.clientRequest;
 
-import com.mygdx.game.model.User;
+import com.mygdx.game.model.user.User;
 
 public class SignInRequest extends ClientRequest {
     private final User user;

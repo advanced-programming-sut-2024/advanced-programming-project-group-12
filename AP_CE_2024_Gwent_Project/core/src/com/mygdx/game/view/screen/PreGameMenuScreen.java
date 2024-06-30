@@ -12,10 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.PreGameMenuController;
 import com.mygdx.game.controller.ScreenManager;
-import com.mygdx.game.model.Faction;
-import com.mygdx.game.model.User;
-import com.mygdx.game.model.card.AbstractCard;
-import com.mygdx.game.model.card.AllCards;
+import com.mygdx.game.model.game.Faction;
+import com.mygdx.game.model.user.User;
+import com.mygdx.game.model.game.card.AbstractCard;
+import com.mygdx.game.model.game.card.AllCards;
 
 import java.util.ArrayList;
 import java.util.List;
