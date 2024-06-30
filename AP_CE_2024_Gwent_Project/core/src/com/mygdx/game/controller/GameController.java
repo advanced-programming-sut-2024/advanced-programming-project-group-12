@@ -95,4 +95,17 @@ public class GameController {
     public void playCard(AbstractCard selectedCard, Row row) {
 
     }
+
+    public void playWeatherCard() {
+    }
+    /*
+     this method has two inputs
+     a boolean for side and this represent this : true -> player, false -> opposition
+     a number that show player wants to play selected card in this row
+     output of this method should be a boolean that tell if player can play this card in this row or not
+     */
+    public boolean isAllowedToPlay(boolean side, int rowNumber) {
+        //TODO:
+        return true;
+    }
 }

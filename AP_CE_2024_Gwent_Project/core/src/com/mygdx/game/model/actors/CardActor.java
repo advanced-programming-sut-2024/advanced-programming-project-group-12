@@ -26,30 +26,31 @@ public class CardActor extends Actor {
         // Set the size of the card
         image.setSize(100, 150);
         //Add click listener to the card
-        image.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                AbstractCard selectedCard = controller.getSelectedCard();
-                if (selectedCard == card) {
-                    // If the clicked card is already the selected card, unselect it
-                    controller.setSelectedCard(null);
-                } else {
-                    // Otherwise, select the clicked card
-                    controller.setSelectedCard(card);
-                }
-            }
-        });
+
+
     }
 
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         // Draw the image
+
         image.draw(batch, parentAlpha);
     }
 
     public AbstractCard getCard() {
         return card;
+    }
+    public Image getImage() {
+        return image;
+    }
+    @Override
+    public float getWidth() {
+        return image.getWidth();
+    }
+    @Override
+    public void setPosition(float x, float y) {
+        image.setPosition(x, y);
     }
 }
 

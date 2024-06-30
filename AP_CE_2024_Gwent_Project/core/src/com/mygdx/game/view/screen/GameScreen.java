@@ -4,38 +4,35 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.GameController;
+import com.mygdx.game.model.Faction;
 import com.mygdx.game.model.Game;
 import com.mygdx.game.model.Player;
-import com.mygdx.game.model.Row;
 import com.mygdx.game.model.actors.CardActor;
 import com.mygdx.game.model.actors.PlayerInfoBox;
-import com.mygdx.game.model.actors.RowActor;
+import com.mygdx.game.model.actors.RowTable;
 import com.mygdx.game.model.card.AbstractCard;
-import com.mygdx.game.model.card.PlayableCard;
-import com.mygdx.game.model.gameBoard.GameBoard;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 
 public class GameScreen implements Screen {
-    //
     private Stage stage;
     private Texture background;
     //Buttons for veto, pass round, end round, end game
     private TextButton passButton;
     private GameController controller;
-    private Actor weatherBox;
-    // info boxes
+    // info boxes and Actor
+    private Table weatherBox;
+    private ArrayList<RowTable> playerRows;
+    private ArrayList<RowTable> enemyRows;
+    private CardActor selectedCardActor;
     private PlayerInfoBox playerInfoBox;
     private PlayerInfoBox oppositionInfoBox;
     public GameScreen() {
@@ -44,25 +41,77 @@ public class GameScreen implements Screen {
         passButton = new TextButton("Pass", Gwent.singleton.skin);
         passButton.setPosition(220, 120);
         passButton.setSize(150, 80);
+        weatherBox = new Table(Gwent.singleton.skin);
+        weatherBox.setSize(255,160);
+        weatherBox.setPosition(110, 425);
+        stage.addActor(weatherBox);
+        weatherBoxListener();
         stage.addActor(passButton);
         controller = new GameController();
-        weatherBox = new Actor();
-        weatherBox.setSize(200,100);
-        weatherBox.setPosition(70, 420);
-        weatherBoxListener();
+        initialRows();
         displayInfo();
 
 
 
-        handleAddCardToRows();
+
         displayLeaderCard();
-        displayRows();
+
         displayHand();
         Gdx.input.setInputProcessor(stage);
     }
 
+    private void initialRows() {
+        Game game = Game.getCurrentGame();
+        playerRows = new ArrayList<>();
+        enemyRows = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            RowTable playerRow = new RowTable(i, true);
+            playerRows.add(playerRow);
+            stage.addActor(playerRow);
+            playerRow.addListener(new ClickListener() {
+               @Override
+                public void clicked(InputEvent event, float x, float y) {
+                   System.out.println("click on row : " + playerRow.getRowNumber() + " and side " + playerRow.getSide());
+                   if(controller.getSelectedCard() != null) {
+                       if(controller.isAllowedToPlay(playerRow.getSide(), playerRow.getRowNumber())) {
+                           playCard(selectedCardActor, playerRow);
+                       }
+                   }
+                }
+            });
+        }
+        for (int i = 0; i < 3; i++) {
+            RowTable enemyRow = new RowTable(i, false);
+            enemyRows.add(enemyRow);
+            stage.addActor(enemyRow);
+            enemyRow.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    System.out.println("click on row : " + enemyRow.getRowNumber() + " and side " + enemyRow.getSide());
+                    if(controller.getSelectedCard() != null) {
+                        if(controller.isAllowedToPlay(enemyRow.getSide(), enemyRow.getRowNumber())) {
+                            playCard(selectedCardActor, enemyRow);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
     private void weatherBoxListener() {
 
+        weatherBox.setTouchable(Touchable.enabled);
+        weatherBox.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (controller.getSelectedCard() != null) {
+                    if (controller.getSelectedCard().getFaction().equals(Faction.WEATHER)) {
+                        controller.playWeatherCard();
+                        playWeatherCard(selectedCardActor);
+                    }
+                }
+            }
+        });
     }
 
     private void displayInfo() {
@@ -74,9 +123,6 @@ public class GameScreen implements Screen {
         oppositionInfoBox.setPosition(50, 610);
     }
 
-    private void handleAddCardToRows() {
-
-    }
     @Override
     public void show() {
         passButton.setVisible(true);
@@ -143,29 +189,7 @@ public class GameScreen implements Screen {
         oppositeLeaderCard.setPosition(115, 780);
         stage.addActor(oppositeLeaderCard);
     }
-    public void displayRows() {
-        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
-        List<Player> players = Arrays.asList(Game.getCurrentGame().getCurrentPlayer(),
-                Game.getCurrentGame().getOpposition());
-        for (int playerIndex = 0; playerIndex < players.size(); playerIndex++) {
-            Player player = players.get(playerIndex);
-            ArrayList<Row> rows = gameBoard.getAllRowsForPlayer(player);
 
-            for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
-                Row row = rows.get(rowIndex);
-                RowActor rowActor = new RowActor(row, controller);
-
-                // Set the position of the row actor based on the row and player
-                // This is just an example, adjust the values to suit your needs
-                float x = 50;
-                float y = (playerIndex * rows.size() + rowIndex) * rowActor.getHeight() + 50;
-                rowActor.setPosition(x, y);
-
-                // Add the row actor to the stage
-                stage.addActor(rowActor);
-            }
-        }
-    }
     public void displayHand() {
         Player player = Game.getCurrentGame().getCurrentPlayer();
         LinkedList<AbstractCard> hand = player.getHand();
@@ -173,16 +197,84 @@ public class GameScreen implements Screen {
         for (int cardIndex = 0; cardIndex < hand.size(); cardIndex++) {
             AbstractCard card = hand.get(cardIndex);
             CardActor cardActor = new CardActor(card, controller);
-
+            cardActor.getImage().setSize(80, 120);
             // Set the position of the card actor based on the card index
             // This is just an example, adjust the values to suit your needs
-            float x = (cardIndex * cardActor.getWidth() + 10) + 300;
-            float y = 200;
-            cardActor.setPosition(x, y);
-
+            float x = (cardIndex * cardActor.getWidth() + 50) + 450;
+            float y = 90;
+            cardActor.getImage().setPosition(x, y);
             // Add the card actor to the stage
-            stage.addActor(cardActor);
+            stage.addActor(cardActor.getImage());
+            // Add a listener to the card actor
+            cardActor.getImage().addListener(new InputListener() {
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    cardActor.getImage().addAction(Actions.moveBy(0, 20, 0.2f));
+                }
+
+                @Override
+                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                    cardActor.getImage().addAction(Actions.moveBy(0, -20, 0.5f));
+                }
+            });
+            cardActor.getImage().addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    AbstractCard selectedCard = controller.getSelectedCard();
+                    if (selectedCard != null && selectedCard.equals(card)) {
+                        // If the clicked card is already the selected card, unselect it
+                        controller.setSelectedCard(null);
+                        if (selectedCardActor != null) {
+                            selectedCardActor.remove(); // Remove the currently selected card actor from the stage
+                            selectedCardActor = null;
+                        }
+                        resetBackgroundColors();
+                    } else {
+                        // Otherwise, select the clicked card
+                        controller.setSelectedCard(card);
+                        if (selectedCardActor != null) {
+                            selectedCardActor.remove(); // Remove the currently selected card actor from the stage
+                        }
+                        selectedCardActor = new CardActor(card, controller);
+                        selectedCardActor.getImage().setSize(200, 300);
+                        selectedCardActor.getImage().setPosition(1300, 400);
+                        stage.addActor(selectedCardActor.getImage());
+                        highlightAllowablePlaces(card);
+
+                    }
+                }
+            });
         }
     }
+    private void resetBackgroundColors() {
+        // Reset the background color of all rows and boxes
+        if(controller.getSelectedCard().getFaction().equals(Faction.WEATHER)) {
+        }
+//        for (RowActor rowActor : allRowActors) {
+//            rowActor.setBackground(normalBackgroundColor);
+//        }
+//        weatherBox.setBackground(normalBackgroundColor);
+    }
 
+    private void highlightAllowablePlaces(AbstractCard card) {
+        // Highlight the allowable rows or boxes for the selected card
+        // This is just an example, adjust the code to suit your needs
+//        if (card instanceof PlayableCard playableCard) {
+//            for (RowActor rowActor : allRowActors) {
+//                if (playableCard.canBePlayedOnRow(rowActor.getRow())) {
+//                    rowActor.setBackground(allowableBackgroundColor);
+//                }
+//            }
+//        } else if (card instanceof SpellCard spellCard) {
+//            if (spellCard.canBePlayedOnWeatherBox()) {
+//                weatherBox.setBackground(allowableBackgroundColor);
+//            }
+//        }
+    }
+    private void playCard(CardActor card, RowTable row) {
+
+    }
+    private void playWeatherCard(CardActor card) {
+
+    }
 }
