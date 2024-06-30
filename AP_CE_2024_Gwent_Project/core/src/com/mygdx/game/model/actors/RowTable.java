@@ -11,6 +11,8 @@ public class RowTable extends Table {
     private List<CardActor> cardActors;
     private final int rowNumber;
     private final boolean side;
+    private Table hornArea; // Area for horn cards
+
     /*
     true : player
     false : enemy
@@ -21,7 +23,14 @@ public class RowTable extends Table {
         this.rowNumber = rowNumber;
         this.side = side;
         this.setTouchable(Touchable.enabled);
+
+        // Initialize the horn area
+        hornArea = new Table();
+        hornArea.setSize(125, 110); // Adjust the size as needed
+        this.addActor(hornArea);
+
         setPosition();
+        hornArea.setDebug(true);
         setDebug(true);
     }
 
@@ -37,11 +46,17 @@ public class RowTable extends Table {
         return cardActors;
     }
 
+    public Table getHornArea() {
+        return hornArea;
+    }
+
     private void setPosition() {
         if (side) {
             this.setPosition(465, 480 - ((rowNumber) * 125));
+            hornArea.setPosition(0, 0); // Position the horn area at the left side of the row
         } else {
             this.setPosition(465, 485 + ((rowNumber + 1) * 125));
+            hornArea.setPosition(0, 0); // Position the horn area at the left side of the row
         }
     }
     public boolean getSide() {

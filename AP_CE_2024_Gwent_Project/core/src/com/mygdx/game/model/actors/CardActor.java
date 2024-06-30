@@ -16,11 +16,9 @@ import com.mygdx.game.view.screen.GameScreen;
 public class CardActor extends Actor {
     private AbstractCard card;
     private Image image;
-    private GameController controller;
 
-    public CardActor(AbstractCard card, GameController controller) {
+    public CardActor(AbstractCard card) {
         this.card = card;
-        this.controller = controller;
         image = new Image(new Texture(card.getAssetName()));
 
         // Set the size of the card

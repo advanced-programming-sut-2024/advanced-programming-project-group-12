@@ -1,15 +1,10 @@
 package com.mygdx.game.controller;
 
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
-
 import com.mygdx.game.model.Row;
 import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.card.PlayableCard;
-import com.mygdx.game.view.screen.GameScreen;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class GameController {
     private AbstractCard selectedCard;
@@ -106,6 +101,12 @@ public class GameController {
      */
     public boolean isAllowedToPlay(boolean side, int rowNumber) {
         //TODO:
+
+        return true;
+    }
+
+    public boolean isCardAHorn(AbstractCard card) {
+        //TODO :
         return true;
     }
 }
