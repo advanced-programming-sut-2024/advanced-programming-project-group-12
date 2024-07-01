@@ -82,7 +82,7 @@ public class PreGameMenuScreen implements Screen {
 
         // Load background image
         batch = new SpriteBatch();
-        background = new Texture(Gdx.files.internal("backgrounds/main_background.png"));
+        background = new Texture(Gdx.files.internal("backgrounds/main_background.jpg"));
 
         buttonAndFieldInit();
     }

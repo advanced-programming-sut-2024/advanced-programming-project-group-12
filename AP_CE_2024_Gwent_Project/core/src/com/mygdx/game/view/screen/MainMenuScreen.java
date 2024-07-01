@@ -31,7 +31,7 @@ public class MainMenuScreen implements Screen {
         controller = new MainMenuController();
         stage = new Stage();
         batch = new SpriteBatch();
-        background = new Texture(Gdx.files.internal("backgrounds/main_background.png"));
+        background = new Texture(Gdx.files.internal("backgrounds/main_background.jpg"));
         Gdx.input.setInputProcessor(stage);
         table = new Table();
         table.setFillParent(true);

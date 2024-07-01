@@ -28,6 +28,7 @@ public class User {
     private ArrayList<Game> allGamePlayed;
     private UserInfo userInfo;
     private ArrayList <String> deck;
+    private ArrayList<User> friends;
 
 
 
@@ -42,8 +43,11 @@ public class User {
         this.allGamePlayed = new ArrayList<>();
         this.userInfo = new UserInfo();
         this.deck = new ArrayList<>();
+        this.friends = new ArrayList<>();
         this.save();
     }
+
+
     //static methods
     public static ArrayList<User> getUsers() {
         return users;
@@ -99,6 +103,7 @@ public class User {
     public UserInfo getUserInfo() {
         return userInfo;
     }
+    public ArrayList<User> getFriends() { return friends; }
     public HashMap<SecurityQuestion, String> getSecurityQuestion() {
         return securityQuestion;
     }

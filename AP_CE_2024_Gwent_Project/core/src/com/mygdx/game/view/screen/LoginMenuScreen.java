@@ -33,7 +33,7 @@ public class LoginMenuScreen implements Screen {
     public LoginMenuScreen() {
         stage = new Stage();
         batch = new SpriteBatch();
-        background = new Texture(Gdx.files.internal("backgrounds/main_background.png"));
+        background = new Texture(Gdx.files.internal("backgrounds/main_background.jpg"));
         Gdx.input.setInputProcessor(stage);
         createFields();
     }
