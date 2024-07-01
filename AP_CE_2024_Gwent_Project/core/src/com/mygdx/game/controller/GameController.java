@@ -1,9 +1,15 @@
 package com.mygdx.game.controller;
 
 
+import com.mygdx.game.model.Game;
+import com.mygdx.game.model.Player;
 import com.mygdx.game.model.Row;
 import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.card.PlayableCard;
+import com.mygdx.game.model.card.SpellCard;
+import com.mygdx.game.model.gameBoard.GameBoard;
+
+import java.util.Random;
 
 
 public class GameController {
@@ -87,8 +93,15 @@ public class GameController {
 
     }
 
-    public void playCard(AbstractCard selectedCard, Row row) {
-
+    public void playCard(AbstractCard card, int row) {
+        Player currentPlayer = Game.getCurrentGame().getCurrentPlayer();
+        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        if(card instanceof PlayableCard) {
+            gameBoard.addCard(currentPlayer, row, (PlayableCard)card);
+        } else {
+            gameBoard.addCard(currentPlayer, row,(SpellCard)card);
+        }
+        currentPlayer.removeCardFromHand(card);
     }
 
     public void playWeatherCard() {
@@ -107,6 +120,6 @@ public class GameController {
 
     public boolean isCardAHorn(AbstractCard card) {
         //TODO :
-        return true;
+        return false;
     }
 }

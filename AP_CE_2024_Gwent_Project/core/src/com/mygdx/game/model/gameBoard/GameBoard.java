@@ -74,7 +74,7 @@ public class GameBoard {
     }
 
     public ArrayList<PlayableCard> getRowCards(Player player, int row) {
-        /**
+        /*
          * returns all cards associated with a row of index row and for the player.
          */
         if(row < 3 && row >= 0) {

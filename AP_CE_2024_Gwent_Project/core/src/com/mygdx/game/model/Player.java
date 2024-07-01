@@ -100,4 +100,7 @@ public class Player {
     public int getHealth() {
         return 2 - roundsLost;
     }
+    public void removeCardFromHand(AbstractCard card) {
+        hand.remove(card);
+    }
 }

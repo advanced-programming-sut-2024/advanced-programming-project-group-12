@@ -2,25 +2,27 @@ package com.mygdx.game.view.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.GameController;
-import com.mygdx.game.model.Faction;
+import com.mygdx.game.model.Action;
 import com.mygdx.game.model.Game;
 import com.mygdx.game.model.Player;
-import com.mygdx.game.model.actors.CardActor;
-import com.mygdx.game.model.actors.HandTable;
-import com.mygdx.game.model.actors.PlayerInfoBox;
-import com.mygdx.game.model.actors.RowTable;
+import com.mygdx.game.model.actors.*;
 import com.mygdx.game.model.card.AbstractCard;
+import com.mygdx.game.model.gameBoard.GameBoard;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class GameScreen implements Screen {
     private Stage stage;
@@ -29,7 +31,7 @@ public class GameScreen implements Screen {
     private TextButton passButton;
     private GameController controller;
     // info boxes and Actor
-    private Table weatherBox;
+    private WeatherBox weatherBox;
     private HandTable hand;
     private ArrayList<RowTable> playerRows;
     private ArrayList<RowTable> enemyRows;
@@ -43,9 +45,8 @@ public class GameScreen implements Screen {
         passButton = new TextButton("Pass", Gwent.singleton.skin);
         passButton.setPosition(220, 120);
         passButton.setSize(150, 80);
-        weatherBox = new Table(Gwent.singleton.skin);
-        weatherBox.setSize(255, 160);
-        weatherBox.setPosition(110, 425);
+        weatherBox = new WeatherBox();
+
         stage.addActor(weatherBox);
         weatherBoxListener();
         stage.addActor(passButton);
@@ -99,16 +100,27 @@ public class GameScreen implements Screen {
     }
 
     private void weatherBoxListener() {
-
         weatherBox.setTouchable(Touchable.enabled);
         weatherBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (controller.getSelectedCard() != null) {
-                    if (controller.getSelectedCard().getFaction().equals(Faction.WEATHER)) {
-                        controller.playWeatherCard();
-                        playWeatherCard(selectedCardActor);
+                AbstractCard selectedCard = controller.getSelectedCard();
+                if (selectedCard != null) {
+                    playWeatherCard(selectedCardActor);
+                    // Add the card to the weather box
+                    weatherBox.add(selectedCardActor.getImage()).size(80, 110).expand().fill();
+                    // Remove the card from the player's hand
+                    Game.getCurrentGame().getCurrentPlayer().getHand().remove(selectedCard);
+                    // Unselect the card
+                    controller.setSelectedCard(null);
+                    if (selectedCardActor != null) {
+                        selectedCardActor.remove(); // Remove the currently selected card actor from the stage
+                        selectedCardActor = null;
                     }
+                    resetBackgroundColors();
+                    hand.clear();
+                    // Redraw the player's hand
+                    displayHand();
                 }
             }
         });
@@ -176,19 +188,94 @@ public class GameScreen implements Screen {
         return controller;
     }
 
-    public Stage getStage() {
-        return stage;
-    }
-
     public void displayLeaderCard() {
         CardActor leaderCard = new CardActor(Game.getCurrentGame().getCurrentPlayer().getLeader());
-        leaderCard.setWidth((float) (leaderCard.getWidth() * 1.25));
-        leaderCard.setPosition(115, 100);
-        stage.addActor(leaderCard);
+        leaderCard.getImage().setWidth((float) (leaderCard.getWidth() * 1.15));
+        leaderCard.getImage().setPosition(115, 100);
+        stage.addActor(leaderCard.getImage());
         CardActor oppositeLeaderCard = new CardActor(Game.getCurrentGame().getOpposition().getLeader());
-        oppositeLeaderCard.setWidth((float) (oppositeLeaderCard.getWidth() * 1.25));
-        oppositeLeaderCard.setPosition(115, 780);
-        stage.addActor(oppositeLeaderCard);
+        oppositeLeaderCard.getImage().setWidth((float) (oppositeLeaderCard.getWidth() * 1.15));
+        oppositeLeaderCard.getImage().setPosition(115, 780);
+        stage.addActor(oppositeLeaderCard.getImage());
+        leaderCard.getImage().setTouchable(Touchable.enabled);
+        leaderCard.getImage().addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                showLeaderCard(leaderCard.getCard());
+            }
+        });
+        oppositeLeaderCard.getImage().addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                showLeaderCard(oppositeLeaderCard.getCard());
+            }
+        });
+    }
+
+    private void showLeaderCard(AbstractCard card) {
+        // Create the blur effect
+        Image blurEffect = new Image(new Texture("bg/Blur-Effect.png")); // Replace with the path to your blur effect
+        blurEffect.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        blurEffect.setColor(new Color(0, 0, 0, 0)); // Start with fully transparent black
+
+        // Create the enlarged card
+        CardActor enlargedCard = new CardActor(card);
+        enlargedCard.getImage().setSize(0, 0); // Start with size 0
+        enlargedCard.getImage().setPosition(700, 450);
+
+        // Create the close button
+        TextButton closeButton = new TextButton("X", Gwent.singleton.skin);
+        closeButton.setSize(75, 75); // Adjust the size as needed
+        closeButton.setPosition(enlargedCard.getImage().getX() + 300 - closeButton.getWidth(),
+                enlargedCard.getImage().getY() + 450 - closeButton.getHeight()); // Position the close button at the top right corner of the enlarged card
+        // Disable all other actors on the stage
+        for (Actor actor : stage.getActors()) {
+            actor.setTouchable(Touchable.disabled);
+        }
+
+        // Add the blur effect, the enlarged card, and the close button to the stage
+        stage.addActor(blurEffect);
+        stage.addActor(enlargedCard.getImage());
+        stage.addActor(closeButton);
+
+        // Enable the blur effect, the enlarged card, and the close button
+        blurEffect.setTouchable(Touchable.enabled);
+        enlargedCard.getImage().setTouchable(Touchable.enabled);
+        closeButton.setTouchable(Touchable.enabled);
+
+        // Add a ClickListener to the close button
+        closeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Add fade-out animations
+                blurEffect.addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Remove the blur effect from the stage after the fade-out animation completes
+                        blurEffect.remove();
+                    }
+                })));
+                enlargedCard.getImage().addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Remove the enlarged card from the stage after the fade-out animation completes
+                        enlargedCard.getImage().remove();
+                    }
+                })));
+
+                // Remove the close button from the stage immediately
+                closeButton.remove();
+
+                // Re-enable all other actors on the stage
+                for (Actor actor : stage.getActors()) {
+                    actor.setTouchable(Touchable.enabled);
+                }
+            }
+        });
+
+        // Add animations
+        blurEffect.addAction(Actions.fadeIn(0.5f)); // Fade in over 0.5 seconds
+        enlargedCard.getImage().addAction(Actions.sizeTo(300, 450, 0.5f)); // Grow to size 300x450 over 0.5 seconds
     }
 
 
@@ -222,21 +309,14 @@ public class GameScreen implements Screen {
                         selectedCardActor.getImage().setSize(200, 300);
                         selectedCardActor.getImage().setPosition(1300, 400);
                         stage.addActor(selectedCardActor.getImage());
+                        resetBackgroundColors();
                         highlightAllowablePlaces(card);
-
                     }
                 }
             });
         }
     }
 
-    private void resetBackgroundColors() {
-        // Reset the background color of all rows and boxes
-    }
-
-    private void highlightAllowablePlaces(AbstractCard card) {
-
-    }
 
     private void playCard(CardActor cardActor, RowTable row) {
         // Get the card from the CardActor
@@ -244,35 +324,8 @@ public class GameScreen implements Screen {
 
         // Remove the card from the player's hand
         Player currentPlayer = Game.getCurrentGame().getCurrentPlayer();
-        currentPlayer.getHand().remove(card);
-
-        // Check if the card is a horn card
-        if (controller.isCardAHorn(card)) {
-            // Check if the horn area already contains a card
-            if (row.getHornArea().getChildren().size == 0) {
-                // If not, add the card to the horn area of the row
-                row.getHornArea().add(cardActor.getImage()).size(80, 110).expand().fill();
-            } else {
-                // If it does, inform the player that they can't play another card in the horn area
-                System.out.println("You can only play one card in the horn area.");
-            }
-        } else {
-            // Add the card to the specified row
-            row.add(cardActor.getImage()).size(80, 110);
-            row.getCards().add(cardActor);
-        }
-
-
-        // Remove the CardActor from the stage
-        cardActor.remove();
-
-        // Create a new CardActor for the card, set its size and position to make it appear in the row, and add it to the stage
-        CardActor newCardActor = new CardActor(card);
-        newCardActor.getImage().setSize(80, 120); // Set the size to make the card appear in the row
-        float x = (row.getCards().size() - 1) * newCardActor.getWidth() + row.getX() + 10;
-        float y = row.getY();
-        newCardActor.getImage().setPosition(x, y);
-        stage.addActor(newCardActor.getImage());
+        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        controller.playCard(card, row.getRowNumber());
 
         // Unselect the card
         controller.setSelectedCard(null);
@@ -284,9 +337,52 @@ public class GameScreen implements Screen {
         hand.clear();
         // Redraw the player's hand
         displayHand();
+        playerInfoBox.updatePlayerInfo(Game.getCurrentGame().getCurrentPlayer().getHand().size());
     }
 
     private void playWeatherCard(CardActor card) {
+
+    }
+
+    private void highlightAllowablePlaces(AbstractCard card) {
+        if (card.getAllowableRows() == null) return;
+        List<Integer> allowableRows = card.getAllowableRows();
+
+        if(allowableRows.contains(3)) {
+            weatherBox.highlight();
+        }
+        // Check if the card is a horn card
+        if (controller.isCardAHorn(card)) {
+            // If it is, highlight the horn areas of the allowable rows
+            for (RowTable row : playerRows) {
+                if (allowableRows.contains(row.getRowNumber())) {
+                    row.getHornArea().highlight();
+                }
+            }
+        } else if (card.getAction().equals(Action.SPY)) {
+            for (RowTable row : enemyRows) {
+                if (allowableRows.contains(row.getRowNumber())) {
+                    row.highlight();
+                }
+            }
+        } else {
+            for (RowTable row : playerRows) {
+                if (allowableRows.contains(row.getRowNumber())) {
+                    row.highlight();
+                }
+            }
+        }
+    }
+
+    private void resetBackgroundColors() {
+        for (RowTable row : playerRows) {
+            row.unhighlight();
+        }
+
+        for (RowTable row : enemyRows) {
+            row.unhighlight();
+        }
+        weatherBox.unhighlight();
 
     }
 }

@@ -19,6 +19,7 @@ public class CardActor extends Actor {
 
     public CardActor(AbstractCard card) {
         this.card = card;
+
         image = new Image(new Texture(card.getAssetName()));
 
         // Set the size of the card
