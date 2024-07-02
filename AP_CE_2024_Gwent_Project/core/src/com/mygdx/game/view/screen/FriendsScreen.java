@@ -26,6 +26,7 @@ public class FriendsScreen implements Screen {
     private TextField searchField;
     private TextButton searchButton;
     private TextButton viewRequestsButton;
+    private TextButton back;
     private Skin skin;
 
     public FriendsScreen() {
@@ -44,6 +45,14 @@ public class FriendsScreen implements Screen {
         searchField = new TextField("", skin);
         searchButton = new TextButton("Search", skin);
         viewRequestsButton = new TextButton("View Friend Requests", skin);
+        back = new TextButton("Back", skin);
+        table.add(back).width(200).padRight(70);
+        back.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gwent.singleton.setScreen(new MainMenuScreen());
+            }
+        });
 
         searchButton.addListener(new ChangeListener() {
             @Override
