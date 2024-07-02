@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class WeatherBox extends Table {
     private RepeatAction blinkAction;
-    private Image background;
+    private final Image background;
     public WeatherBox() {
         // Initialize blinkAction like in RowTable
         setSize(255, 160);

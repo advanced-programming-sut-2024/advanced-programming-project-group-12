@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class HornArea extends Table {
     private RepeatAction blinkAction;
-    private Image background;
+    private final Image background;
     public HornArea() {
         // Initialize blinkAction like in RowTable
         this.setVisible(true);

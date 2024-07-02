@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
@@ -25,13 +24,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class GameScreen implements Screen {
-    private Stage stage;
-    private Texture background;
+    private final Stage stage;
+    private final Texture background;
     //Buttons for veto, pass round, end round, end game
-    private TextButton passButton;
-    private GameController controller;
+    private final TextButton passButton;
+    private final GameController controller;
     // info boxes and Actor
-    private WeatherBox weatherBox;
+    private final WeatherBox weatherBox;
     private HandTable hand;
     private ArrayList<RowTable> playerRows;
     private ArrayList<RowTable> enemyRows;
