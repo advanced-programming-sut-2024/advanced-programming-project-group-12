@@ -8,7 +8,7 @@ import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.card.AllCards;
 import com.mygdx.game.model.card.PlayableCard;
 import com.mygdx.game.model.card.SpellCard;
-import com.mygdx.game.model.gameBoard.GameBoard;
+import com.mygdx.game.model.GameBoard;
 
 public class GameController {
     private AbstractCard selectedCard;

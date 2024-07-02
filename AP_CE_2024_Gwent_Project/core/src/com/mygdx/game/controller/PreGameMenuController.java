@@ -24,19 +24,14 @@ public class PreGameMenuController {
         ScreenManager.setMainMenuScreen();
     }
 
-    public void startGame() {
+    public void startGame(LinkedList<AbstractCard> deck,CommanderCard leader) {
         //hard coding a deck
-        CommanderCard commanderCard = CommanderCards.EMHYR_INVADER.getAbstractCard();
-        LinkedList<AbstractCard> deck = new LinkedList<>();
-        deck.add(AllCards.COMMANDER_HORN.getAbstractCard());
-        deck.add(AllCards.SCORCH.getAbstractCard());
-        deck.add(AllCards.YENNEFER_OF_VENGENBERG.getAbstractCard());
-        deck.add(AllCards.KEIRA_METZ.getAbstractCard());
-        deck.add(AllCards.POOR_FUCKING_INFANTRY.getAbstractCard());
-        deck.add(AllCards.CIRILLA_FIONA_ELEN_RIANNON.getAbstractCard());
 
-        Faction faction = Faction.NILFGAARD;
-        Player player = new Player(User.getLoggedInUser(), commanderCard, deck, faction);
+
+
+
+
+        Player player = new Player(User.getLoggedInUser(), leader, deck, User.getLoggedInUser().getFaction());
 
         new Game(player, player);
         Game.getCurrentGame().setCurrentPlayer(player); // Set the current player

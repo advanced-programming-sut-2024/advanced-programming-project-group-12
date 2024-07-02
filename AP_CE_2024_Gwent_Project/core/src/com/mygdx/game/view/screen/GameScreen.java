@@ -20,7 +20,7 @@ import com.mygdx.game.model.Game;
 import com.mygdx.game.model.Player;
 import com.mygdx.game.model.actors.*;
 import com.mygdx.game.model.card.AbstractCard;
-import com.mygdx.game.model.gameBoard.GameBoard;
+import com.mygdx.game.model.GameBoard;
 
 import javax.swing.plaf.LabelUI;
 import javax.swing.plaf.synth.SynthLabelUI;
