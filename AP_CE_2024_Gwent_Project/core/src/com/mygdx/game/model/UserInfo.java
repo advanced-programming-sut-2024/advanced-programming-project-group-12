@@ -76,4 +76,11 @@ public class UserInfo {
         return user;
     }
 
+    public String getWins() {
+        return String.valueOf(gamesWon);
+    }
+
+    public String getLosses() {
+        return String.valueOf(gamesLost);
+    }
 }

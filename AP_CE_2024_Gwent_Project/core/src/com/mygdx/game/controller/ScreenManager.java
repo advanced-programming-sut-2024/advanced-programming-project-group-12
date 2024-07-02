@@ -1,6 +1,7 @@
 package com.mygdx.game.controller;
 
 import com.mygdx.game.Gwent;
+import com.mygdx.game.model.User;
 import com.mygdx.game.view.screen.*;
 
 public class ScreenManager {

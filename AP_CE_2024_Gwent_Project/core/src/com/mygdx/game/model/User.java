@@ -14,11 +14,11 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class User {
-    //static fields
+    // static fields
     private static User loggedInUser;
     private static ArrayList<User> users = new ArrayList<>();
 
-    //instance fields
+    // instance fields
     private String username;
     private String nickname;
     private String password;
@@ -27,12 +27,12 @@ public class User {
     private HashMap<SecurityQuestion, String> securityQuestion;
     private ArrayList<Game> allGamePlayed;
     private UserInfo userInfo;
-    private ArrayList <String> deck;
+    private ArrayList<String> deck;
     private ArrayList<User> friends;
+    private ArrayList<FriendRequest> receivedFriendRequests;
+    private ArrayList<FriendRequest> sentFriendRequests;
 
-
-
-    //constructors
+    // constructors
     public User(String username, String nickname, String password, String email) {
         this.username = username;
         this.nickname = nickname;
@@ -44,20 +44,24 @@ public class User {
         this.userInfo = new UserInfo();
         this.deck = new ArrayList<>();
         this.friends = new ArrayList<>();
+        this.receivedFriendRequests = new ArrayList<>();
+        this.sentFriendRequests = new ArrayList<>();
         this.save();
     }
 
-
-    //static methods
+    // static methods
     public static ArrayList<User> getUsers() {
         return users;
     }
+
     public static void setLoggedInUser(User user) {
         loggedInUser = user;
     }
+
     public static User getLoggedInUser() {
         return loggedInUser;
     }
+
     public static ArrayList<User> getAllUsers() {
         ArrayList<User> users = new ArrayList<>();
         File folder = new File("Data/Users");
@@ -67,17 +71,19 @@ public class User {
         return users;
     }
 
-
-    //getter and setter methods
+    // getter and setter methods
     public void setSecurityQuestion(SecurityQuestion question, String answer) {
         this.securityQuestion.put(question, answer);
     }
+
     public String getPassword() {
         return password;
     }
+
     public String getUsername() {
         return username;
     }
+
     public String getEmail() {
         return email;
     }
@@ -85,42 +91,52 @@ public class User {
     public String getNickname() {
         return nickname;
     }
+
     public void setUsername(String username) {
         File oldFile = new File("Data/Users/" + this.username);
         File newFile = new File("Data/Users/" + username);
         oldFile.renameTo(newFile);
         this.username = username;
     }
+
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
+
     public void setEmail(String newEmail) {
         this.email = newEmail;
     }
+
     public void setPassword(String newPassword) {
         this.password = newPassword;
     }
+
     public UserInfo getUserInfo() {
         return userInfo;
     }
-    public ArrayList<User> getFriends() { return friends; }
+
+    public ArrayList<User> getFriends() {
+        return friends;
+    }
+
     public HashMap<SecurityQuestion, String> getSecurityQuestion() {
         return securityQuestion;
     }
-    //instance methods
-    public static void updateRanking() {
 
+    // instance methods
+    public static void updateRanking() {
+        // Implementation
     }
 
     public boolean doesPasswordMatch(String password) {
         return this.password.equals(password);
     }
 
-    //this part is about saving user data and loading it
+    // this part is about saving user data and loading it
 
     public static User getUserByUsername(String username) {
         File file = new File("Data/Users/" + username + "/data.json");
-        if(!file.exists())
+        if (!file.exists())
             return null;
         Gson gson = new Gson();
         try {
@@ -128,7 +144,6 @@ public class User {
             User user = gson.fromJson(reader, User.class);
             reader.close();
             return user;
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -137,7 +152,7 @@ public class User {
     public void save() {
         File file = new File("Data/Users/" + username + "/data.json");
         Gson gson = new Gson();
-        if(file.exists()) {
+        if (file.exists()) {
             file.delete();
         } else {
             file.getParentFile().mkdirs();
@@ -150,6 +165,7 @@ public class User {
             throw new RuntimeException(e);
         }
     }
+
     public static void removeUser(User user) {
         try {
             deleteDirectory(Paths.get("Data/Users/" + user.getUsername()));
@@ -157,6 +173,7 @@ public class User {
             throw new RuntimeException(e);
         }
     }
+
     public static void deleteDirectory(Path path) throws IOException {
         if (Files.isDirectory(path)) {
             try (DirectoryStream<Path> entries = Files.newDirectoryStream(path)) {
@@ -167,8 +184,9 @@ public class User {
         }
         Files.delete(path);
     }
+
     public void updateInfo() {
-        if(this.username.equals("_Geust_"))
+        if (this.username.equals("_Guest_"))
             return;
         User.removeUser(this);
         this.save();
@@ -188,13 +206,26 @@ public class User {
 
     public void setDeck(List<AbstractCard> selectedCards) {
         deck.clear();
-        for(AbstractCard card : selectedCards) {
+        for (AbstractCard card : selectedCards) {
             deck.add(card.getName());
         }
         save();
     }
+
     public void resetDeck() {
         deck.clear();
         save();
+    }
+
+    public ArrayList<Game> getAllGamePlayed() {
+        return allGamePlayed;
+    }
+
+    public ArrayList<FriendRequest> getReceivedFriendRequests() {
+        return receivedFriendRequests;
+    }
+
+    public ArrayList<FriendRequest> getSentFriendRequests() {
+        return sentFriendRequests;
     }
 }
