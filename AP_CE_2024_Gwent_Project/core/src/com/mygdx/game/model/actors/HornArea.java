@@ -31,7 +31,7 @@ public class HornArea extends Table {
         }
     }
 
-    public void unhighlight() {
+    public void unhghlight() {
         if (blinkAction != null && background.hasActions()) {
             background.removeAction(blinkAction);
         }

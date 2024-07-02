@@ -1,10 +1,12 @@
 package com.mygdx.game.controller;
 
 
+import com.mygdx.game.model.Action;
 import com.mygdx.game.model.Game;
 import com.mygdx.game.model.Player;
 import com.mygdx.game.model.Row;
 import com.mygdx.game.model.card.AbstractCard;
+import com.mygdx.game.model.card.AllCards;
 import com.mygdx.game.model.card.PlayableCard;
 import com.mygdx.game.model.card.SpellCard;
 import com.mygdx.game.model.gameBoard.GameBoard;
@@ -112,14 +114,17 @@ public class GameController {
      a number that show player wants to play selected card in this row
      output of this method should be a boolean that tell if player can play this card in this row or not
      */
-    public boolean isAllowedToPlay(boolean side, int rowNumber) {
-        //TODO:
-
-        return true;
+    public boolean isAllowedToPlay(AbstractCard card, boolean side, int rowNumber) {
+        if(!side) {
+            return card.getAction().equals(Action.SPY) &&
+                    card.getAllowableRows().contains(rowNumber);
+        } else {
+            return card.getAllowableRows().contains(rowNumber);
+        }
     }
 
     public boolean isCardAHorn(AbstractCard card) {
         //TODO :
-        return false;
+        return card.equals(AllCards.COMMANDER_HORN.getAbstractCard());
     }
 }

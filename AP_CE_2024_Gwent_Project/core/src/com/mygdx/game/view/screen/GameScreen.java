@@ -72,9 +72,8 @@ public class GameScreen implements Screen {
             playerRow.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    System.out.println("click on row : " + playerRow.getRowNumber() + " and side " + playerRow.getSide());
-                    if (controller.getSelectedCard() != null) {
-                        if (controller.isAllowedToPlay(playerRow.getSide(), playerRow.getRowNumber())) {
+                   if (controller.getSelectedCard() != null) {
+                        if (controller.isAllowedToPlay(controller.getSelectedCard(), playerRow.getSide(), playerRow.getRowNumber())) {
                             playCard(selectedCardActor, playerRow);
                         }
                     }
@@ -88,9 +87,8 @@ public class GameScreen implements Screen {
             enemyRow.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    System.out.println("click on row : " + enemyRow.getRowNumber() + " and side " + enemyRow.getSide());
                     if (controller.getSelectedCard() != null) {
-                        if (controller.isAllowedToPlay(enemyRow.getSide(), enemyRow.getRowNumber())) {
+                        if (controller.isAllowedToPlay(controller.getSelectedCard(), enemyRow.getSide(), enemyRow.getRowNumber())) {
                             playCard(selectedCardActor, enemyRow);
                         }
                     }
@@ -114,12 +112,12 @@ public class GameScreen implements Screen {
                     // Unselect the card
                     controller.setSelectedCard(null);
                     if (selectedCardActor != null) {
-                        selectedCardActor.remove(); // Remove the currently selected card actor from the stage
+                        selectedCardActor.remove();
                         selectedCardActor = null;
                     }
+                    // Redraw the player's hand
                     resetBackgroundColors();
                     hand.clear();
-                    // Redraw the player's hand
                     displayHand();
                 }
             }
