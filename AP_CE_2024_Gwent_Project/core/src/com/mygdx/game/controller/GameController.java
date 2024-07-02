@@ -4,15 +4,11 @@ package com.mygdx.game.controller;
 import com.mygdx.game.model.Action;
 import com.mygdx.game.model.Game;
 import com.mygdx.game.model.Player;
-import com.mygdx.game.model.Row;
 import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.card.AllCards;
 import com.mygdx.game.model.card.PlayableCard;
 import com.mygdx.game.model.card.SpellCard;
 import com.mygdx.game.model.gameBoard.GameBoard;
-
-import java.util.Random;
-
 
 public class GameController {
     private AbstractCard selectedCard;

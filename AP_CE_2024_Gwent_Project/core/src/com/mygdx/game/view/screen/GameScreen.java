@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.GameController;
 import com.mygdx.game.model.Action;
+import com.mygdx.game.model.Faction;
 import com.mygdx.game.model.Game;
 import com.mygdx.game.model.Player;
 import com.mygdx.game.model.actors.*;
@@ -61,7 +62,6 @@ public class GameScreen implements Screen {
     }
 
     private void initialRows() {
-        Game game = Game.getCurrentGame();
         playerRows = new ArrayList<>();
         enemyRows = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -75,7 +75,7 @@ public class GameScreen implements Screen {
                         if (controller.isAllowedToPlay(controller.getSelectedCard(), playerRow.getSide(), playerRow.getRowNumber())) {
                             playCard(selectedCardActor, playerRow);
                         }
-                    }
+                   }
                 }
             });
         }
@@ -102,7 +102,7 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 AbstractCard selectedCard = controller.getSelectedCard();
-                if (selectedCard != null) {
+                if (selectedCard != null && selectedCard.getFaction().equals(Faction.WEATHER)) {
                     playWeatherCard(selectedCardActor);
                     // Add the card to the weather box
                     weatherBox.add(selectedCardActor.getImage()).size(80, 110).expand().fill();
@@ -124,9 +124,11 @@ public class GameScreen implements Screen {
     }
 
     private void displayInfo() {
-        playerInfoBox = new PlayerInfoBox(Game.getCurrentGame().getCurrentPlayer().getHand().size(), Game.getCurrentGame().getCurrentPlayer().getUsername(), Game.getCurrentGame().getCurrentPlayer().getFaction().toString());
+        playerInfoBox = new PlayerInfoBox(Game.getCurrentGame().getCurrentPlayer().getHand().size(), Game.getCurrentGame().getCurrentPlayer().getUsername(),
+                Game.getCurrentGame().getCurrentPlayer().getFaction().toString());
         stage.addActor(playerInfoBox.getInfoTable());
-        oppositionInfoBox = new PlayerInfoBox(Game.getCurrentGame().getOpposition().getHand().size(), Game.getCurrentGame().getOpposition().getUsername(), Game.getCurrentGame().getOpposition().getFaction().toString());
+        oppositionInfoBox = new PlayerInfoBox(Game.getCurrentGame().getOpposition().getHand().size(), Game.getCurrentGame().getOpposition().getUsername(),
+                Game.getCurrentGame().getOpposition().getFaction().toString());
         stage.addActor(oppositionInfoBox.getInfoTable());
         playerInfoBox.setPosition(50, 260);
         oppositionInfoBox.setPosition(50, 610);
@@ -224,7 +226,7 @@ public class GameScreen implements Screen {
         TextButton closeButton = new TextButton("X", Gwent.singleton.skin);
         closeButton.setSize(75, 75); // Adjust the size as needed
         closeButton.setPosition(enlargedCard.getImage().getX() + 300 - closeButton.getWidth(),
-                enlargedCard.getImage().getY() + 450 - closeButton.getHeight()); // Position the close button at the top right corner of the enlarged card
+                enlargedCard.getImage().getY() + 450 - closeButton.getHeight());
         // Disable all other actors on the stage
         for (Actor actor : stage.getActors()) {
             actor.setTouchable(Touchable.disabled);

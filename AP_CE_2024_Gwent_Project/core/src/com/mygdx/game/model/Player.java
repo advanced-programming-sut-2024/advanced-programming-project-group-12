@@ -24,9 +24,6 @@ public class Player {
         this.leader = leader;
         this.faction = faction;
         hand = new LinkedList<>();
-        hand.add(AllCards.ASSIRE.getAbstractCard());
-        hand.add(AllCards.AVALLACH.getAbstractCard());
-        hand.add(AllCards.ARACHAS_1.getAbstractCard());
         this.roundsLost = 0;
         isPassed = false;
 

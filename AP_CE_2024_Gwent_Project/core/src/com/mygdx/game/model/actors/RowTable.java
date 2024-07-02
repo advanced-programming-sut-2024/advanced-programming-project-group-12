@@ -1,10 +1,8 @@
 package com.mygdx.game.model.actors;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
@@ -16,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RowTable extends Table {
-    private List<CardActor> cardActors;
-    private HornArea hornArea;
+    private final List<CardActor> cardActors;
+    private final HornArea hornArea;
     private final int rowNumber;
     private final boolean side;
-    private Image background;
+    private final Image background;
     private RepeatAction blinkAction;
     /*
     true : player
