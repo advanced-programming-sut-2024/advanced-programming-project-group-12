@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
@@ -20,6 +22,8 @@ import com.mygdx.game.model.actors.*;
 import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.gameBoard.GameBoard;
 
+import javax.swing.plaf.LabelUI;
+import javax.swing.plaf.synth.SynthLabelUI;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,6 +42,7 @@ public class GameScreen implements Screen {
     private CardActor selectedCardActor;
     private PlayerInfoBox playerInfoBox;
     private PlayerInfoBox oppositionInfoBox;
+    private Table playerDeck;
 
     public GameScreen() {
         stage = new Stage();
@@ -56,8 +61,8 @@ public class GameScreen implements Screen {
 
 
         displayLeaderCard();
-
         displayHand();
+        displayPlayerDeck();
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -383,5 +388,27 @@ public class GameScreen implements Screen {
         }
         weatherBox.unhighlight();
 
+    }
+    private void displayPlayerDeck() {
+        playerDeck = new Table(Gwent.singleton.skin);
+        Player player = Game.getCurrentGame().getCurrentPlayer();
+
+        Image cardImage = new Image(new Texture(player.getFaction().getAssetFileName()));
+        cardImage.setSize(90, 130);
+        playerDeck.addActor(cardImage);
+
+        playerDeck.setPosition(1430, 97);
+        playerDeck.row().padTop(30);
+
+        Label numberOfCards = new Label("cards: " + player.getDeck().size(), Gwent.singleton.skin);
+        numberOfCards.setColor(Color.ORANGE);
+        playerDeck.add(numberOfCards).center().padTop(10).padLeft(10); // Adjust padding for the label
+
+        // Position the label a little down and right
+        float xOffset = 10; // Adjust horizontal offset
+        float yOffset = 10; // Adjust vertical offset
+        numberOfCards.setPosition(numberOfCards.getX() + xOffset, numberOfCards.getY() - yOffset);
+
+        stage.addActor(playerDeck);
     }
 }

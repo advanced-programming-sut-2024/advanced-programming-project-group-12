@@ -27,7 +27,7 @@ public class PreGameMenuController {
         deck.add(AllCards.POOR_FUCKING_INFANTRY.getAbstractCard());
         deck.add(AllCards.CIRILLA_FIONA_ELEN_RIANNON.getAbstractCard());
 
-        Faction faction = Faction.UNUSABLE;
+        Faction faction = Faction.NILFGAARD;
         Player player = new Player(User.getLoggedInUser(), commanderCard, deck, faction);
 
         new Game(player, player);
