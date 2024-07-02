@@ -1,6 +1,7 @@
 package com.mygdx.game.model.game.card;
 
 import com.mygdx.game.model.game.Faction;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionResponse;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayCardResponse;
 
@@ -20,21 +21,22 @@ public class CommanderCard extends AbstractCard{
     }
 
     @Override
-    public void doAction() {
+    public ActionResponse doAction() {
         if(!hasPlayedAction) {
-            super.doAction();
             hasPlayedAction = true;
+            return super.doAction();
         }
+        //todo:
+        //should the method return null?
+        return new ActionResponse(null, null, null);
     }
 
     @Override
-    public void kill() {
-
-    }
+    public void kill() {}
 
     @Override
     public PlayCardResponse place(int row, Player player) {
-        return null;
+        return new PlayCardResponse(this.player.getGame(), doAction());
     }
 
     public boolean HasPlayedAction() {

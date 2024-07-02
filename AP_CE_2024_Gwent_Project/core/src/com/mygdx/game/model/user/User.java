@@ -213,4 +213,12 @@ public class User {
     public void addGame(Game game) {
         allGamePlayed.add(game);
     }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 }

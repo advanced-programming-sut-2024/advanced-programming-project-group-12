@@ -1,46 +1,55 @@
 package com.mygdx.game.model.network;
 
-import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
-import com.mygdx.game.model.network.session.Session;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 
-import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 
-public class Client extends Thread{
-    /**
-     * the listener thread for server massages
-     * they also include a handler that is connected to the main game thread
-     */
-    Socket server;
-    DataInputStream dataInputStream;
-    Session session;
+public class Client extends Thread {
+    private ClientListener clientListener;
+    private DataOutputStream dataOutputStream;
+    private Gson gson;
+
+    private String request;
 
     public Client() {
-        setDaemon(true);
-        server = new Socket();
-        try {
-            dataInputStream = new DataInputStream(server.getInputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        clientListener = new ClientListener();
+        clientListener.start();
+        gson = new GsonBuilder().create();
+    }
+
+    public void setDataOutputStream(DataOutputStream dataOutputStream) {
+        this.dataOutputStream = dataOutputStream;
     }
 
     @Override
     public void run() {
         while(true) {
-            try {
-                String serverMassage = dataInputStream.readUTF();
-                ServerResponse serverResponse = extractMassage(serverMassage);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            synchronized (clientListener.serverResponses) {
+                while (clientListener.serverResponses.isEmpty()) {
+                    try {
+                        clientListener.serverResponses.wait();  //wait until a request is issued to the server thread
+                    } catch (InterruptedException e) {
+                        System.err.println("interrupted in request handler");
+                    }
+                }
+                request = clientListener.serverResponses.removeFirst();
             }
-
+            handleRequest();
         }
     }
 
-    private ServerResponse extractMassage(String serverMassage) {
-        return null;
+    private void sendMassage(ClientRequest massage) {
+        //perhaps wait for response
+        try {
+            dataOutputStream.writeUTF(gson.toJson(massage));
+        } catch (IOException e) {
+            System.err.println("IO exception in sendMassage");
+        }
+    }
+
+    private void handleRequest() {
     }
 }

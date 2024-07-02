@@ -362,9 +362,7 @@ public enum Action {
     KING_BRAN(abstractCard -> {
         abstractCard.getPlayer().getGame().getGameBoard().setHalfAttrition();
         return new ActionResponse();
-    }
-    ),
-
+    }),
 
     NO_ACTION(card -> null),
     ;

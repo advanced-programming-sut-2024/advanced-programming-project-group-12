@@ -3,6 +3,7 @@ package com.mygdx.game.model.game.card;
 import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.GameBoard;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionResponse;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.game.Row;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayCardResponse;
@@ -78,11 +79,9 @@ public class PlayableCard extends AbstractCard {
         if(action.equals(Action.SPY)) {
             this.player = game.getOpposition();
         }
-        doAction();
         player.getGame().getGameBoard().addCard(player, row, this);
         ArrayList<PlayableCard> boardRow = player.getGame().getGameBoard().getRowCards(player, row);
         boardRow.sort(null);
-        //todo
-        return null;
+        return new PlayCardResponse(player.getGame(), doAction());
     }
 }

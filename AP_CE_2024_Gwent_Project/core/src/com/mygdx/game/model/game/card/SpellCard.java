@@ -15,11 +15,10 @@ public class SpellCard extends AbstractCard {
     public PlayCardResponse place(int row, Player player) {
         doAction();
         player.getGame().getGameBoard().addCard(player, row, this);
-        return null;
+        return new PlayCardResponse(this.player.getGame(), doAction());
     }
 
     @Override
     public void kill() {
-
     }
 }

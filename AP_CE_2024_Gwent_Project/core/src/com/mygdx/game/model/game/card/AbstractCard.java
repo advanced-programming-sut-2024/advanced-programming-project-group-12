@@ -1,6 +1,7 @@
 package com.mygdx.game.model.game.card;
 
 import com.mygdx.game.model.game.Faction;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionResponse;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayCardResponse;
 
@@ -66,8 +67,8 @@ public abstract class AbstractCard implements Cloneable{
         this.row = row;
         return null;
     }
-    public void doAction() {
-        action.execute(this);
+    public ActionResponse doAction() {
+        return action.execute(this);
     }
 
     @Override

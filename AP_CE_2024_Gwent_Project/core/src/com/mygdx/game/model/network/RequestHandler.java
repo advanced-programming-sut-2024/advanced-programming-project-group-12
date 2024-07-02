@@ -1,6 +1,10 @@
 package com.mygdx.game.model.network;
 
 import com.google.gson.Gson;
+import com.mygdx.game.model.game.card.AbstractCard;
+import com.mygdx.game.model.network.session.InvalidSessionException;
+import com.mygdx.game.model.network.session.SessionExpiredException;
+import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.model.network.massage.clientRequest.*;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
@@ -32,7 +36,7 @@ public class RequestHandler extends Thread {
             synchronized (server.clientRequests) {
                 while (server.clientRequests.isEmpty()) {
                     try {
-                        server.clientRequests.wait();
+                        server.clientRequests.wait();  //wait until a request is issued to the server thread
                     } catch (InterruptedException e) {
                         System.err.println("interrupted in request handler");
                     }
@@ -45,20 +49,35 @@ public class RequestHandler extends Thread {
 
     private void handleRequest() {
         ClientRequest clientRequest = gson.fromJson(request, ClientRequest.class);
-        User user = Session.getUser(clientRequest.getSession());
         ServerResponse serverResponse = null;
-        switch (clientRequest.getType()) {
-            case SIGN_IN :;//handle the shit
-            case LOGIN :;
-            case ADD_TO_FRIEND :;
-            case ACCEPT_FRIEND_REQUEST:;
-            case START_GAME :
-                StartGameRequest startGameRequest = gson.fromJson(request, StartGameRequest.class);
-                User target = startGameRequest.getUserToBeInvited();
-                AnswerUserInvite answer = (AnswerUserInvite) target.sendMassage(new InviteUserToPlay(Session.getUser(startGameRequest.getSession())));
-                serverResponse =  new ServerResponse(answer.isAccept() ? ServerResponseType.CONFIRM : ServerResponseType.DENY, startGameRequest.getSession());
-            break;
-        };
+        try {
+            Session session = clientRequest.getSession();
+            User user = Session.getUser(session);
+            switch (clientRequest.getType()) {
+                case SIGN_IN:
+                    ;//handle the shit
+                case LOGIN:
+                    ;
+                case ADD_TO_FRIEND:
+                    ;
+                case ACCEPT_FRIEND_REQUEST:
+                    ;
+                case START_GAME:
+                    StartGameRequest startGameRequest = gson.fromJson(request, StartGameRequest.class);
+                    User target = startGameRequest.getUserToBeInvited();
+                    AnswerUserInvite answer = (AnswerUserInvite) target.sendMassage(new InviteUserToPlay(Session.getUser(startGameRequest.getSession())));
+                    serverResponse = new ServerResponse(answer.isAccept() ? ServerResponseType.CONFIRM : ServerResponseType.DENY, startGameRequest.getSession());
+                    break;
+                case PLAY_CARD_REQUEST:
+                    PlayCardRequest playCardRequest = gson.fromJson(request, PlayCardRequest.class);
+                    Player player = user.getPlayer();
+                    AbstractCard abstractCard = playCardRequest.getCard();
+                    serverResponse = abstractCard.place(playCardRequest.getRow(), player);
+                    break;
+            }
+        } catch (SessionExpiredException | InvalidSessionException e) {
+            serverResponse = new ServerResponse(e);
+        }
 
         try {
             dataOutputStream.writeUTF(gson.toJson(serverResponse));
@@ -68,6 +87,7 @@ public class RequestHandler extends Thread {
     }
 
     private void sendMassage(ServerResponse massage) {
+        //perhaps wait for response
         try {
             dataOutputStream.writeUTF(gson.toJson(massage));
         } catch (IOException e) {

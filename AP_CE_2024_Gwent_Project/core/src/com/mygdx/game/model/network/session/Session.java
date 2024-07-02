@@ -33,15 +33,21 @@ public class Session {
         return id;
     }
 
-    public void renewSession() {
+    public Session renewSession() {
         time = LocalTime.now();
+        return this;
     }
 
-    boolean isExpired() {
-        return true;
+    public boolean isExpired() {
+        //todo
+        return false;
     }
 
     void terminate() {
         allSessions.get(this).getServer().terminate();
+    }
+
+    public boolean isValid() {
+        return allSessions.containsKey(this);
     }
 }

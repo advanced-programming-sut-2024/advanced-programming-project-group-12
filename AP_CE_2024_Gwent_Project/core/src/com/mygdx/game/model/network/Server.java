@@ -110,7 +110,7 @@ public class Server extends Thread {
         try {
             dataInputStream.close();
         }catch (IOException e) {
-
+            System.err.println("listener interrupted");
         }
         socket.close();
         dataInputStream.close();

@@ -3,6 +3,9 @@ package com.mygdx.game.model.network.session;
 import java.util.ArrayList;
 
 public class SessionManager extends Thread{
+    {
+        setDaemon(true);
+    }
     @Override
     public void run() {
         while(true) {

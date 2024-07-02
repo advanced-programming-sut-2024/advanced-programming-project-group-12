@@ -4,11 +4,20 @@ import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.session.Session;
 
 public class PlayCardRequest extends ClientRequest {
-    AbstractCard card;
-    int row;
+    private AbstractCard card;
+    private int row;
 
+    public PlayCardRequest(Session session, int row , AbstractCard abstractCard) {
+        super(ClientRequestType.PLAY_CARD_REQUEST, session);
+        this.row = row;
+        this.card = abstractCard;
+    }
 
-    public PlayCardRequest(ClientRequestType type, Session session) {
-        super(type, session);
+    public AbstractCard getCard() {
+        return card;
+    }
+
+    public int getRow() {
+        return row;
     }
 }
