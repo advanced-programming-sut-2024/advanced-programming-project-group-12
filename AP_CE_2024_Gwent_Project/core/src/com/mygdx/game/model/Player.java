@@ -1,11 +1,13 @@
 package com.mygdx.game.model;
 
+import com.mygdx.game.model.card.AllCards;
 import com.mygdx.game.model.card.CommanderCard;
 import com.mygdx.game.model.card.AbstractCard;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Player {
     private final User user;
@@ -25,7 +27,7 @@ public class Player {
         this.roundsLost = 0;
         isPassed = false;
 
-        Collections.shuffle((LinkedList)deck.clone());
+        Collections.shuffle((List<?>) deck.clone());
         this.deck = deck;
         for(int i = 0; i< 10 ; i++) {
             drawCard();
@@ -86,5 +88,16 @@ public class Player {
 
     public void loseRound() {
         roundsLost++;
+    }
+
+    public String getUsername() {
+        return user.getUsername();
+    }
+
+    public int getHealth() {
+        return 2 - roundsLost;
+    }
+    public void removeCardFromHand(AbstractCard card) {
+        hand.remove(card);
     }
 }

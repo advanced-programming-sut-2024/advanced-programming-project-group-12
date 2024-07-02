@@ -23,7 +23,7 @@ public class Game {
     public Game(Player player, Player opposition) {
         players = Arrays.asList(player, opposition);
 
-        //todo
+        //TODO :
 //        date = LocalDate.now();
         rounds = new ArrayList<>();
         gameBoard = new GameBoard(player, opposition);

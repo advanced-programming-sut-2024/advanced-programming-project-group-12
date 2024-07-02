@@ -108,8 +108,8 @@ public class PreGameMenuScreen implements Screen {
         dashboard.add(startGameButton).padBottom(20).center();
         startGameButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                dispose();
                 controller.startGame();
+                dispose();
             }
         });
         dashboard.row();
@@ -142,8 +142,8 @@ public class PreGameMenuScreen implements Screen {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                dispose();
                 controller.gotoMainMenu();
+                dispose();
             }
         });
 
