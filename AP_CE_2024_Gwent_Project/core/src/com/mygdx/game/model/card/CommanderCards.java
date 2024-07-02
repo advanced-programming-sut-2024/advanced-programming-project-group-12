@@ -17,13 +17,13 @@ public enum CommanderCards {
     EMHYR_EMPERIAL(new CommanderCard("emhyr his imperial majesty", "", Action.EMHYR_EMPERIAL, null, 1,Faction.NILFGAARD)),
     EMHYR_WHITEFLAME(new CommanderCard("emhyr the white flame", "", Action.EMHYR_WHITEFLAME, null, 1,Faction.NILFGAARD)),
     EMHYR_RELENTLESS(new CommanderCard("emhyr the relentless", "", Action.EMHYR_RELENTLESS, null, 1,Faction.NILFGAARD)),
-    EMHYR_INVADER(new CommanderCard("emhyr the invader of the north", "", Action.EMHYR_INVADER, null, 1,Faction.NILFGAARD)),
+    EMHYR_INVADER(new CommanderCard("emhyr invader of the north", "", Action.EMHYR_INVADER, null, 1,Faction.NILFGAARD)),
 
-    ERIDIN_COMMANDER(new CommanderCard("eridin commander of the red riders", "", Action.ERIDIN_COMMANDER, null, 1,Faction.MONSTERS)),
-    ERIDIN_BRINGER(new CommanderCard("eridin bringer of death", "", Action.ERIDIN_COMMANDER, null, 1,Faction.MONSTERS)),
-    ERIDIN_DESTROYER(new CommanderCard("eridin destroyer of worlds", "", Action.ERIDIN_DESTROYER, null, 1,Faction.MONSTERS)),
-    ERIDIN_KING(new CommanderCard("eridin king of the wild hunt", "", Action.ERIDIN_KING, null, 1,Faction.MONSTERS)),
-    ERIDIN_TREACHEROUS(new CommanderCard("eridin the treacherous", "", Action.ERIDIN_TREACHEROUS, null, 1,Faction.MONSTERS)),
+    ERIDIN_COMMANDER(new CommanderCard("eredin commander of the red riders", "", Action.ERIDIN_COMMANDER, null, 1,Faction.MONSTERS)),
+    ERIDIN_BRINGER(new CommanderCard("eredin bringer of death", "", Action.ERIDIN_COMMANDER, null, 1,Faction.MONSTERS)),
+    ERIDIN_DESTROYER(new CommanderCard("eredin destroyer of worlds", "", Action.ERIDIN_DESTROYER, null, 1,Faction.MONSTERS)),
+    ERIDIN_KING(new CommanderCard("eredin king of the wild hunt", "", Action.ERIDIN_KING, null, 1,Faction.MONSTERS)),
+    ERIDIN_TREACHEROUS(new CommanderCard("eredin the treacherous", "", Action.ERIDIN_TREACHEROUS, null, 1,Faction.MONSTERS)),
 
     FRANCESCA_QUEEN(new CommanderCard("francesca queen of dol blathanna", "", Action.FRANCESCA_QUEEN, null, 1,Faction.SCOIATAEL)),
     FRANCESCA_BEAUTIFUL(new CommanderCard("francesca the beautiful", "", Action.FRANCESCA_BEAUTIFUL, null, 1,Faction.SCOIATAEL)),
@@ -31,7 +31,7 @@ public enum CommanderCards {
     FRANCESCA_PUREBLOOD(new CommanderCard("francesca pureblood elf", "", Action.FRANCESCA_PUREBLOOD, null, 1,Faction.SCOIATAEL)),
     FRANCESCA_HOPE(new CommanderCard("francesca  hope of the aen seidhe", "", Action.FRANCESCA_HOPE, null, 1,Faction.SCOIATAEL)),
 
-    CRACH_AN_CRAIT(new CommanderCard("crach an crait", "", Action.CRACH_AN_CRAITE, null, 1,Faction.SKELLIGE)),
+    CRACH_AN_CRAIT(new CommanderCard("crach an craite", "", Action.CRACH_AN_CRAITE, null, 1,Faction.SKELLIGE)),
     KING_BRAN(new CommanderCard("king bran", "", Action.KING_BRAN, null, 1,Faction.SKELLIGE)),
 
     ;

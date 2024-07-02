@@ -6,6 +6,7 @@ import com.mygdx.game.model.Faction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public enum AllCards {
     //special cards
@@ -256,6 +257,16 @@ public enum AllCards {
 
     public static ArrayList<AbstractCard> getWeatherCards() {
         return AllCards.faction.get(Faction.WEATHER);
+    }
+
+    public static List<AbstractCard> getFactionHeroCards(Faction faction) {
+        List<AbstractCard> heroCards = new ArrayList<>();
+        for(AbstractCard card: AllCards.faction.get(faction)) {
+            if(card instanceof Hero) {
+                heroCards.add(card);
+            }
+        }
+        return heroCards;
     }
 
 

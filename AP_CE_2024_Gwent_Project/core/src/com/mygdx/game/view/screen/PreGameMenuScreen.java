@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -16,8 +17,8 @@ import com.mygdx.game.model.Faction;
 import com.mygdx.game.model.User;
 import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.card.AllCards;
+import com.mygdx.game.model.card.CommanderCards;
 import com.mygdx.game.model.card.Hero;
-import sun.tools.jconsole.Tab;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -180,14 +181,14 @@ public class PreGameMenuScreen implements Screen {
         User.getLoggedInUser().setDeck(selectedCards);
     }
 
-    private void selectLeader(Faction faction) {
-        for (AbstractCard card : AllCards.getFactionCardsByFaction(faction)) {
-            if (card instanceof Hero) {
-                selectedCards.add(card);
-                break;
-            }
-        }
-    }
+//    private void selectLeader(Faction faction) {
+//        for (AbstractCard card : AllCards.getFactionCardsByFaction(faction)) {
+//            if (card instanceof Hero) {
+//                selectedCards.add(card);
+//                break;
+//            }
+//        }
+//    }
 
     private void initializeFactionButtons() {
         Table factionButtonTable = new Table();
@@ -195,6 +196,13 @@ public class PreGameMenuScreen implements Screen {
         selectLeaderButton = new TextButton("Select Leader", Gwent.singleton.skin);
         selectLeaderButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
         factionButtonTable.add(selectLeaderButton).center().padBottom(20).row();
+
+        selectLeaderButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                showSelectLeaderWindow();
+            }
+        });
+
 
         northernRealmsButton = new ImageButton(new TextureRegionDrawable(new Texture(Faction.NORTHERN_REALMS.getAssetFileName())));
         factionButtonTable.add(northernRealmsButton).padBottom(20).center().padRight(20);
@@ -247,7 +255,76 @@ public class PreGameMenuScreen implements Screen {
         });
 
         factionWindow.add(factionButtonTable).center();
+        factionWindow.row();
+        TextButton backToSelectLeaderButton = new TextButton("Back", Gwent.singleton.skin);
+        backToSelectLeaderButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                factionWindow.setVisible(false);
+            }
+        });
+        factionWindow.add(backToSelectLeaderButton).padTop(20).center().row();
     }
+
+    private void showSelectLeaderWindow() {
+        Window selectLeaderWindow = new Window("Select Leader", Gwent.singleton.skin);
+        selectLeaderWindow.setSize(Gwent.WIDTH , Gwent.HEIGHT );
+        selectLeaderWindow.setPosition(
+                (float) Gdx.graphics.getWidth() / 2 - selectLeaderWindow.getWidth() / 2,
+                (float) Gdx.graphics.getHeight() / 2 - selectLeaderWindow.getHeight() / 2
+        );
+        TextureRegionDrawable windowBackground = new TextureRegionDrawable(new TextureRegion(new Texture("backgrounds/faction_window_background.png")));
+        selectLeaderWindow.setBackground(windowBackground);
+
+        Table heroTable = new Table();
+        heroTable.defaults().pad(10);
+
+        Faction currentFaction = User.getLoggedInUser().getFaction();
+        for (AbstractCard card : CommanderCards.getFactionCardsByFaction(currentFaction)) {
+            ImageButton cardButton = createCardButton(card);
+            heroTable.add(cardButton).padBottom(10);
+
+            // Create a final reference to the card for use in the listener
+            final AbstractCard finalCard = card;
+
+            cardButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    User.getLoggedInUser().setLeader(finalCard); // Use finalCard here
+                    selectLeaderWindow.setVisible(false);
+                    updateCurrentFactionLabel();
+                }
+            });
+        }
+
+
+        selectLeaderWindow.add(heroTable).center();
+        stage.addActor(selectLeaderWindow);
+
+    }
+
+    private ImageButton createCardButton(AbstractCard card) {
+        TextureRegionDrawable drawable = new TextureRegionDrawable(new Texture(card.getAssetName()));
+        ImageButton cardButton = new ImageButton(drawable);
+        cardButton.setTransform(true);
+
+        // Calculate the new size
+        float originalWidth = drawable.getMinWidth();
+        float originalHeight = drawable.getMinHeight();
+        float scale = 0.7f; // Scale factor of 1.5
+        float resizedWidth = originalWidth * scale;
+        float resizedHeight = originalHeight * scale;
+
+        // Set the size of the ImageButton and the image within it
+        cardButton.setSize(resizedWidth, resizedHeight);
+        cardButton.getImageCell().size(resizedWidth, resizedHeight);
+
+        return cardButton;
+    }
+
+
+
+
 
     private void initializeDecks() {
         deckWindow.clear();

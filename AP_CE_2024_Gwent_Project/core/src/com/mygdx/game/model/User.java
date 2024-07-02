@@ -31,6 +31,7 @@ public class User {
     private ArrayList<User> friends;
     private ArrayList<FriendRequest> receivedFriendRequests;
     private ArrayList<FriendRequest> sentFriendRequests;
+    private String leader;
 
     // constructors
     public User(String username, String nickname, String password, String email) {
@@ -228,4 +229,14 @@ public class User {
     public ArrayList<FriendRequest> getSentFriendRequests() {
         return sentFriendRequests;
     }
+    public void setLeader(AbstractCard leader) {
+        this.leader = leader.getAssetName();
+        save(); // Save the user's data after setting the leader
+    }
+
+    public String getLeader() {
+        return leader;
+    }
+
 }
+
