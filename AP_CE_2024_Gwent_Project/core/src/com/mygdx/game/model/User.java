@@ -250,6 +250,5 @@ public class User {
     public AbstractCard getLeaderAsCard() {
         return CommanderCards.getCardByCardName(leader);
     }
-
 }
 
