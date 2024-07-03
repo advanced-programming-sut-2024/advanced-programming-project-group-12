@@ -3,6 +3,8 @@ package com.mygdx.game.model.network;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
+import com.mygdx.game.model.network.massage.serverResponse.LoginResponse;
+import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.user.User;
 
 import java.io.DataOutputStream;
@@ -58,7 +60,13 @@ public class Client extends Thread {
     }
 
     private void handleRequest() {
-        
+        ServerResponse serverResponse = gson.fromJson(request , ServerResponse.class);
+        switch (serverResponse.getType()) {
+            case LOGIN_CONFIRM -> {
+                LoginResponse loginResponse = gson.fromJson(request, LoginResponse.class);
+                user = loginResponse.getUser();
+            }
+        }
     }
     public void setUser(User user) {
         this.user = user;

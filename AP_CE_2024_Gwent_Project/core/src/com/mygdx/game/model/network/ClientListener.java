@@ -24,7 +24,12 @@ public class ClientListener extends Thread{
     public ClientListener() {
         setDaemon(true);
         serverResponses = new ArrayList<>();
-        server = new Socket();
+
+        try {
+            server = new Socket("127.0.0.1", 5000);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         try {
             dataInputStream = new DataInputStream(server.getInputStream());
         } catch (IOException e) {
