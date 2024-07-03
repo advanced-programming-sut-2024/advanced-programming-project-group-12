@@ -5,13 +5,14 @@ import com.mygdx.game.model.network.session.Session;
 import java.lang.reflect.Executable;
 
 public class ServerResponse {
-    private Exception exception;
-    private ServerResponseType type;
+    Exception exception;
+    ServerResponseType type;
     Session session;
 
     public ServerResponse(ServerResponseType type) {
         this.type = type;
         exception = null;
+        session = null;
     }
     public ServerResponse(ServerResponseType type, Session session) {
         this(type);

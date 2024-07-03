@@ -53,8 +53,11 @@ public class RequestHandler extends Thread {
         ClientRequest clientRequest = gson.fromJson(request, ClientRequest.class);
         ServerResponse serverResponse = null;
         try {
-            Session session = clientRequest.getSession();
-            User user = Session.getUser(session);
+            User user = null;
+            if(!clientRequest.getType().equals(ClientRequestType.LOGIN)){
+                Session session = clientRequest.getSession();
+                user = Session.getUser(session);
+            }
             switch (clientRequest.getType()) {
                 case SIGN_IN:
                     ;//handle the shit
@@ -66,8 +69,10 @@ public class RequestHandler extends Thread {
                     if(response.equals("accept")) {
                         serverResponse = new LoginResponse(ServerResponseType.LOGIN_CONFIRM ,User.getUserByUsername(username));
                     } else {
+                        System.out.println("reject");
                         serverResponse = new LoginResponse(ServerResponseType.LOGIN_DENY, response);
                     }
+                    break;
                 case ADD_TO_FRIEND:
                     ;
                 case ACCEPT_FRIEND_REQUEST:

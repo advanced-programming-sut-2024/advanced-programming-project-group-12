@@ -86,7 +86,7 @@ public class Row {
         if(playableCard.getAction().equals(Action.TIGHT_BOND)) {
             int similar = 0;
             for(PlayableCard p: cards) {
-                if(p.getName().equals(playableCard.getName())) {
+                if(p.getName().split(" ")[0].equals(playableCard.getName())) {
                     similar++;
                 }
             }

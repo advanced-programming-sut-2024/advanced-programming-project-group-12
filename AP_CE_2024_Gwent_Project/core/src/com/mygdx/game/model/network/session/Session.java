@@ -2,11 +2,12 @@ package com.mygdx.game.model.network.session;
 
 import com.mygdx.game.model.user.User;
 
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Session {
-    static final HashMap<Session, User> allSessions = new HashMap<>();
+    static final HashMap<String, User> allUsers = new HashMap<>();
+    static final ArrayList<Session> allSessions = new ArrayList<>();
     private static final int IDLEN = 8;
 
     private String id;
@@ -15,13 +16,13 @@ public class Session {
     public Session(User user) {
        // this.time = LocalTime.now();
         id = generateId();
-        synchronized (allSessions) {
-            allSessions.put(this, user);
+        synchronized (allUsers) {
+            allUsers.put(id, user);
         }
     }
 
     public static User getUser(Session session) {
-        return allSessions.get(session);
+        return allUsers.get(session.id);
     }
 
     private String generateId() {
@@ -30,7 +31,10 @@ public class Session {
             idChar[i] =(char) (Math.random() * 128);
         }
         String id = new String(idChar);
+        if(!allUsers.containsKey(id))
         return id;
+        else
+            return generateId();
     }
 
     public Session renewSession() {
@@ -44,10 +48,14 @@ public class Session {
     }
 
     void terminate() {
-        allSessions.get(this).getServer().terminate();
+        allUsers.get(id).getServer().terminate();
     }
 
     public boolean isValid() {
-        return allSessions.containsKey(this);
+        return allUsers.containsKey(id);
+    }
+
+    String getId() {
+        return id;
     }
 }

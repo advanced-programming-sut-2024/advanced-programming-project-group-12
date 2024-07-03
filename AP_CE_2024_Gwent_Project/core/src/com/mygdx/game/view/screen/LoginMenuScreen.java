@@ -127,7 +127,7 @@ public class LoginMenuScreen implements Screen {
 
         stage.addActor(table);
     }
-    private void showError(String message) {
+    public void showError(String message) {
         errorDialog = new Dialog("Error", Gwent.singleton.getSkin());
         errorDialog.text(message);
         errorDialog.button("OK");
@@ -142,7 +142,6 @@ public class LoginMenuScreen implements Screen {
     private void loginHandler() {
         String username = usernameField.getText();
         String password = passwordField.getText();
-        String response = LoginMenuController.loginHandler(username, password);
         Client.getInstance().sendMassage(new LoginRequest(username, password));
     }
     private void forgotPasswordHandler() {

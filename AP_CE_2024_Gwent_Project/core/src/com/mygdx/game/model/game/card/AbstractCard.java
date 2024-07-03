@@ -96,4 +96,10 @@ public abstract class AbstractCard implements Cloneable{
         }
         return "cards/" + faction.getName()+ "_" + name + typeNumber + ".jpg";
     }
+    public String getInGameAssetName() {
+        if (Objects.equals(faction.getName(), "northern realms")) {
+            return "gameCards/realms" + "_" + name + typeNumber + ".jpg";
+        }
+        return "gameCards/" + faction.getName()+ "_" + name + typeNumber + ".jpg";
+    }
 }

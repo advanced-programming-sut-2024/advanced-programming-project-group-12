@@ -4,7 +4,6 @@ import com.mygdx.game.model.game.card.PlayableCard;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -62,6 +61,9 @@ public class Game {
         currentPlayer = opposition;
         opposition = temp;
 
+        if(currentPlayer.doesNotHaveGameToPlay()) {
+            currentPlayer.setPassed(true);
+        }
         if(currentPlayer.isPassed() && opposition.isPassed()) {
             endRound();
         }
@@ -117,9 +119,5 @@ public class Game {
             u.addGame(this);
         }
         //todo
-    }
-
-    public void isOver() {
-        isOver = true;
     }
 }

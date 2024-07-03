@@ -9,7 +9,6 @@ import com.mygdx.game.model.game.card.CommanderCards;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 
 public class Player {
     private final User user;
@@ -119,5 +118,9 @@ public class Player {
     }
     public void removeCardFromHand(AbstractCard card) {
         hand.remove(card);
+    }
+
+    public boolean doesNotHaveGameToPlay() {
+        return leader.HasPlayedAction() && hand.isEmpty();
     }
 }

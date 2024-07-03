@@ -90,6 +90,7 @@ public class Server extends Thread {
                 socket = clients.removeFirst();
                 listen = true;
                 try {
+                    dataInputStream = new DataInputStream(socket.getInputStream());
                     requestHandler.setDataOutputStream(new DataOutputStream(socket.getOutputStream()));
                     handleConnection();
                 } catch (IOException e) {

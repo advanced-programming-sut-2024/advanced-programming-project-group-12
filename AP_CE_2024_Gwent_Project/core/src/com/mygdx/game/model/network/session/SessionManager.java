@@ -10,15 +10,15 @@ public class SessionManager extends Thread{
     public void run() {
         while(true) {
             ArrayList<Session> expiredSessions = new ArrayList<>();
-            for (Session s : Session.allSessions.keySet()) {
+            for (Session s : Session.allSessions) {
                 if(s.isExpired()) {
                     expiredSessions.add(s);
                     s.terminate();
                 }
             }
-            synchronized (Session.allSessions) {
+            synchronized (Session.allUsers) {
                 for(Session s: expiredSessions) {
-                    Session.allSessions.remove(s);
+                    Session.allUsers.remove(s.getId());
                 }
             }
             try {

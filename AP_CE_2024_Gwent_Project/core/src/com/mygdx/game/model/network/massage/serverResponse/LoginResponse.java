@@ -4,8 +4,8 @@ import com.mygdx.game.model.user.User;
 import com.mygdx.game.model.network.session.Session;
 
 public class LoginResponse extends ServerResponse {
-    private User user;
-    private String error;
+    User user;
+    String error;
     public LoginResponse(ServerResponseType type ,User user) {
         super(type);
         super.session = new Session(user);
@@ -15,10 +15,13 @@ public class LoginResponse extends ServerResponse {
         super(type);
         this.error = error;
         super.session = new Session(user);
-        this.user = user;
     }
 
     public User getUser() {
         return user;
+    }
+
+    public String getError() {
+        return error;
     }
 }

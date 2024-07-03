@@ -7,6 +7,7 @@ import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.serverResponse.LoginResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.user.User;
+import com.mygdx.game.view.screen.LoginMenuScreen;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -64,9 +65,14 @@ public class Client extends Thread {
         ServerResponse serverResponse = gson.fromJson(request , ServerResponse.class);
         switch (serverResponse.getType()) {
             case LOGIN_CONFIRM :
-                LoginResponse loginResponse = gson.fromJson(request, LoginResponse.class);
-                user = loginResponse.getUser();
+                LoginResponse loginResponseAccept = gson.fromJson(request, LoginResponse.class);
+                user = loginResponseAccept.getUser();
                 ScreenManager.setMainMenuScreen();
+                break;
+            case LOGIN_DENY:
+                System.out.println("login deny");
+                LoginResponse loginResponseDeny = gson.fromJson(request, LoginResponse.class);
+                ((LoginMenuScreen) ScreenManager.getOnScreen()).showError(loginResponseDeny.getError());
                 break;
         }
     }

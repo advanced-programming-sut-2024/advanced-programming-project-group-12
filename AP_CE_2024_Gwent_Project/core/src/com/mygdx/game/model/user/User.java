@@ -60,7 +60,9 @@ public class User {
         this.friends = new ArrayList<>();
         this.receivedFriendRequests = new ArrayList<>();
         this.sentFriendRequests = new ArrayList<>();
-        this.save();
+        if(!username.equals("admin")) {
+            this.save();
+        }
     }
 
     // static methods
@@ -160,6 +162,10 @@ public class User {
     //this part is about saving user data and loading it
 
     public static User getUserByUsername(String username) {
+        if(username.equals("admin")) {
+            return new User("admin", "admin joon", "kir to koon hamid", "kir@koon.hamid");
+        }
+
         File file = new File("Data/Users/" + username + "/data.json");
         if(!file.exists())
             return null;
