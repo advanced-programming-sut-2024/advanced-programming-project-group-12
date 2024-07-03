@@ -3,6 +3,7 @@ package com.mygdx.game.model;
 import com.google.gson.Gson;
 import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.card.AllCards;
+import com.mygdx.game.model.card.CommanderCards;
 
 import java.io.File;
 import java.io.FileReader;
@@ -245,6 +246,9 @@ public class User {
 
     public String getLeader() {
         return leader;
+    }
+    public AbstractCard getLeaderAsCard() {
+        return CommanderCards.getCardByCardName(leader);
     }
 
 }
