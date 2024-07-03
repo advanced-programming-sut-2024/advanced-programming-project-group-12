@@ -6,8 +6,8 @@ public class LoginRequest extends ClientRequest{
     private String username;
     private String password;
 
-    public LoginRequest(ClientRequestType type, Session session, String username, String password) {
-        super(type, session);
+    public LoginRequest(String username, String password) {
+        super(ClientRequestType.LOGIN, null);
         this.username = username;
         this.password = password;
     }

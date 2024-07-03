@@ -14,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.LoginMenuController;
+import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.network.massage.clientRequest.LoginRequest;
 
 public class LoginMenuScreen implements Screen {
     private Stage stage;
@@ -145,13 +147,7 @@ public class LoginMenuScreen implements Screen {
         }
         String password = passwordField.getText();
         String response = LoginMenuController.loginHandler(username, password);
-        if(!response.equals("accept")) {
-            showError(response);
-            return;
-        }
-        dispose();
-        LoginMenuController.Login(username);
-        LoginMenuController.goToMainMenu();
+        Client.getInstance().sendMassage(new LoginRequest(username, password));
     }
     private void forgotPasswordHandler() {
         String username = usernameField.getText();
