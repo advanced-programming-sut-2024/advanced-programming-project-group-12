@@ -16,7 +16,7 @@ public class Client extends Thread {
     private User user;
     private String request;
 
-    public Client() {
+    public Client() throws IOException {
         clientListener = new ClientListener();
         clientListener.start();
         gson = new GsonBuilder().create();
@@ -58,7 +58,7 @@ public class Client extends Thread {
     }
 
     private void handleRequest() {
-        
+
     }
     public void setUser(User user) {
         this.user = user;

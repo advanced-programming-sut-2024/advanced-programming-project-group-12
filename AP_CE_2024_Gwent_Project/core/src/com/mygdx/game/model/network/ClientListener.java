@@ -21,10 +21,10 @@ public class ClientListener extends Thread{
 
     final ArrayList<String> serverResponses;
 
-    public ClientListener() {
+    public ClientListener() throws IOException {
         setDaemon(true);
         serverResponses = new ArrayList<>();
-        server = new Socket();
+        server = new Socket("127.0.0.1", 5000);
         try {
             dataInputStream = new DataInputStream(server.getInputStream());
         } catch (IOException e) {
