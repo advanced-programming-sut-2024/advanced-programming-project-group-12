@@ -3,6 +3,7 @@ package com.mygdx.game.model.network;
 import com.google.gson.Gson;
 import com.mygdx.game.controller.LoginMenuController;
 import com.mygdx.game.model.game.card.AbstractCard;
+import com.mygdx.game.model.network.massage.serverResponse.LoginResponse;
 import com.mygdx.game.model.network.session.InvalidSessionException;
 import com.mygdx.game.model.network.session.SessionExpiredException;
 import com.mygdx.game.model.user.Player;
@@ -63,11 +64,10 @@ public class RequestHandler extends Thread {
                     String password = loginRequest.getPassword();
                     String response = LoginMenuController.loginHandler(username, password);
                     if(response.equals("accept")) {
-
+                        serverResponse = new LoginResponse(ServerResponseType.LOGIN_CONFIRM ,User.getUserByUsername(username));
                     } else {
-
+                        serverResponse = new LoginResponse(ServerResponseType.LOGIN_DENY, response);
                     }
-                    ;
                 case ADD_TO_FRIEND:
                     ;
                 case ACCEPT_FRIEND_REQUEST:

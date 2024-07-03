@@ -20,7 +20,7 @@ public class Client extends Thread {
     private String request;
 
     public Client() {
-        clientListener = new ClientListener();
+        clientListener = new ClientListener(this);
         clientListener.start();
         gson = new GsonBuilder().create();
         instance = this;
@@ -63,11 +63,11 @@ public class Client extends Thread {
     private void handleRequest() {
         ServerResponse serverResponse = gson.fromJson(request , ServerResponse.class);
         switch (serverResponse.getType()) {
-            case LOGIN_CONFIRM -> {
+            case LOGIN_CONFIRM :
                 LoginResponse loginResponse = gson.fromJson(request, LoginResponse.class);
                 user = loginResponse.getUser();
                 ScreenManager.setMainMenuScreen();
-            }
+                break;
         }
     }
     public void setUser(User user) {

@@ -6,6 +6,7 @@ import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.session.Session;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class ClientListener extends Thread{
 
     final ArrayList<String> serverResponses;
 
-    public ClientListener() {
+    public ClientListener(Client client) {
         setDaemon(true);
         serverResponses = new ArrayList<>();
 
@@ -31,6 +32,7 @@ public class ClientListener extends Thread{
             throw new RuntimeException(e);
         }
         try {
+            client.setDataOutputStream(new DataOutputStream(server.getOutputStream()));
             dataInputStream = new DataInputStream(server.getInputStream());
         } catch (IOException e) {
             throw new RuntimeException(e);

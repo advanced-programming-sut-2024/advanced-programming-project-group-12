@@ -10,10 +10,10 @@ public class Session {
     private static final int IDLEN = 8;
 
     private String id;
-    private LocalTime time;
+    //private LocalTime time;
 
     public Session(User user) {
-        this.time = LocalTime.now();
+       // this.time = LocalTime.now();
         id = generateId();
         synchronized (allSessions) {
             allSessions.put(this, user);
@@ -34,7 +34,7 @@ public class Session {
     }
 
     public Session renewSession() {
-        time = LocalTime.now();
+        //time = LocalTime.now();
         return this;
     }
 
