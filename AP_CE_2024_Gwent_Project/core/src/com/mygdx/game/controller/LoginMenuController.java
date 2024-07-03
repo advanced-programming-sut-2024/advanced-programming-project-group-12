@@ -53,4 +53,22 @@ public class LoginMenuController {
     public static void removeUsernameForForgotPassword() {
         usernameForForgotPassword = null;
     }
+    public static String loginHandler(String username, String password) {
+        if(username.equals("admin")) {
+            return "accept";
+        }
+        if (username.isEmpty() || password.isEmpty()) {
+            return "Please fill all fields";
+        }
+        if(!LoginMenuController.doesThisUserExist(username)) {
+            return "User does not exist";
+
+        }
+        if(!LoginMenuController.doesThisPasswordMatch(username, password)) {
+            return "Incorrect password";
+
+        }
+        return "accept";
+
+    }
 }

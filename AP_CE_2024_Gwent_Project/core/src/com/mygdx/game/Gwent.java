@@ -8,6 +8,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.controller.ScreenManager;
 import com.mygdx.game.model.network.Client;
 
+import java.io.IOException;
+
 public class Gwent extends Game {
 	public static Gwent singleton;
 	SpriteBatch batch;
@@ -17,11 +19,11 @@ public class Gwent extends Game {
 	
 	@Override
 	public void create () {
-		new Client().start();
 		singleton = this;
         skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
 		batch = new SpriteBatch();
 		ScreenManager.setLoginScreen();
+        new Client().start();
     }
 
 	@Override

@@ -141,20 +141,12 @@ public class LoginMenuScreen implements Screen {
         String username = usernameField.getText();
         //TODO : remove it after finilize the project
         if(username.equals("admin")) {
-            LoginMenuController.Login(username);
-            LoginMenuController.goToMainMenu();
+            //TODO : log in admin
         }
         String password = passwordField.getText();
-        if (username.isEmpty() || password.isEmpty()) {
-            showError("Please fill all fields");
-            return;
-        }
-        if(!LoginMenuController.doesThisUserExist(username)) {
-            showError("User does not exist");
-            return;
-        }
-        if(!LoginMenuController.doesThisPasswordMatch(username, password)) {
-            showError("Incorrect password");
+        String response = LoginMenuController.loginHandler(username, password);
+        if(!response.equals("accept")) {
+            showError(response);
             return;
         }
         dispose();
