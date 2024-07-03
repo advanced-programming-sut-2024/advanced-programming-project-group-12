@@ -3,21 +3,28 @@ package com.mygdx.game.model.network;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
+import com.mygdx.game.model.user.User;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class Client extends Thread {
+    private static Client instance;
     private ClientListener clientListener;
     private DataOutputStream dataOutputStream;
     private Gson gson;
-
+    private User user;
     private String request;
 
     public Client() {
         clientListener = new ClientListener();
         clientListener.start();
         gson = new GsonBuilder().create();
+        instance = this;
+    }
+
+    public static Client getInstance() {
+        return instance;
     }
 
     public void setDataOutputStream(DataOutputStream dataOutputStream) {
@@ -51,5 +58,12 @@ public class Client extends Thread {
     }
 
     private void handleRequest() {
+        
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
+    public User getUser() {
+        return user;
     }
 }
