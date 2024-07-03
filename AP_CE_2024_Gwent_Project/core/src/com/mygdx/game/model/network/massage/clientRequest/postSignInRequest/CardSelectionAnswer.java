@@ -1,11 +1,11 @@
-package com.mygdx.game.model.network.massage.clientRequest;
+package com.mygdx.game.model.network.massage.clientRequest.postSignInRequest;
 
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.session.Session;
 
 import java.util.List;
 
-public class CardSelectionAnswer extends ClientRequest{
+public class CardSelectionAnswer extends PostSignInRequest{
     private List<AbstractCard> selection;
     private int row;
 

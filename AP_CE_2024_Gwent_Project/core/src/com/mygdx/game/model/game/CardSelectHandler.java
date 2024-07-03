@@ -1,8 +1,7 @@
 package com.mygdx.game.model.game;
 
 import com.mygdx.game.model.game.card.AbstractCard;
-import com.mygdx.game.model.game.card.PlayableCard;
-import com.mygdx.game.model.network.massage.clientRequest.CardSelectionAnswer;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.CardSelectionAnswer;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionResponse;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionResponseType;
@@ -12,7 +11,6 @@ import com.mygdx.game.model.user.Player;
 
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public enum CardSelectHandler {
     ERIDIN_DESTROYER_ADD((cardSelectionAnswer, player) -> {

@@ -7,14 +7,12 @@ public class LoginResponse extends ServerResponse {
     User user;
     String error;
     public LoginResponse(ServerResponseType type ,User user) {
-        super(type);
-        super.session = new Session(user);
+        super(type, new Session(user));
         this.user = user;
     }
     public LoginResponse(ServerResponseType type , String error) {
-        super(type);
+        super(type, null);
         this.error = error;
-        super.session = new Session(user);
     }
 
     public User getUser() {

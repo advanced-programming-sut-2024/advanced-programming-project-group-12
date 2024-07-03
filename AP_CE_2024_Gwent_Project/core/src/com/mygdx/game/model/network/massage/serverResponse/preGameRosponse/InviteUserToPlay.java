@@ -7,7 +7,7 @@ import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 public class InviteUserToPlay extends ServerResponse {
     User toPlayWith;
     public InviteUserToPlay(User user) {
-        super((ServerResponseType) null);
+        super( null);
         toPlayWith = user;
     }
 }

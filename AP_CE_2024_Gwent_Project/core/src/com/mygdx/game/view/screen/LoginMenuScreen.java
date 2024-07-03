@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.LoginMenuController;
 import com.mygdx.game.model.network.Client;
-import com.mygdx.game.model.network.massage.clientRequest.LoginRequest;
+import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.LoginRequest;
 
 public class LoginMenuScreen implements Screen {
     private Stage stage;

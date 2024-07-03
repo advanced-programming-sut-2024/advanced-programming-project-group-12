@@ -1,4 +1,4 @@
-package com.mygdx.game.model.network.massage.clientRequest;
+package com.mygdx.game.model.network.massage.clientRequest.postSignInRequest;
 
 public enum ClientRequestType {
     SIGN_IN,

@@ -3,7 +3,7 @@ package com.mygdx.game.model.network;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.controller.ScreenManager;
-import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.serverResponse.LoginResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.user.User;

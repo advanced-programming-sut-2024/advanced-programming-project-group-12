@@ -11,7 +11,7 @@ public class PlayCardResponse extends ServerResponse {
     private ActionResponse actionResponse;
 
     public PlayCardResponse(Game game, ActionResponse actionResponse) {
-        super(ServerResponseType.PLAY_CARD_RESPONSE);
+        super(ServerResponseType.PLAY_CARD_RESPONSE, null);
         this.game = game;
         this.actionResponse = actionResponse;
     }

@@ -120,4 +120,8 @@ public class Game {
         }
         //todo
     }
+
+    public void isOver() {
+        isOver = true;
+    }
 }

@@ -1,9 +1,9 @@
-package com.mygdx.game.model.network.massage.clientRequest;
+package com.mygdx.game.model.network.massage.clientRequest.postSignInRequest;
 
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.session.Session;
 
-public class PlayCardRequest extends ClientRequest {
+public class PlayCardRequest extends PostSignInRequest {
     private AbstractCard card;
     private int row;
 

@@ -8,7 +8,7 @@ import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.AllCards;
 import com.mygdx.game.model.game.card.CommanderCards;
 import com.mygdx.game.model.network.Server;
-import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 
 import java.io.File;
@@ -60,9 +60,7 @@ public class User {
         this.friends = new ArrayList<>();
         this.receivedFriendRequests = new ArrayList<>();
         this.sentFriendRequests = new ArrayList<>();
-        if(!username.equals("admin")) {
-            this.save();
-        }
+        this.save();
     }
 
     // static methods
@@ -180,6 +178,7 @@ public class User {
             throw new RuntimeException(e);
         }
     }
+
 
     public void save() {
         File file = new File("Data/Users/" + username + "/data.json");
