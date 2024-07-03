@@ -26,7 +26,7 @@ public class PreGameMenuController {
 
     public void startGame() {
         //hard coding a deck
-        CommanderCard commanderCard = CommanderCards.FOLTEST_SIEGE.getAbstractCard();
+        CommanderCard commanderCard = CommanderCards.EMHYR_INVADER.getAbstractCard();
         LinkedList<AbstractCard> deck = new LinkedList<>();
         deck.add(AllCards.COMMANDER_HORN.getAbstractCard());
         deck.add(AllCards.SCORCH.getAbstractCard());
@@ -35,13 +35,14 @@ public class PreGameMenuController {
         deck.add(AllCards.POOR_FUCKING_INFANTRY.getAbstractCard());
         deck.add(AllCards.CIRILLA_FIONA_ELEN_RIANNON.getAbstractCard());
 
-        Faction faction = Faction.NORTHERN_REALMS;
+        Faction faction = Faction.NILFGAARD;
         Player player = new Player(User.getLoggedInUser(), commanderCard, deck, faction);
 
         new Game(player, player);
         Game.getCurrentGame().setCurrentPlayer(player); // Set the current player
         Game.getCurrentGame().setOpposition(player);
-        ScreenManager.setGameMenuScreen();
+
+        ScreenManager.setGameScreen();
     }
 
     public void setFaction(String factionName) {
