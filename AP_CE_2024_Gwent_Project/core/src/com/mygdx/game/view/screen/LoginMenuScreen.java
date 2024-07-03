@@ -102,7 +102,7 @@ public class LoginMenuScreen implements Screen {
     public void createFields() {
         table = new Table();
         table.setFillParent(true);
-        // Center the fields
+        // Center fields
 
         table.align(2);
         table.padTop(100);
@@ -139,19 +139,7 @@ public class LoginMenuScreen implements Screen {
     }
     private void loginHandler() {
         String username = usernameField.getText();
-        //TODO : remove it after finilize the project
-        if(username.equals("admin")) {
-            //TODO : log in admin
-        }
         String password = passwordField.getText();
-        String response = LoginMenuController.loginHandler(username, password);
-        if(!response.equals("accept")) {
-            showError(response);
-            return;
-        }
-        dispose();
-        LoginMenuController.Login(username);
-        LoginMenuController.goToMainMenu();
     }
     private void forgotPasswordHandler() {
         String username = usernameField.getText();

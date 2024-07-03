@@ -2,6 +2,7 @@ package com.mygdx.game.model.network;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mygdx.game.controller.ScreenManager;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.serverResponse.LoginResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
@@ -65,6 +66,7 @@ public class Client extends Thread {
             case LOGIN_CONFIRM -> {
                 LoginResponse loginResponse = gson.fromJson(request, LoginResponse.class);
                 user = loginResponse.getUser();
+                ScreenManager.setMainMenuScreen();
             }
         }
     }
