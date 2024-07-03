@@ -21,9 +21,6 @@ import com.mygdx.game.model.Player;
 import com.mygdx.game.model.actors.*;
 import com.mygdx.game.model.card.AbstractCard;
 import com.mygdx.game.model.gameBoard.GameBoard;
-
-import javax.swing.plaf.LabelUI;
-import javax.swing.plaf.synth.SynthLabelUI;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,7 +59,8 @@ public class GameScreen implements Screen {
 
         displayLeaderCard();
         displayHand();
-        displayPlayerDeck();
+        displayPlayerDeckStack(Game.getCurrentGame().getCurrentPlayer(), 97);
+        displayPlayerDeckStack(Game.getCurrentGame().getOpposition(), 785);
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -389,26 +387,28 @@ public class GameScreen implements Screen {
         weatherBox.unhighlight();
 
     }
-    private void displayPlayerDeck() {
-        playerDeck = new Table(Gwent.singleton.skin);
-        Player player = Game.getCurrentGame().getCurrentPlayer();
 
-        Image cardImage = new Image(new Texture(player.getFaction().getAssetFileName()));
-        cardImage.setSize(90, 130);
-        playerDeck.addActor(cardImage);
+    private void displayPlayerDeckStack(Player player, float y) {
+        final int MAX_VISIBLE_CARDS = 5; // Maximum number of cards to display in the stack
+        final float CARD_OFFSET = 3f; // Offset for each card in the stack
 
-        playerDeck.setPosition(1430, 97);
-        playerDeck.row().padTop(30);
+        Texture cardBackTexture = new Texture(player.getFaction().getAssetFileName());
+        int deckSize = player.getDeck().size();
+        int cardsToShow = Math.min(deckSize, MAX_VISIBLE_CARDS);
 
-        Label numberOfCards = new Label("cards: " + player.getDeck().size(), Gwent.singleton.skin);
+        for (int i = 0; i < cardsToShow; i++) {
+            Image cardImage = new Image(cardBackTexture);
+            cardImage.setSize(90, 130);
+            // Adjust the position for each card to create a stack effect
+            cardImage.setPosition(1440 - (i * CARD_OFFSET), y + (i * CARD_OFFSET));
+            stage.addActor(cardImage);
+        }
+
+        // Display the number of cards left in the deck
+        Label numberOfCards = new Label("Cards: " + deckSize, Gwent.singleton.skin);
         numberOfCards.setColor(Color.ORANGE);
-        playerDeck.add(numberOfCards).center().padTop(10).padLeft(10); // Adjust padding for the label
-
-        // Position the label a little down and right
-        float xOffset = 10; // Adjust horizontal offset
-        float yOffset = 10; // Adjust vertical offset
-        numberOfCards.setPosition(numberOfCards.getX() + xOffset, numberOfCards.getY() - yOffset);
-
-        stage.addActor(playerDeck);
+        // Position the label above or below the stack
+        numberOfCards.setPosition(1440 + 45 - numberOfCards.getWidth() / 2, y - 60);
+        stage.addActor(numberOfCards);
     }
 }
