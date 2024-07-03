@@ -230,7 +230,7 @@ public class User {
         return sentFriendRequests;
     }
     public void setLeader(AbstractCard leader) {
-        this.leader = leader.getAssetName();
+        this.leader = leader.getName();
         save(); // Save the user's data after setting the leader
     }
 
