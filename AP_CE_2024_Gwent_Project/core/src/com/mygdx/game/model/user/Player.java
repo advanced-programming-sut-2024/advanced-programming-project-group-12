@@ -9,6 +9,7 @@ import com.mygdx.game.model.game.card.CommanderCards;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Player {
     private CommanderCard leader;
@@ -30,7 +31,7 @@ public class Player {
         this.isPassed = false;
 
 
-        Collections.shuffle((LinkedList)deck.clone());
+        Collections.shuffle((List<?>) deck.clone());
         this.deck = deck;
         for(int i = 0; i< 10 ; i++) {
             drawCard();
@@ -107,5 +108,14 @@ public class Player {
 
     public User getUser() {
         return user;
+    public String getUsername() {
+        return user.getUsername();
+    }
+
+    public int getHealth() {
+        return 2 - roundsLost;
+    }
+    public void removeCardFromHand(AbstractCard card) {
+        hand.remove(card);
     }
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -12,10 +13,19 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.PreGameMenuController;
 import com.mygdx.game.controller.ScreenManager;
+<<<<<<< HEAD
 import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.AllCards;
+=======
+import com.mygdx.game.model.Faction;
+import com.mygdx.game.model.User;
+import com.mygdx.game.model.card.AbstractCard;
+import com.mygdx.game.model.card.AllCards;
+import com.mygdx.game.model.card.CommanderCards;
+import com.mygdx.game.model.card.Hero;
+>>>>>>> pregameMenu
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +54,7 @@ public class PreGameMenuScreen implements Screen {
     private Button saveDeckButton;
     private Button downloadDeckButton;
     private Button uploadDeckButton;
-
+    private Button selectLeaderButton;
     // Faction buttons
     private ImageButton northernRealmsButton;
     private ImageButton nilfgaardianButton;
@@ -63,6 +73,10 @@ public class PreGameMenuScreen implements Screen {
     // Labels
     private Label currentFactionLabel;
     private Label totalCardsInDeck;
+    private Label numberOfUnitCards;
+    private Label numberOfSpecialCards;
+    private Label totalUnitCardStrength;
+    private Label heroCards;
 
     public PreGameMenuScreen() {
         controller = new PreGameMenuController();
@@ -76,7 +90,7 @@ public class PreGameMenuScreen implements Screen {
 
         // Load background image
         batch = new SpriteBatch();
-        background = new Texture(Gdx.files.internal("backgrounds/main_background.png"));
+        background = new Texture(Gdx.files.internal("backgrounds/main_background.jpg"));
 
         buttonAndFieldInit();
     }
@@ -102,8 +116,8 @@ public class PreGameMenuScreen implements Screen {
         dashboard.add(startGameButton).padBottom(20).center();
         startGameButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                dispose();
                 controller.startGame();
+                dispose();
             }
         });
         dashboard.row();
@@ -136,8 +150,8 @@ public class PreGameMenuScreen implements Screen {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                dispose();
                 controller.gotoMainMenu();
+                dispose();
             }
         });
 
@@ -154,8 +168,6 @@ public class PreGameMenuScreen implements Screen {
         currentFactionLabel = new Label("Current Faction: ", Gwent.singleton.skin);
         factionWindow.add(currentFactionLabel).center().padBottom(20).row();
 
-        totalCardsInDeck = new Label("Total Cards in Deck: \n" + selectedCards.size(), Gwent.singleton.skin);
-        deckWindow.add(totalCardsInDeck);
 
         initializeFactionButtons();
 
@@ -176,8 +188,28 @@ public class PreGameMenuScreen implements Screen {
         User.getLoggedInUser().setDeck(selectedCards);
     }
 
+//    private void selectLeader(Faction faction) {
+//        for (AbstractCard card : AllCards.getFactionCardsByFaction(faction)) {
+//            if (card instanceof Hero) {
+//                selectedCards.add(card);
+//                break;
+//            }
+//        }
+//    }
+
     private void initializeFactionButtons() {
         Table factionButtonTable = new Table();
+
+        selectLeaderButton = new TextButton("Select Leader", Gwent.singleton.skin);
+        selectLeaderButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
+        factionButtonTable.add(selectLeaderButton).center().padBottom(20).row();
+
+        selectLeaderButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                showSelectLeaderWindow();
+            }
+        });
+
 
         northernRealmsButton = new ImageButton(new TextureRegionDrawable(new Texture(Faction.NORTHERN_REALMS.getAssetFileName())));
         factionButtonTable.add(northernRealmsButton).padBottom(20).center().padRight(20);
@@ -230,23 +262,97 @@ public class PreGameMenuScreen implements Screen {
         });
 
         factionWindow.add(factionButtonTable).center();
+        factionWindow.row();
+        TextButton backToSelectLeaderButton = new TextButton("Back", Gwent.singleton.skin);
+        backToSelectLeaderButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                factionWindow.setVisible(false);
+            }
+        });
+        factionWindow.add(backToSelectLeaderButton).padTop(20).center().row();
     }
+
+    private void showSelectLeaderWindow() {
+        Window selectLeaderWindow = new Window("Select Leader", Gwent.singleton.skin);
+        selectLeaderWindow.setSize(Gwent.WIDTH , Gwent.HEIGHT );
+        selectLeaderWindow.setPosition(
+                (float) Gdx.graphics.getWidth() / 2 - selectLeaderWindow.getWidth() / 2,
+                (float) Gdx.graphics.getHeight() / 2 - selectLeaderWindow.getHeight() / 2
+        );
+        TextureRegionDrawable windowBackground = new TextureRegionDrawable(new TextureRegion(new Texture("backgrounds/faction_window_background.png")));
+        selectLeaderWindow.setBackground(windowBackground);
+
+        Table heroTable = new Table();
+        heroTable.defaults().pad(10);
+
+        Faction currentFaction = User.getLoggedInUser().getFaction();
+        for (AbstractCard card : CommanderCards.getFactionCardsByFaction(currentFaction)) {
+            ImageButton cardButton = createCardButton(card);
+            heroTable.add(cardButton).padBottom(10);
+
+            // Create a final reference to the card for use in the listener
+            final AbstractCard finalCard = card;
+
+            cardButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    User.getLoggedInUser().setLeader(finalCard); // Use finalCard here
+                    selectLeaderWindow.setVisible(false);
+                    updateCurrentFactionLabel();
+                }
+            });
+        }
+
+
+        selectLeaderWindow.add(heroTable).center();
+        stage.addActor(selectLeaderWindow);
+
+    }
+
+    private ImageButton createCardButton(AbstractCard card) {
+        TextureRegionDrawable drawable = new TextureRegionDrawable(new Texture(card.getAssetName()));
+        ImageButton cardButton = new ImageButton(drawable);
+        cardButton.setTransform(true);
+
+        // Calculate the new size
+        float originalWidth = drawable.getMinWidth();
+        float originalHeight = drawable.getMinHeight();
+        float scale = 0.7f; // Scale factor of 1.5
+        float resizedWidth = originalWidth * scale;
+        float resizedHeight = originalHeight * scale;
+
+        // Set the size of the ImageButton and the image within it
+        cardButton.setSize(resizedWidth, resizedHeight);
+        cardButton.getImageCell().size(resizedWidth, resizedHeight);
+
+        return cardButton;
+    }
+
+
+
+
 
     private void initializeDecks() {
         deckWindow.clear();
-        deckWindow.pad(20);
         selectedCards = selectedCardsExtractedByCardNames(User.getLoggedInUser().getDeck()==null?new ArrayList<>():User.getLoggedInUser().getDeck());
 
-        saveDeckButton = new TextButton("Save Deck", Gwent.singleton.skin);
-        saveDeckButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
-        deckWindow.add(saveDeckButton).width(300).height(100).padBottom(20).center().row();
+        // Add the buttons table in a new table that does not affect the main layout
+        Table buttonWrapperTable = new Table();
+        buttonsTableInit(buttonWrapperTable);
+
+        deckWindow.add(buttonWrapperTable).expandX().padLeft(30).padTop(80).row();
+
+        Table scrollTable = new Table();
 
         ScrollPane unselectedScrollPane = new ScrollPane(unselectedCardsTable = new Table());
         ScrollPane selectedScrollPane = new ScrollPane(selectedCardsTable = new Table());
 
+        scrollTable.add(unselectedScrollPane).width(750).height(CARD_HEIGHT * 2).padRight(20);
+        scrollTable.add(selectedScrollPane).width(750).height(CARD_HEIGHT * 2).padLeft(20);
+
         // Add ScrollPanes to the window
-        deckWindow.add(unselectedScrollPane).width(750).height((CARD_HEIGHT * 2) + 20).padRight(20);
-        deckWindow.add(selectedScrollPane).width(750).height((CARD_HEIGHT * 2) + 20).padLeft(20);
+        deckWindow.add(scrollTable).expand().fill().row();
 
         // Add cards to unselected cards table
         addFactionCards();
@@ -254,15 +360,103 @@ public class PreGameMenuScreen implements Screen {
         // Add cards to selected cards table
         addSelectedCardsToTable(selectedCards, selectedCardsTable, true);
 
+        stage.addActor(deckWindow);
+    }
+
+    private void buttonsTableInit(Table buttonsTable) {
+        buttonsTable.clear();
+
+        saveDeckButton = new TextButton("Save Deck", Gwent.singleton.getSkin());
+        saveDeckButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
+
+        downloadDeckButton = new TextButton("Download Deck", Gwent.singleton.getSkin());
+        downloadDeckButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
+
+        uploadDeckButton = new TextButton("Upload Deck", Gwent.singleton.getSkin());
+        uploadDeckButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
+
+        buttonsTable.add(downloadDeckButton).padRight(20).left();
+        buttonsTable.add(saveDeckButton).padRight(20).center();
+        buttonsTable.add(uploadDeckButton).right();
+
+        totalCardsInDeck = new Label("Total Cards in Deck: \n" + selectedCards.size(), Gwent.singleton.skin);
+        numberOfUnitCards = new Label("Number of Unit Cards: \n" + getNumberOfUnitCards() + "/22", Gwent.singleton.skin);
+        numberOfSpecialCards = new Label("Special Cards: \n" + getNumberOfSpecialCards() + "/10", Gwent.singleton.skin);
+        totalUnitCardStrength = new Label("Total Unit Card Strength: \n" + getTotalUnitCardStrength(), Gwent.singleton.skin);
+        heroCards = new Label("Hero Cards: \n" + getNumberOfHeroCards(), Gwent.singleton.skin);
+
+        Table infoTable = new Table();
+        infoTable.add(totalCardsInDeck).center().padTop(80).padRight(20);
+        infoTable.add(numberOfUnitCards).center().padTop(80).padRight(20);
+        infoTable.add(numberOfSpecialCards).center().padTop(80).padRight(20);
+        infoTable.add(totalUnitCardStrength).center().padTop(80).padRight(20);
+        infoTable.add(heroCards).center().padTop(80);
+
+        deckWindow.add(infoTable).center().row();
+
         saveDeckButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 saveDeck();
                 ScreenManager.setPreGameMenuScreen();
             }
         });
-
-        stage.addActor(deckWindow);
+        downloadDeckButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                saveDeck();
+                controller.downloadDeck();
+            }
+        });
+        uploadDeckButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                controller.uploadDeck();
+            }
+        });
     }
+
+    private void updateTotalCardsInDeckLabel() {
+        totalCardsInDeck.setText("Total Cards in Deck: \n" + selectedCards.size());
+        numberOfUnitCards.setText("Number of Unit Cards: \n" + getNumberOfUnitCards() + "/22");
+        numberOfSpecialCards.setText("Special Cards: \n" + getNumberOfSpecialCards() + "/10");
+        totalUnitCardStrength.setText("Total Unit Card Strength: \n" + getTotalUnitCardStrength());
+        heroCards.setText("Hero Cards: \n" + getNumberOfHeroCards());
+    }
+
+
+    private int getNumberOfUnitCards() {
+        // TODO: implement this
+        return 0;
+    }
+    private int getNumberOfSpecialCards() {
+        int specialCards = 0;
+        for (AbstractCard card : selectedCards) {
+            if (card.getFaction() == Faction.SPECIAL) {
+                specialCards++;
+            }
+        }
+        return specialCards;
+    }
+
+    private int getTotalUnitCardStrength() {
+        // TODO: implement this
+        int totalStrength = 0;
+//        for (AbstractCard card : selectedCards) {
+//            if (card.getFaction() != Faction.SPECIAL) {
+//                totalStrength += card.getStrength();
+//            }
+//        }
+        return totalStrength;
+    }
+
+    private int getNumberOfHeroCards() {
+        int heroCards = 0;
+        for (AbstractCard card : selectedCards) {
+            if (card instanceof Hero) {
+                heroCards++;
+            }
+        }
+        return heroCards;
+    }
+
 
     private void addFactionCards() {
         List<AbstractCard> factionCards = AllCards.getFactionCardsByFaction(User.getLoggedInUser().getFaction());
@@ -361,9 +555,6 @@ public class PreGameMenuScreen implements Screen {
         addSelectedCardsToTable(selectedCards, selectedCardsTable, true);
     }
 
-    private void updateTotalCardsInDeckLabel() {
-        totalCardsInDeck.setText("Total Cards in Deck: \n" + selectedCards.size());
-    }
 
     private void updateCurrentFactionLabel() {
         currentFactionLabel.setText("Current Faction: " + User.getLoggedInUser().getFaction());

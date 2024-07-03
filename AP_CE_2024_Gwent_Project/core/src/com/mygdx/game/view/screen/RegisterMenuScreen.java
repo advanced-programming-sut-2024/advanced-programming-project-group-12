@@ -3,11 +3,14 @@ package com.mygdx.game.view.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.RegisterMenuController;
 import com.mygdx.game.controller.ScreenManager;
@@ -17,6 +20,7 @@ public class RegisterMenuScreen implements Screen {
     private static final float FIELD_HEIGHT = 80;
     //
     private Stage stage;
+    private SpriteBatch batch;
     private Table table;
     private Window chooseSecurityQuestionWindow;
     private Window errorWindow;
@@ -33,6 +37,7 @@ public class RegisterMenuScreen implements Screen {
     private TextField nicknameField;
     // Labels
     private Label passwordStateLabel;
+    private Texture background;
     public RegisterMenuScreen() {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -47,6 +52,8 @@ public class RegisterMenuScreen implements Screen {
                 return super.keyTyped(event, character);
             }
         });
+        batch = new SpriteBatch();
+        background = new Texture(Gdx.files.internal("backgrounds/main_background.jpg"));
     }
     @Override
     public void show() {
@@ -95,8 +102,9 @@ public class RegisterMenuScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.5f, 0.5f, 0, 0);
         Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
-        Gwent.singleton.getBatch().begin();
-        Gwent.singleton.getBatch().end();
+        batch.begin();
+        batch.draw(background, 0, 0, Gwent.WIDTH, Gwent.HEIGHT);
+        batch.end();
         stage.act();
         stage.draw();
 

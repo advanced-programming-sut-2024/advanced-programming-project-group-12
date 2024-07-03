@@ -15,8 +15,11 @@ public class MainMenuController {
 
 
     public void showProfile() {
-        Gwent.singleton.setScreen(new ProfileMenuScreen());
+        ScreenManager.setProfileMenuScreen();
     }
 
     public void exit() { System.exit(0); }
+
+    public void showLeaderBoard() {
+        ScreenManager.setLeaderBoardScreen();}
 }

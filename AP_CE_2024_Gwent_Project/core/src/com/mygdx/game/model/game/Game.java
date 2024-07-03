@@ -31,8 +31,8 @@ public class Game {
         currentPlayer = player1;
         opposition = player2;
 
-        //todo
-        //date = LocalDate.now();
+        //TODO :
+//        date = LocalDate.now();
         rounds = new ArrayList<>();
         gameBoard = new GameBoard(currentPlayer, opposition);
         currentRound = new Round(1, currentPlayer, opposition);

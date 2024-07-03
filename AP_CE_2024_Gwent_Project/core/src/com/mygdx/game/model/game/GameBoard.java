@@ -16,6 +16,10 @@ public class GameBoard {
         rows = new HashMap<>(2);
         rows.put(player1, new ArrayList<>(3));
         rows.put(player2, new ArrayList<>(3));
+        for(int i = 0; i < 3; i++) {
+            rows.get(player1).add(new Row());
+            rows.get(player2).add(new Row());
+        }
         discard = new HashMap<>(2);
         discard.put(player1, new Discard());
         discard.put(player2, new Discard());
@@ -74,14 +78,14 @@ public class GameBoard {
     }
 
     public ArrayList<PlayableCard> getRowCards(Player player, int row) {
-        /**
+        /*
          * returns all cards associated with a row of index row and for the player.
          */
         if(row < 3 && row >= 0) {
             return rows.get(player).get(row).getCards();
         }
         else {
-            System.err.println("Inalid row input");
+            System.err.println("Invalid row input");
             return null;
         }
     }

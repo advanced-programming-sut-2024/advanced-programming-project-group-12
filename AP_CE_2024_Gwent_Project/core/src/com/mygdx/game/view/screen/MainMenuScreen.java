@@ -25,12 +25,13 @@ public class MainMenuScreen implements Screen {
     private TextButton startGameButton;
     private TextButton showProfileButton;
     private TextButton exitButton;
+    private TextButton leaderBoardButton;
 
     public MainMenuScreen() {
         controller = new MainMenuController();
         stage = new Stage();
         batch = new SpriteBatch();
-        background = new Texture(Gdx.files.internal("backgrounds/main_background.png"));
+        background = new Texture(Gdx.files.internal("backgrounds/main_background.jpg"));
         Gdx.input.setInputProcessor(stage);
         table = new Table();
         table.setFillParent(true);
@@ -54,20 +55,31 @@ public class MainMenuScreen implements Screen {
                 controller.exit();
             }
         });
+        leaderBoardButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.showLeaderBoard();
+            }
+        });
     }
 
     private void buttonAndFieldInit() {
-        showProfileButton = new TextButton("Show Profile", Gwent.singleton.skin);
-        showProfileButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
-        table.add(showProfileButton).padBottom(20);
-        table.row();
         startGameButton = new TextButton("Start Game", Gwent.singleton.skin);
         startGameButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
         table.add(startGameButton).padBottom(20);
         table.row();
+        showProfileButton = new TextButton("Show Profile", Gwent.singleton.skin);
+        showProfileButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
+        table.add(showProfileButton).padBottom(20);
+        table.row();
+        leaderBoardButton = new TextButton("Leaderboard", Gwent.singleton.skin);
+        leaderBoardButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
+        table.add(leaderBoardButton).padBottom(20);
+        table.row();
         exitButton = new TextButton("Exit", Gwent.singleton.skin);
         exitButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
         table.add(exitButton).padBottom(20);
+
     }
 
     @Override
