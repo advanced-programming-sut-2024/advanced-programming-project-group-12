@@ -1,6 +1,7 @@
 package com.mygdx.game.model.network;
 
 import com.google.gson.Gson;
+import com.mygdx.game.controller.LoginMenuController;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.session.InvalidSessionException;
 import com.mygdx.game.model.network.session.SessionExpiredException;
@@ -57,6 +58,15 @@ public class RequestHandler extends Thread {
                 case SIGN_IN:
                     ;//handle the shit
                 case LOGIN:
+                    LoginRequest loginRequest = gson.fromJson(request, LoginRequest.class);
+                    String username = loginRequest.getUsername();
+                    String password = loginRequest.getPassword();
+                    String response = LoginMenuController.loginHandler(username, password);
+                    if(response.equals("accept")) {
+
+                    } else {
+
+                    }
                     ;
                 case ADD_TO_FRIEND:
                     ;

@@ -141,10 +141,6 @@ public class LoginMenuScreen implements Screen {
     }
     private void loginHandler() {
         String username = usernameField.getText();
-        //TODO : remove it after finilize the project
-        if(username.equals("admin")) {
-            //TODO : log in admin
-        }
         String password = passwordField.getText();
         String response = LoginMenuController.loginHandler(username, password);
         Client.getInstance().sendMassage(new LoginRequest(username, password));
