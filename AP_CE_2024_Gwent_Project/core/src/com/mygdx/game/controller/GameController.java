@@ -1,7 +1,7 @@
 package com.mygdx.game.controller;
 
 
-import com.mygdx.game.model.Action;
+import com.mygdx.game.model.game.card.Action;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.game.card.AbstractCard;

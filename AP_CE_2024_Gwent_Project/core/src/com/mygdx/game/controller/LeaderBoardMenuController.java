@@ -1,7 +1,7 @@
 package com.mygdx.game.controller;
 
-import com.mygdx.game.model.User;
-import com.mygdx.game.model.UserInfo;
+import com.mygdx.game.model.user.User;
+import com.mygdx.game.model.user.UserInfo;
 
 import java.util.ArrayList;
 import java.util.Comparator;

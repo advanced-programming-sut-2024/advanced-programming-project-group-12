@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.FriendsController;
 import com.mygdx.game.model.FriendRequest;
-import com.mygdx.game.model.User;
+import com.mygdx.game.model.user.User;
 
 public class FriendsScreen implements Screen {
     private User loggedInUser;

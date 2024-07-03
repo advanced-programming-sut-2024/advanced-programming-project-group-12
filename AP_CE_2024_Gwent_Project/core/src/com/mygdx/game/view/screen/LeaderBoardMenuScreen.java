@@ -19,7 +19,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.LeaderBoardMenuController;
 import com.mygdx.game.controller.ScreenManager;
-import com.mygdx.game.model.User;
+import com.mygdx.game.model.user.User;
 
 import java.util.List;
 

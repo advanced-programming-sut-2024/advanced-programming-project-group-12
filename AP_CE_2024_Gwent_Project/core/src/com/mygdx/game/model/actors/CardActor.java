@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.controller.GameController;
 import com.mygdx.game.controller.ScreenManager;
-import com.mygdx.game.model.card.AbstractCard;
+import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.view.screen.GameScreen;
 
 public class CardActor extends Actor {

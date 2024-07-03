@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.mygdx.game.model.card.AbstractCard;
+import com.mygdx.game.model.game.card.AbstractCard;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
