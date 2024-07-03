@@ -139,6 +139,11 @@ public class LoginMenuScreen implements Screen {
     }
     private void loginHandler() {
         String username = usernameField.getText();
+        //TODO : remove it after finilize the project
+        if(username.equals("admin")) {
+            LoginMenuController.Login(username);
+            LoginMenuController.goToMainMenu();
+        }
         String password = passwordField.getText();
         if (username.isEmpty() || password.isEmpty()) {
             showError("Please fill all fields");
