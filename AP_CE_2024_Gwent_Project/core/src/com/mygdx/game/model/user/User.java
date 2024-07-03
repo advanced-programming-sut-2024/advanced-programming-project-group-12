@@ -10,6 +10,7 @@ import com.mygdx.game.model.game.card.CommanderCards;
 import com.mygdx.game.model.network.Server;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
+import com.mygdx.game.model.network.massage.serverResponse.preGameRosponse.InviteUserToPlay;
 
 import java.io.File;
 import java.io.FileReader;
@@ -33,18 +34,18 @@ public class User {
     private String email;
     private HashMap<SecurityQuestion, String> securityQuestion;
 
+    private ArrayList<Game> allGamePlayed;
     private UserInfo userInfo;
 
     private Faction faction;
-    private ArrayList<Game> allGamePlayed;
+    private String leader;
     private ArrayList <String> deck;
 
-    private Player player;
-    private Server server;
     private ArrayList<User> friends;
     private ArrayList<FriendRequest> receivedFriendRequests;
     private ArrayList<FriendRequest> sentFriendRequests;
-    private String leader;
+
+    private Player player;
 
     //constructors
     public User(String username, String nickname, String password, String email) {
@@ -144,9 +145,6 @@ public class User {
 
     public HashMap<SecurityQuestion, String> getSecurityQuestion() {
         return securityQuestion;
-    }
-    public Server getServer() {
-        return server;
     }
     //instance methods
     public static void updateRanking() {
@@ -255,10 +253,6 @@ public class User {
         save();
     }
 
-    public ClientRequest sendMassage(ServerResponse serverResponse) {
-        return null;
-    }
-
     public void addGame(Game game) {
         allGamePlayed.add(game);
     }
@@ -294,4 +288,7 @@ public class User {
         return CommanderCards.getCardByCardName(leader);
     }
 
+    public void sendMassage(InviteUserToPlay inviteUserToPlay) {
+        return ;
+    }
 }

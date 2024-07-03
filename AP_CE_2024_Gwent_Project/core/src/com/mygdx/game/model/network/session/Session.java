@@ -1,5 +1,6 @@
 package com.mygdx.game.model.network.session;
 
+import com.mygdx.game.model.network.Server;
 import com.mygdx.game.model.user.User;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class Session {
     }
 
     void terminate() {
-        allUsers.get(id).getServer().terminate();
+        Server.servers.get(this).terminate();
     }
 
     public boolean isValid() {

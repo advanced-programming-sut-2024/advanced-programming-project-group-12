@@ -5,7 +5,6 @@ import com.mygdx.game.model.network.session.Session;
 import java.lang.reflect.Executable;
 
 public class ServerResponse {
-    private Exception exception;
     private ServerResponseType type;
     Session session;
 
@@ -14,7 +13,7 @@ public class ServerResponse {
         this.session = session;
     }
     public ServerResponse(Exception exception) {
-        this.exception = exception;
+
         type = null;
         session = null;
     }

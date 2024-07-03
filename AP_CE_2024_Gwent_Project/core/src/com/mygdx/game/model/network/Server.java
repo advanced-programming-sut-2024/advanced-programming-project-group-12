@@ -2,6 +2,7 @@ package com.mygdx.game.model.network;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.model.user.User;
 
 import java.io.DataInputStream;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 
@@ -20,6 +22,7 @@ public class Server extends Thread {
      */
     public static final int THREAD_NUMBER = 10;
 
+    public static final HashMap<Session, Server> servers = new HashMap<>();
     private static final LinkedList<Socket> clients = new LinkedList<>();
     private static ServerSocket serverSocket;
     private static final GsonBuilder builder = new GsonBuilder();

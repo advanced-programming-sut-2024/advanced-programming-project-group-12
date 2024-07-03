@@ -79,8 +79,8 @@ public class RequestHandler extends Thread {
                 case START_GAME:
                     StartGameRequest startGameRequest = gson.fromJson(request, StartGameRequest.class);
                     User target = startGameRequest.getUserToBeInvited();
-                    AnswerUserInvite answer = (AnswerUserInvite) target.sendMassage(new InviteUserToPlay(Session.getUser(startGameRequest.getSession())));
-                    serverResponse = new ServerResponse(answer.isAccept() ? ServerResponseType.CONFIRM : ServerResponseType.DENY, startGameRequest.getSession());
+                    //AnswerUserInvite) target.sendMassage(new InviteUserToPlay(Session.getUser(startGameRequest.getSession())));
+                    //serverResponse = new ServerResponse(answer.isAccept() ? ServerResponseType.CONFIRM : ServerResponseType.DENY, startGameRequest.getSession());
                     break;
                 case PLAY_CARD_REQUEST:
                     PlayCardRequest playCardRequest = gson.fromJson(request, PlayCardRequest.class);
@@ -94,10 +94,8 @@ public class RequestHandler extends Thread {
         }
 
         try {
-            Writer writer = new StringWriter();
-            gson.toJson(this, writer);
-            writer.close();
-            dataOutputStream.writeUTF(writer.toString());
+
+            dataOutputStream.writeUTF(gson.toJson(serverResponse));
         } catch (IOException e) {
             System.err.println("IO exception in request handler");
         }
