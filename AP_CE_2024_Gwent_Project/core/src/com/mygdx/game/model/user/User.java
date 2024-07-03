@@ -1,9 +1,12 @@
 package com.mygdx.game.model.user;
 
 import com.google.gson.Gson;
+import com.mygdx.game.model.FriendRequest;
 import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.AbstractCard;
+import com.mygdx.game.model.game.card.AllCards;
+import com.mygdx.game.model.game.card.CommanderCards;
 import com.mygdx.game.model.network.Server;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
@@ -19,11 +22,11 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class User {
-    //static fields
+    // static fields
     private static User loggedInUser;
     private static ArrayList<User> users = new ArrayList<>();
 
-    //instance fields
+    // instance fields
     private String username;
     private String nickname;
     private String password;
@@ -38,6 +41,10 @@ public class User {
 
     private Player player;
     private Server server;
+    private ArrayList<User> friends;
+    private ArrayList<FriendRequest> receivedFriendRequests;
+    private ArrayList<FriendRequest> sentFriendRequests;
+    private String leader;
 
     //constructors
     public User(String username, String nickname, String password, String email) {
@@ -50,18 +57,25 @@ public class User {
         this.allGamePlayed = new ArrayList<>();
         this.userInfo = new UserInfo();
         this.deck = new ArrayList<>();
+        this.friends = new ArrayList<>();
+        this.receivedFriendRequests = new ArrayList<>();
+        this.sentFriendRequests = new ArrayList<>();
         this.save();
     }
-    //static methods
+
+    // static methods
     public static ArrayList<User> getUsers() {
         return users;
     }
+
     public static void setLoggedInUser(User user) {
         loggedInUser = user;
     }
+
     public static User getLoggedInUser() {
         return loggedInUser;
     }
+
     public static ArrayList<User> getAllUsers() {
         ArrayList<User> users = new ArrayList<>();
         File folder = new File("Data/Users");
@@ -84,12 +98,15 @@ public class User {
     public void setSecurityQuestion(SecurityQuestion question, String answer) {
         this.securityQuestion.put(question, answer);
     }
+
     public String getPassword() {
         return password;
     }
+
     public String getUsername() {
         return username;
     }
+
     public String getEmail() {
         return email;
     }
@@ -97,35 +114,43 @@ public class User {
     public String getNickname() {
         return nickname;
     }
+
     public void setUsername(String username) {
         File oldFile = new File("Data/Users/" + this.username);
         File newFile = new File("Data/Users/" + username);
         oldFile.renameTo(newFile);
         this.username = username;
     }
+
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
+
     public void setEmail(String newEmail) {
         this.email = newEmail;
     }
+
     public void setPassword(String newPassword) {
         this.password = newPassword;
     }
+
     public UserInfo getUserInfo() {
         return userInfo;
     }
+
+    public ArrayList<User> getFriends() {
+        return friends;
+    }
+
     public HashMap<SecurityQuestion, String> getSecurityQuestion() {
         return securityQuestion;
     }
-
     public Server getServer() {
         return server;
     }
-
     //instance methods
     public static void updateRanking() {
-
+        // Implementation
     }
 
     public boolean doesPasswordMatch(String password) {
@@ -166,6 +191,7 @@ public class User {
             throw new RuntimeException(e);
         }
     }
+
     public static void removeUser(User user) {
         try {
             deleteDirectory(Paths.get("Data/Users/" + user.getUsername()));
@@ -173,6 +199,7 @@ public class User {
             throw new RuntimeException(e);
         }
     }
+
     public static void deleteDirectory(Path path) throws IOException {
         if (Files.isDirectory(path)) {
             try (DirectoryStream<Path> entries = Files.newDirectoryStream(path)) {
@@ -183,8 +210,9 @@ public class User {
         }
         Files.delete(path);
     }
+
     public void updateInfo() {
-        if(this.username.equals("_Geust_"))
+        if (this.username.equals("_Guest_"))
             return;
         User.removeUser(this);
         this.save();
@@ -198,13 +226,21 @@ public class User {
         this.faction = faction;
     }
 
+    public LinkedList<AbstractCard> getDeckAsCard() {
+        LinkedList<AbstractCard> deckCards = new LinkedList<>();
+        for (String cardName : deck) {
+            deckCards.add(AllCards.getCardByCardName(cardName));
+        }
+        return deckCards;
+    }
+
     public ArrayList<String> getDeck() {
         return deck;
     }
 
     public void setDeck(List<AbstractCard> selectedCards) {
         deck.clear();
-        for(AbstractCard card : selectedCards) {
+        for (AbstractCard card : selectedCards) {
             deck.add(card.getName());
         }
         save();
@@ -229,4 +265,28 @@ public class User {
     public void setPlayer(Player player) {
         this.player = player;
     }
+
+    public ArrayList<Game> getAllGamePlayed() {
+        return allGamePlayed;
+    }
+
+    public ArrayList<FriendRequest> getReceivedFriendRequests() {
+        return receivedFriendRequests;
+    }
+
+    public ArrayList<FriendRequest> getSentFriendRequests() {
+        return sentFriendRequests;
+    }
+    public void setLeader(AbstractCard leader) {
+        this.leader = leader.getName();
+        save(); // Save the user's data after setting the leader
+    }
+
+    public String getLeader() {
+        return leader;
+    }
+    public AbstractCard getLeaderAsCard() {
+        return CommanderCards.getCardByCardName(leader);
+    }
+
 }

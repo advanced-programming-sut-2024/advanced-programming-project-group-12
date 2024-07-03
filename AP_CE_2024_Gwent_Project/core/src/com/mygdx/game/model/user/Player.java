@@ -9,8 +9,10 @@ import com.mygdx.game.model.game.card.CommanderCards;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Player {
+    private final User user;
     private CommanderCard leader;
     private LinkedList<AbstractCard> deck;
     private LinkedList<AbstractCard> hand;
@@ -19,7 +21,6 @@ public class Player {
     private boolean won;
     private boolean isPassed;
     private Game game;
-    User user;
 
     public Player(User user, CommanderCard leader, LinkedList<AbstractCard> deck, Faction faction) {
         this.leader = leader;
@@ -107,5 +108,16 @@ public class Player {
 
     public User getUser() {
         return user;
+    }
+
+    public String getUsername() {
+        return user.getUsername();
+    }
+
+    public int getHealth() {
+        return 2 - roundsLost;
+    }
+    public void removeCardFromHand(AbstractCard card) {
+        hand.remove(card);
     }
 }

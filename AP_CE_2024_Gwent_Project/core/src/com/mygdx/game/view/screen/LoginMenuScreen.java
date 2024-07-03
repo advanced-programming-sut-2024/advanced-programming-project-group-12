@@ -33,7 +33,7 @@ public class LoginMenuScreen implements Screen {
     public LoginMenuScreen() {
         stage = new Stage();
         batch = new SpriteBatch();
-        background = new Texture(Gdx.files.internal("backgrounds/main_background.png"));
+        background = new Texture(Gdx.files.internal("backgrounds/main_background.jpg"));
         Gdx.input.setInputProcessor(stage);
         createFields();
     }
@@ -139,6 +139,11 @@ public class LoginMenuScreen implements Screen {
     }
     private void loginHandler() {
         String username = usernameField.getText();
+        //TODO : remove it after finilize the project
+        if(username.equals("admin")) {
+            LoginMenuController.Login(username);
+            LoginMenuController.goToMainMenu();
+        }
         String password = passwordField.getText();
         if (username.isEmpty() || password.isEmpty()) {
             showError("Please fill all fields");

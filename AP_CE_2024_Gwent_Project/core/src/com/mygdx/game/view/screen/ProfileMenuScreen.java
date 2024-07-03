@@ -17,7 +17,7 @@ import com.mygdx.game.controller.ScreenManager;
 import java.util.ArrayList;
 
 public class ProfileMenuScreen implements Screen {
-    private static final float FIELD_WIDTH = 400;
+    private static final float FIELD_WIDTH = 500;
     private static final float FIELD_HEIGHT = 80;
 
     private final Stage stage;
@@ -37,6 +37,7 @@ public class ProfileMenuScreen implements Screen {
     private TextButton changeEmailButton;
     private TextButton backButton;
     private TextButton logoutButton;
+    private TextButton friendsButton;
     // Text Fields
     private TextField oldPasswordField;
     private TextField newPasswordField;
@@ -57,7 +58,7 @@ public class ProfileMenuScreen implements Screen {
         controller = new ProfileMenuController();
 
         // Load background image
-        backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("backgrounds/main_background.png")));
+        backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("backgrounds/profile_menu_background.jpg")));
 
         buttonAndFieldInit();
 
@@ -67,10 +68,10 @@ public class ProfileMenuScreen implements Screen {
 
     private void buttonAndFieldInit() {
         ArrayList<String> profileInfo = controller.showProfile();
-        currentUsernameLabel = new Label("Username: " + profileInfo.get(0), Gwent.singleton.getSkin());
-        currentEmailLabel = new Label("Email: " + profileInfo.get(2), Gwent.singleton.getSkin());
-        currentNicknameLabel = new Label("Nickname: " + profileInfo.get(1), Gwent.singleton.getSkin());
-        factionLabel = new Label("Faction: " + profileInfo.get(3), Gwent.singleton.getSkin());
+        currentUsernameLabel = new Label("Username: " + profileInfo.get(0), Gwent.singleton.getSkin(), "subtitle");
+        currentEmailLabel = new Label("Email: " + profileInfo.get(2), Gwent.singleton.getSkin(), "subtitle");
+        currentNicknameLabel = new Label("Nickname: " + profileInfo.get(1), Gwent.singleton.getSkin(), "subtitle");
+        factionLabel = new Label("Faction: " + profileInfo.get(3), Gwent.singleton.getSkin(), "subtitle");
 
         changePasswordButton = new TextButton("Change Password", Gwent.singleton.getSkin());
         changeUsernameButton = new TextButton("Change Username", Gwent.singleton.getSkin());
@@ -78,6 +79,7 @@ public class ProfileMenuScreen implements Screen {
         changeEmailButton = new TextButton("Change Email", Gwent.singleton.getSkin());
         backButton = new TextButton("Back", Gwent.singleton.getSkin());
         logoutButton = new TextButton("Logout", Gwent.singleton.getSkin());
+        friendsButton = new TextButton("Friends", Gwent.singleton.getSkin());
 
         oldPasswordField = new TextField("", Gwent.singleton.getSkin());
         oldPasswordField.setMessageText("Old Password");
@@ -117,7 +119,6 @@ public class ProfileMenuScreen implements Screen {
         table.add(confirmPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.add(changePasswordButton).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.row().pad(10);
-
         table.add(newUsernameField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.add(changeUsernameButton).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.row().pad(10);
@@ -127,8 +128,10 @@ public class ProfileMenuScreen implements Screen {
         table.add(newEmailField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.add(changeEmailButton).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.row().pad(20);
-        table.add(logoutButton).width(FIELD_WIDTH).height(FIELD_HEIGHT);
-        table.add(backButton).width(FIELD_WIDTH).height(FIELD_HEIGHT);
+        table.add(friendsButton).width(FIELD_WIDTH/2).height(FIELD_HEIGHT).center();
+        table.add(backButton).width(FIELD_WIDTH/2).height(FIELD_HEIGHT);
+        table.row();
+        table.add(logoutButton).width(FIELD_WIDTH/2).height(FIELD_HEIGHT);
     }
 
     private void setupListeners() {
@@ -192,6 +195,14 @@ public class ProfileMenuScreen implements Screen {
                 controller.logout();
                 dispose();
                 ScreenManager.setLoginScreen();
+            }
+        });
+
+        friendsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                dispose();
+                ScreenManager.setFriendsScreen();
             }
         });
     }

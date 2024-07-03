@@ -9,10 +9,18 @@ import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import javax.swing.*;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class PreGameMenuController {
-//    Player player = Game.getCurrentGame().getCurrentPlayer();
     User user = User.getLoggedInUser();
 
     public void gotoMainMenu() {
@@ -20,25 +28,19 @@ public class PreGameMenuController {
     }
 
     public void startGame() {
-        User toBePlayedWith;
         //hard coding a deck
-        CommanderCard commanderCard = CommanderCards.FOLTEST_SIEGE.getAbstractCard();
-        LinkedList<AbstractCard> deck = new LinkedList<>();
-        deck.add(AllCards.COMMANDER_HORN.getAbstractCard());
-        deck.add(AllCards.SCORCH.getAbstractCard());
-        deck.add(AllCards.YENNEFER_OF_VENGENBERG.getAbstractCard());
-        deck.add(AllCards.KEIRA_METZ.getAbstractCard());
-        deck.add(AllCards.POOR_FUCKING_INFANTRY.getAbstractCard());
-        deck.add(AllCards.CIRILLA_FIONA_ELEN_RIANNON.getAbstractCard());
 
-        Faction faction = Faction.NORTHERN_REALMS;
-        Player player = new Player(user ,commanderCard, deck, faction);
-        Player opposition = player;
-        Game game = new Game(player, opposition);
-        player.setGame(game);
-        opposition.setGame(game);
+        LinkedList<AbstractCard> deck = User.getLoggedInUser().getDeckAsCard();
+        CommanderCard leader =(CommanderCard) User.getLoggedInUser().getLeaderAsCard();
+        Faction faction = User.getLoggedInUser().getFaction();
 
-        ScreenManager.setGameMenuScreen();
+        Player player = new Player(User.getLoggedInUser(), leader, deck, faction);
+
+        new Game(player, player);
+        Game.getCurrentGame().setCurrentPlayer(player); // Set the current player
+        Game.getCurrentGame().setOpposition(player);
+
+        ScreenManager.setGameScreen();
     }
 
     public void setFaction(String factionName) {
@@ -48,5 +50,46 @@ public class PreGameMenuController {
         }
         user.setFaction(faction);
         user.updateInfo();
+    }
+
+    public void downloadDeck() {
+        // Convert the deck to a JSON string
+        Gson gson = new Gson();
+        String deckJson = gson.toJson(User.getLoggedInUser().getDeck());
+
+        // Write the JSON string to a file
+        try (FileWriter file = new FileWriter("/Users/alinr/Desktop/deck.json")) {
+            file.write(deckJson);
+            System.out.println("Deck successfully downloaded to deck.json");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void uploadDeck() {
+        /* TODO : fix this method
+
+        // Open a file chooser dialog
+//        JFileChooser fileChooser = new JFileChooser();
+//        int returnValue = fileChooser.showOpenDialog(null);
+//
+//        If the user selected a file
+//        if (returnValue == JFileChooser.APPROVE_OPTION) {
+//        Read the JSON string from the file
+//            try (FileReader file = new FileReader(fileChooser.getSelectedFile().getPath())) {
+//                Gson gson = new Gson();
+//                Type deckType = new TypeToken<LinkedList<AbstractCard>>() {}.getType();
+//                LinkedList<AbstractCard> deck = gson.fromJson(file, deckType);
+//
+//        Set the user 's deck to the deck read from the file
+//                User.getLoggedInUser().setDeck(deck);
+//                System.out.println("Deck successfully uploaded from " + fileChooser.getSelectedFile().getName());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+    }
+*/
     }
 }
