@@ -71,6 +71,14 @@ public class User {
         return users;
     }
 
+    public static List<User> usersForScoreBoardByNumber(int number) {
+        /**
+         * each number like i returns the i+1th division in allUsers ranking
+         * ex: 0 gives top 10 players
+         */
+        return users.subList(number * 10, number * 10 + 10);
+    }
+
 
     //getter and setter methods
     public void setSecurityQuestion(SecurityQuestion question, String answer) {

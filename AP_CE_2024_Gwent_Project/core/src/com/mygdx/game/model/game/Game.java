@@ -12,7 +12,8 @@ import java.util.List;
 public class Game {
     private final List<User> allUsers;
     private final List<Player> players;
-    private final LocalDate date;
+    private CardSelectHandler cardSelectHandler;
+//    private final LocalDate date;
 
     private final ArrayList<Round> rounds;
     private Round currentRound;
@@ -31,7 +32,7 @@ public class Game {
         opposition = player2;
 
         //todo
-        date = LocalDate.now();
+        //date = LocalDate.now();
         rounds = new ArrayList<>();
         gameBoard = new GameBoard(currentPlayer, opposition);
         currentRound = new Round(1, currentPlayer, opposition);
@@ -64,6 +65,14 @@ public class Game {
         if(currentPlayer.isPassed() && opposition.isPassed()) {
             endRound();
         }
+    }
+
+    public CardSelectHandler getCardSelectHandler() {
+        return cardSelectHandler;
+    }
+
+    public void setCardSelectHandler(CardSelectHandler cardSelectHandler) {
+        this.cardSelectHandler = cardSelectHandler;
     }
 
     public void setRandomMedic(boolean randomMedic) {

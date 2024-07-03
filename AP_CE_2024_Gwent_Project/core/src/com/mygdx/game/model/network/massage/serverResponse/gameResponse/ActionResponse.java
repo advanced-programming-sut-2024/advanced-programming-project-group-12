@@ -1,24 +1,34 @@
 package com.mygdx.game.model.network.massage.serverResponse.gameResponse;
 
-import com.mygdx.game.model.game.card.Action;
 import com.mygdx.game.model.game.card.AbstractCard;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class ActionResponse {
-    private final Action action;
-    private final String animationAssetPath;
+    private final ActionResponseType action;
     private final List<AbstractCard> affectedCards;
+    int actionCount;
 
-    public ActionResponse() {
-        action = Action.NO_ACTION;
-        animationAssetPath = null;
+    public ActionResponse(ActionResponseType action) {
+        this.action = action;
         affectedCards = null;
     }
 
-    public ActionResponse(Action action, String animationAssetPath, List<AbstractCard> affectedCards) {
+    public ActionResponse(ActionResponseType action, int actionCount) {
         this.action = action;
-        this.animationAssetPath = animationAssetPath;
+        this.actionCount = actionCount;
+        affectedCards = null;
+    }
+
+    public ActionResponse(ActionResponseType action, List<AbstractCard> affectedCards) {
+        this.action = action;
         this.affectedCards = affectedCards;
+    }
+
+    public ActionResponse(ActionResponseType actionResponseType, LinkedList<AbstractCard> selection, int actionCount) {
+        this.action = actionResponseType;
+        this.affectedCards = selection;
+        this.actionCount = actionCount;
     }
 }

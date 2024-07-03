@@ -60,6 +60,9 @@ public abstract class AbstractCard implements Cloneable{
     }
 
     public abstract void kill();
+    public void discard() {
+        player.getHand().remove(this);
+    }
 
     public PlayCardResponse place(int row, Player player) {
         this.player = player;

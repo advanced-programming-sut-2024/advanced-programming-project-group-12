@@ -1,7 +1,9 @@
 package com.mygdx.game.model.game.card;
 
+import com.mygdx.game.model.game.CardSelectHandler;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.GameBoard;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionResponseType;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.game.Row;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionResponse;
@@ -284,38 +286,47 @@ public enum Action {
     ERIDIN_BRINGER(abstractCard -> {
         //medic
         //todo
-        return null;
+        return new ActionResponse(ActionResponseType.REVIVE, 1);
     }),
     ERIDIN_DESTROYER(abstractCard -> {
         //discard two cards
         //draw one card of choice from deck
-        return null;
+        abstractCard.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.ERIDIN_DESTROYER_DISCARD);
+        return new ActionResponse(ActionResponseType.SELECTION, abstractCard.getPlayer().getHand(), 2);
     }),
     ERIDIN_KING(abstractCard -> {
-        //pick any weather card and play it instantly
-        //sends a response to pick a weather card then recieves the card
-        //and plays it(outside lambda)
-        return null;
+        ArrayList<AbstractCard> selectionList = new ArrayList<>();
+        selectionList.add(AllCards.CLEAR.getAbstractCard());
+        selectionList.add(AllCards.RAIN.getAbstractCard());
+        selectionList.add(AllCards.FOG.getAbstractCard());
+        selectionList.add(AllCards.FROST.getAbstractCard());
+        selectionList.add(AllCards.STORM.getAbstractCard());
+
+        abstractCard.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.ERIDIN_KING);
+
+        return new ActionResponse(ActionResponseType.SELECTION, selectionList);
     }),
     ERIDIN_TREACHEROUS(abstractCard -> {
         abstractCard.getPlayer().getGame().getGameBoard().setDoubleSpyPower();
+        abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
     FRANCESCA_QUEEN(abstractCard -> {
-        SCORCH_C.execute(abstractCard);
+        return SCORCH_C.execute(abstractCard);
         //make sure to include the above response
-        return null;
     }),
     FRANCESCA_BEAUTIFUL(abstractCard -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(1, abstractCard.getPlayer());
+        abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
     FRANCESCA_DAISY(abstractCard -> {
-        //send a response thet action has been treegered
+        //send a response that action has been triggered
         return null;
     }),
     FRANCESCA_PUREBLOOD(abstractCard -> {
         AllCards.FROST.getAbstractCard().place(3, abstractCard.getPlayer());
+        abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
     FRANCESCA_HOPE(abstractCard -> {
@@ -339,8 +350,9 @@ public enum Action {
                 }
             }
 
-            card.replace(maxRow);
+            card.replaceBetweenTwoRows(maxRow);
         }
+        abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
     CRACH_AN_CRAITE(abstractCard -> {
@@ -357,11 +369,13 @@ public enum Action {
             i.addCardsToDeck(discard);
             gameBoard.resetDiscard(i);
         }
-        return new ActionResponse();
+        abstractCard.getPlayer().getGame().switchTurn();
+        return null;
     }),
     KING_BRAN(abstractCard -> {
         abstractCard.getPlayer().getGame().getGameBoard().setHalfAttrition();
-        return new ActionResponse();
+        abstractCard.getPlayer().getGame().switchTurn();
+        return null;
     }),
 
     NO_ACTION(card -> null),

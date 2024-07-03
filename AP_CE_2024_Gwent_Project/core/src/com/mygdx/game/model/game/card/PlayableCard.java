@@ -3,7 +3,6 @@ package com.mygdx.game.model.game.card;
 import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.GameBoard;
-import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionResponse;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.game.Row;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayCardResponse;
@@ -47,7 +46,7 @@ public class PlayableCard extends AbstractCard {
         return legacyCard.clone();
     }
 
-    public void replace(int rowNumber) {
+    public void replaceBetweenTwoRows(int rowNumber) {
         Row row = player.getGame().getGameBoard().getRowForPlayer(rowNumber, player);
         row.removeCard(this);
 

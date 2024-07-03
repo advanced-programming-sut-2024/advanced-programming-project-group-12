@@ -28,7 +28,7 @@ public class CommanderCard extends AbstractCard{
         }
         //todo:
         //should the method return null?
-        return new ActionResponse(null, null, null);
+        return new ActionResponse(null, null);
     }
 
     @Override
