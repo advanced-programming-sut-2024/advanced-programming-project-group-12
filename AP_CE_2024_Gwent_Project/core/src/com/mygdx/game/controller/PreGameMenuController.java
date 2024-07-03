@@ -37,8 +37,7 @@ public class PreGameMenuController {
         Player player = new Player(User.getLoggedInUser(), leader, deck, faction);
 
         new Game(player, player);
-        Game.getCurrentGame().setCurrentPlayer(player); // Set the current player
-        Game.getCurrentGame().setOpposition(player);
+
 
         ScreenManager.setGameScreen();
     }

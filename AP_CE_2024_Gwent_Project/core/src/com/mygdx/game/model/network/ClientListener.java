@@ -15,12 +15,9 @@ public class ClientListener extends Thread{
      * the listener thread for server massages
      * they also include a handler that is connected to the main game thread
      */
-    private static GsonBuilder gsonBuilder = new GsonBuilder();
 
-    private Gson gson;
     private Socket server;
     private DataInputStream dataInputStream;
-    private Session session;
 
     final ArrayList<String> serverResponses;
 
@@ -33,7 +30,6 @@ public class ClientListener extends Thread{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        gson = gsonBuilder.create();
     }
 
     @Override
