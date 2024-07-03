@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class PreGameMenuController {
-    //    Player player = Game.getCurrentGame().getCurrentPlayer();
     User user = User.getLoggedInUser();
 
     public void gotoMainMenu() {
@@ -26,17 +25,12 @@ public class PreGameMenuController {
 
     public void startGame() {
         //hard coding a deck
-        CommanderCard commanderCard = CommanderCards.EMHYR_INVADER.getAbstractCard();
-        LinkedList<AbstractCard> deck = new LinkedList<>();
-        deck.add(AllCards.COMMANDER_HORN.getAbstractCard());
-        deck.add(AllCards.SCORCH.getAbstractCard());
-        deck.add(AllCards.YENNEFER_OF_VENGENBERG.getAbstractCard());
-        deck.add(AllCards.KEIRA_METZ.getAbstractCard());
-        deck.add(AllCards.POOR_FUCKING_INFANTRY.getAbstractCard());
-        deck.add(AllCards.CIRILLA_FIONA_ELEN_RIANNON.getAbstractCard());
 
-        Faction faction = Faction.NILFGAARD;
-        Player player = new Player(User.getLoggedInUser(), commanderCard, deck, faction);
+        LinkedList<AbstractCard> deck = User.getLoggedInUser().getDeckAsCard();
+        CommanderCard leader =(CommanderCard) User.getLoggedInUser().getLeaderAsCard();
+        Faction faction = User.getLoggedInUser().getFaction();
+
+        Player player = new Player(User.getLoggedInUser(), leader, deck, faction);
 
         new Game(player, player);
         Game.getCurrentGame().setCurrentPlayer(player); // Set the current player

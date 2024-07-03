@@ -203,8 +203,8 @@ public class User {
         this.faction = faction;
     }
 
-    public List<AbstractCard> getDeckAsCard() {
-        List<AbstractCard> deckCards = new ArrayList<>();
+    public LinkedList<AbstractCard> getDeckAsCard() {
+        LinkedList<AbstractCard> deckCards = new LinkedList<>();
         for (String cardName : deck) {
             deckCards.add(AllCards.getCardByCardName(cardName));
         }
