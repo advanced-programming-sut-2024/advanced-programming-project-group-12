@@ -3,6 +3,7 @@ package com.mygdx.game.controller;
 
 import com.mygdx.game.model.game.card.Action;
 import com.mygdx.game.model.game.Game;
+import com.mygdx.game.model.network.Client;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.AllCards;
@@ -93,8 +94,8 @@ public class GameController {
 
     public void playCard(AbstractCard card, int row) {
         //todo
-        Player currentPlayer = Game.getCurrentGame().getCurrentPlayer();
-        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
+        Player currentPlayer = Client.getInstance().getUser().getPlayer();
+        GameBoard gameBoard = Client.getInstance().getUser().getPlayer().getGame().getGameBoard();
         if(card instanceof PlayableCard) {
             gameBoard.addCard(currentPlayer, row, (PlayableCard)card);
         } else {
