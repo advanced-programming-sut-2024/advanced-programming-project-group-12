@@ -10,7 +10,7 @@ import com.mygdx.game.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayableCard extends AbstractCard {
+public class PlayableCard extends AbstractCard implements Comparable<PlayableCard>{
     private int power;
     private boolean isDead;
     private AbstractCard legacyCard;
@@ -88,5 +88,12 @@ public class PlayableCard extends AbstractCard {
         Game.getCurrentGame().getGameBoard().addCard(player, row, this);
         ArrayList<PlayableCard> boardRow = Game.getCurrentGame().getGameBoard().getRowCards(player, row);
         boardRow.sort(null);
+    }
+
+    @Override
+    public int compareTo(PlayableCard o) {
+        if(o.getPower() > power) return 1;
+        else if(o.power == power) return 0;
+        else return -1;
     }
 }
