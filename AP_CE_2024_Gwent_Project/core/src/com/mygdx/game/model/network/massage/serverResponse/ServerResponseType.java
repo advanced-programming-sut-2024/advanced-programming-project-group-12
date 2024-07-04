@@ -15,5 +15,5 @@ public enum ServerResponseType {
     INVITE_TO_PLAY_RESPONSE,
 
     PLAY_CARD_RESPONSE,
-    FRIEND_REQUEST,
+    FRIEND_REQUEST, CHANGE_SCREEN,
 }

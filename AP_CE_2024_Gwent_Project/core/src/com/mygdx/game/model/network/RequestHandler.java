@@ -5,9 +5,11 @@ import com.mygdx.game.controller.remote.*;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
+import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.ChangeMenuRequest;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.LoginRequest;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SecurityQuestionRequest;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SignUpRequest;
+import com.mygdx.game.model.network.massage.serverResponse.ChangeMenuResponse;
 import com.mygdx.game.model.network.session.InvalidSessionException;
 import com.mygdx.game.model.network.session.SessionExpiredException;
 import com.mygdx.game.model.user.Player;
@@ -68,6 +70,10 @@ public class RequestHandler extends Thread {
                 user = Session.getUser(session);
             }
             switch (clientRequest.getType()) {
+                case CHANGE_MENU:
+                    ChangeMenuRequest changeMenuRequest = gson.fromJson(request, ChangeMenuRequest.class);
+                    serverResponse = new ChangeMenuResponse(changeMenuRequest.getScreen());
+                    break;
                 case SIGN_IN:
                     serverResponse = new RegisterHandler(request).handleRegister(gson);
                     break;

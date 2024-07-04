@@ -2,6 +2,8 @@ package com.mygdx.game.controller.local;
 
 
 import com.mygdx.game.Gwent;
+import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.ChangeMenuRequest;
 import com.mygdx.game.model.user.SecurityQuestion;
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.view.Screens;
@@ -14,12 +16,9 @@ public class LoginMenuController {
         User.setLoggedInUser(User.getUserByUsername(username));
     }
     public static void goToRegisterMenu() {
-        Gwent.singleton.changeScreen(Screens.REGISTER);
+        Client.getInstance().sendMassage(new ChangeMenuRequest(Screens.REGISTER));
     }
 
-    public static void goToMainMenu() {
-        Gwent.singleton.changeScreen(Screens.MAIN_MENU);
-    }
     public static void goToForgotPasswordScreen() {
         Gwent.singleton.changeScreen(Screens.FORGET_PASSWORD);
     }

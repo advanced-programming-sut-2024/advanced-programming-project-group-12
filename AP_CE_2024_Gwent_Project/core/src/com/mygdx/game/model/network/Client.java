@@ -3,6 +3,7 @@ package com.mygdx.game.model.network;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
+import com.mygdx.game.model.network.massage.serverResponse.ChangeMenuResponse;
 import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.view.Screens;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
@@ -71,6 +72,10 @@ public class Client extends Thread{
         if(serverResponse == null) return;
 
         switch (serverResponse.getType()) {
+            case CHANGE_SCREEN:
+                ChangeMenuResponse changeMenuResponse = gson.fromJson(request, ChangeMenuResponse.class);
+                Gwent.singleton.changeScreen(changeMenuResponse.getScreen());
+                break;
             case SIGN_IN_CONFIRM:
                 SignUpResponse confirm = gson.fromJson(request, SignUpResponse.class);
 //                User
