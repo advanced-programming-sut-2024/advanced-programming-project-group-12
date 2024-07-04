@@ -278,6 +278,9 @@ public class User {
     public ArrayList<FriendRequest> getReceivedFriendRequests() {
         return receivedFriendRequests;
     }
+    public void setReceivedFriendRequests(ArrayList<FriendRequest> receivedFriendRequests) {
+        this.receivedFriendRequests = receivedFriendRequests;
+    }
 
     public ArrayList<FriendRequest> getSentFriendRequests() {
         return sentFriendRequests;
@@ -300,15 +303,15 @@ public class User {
 
 
     //todo; my dear Ali <3
-    public void addFriendRequest() {
+    public void addFriendRequest(FriendRequest friendRequest) {
         //todo
     }
 
-    public void requestAccepted(ClientFriendRequest friendRequest) {
+    public void requestAccepted(FriendRequest friendRequest) {
         //todo
     }
 
-    public void requestRejected(ClientFriendRequest friendRequest) {
+    public void requestRejected(FriendRequest friendRequest) {
         //todo
     }
 }

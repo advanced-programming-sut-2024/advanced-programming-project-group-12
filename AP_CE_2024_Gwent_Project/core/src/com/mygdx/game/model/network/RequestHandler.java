@@ -107,14 +107,13 @@ public class RequestHandler extends Thread {
                     break;
             }
 
-            if(serverResponse != null) {
+            if(serverResponse != null && session != null) {
                 serverResponse.setSession(session.renewSession());
             }
 
         } catch (SessionExpiredException | InvalidSessionException e) {
             serverResponse = new ServerResponse(ServerResponseType.DENY, null);
         }
-
 
         try {
             System.out.println(gson.toJson(serverResponse));
