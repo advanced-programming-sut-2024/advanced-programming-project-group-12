@@ -74,8 +74,8 @@ public class Client extends Thread{
                 break;
             case SIGN_IN_DENY:
                 SignUpResponse deny = gson.fromJson(request, SignUpResponse.class);
-                ((RegisterMenuScreen) ScreenManager.getOnScreen()).showError(deny.getError(), deny.getUsername());
-
+                Gwent.singleton.changeScreen(Screens.CHOOSE_SECURITY_QUESTION);
+                break;
             case LOGIN_CONFIRM :
                 LoginResponse loginResponseAccept = gson.fromJson(request, LoginResponse.class);
                 user = loginResponseAccept.getUser();
@@ -86,6 +86,8 @@ public class Client extends Thread{
                 LoginResponse loginResponseDeny = gson.fromJson(request, LoginResponse.class);
                 ((LoginMenuScreen) ScreenManager.getOnScreen()).showError(loginResponseDeny.getError());
                 break;
+
+
         }
     }
     public void setUser(User user) {
