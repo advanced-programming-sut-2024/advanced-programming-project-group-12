@@ -16,6 +16,7 @@ import com.mygdx.game.controller.RegisterMenuController;
 import com.mygdx.game.controller.ScreenManager;
 import com.mygdx.game.model.SecurityQuestion;
 
+
 public class RegisterMenuScreen implements Screen {
     private static final float FIELD_WIDTH = 400;
     private static final float FIELD_HEIGHT = 80;

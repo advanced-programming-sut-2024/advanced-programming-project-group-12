@@ -9,9 +9,13 @@ import com.mygdx.game.view.ValidInputs;
 import java.util.Random;
 
 public class RegisterMenuController {
+    private static String tempUsername;
+    private static String tempNickname;
+    private static String tempPassword;
+    private static String tempEmail;
+    private static String verificationCode;
     public static void register(String username, String nickname, String password, String email) {
         new User(username, nickname, password, email);
-
     }
 
     public static boolean isUsernameValid(String username) {

@@ -88,4 +88,8 @@ public class PreGameMenuController {
     }
 */
     }
+
+    public void sendGameRequest() {
+        ScreenManager.setGameRequestScreen();
+    }
 }

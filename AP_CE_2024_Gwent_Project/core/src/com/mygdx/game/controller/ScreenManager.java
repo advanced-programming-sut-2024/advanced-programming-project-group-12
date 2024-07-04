@@ -65,4 +65,9 @@ public class ScreenManager {
         // Set the friends screen
         Gwent.singleton.setScreen(new FriendsScreen());
     }
+
+    public static void setGameRequestScreen() {
+        // Set the game request screen
+        Gwent.singleton.setScreen(new GameRequestScreen());
+    }
 }
