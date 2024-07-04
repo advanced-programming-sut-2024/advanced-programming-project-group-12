@@ -4,9 +4,12 @@ import com.google.gson.Gson;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SecurityQuestionRequest;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SignUpRequest;
 import com.mygdx.game.model.network.massage.serverResponse.SecurityQuestionResponse;
+import com.mygdx.game.model.network.massage.serverResponse.ServerResponseType;
+import com.mygdx.game.model.network.massage.serverResponse.SecurityQuestionResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponseType;
 import com.mygdx.game.model.network.massage.serverResponse.SignUpResponse;
+import com.mygdx.game.model.user.SecurityQuestion;
 import com.mygdx.game.model.user.User;
 
 public class RegisterHandler {
@@ -22,8 +25,7 @@ public class RegisterHandler {
             return new SignUpResponse("this username is already taken", signUpRequest.getUsername());
         }
         else {
-            new User(signUpRequest.getUsername(), signUpRequest.getNickname(), signUpRequest.getPassword(), signUpRequest.getEmail());
-            return new SignUpResponse();
+            return new SignUpResponse(new User(signUpRequest.getUsername(), signUpRequest.getNickname(), signUpRequest.getPassword(), signUpRequest.getEmail()));
         }
     }
 

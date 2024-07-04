@@ -16,6 +16,7 @@ import com.mygdx.game.view.Screens;
 import com.mygdx.game.model.network.Client;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SignUpRequest;
 
+
 public class RegisterMenuScreen implements Screen {
     private static final float FIELD_WIDTH = 400;
     private static final float FIELD_HEIGHT = 80;
@@ -205,7 +206,6 @@ public class RegisterMenuScreen implements Screen {
             return;
         }else {
             Client.getInstance().sendMassage(new SignUpRequest(username, password, nickname, email));
-            Gwent.singleton.changeScreen(Screens.CHOOSE_SECURITY_QUESTION);
         }
     }
     private void clearFields() {

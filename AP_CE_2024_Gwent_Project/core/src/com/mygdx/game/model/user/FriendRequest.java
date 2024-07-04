@@ -1,6 +1,4 @@
-package com.mygdx.game.model;
-
-import com.mygdx.game.model.user.User;
+package com.mygdx.game.model.user;
 
 public class FriendRequest {
     private User fromUser;

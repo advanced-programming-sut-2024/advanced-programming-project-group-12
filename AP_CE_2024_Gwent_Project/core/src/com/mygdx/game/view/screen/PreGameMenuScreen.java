@@ -41,6 +41,7 @@ public class PreGameMenuScreen implements Screen {
 
     // Buttons
     private Button backButton;
+    private Button sendAGameRequestButton;
     private Button changeFactionButton;
     private Button startGameButton;
     private Button deckButton;
@@ -78,7 +79,7 @@ public class PreGameMenuScreen implements Screen {
         mainTable = new Table();
         mainTable.setFillParent(true);
         stage.addActor(mainTable);
-        selectedCards = selectedCardsExtractedByCardNames(User.getLoggedInUser().getDeck()==null?new ArrayList<>():User.getLoggedInUser().getDeck());
+        selectedCards =  selectedCardsExtractedByCardNames(User.getLoggedInUser().getDeck()==null?new ArrayList<>():User.getLoggedInUser().getDeck());
         unselectedCards = new ArrayList<>();
 
         // Load background image
@@ -114,6 +115,16 @@ public class PreGameMenuScreen implements Screen {
             }
         });
         dashboard.row();
+        sendAGameRequestButton = new TextButton("Send A Game Request", Gwent.singleton.getSkin());
+        sendAGameRequestButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
+        dashboard.add(sendAGameRequestButton).padBottom(20).center();
+        sendAGameRequestButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.sendGameRequest();
+            }
+        });
+        dashboard.row();
 
         changeFactionButton = new TextButton("Change Faction", Gwent.singleton.skin);
         changeFactionButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
@@ -137,7 +148,7 @@ public class PreGameMenuScreen implements Screen {
         });
         dashboard.row();
 
-        backButton = new TextButton("Back", Gwent.singleton.skin);
+        backButton = new TextButton("Back", Gwent.singleton.getSkin());
         backButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
         dashboard.add(backButton).padBottom(20).center();
         backButton.addListener(new ClickListener() {
@@ -147,6 +158,8 @@ public class PreGameMenuScreen implements Screen {
                 dispose();
             }
         });
+
+
 
         dashboard.setFillParent(true);
 

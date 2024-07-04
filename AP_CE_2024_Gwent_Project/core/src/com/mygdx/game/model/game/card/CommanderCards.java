@@ -71,5 +71,4 @@ public enum CommanderCards {
         }
         return null;
     }
-
 }

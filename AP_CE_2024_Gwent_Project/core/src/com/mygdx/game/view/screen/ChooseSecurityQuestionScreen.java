@@ -54,7 +54,7 @@ public class ChooseSecurityQuestionScreen implements Screen {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                RegisterMenuController.removeUser();
+                RegisterMenuController.abortSignUp();
                 dispose();
                 Gwent.singleton.changeScreen(Screens.REGISTER);
             }

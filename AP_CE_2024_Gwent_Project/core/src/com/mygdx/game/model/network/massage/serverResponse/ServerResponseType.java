@@ -10,4 +10,5 @@ public enum ServerResponseType {
     SIGN_IN_DENY,
     SECURITY_QUESTION_SET,
     PLAY_CARD_RESPONSE,
+    FRIEND_REQUEST_ACCEPT,
 }
