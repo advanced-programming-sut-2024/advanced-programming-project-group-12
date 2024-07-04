@@ -1,14 +1,11 @@
 package com.mygdx.game.model.network;
 
 import com.google.gson.Gson;
-import com.mygdx.game.controller.local.LoginMenuController;
 import com.mygdx.game.controller.remote.LoginHandler;
 import com.mygdx.game.controller.remote.RegisterHandler;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
-import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.LoginRequest;
-import com.mygdx.game.model.network.massage.serverResponse.LoginResponse;
 import com.mygdx.game.model.network.session.InvalidSessionException;
 import com.mygdx.game.model.network.session.SessionExpiredException;
 import com.mygdx.game.model.user.Player;
@@ -62,7 +59,13 @@ public class RequestHandler extends Thread {
             }
             switch (clientRequest.getType()) {
                 case SIGN_IN:
-                    serverResponse = new RegisterHandler(request).handle(gson);
+                    serverResponse = new RegisterHandler(request).handleRegister(gson);
+                    break;
+                case ABORT_SIGN_IN:
+                    serverResponse = new RegisterHandler(request).handleAbort(gson);
+                    break;
+                case SET_SECURITY_QUESTION:
+                    serverResponse = new RegisterHandler(request).handleSecurityQuestion(gson);
                     break;
                 case LOGIN:
                     serverResponse = new LoginHandler(request, gson).handle();

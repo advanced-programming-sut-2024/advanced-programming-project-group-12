@@ -67,6 +67,8 @@ public class Client extends Thread{
 
     private void handleRequest() {
         ServerResponse serverResponse = gson.fromJson(request , ServerResponse.class);
+        if(serverResponse == null) return;
+
         switch (serverResponse.getType()) {
             case SIGN_IN_CONFIRM:
                 Gwent.singleton.changeScreen(Screens.CHOOSE_SECURITY_QUESTION);
@@ -86,7 +88,6 @@ public class Client extends Thread{
                 LoginResponse loginResponseDeny = gson.fromJson(request, LoginResponse.class);
                 ((LoginMenuScreen)Gwent.singleton.getCurrentScreen()).showError(loginResponseDeny.getError());
                 break;
-
 
         }
     }

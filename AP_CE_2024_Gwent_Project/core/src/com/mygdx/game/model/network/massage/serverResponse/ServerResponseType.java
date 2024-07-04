@@ -8,5 +8,6 @@ public enum ServerResponseType {
     LOGIN_DENY,
     SIGN_IN_CONFIRM,
     SIGN_IN_DENY,
+    SECURITY_QUESTION_SET,
     PLAY_CARD_RESPONSE,
 }
