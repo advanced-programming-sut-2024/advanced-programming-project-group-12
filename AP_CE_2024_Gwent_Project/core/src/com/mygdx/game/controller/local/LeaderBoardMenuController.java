@@ -1,11 +1,9 @@
-package com.mygdx.game.controller;
+package com.mygdx.game.controller.local;
 
 import com.mygdx.game.model.user.User;
-import com.mygdx.game.model.user.UserInfo;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 public class LeaderBoardMenuController {
 

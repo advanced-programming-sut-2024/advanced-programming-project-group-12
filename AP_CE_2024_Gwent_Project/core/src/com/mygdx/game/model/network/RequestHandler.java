@@ -1,15 +1,14 @@
 package com.mygdx.game.model.network;
 
 import com.google.gson.Gson;
-import com.mygdx.game.controller.LoginMenuController;
-import com.mygdx.game.controller.RegisterMenuController;
+import com.mygdx.game.controller.local.LoginMenuController;
+import com.mygdx.game.controller.remote.LoginHandler;
+import com.mygdx.game.controller.remote.RegisterHandler;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.LoginRequest;
-import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SignUpRequest;
 import com.mygdx.game.model.network.massage.serverResponse.LoginResponse;
-import com.mygdx.game.model.network.massage.serverResponse.SignUpResponse;
 import com.mygdx.game.model.network.session.InvalidSessionException;
 import com.mygdx.game.model.network.session.SessionExpiredException;
 import com.mygdx.game.model.user.Player;
@@ -63,24 +62,10 @@ public class RequestHandler extends Thread {
             }
             switch (clientRequest.getType()) {
                 case SIGN_IN:
-                    SignUpRequest signUpRequest = gson.fromJson(request, SignUpRequest.class);
-                    if(RegisterMenuController.isUsernameTaken(signUpRequest.getUsername())) {
-                        serverResponse = new SignUpResponse("this username is already taken", signUpRequest.getUsername());
-                    }
-                    else {
-                        new User(signUpRequest.getUsername(), signUpRequest.getNickname(), signUpRequest.getPassword(), signUpRequest.getEmail());
-                        serverResponse = new SignUpResponse();
-                    }
+                    serverResponse = new RegisterHandler(request).handle(gson);
+                    break;
                 case LOGIN:
-                    LoginRequest loginRequest = gson.fromJson(request, LoginRequest.class);
-                    String username = loginRequest.getUsername();
-                    String password = loginRequest.getPassword();
-                    String response = LoginMenuController.loginHandler(username, password);
-                    if(response.equals("accept")) {
-                        serverResponse = new LoginResponse(ServerResponseType.LOGIN_CONFIRM ,User.getUserByUsername(username));
-                    } else {
-                        serverResponse = new LoginResponse(ServerResponseType.LOGIN_DENY, response);
-                    }
+                    serverResponse = new LoginHandler(request, gson).handle();
                     break;
                 case ADD_TO_FRIEND:
                     ;

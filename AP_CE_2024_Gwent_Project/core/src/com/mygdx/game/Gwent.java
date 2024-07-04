@@ -6,13 +6,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.mygdx.game.controller.ScreenManager;
-import com.mygdx.game.model.Screens;
+import com.mygdx.game.view.Screens;
 import com.mygdx.game.model.network.Client;
 import com.mygdx.game.view.screen.LoginMenuScreen;
-
-import java.io.IOException;
 
 public class Gwent extends Game implements ApplicationListener {
 	private Screens typeScreen;
@@ -56,5 +52,8 @@ public class Gwent extends Game implements ApplicationListener {
 	public void changeScreen(Screens screens) {
 		typeScreen =screens;
 		pendingScreenChange = true;
+	}
+	public Screen getCurrentScreen() {
+		return currentScreen;
 	}
 }

@@ -7,10 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
-import com.mygdx.game.controller.LoginMenuController;
-import com.mygdx.game.controller.RegisterMenuController;
-import com.mygdx.game.controller.ScreenManager;
+import com.mygdx.game.controller.local.LoginMenuController;
+import com.mygdx.game.controller.local.RegisterMenuController;
 import com.mygdx.game.model.user.SecurityQuestion;
+import com.mygdx.game.view.Screens;
 
 public class ForgetPasswordScreen implements Screen {
     private Stage stage;
@@ -72,7 +72,7 @@ public class ForgetPasswordScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 LoginMenuController.removeUsernameForForgotPassword();
-                ScreenManager.setLoginScreen();
+                Gwent.singleton.changeScreen(Screens.LOGIN);
             }
         });
         showPasswordButton.addListener(new ClickListener() {

@@ -1,9 +1,7 @@
-package com.mygdx.game.controller;
+package com.mygdx.game.controller.local;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.mygdx.game.model.network.Client;
-import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SignUpRequest;
 import com.mygdx.game.model.user.SecurityQuestion;
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.view.ValidInputs;

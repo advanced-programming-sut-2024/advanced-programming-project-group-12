@@ -1,8 +1,7 @@
-package com.mygdx.game.controller;
+package com.mygdx.game.controller.local;
 
 
 import com.mygdx.game.model.game.card.Action;
-import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.network.Client;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.game.card.AbstractCard;

@@ -3,8 +3,7 @@ package com.mygdx.game.model.network;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
-import com.mygdx.game.controller.ScreenManager;
-import com.mygdx.game.model.Screens;
+import com.mygdx.game.view.Screens;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.serverResponse.LoginResponse;
@@ -70,21 +69,22 @@ public class Client extends Thread{
         ServerResponse serverResponse = gson.fromJson(request , ServerResponse.class);
         switch (serverResponse.getType()) {
             case SIGN_IN_CONFIRM:
-                //confirm the shit
+                Gwent.singleton.changeScreen(Screens.CHOOSE_SECURITY_QUESTION);
                 break;
             case SIGN_IN_DENY:
                 SignUpResponse deny = gson.fromJson(request, SignUpResponse.class);
-                Gwent.singleton.changeScreen(Screens.CHOOSE_SECURITY_QUESTION);
+                ((RegisterMenuScreen) Gwent.singleton.getCurrentScreen()).showError(deny.getError(), deny.getUsername());
                 break;
             case LOGIN_CONFIRM :
                 LoginResponse loginResponseAccept = gson.fromJson(request, LoginResponse.class);
                 user = loginResponseAccept.getUser();
-                Gwent.singleton.changeScreen(Screens.MAIN_MENU_SCREEN);
+                User.setLoggedInUser(user);
+                Gwent.singleton.changeScreen(Screens.MAIN_MENU);
                 break;
             case LOGIN_DENY:
                 System.out.println("login deny");
                 LoginResponse loginResponseDeny = gson.fromJson(request, LoginResponse.class);
-                ((LoginMenuScreen) ScreenManager.getOnScreen()).showError(loginResponseDeny.getError());
+                ((LoginMenuScreen)Gwent.singleton.getCurrentScreen()).showError(loginResponseDeny.getError());
                 break;
 
 

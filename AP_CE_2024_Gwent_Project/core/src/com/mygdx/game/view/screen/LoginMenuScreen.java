@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.Gwent;
-import com.mygdx.game.controller.LoginMenuController;
+import com.mygdx.game.controller.local.LoginMenuController;
 import com.mygdx.game.model.network.Client;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.LoginRequest;
 

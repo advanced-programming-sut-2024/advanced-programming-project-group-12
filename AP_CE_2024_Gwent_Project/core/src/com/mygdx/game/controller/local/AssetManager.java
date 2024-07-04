@@ -1,4 +1,4 @@
-package com.mygdx.game.controller;
+package com.mygdx.game.controller.local;
 
 import com.badlogic.gdx.graphics.Texture;
 

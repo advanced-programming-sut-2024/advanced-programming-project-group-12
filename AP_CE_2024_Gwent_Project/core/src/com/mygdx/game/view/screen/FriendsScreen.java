@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.mygdx.game.Gwent;
-import com.mygdx.game.controller.FriendsController;
+import com.mygdx.game.controller.local.FriendsController;
 import com.mygdx.game.model.FriendRequest;
 import com.mygdx.game.model.user.User;
 

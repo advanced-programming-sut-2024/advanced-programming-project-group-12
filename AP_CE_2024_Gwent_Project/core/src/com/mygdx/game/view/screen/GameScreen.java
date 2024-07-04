@@ -13,15 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
-import com.mygdx.game.controller.GameController;
+import com.mygdx.game.controller.local.GameController;
 import com.mygdx.game.model.game.card.Action;
 import com.mygdx.game.model.game.Faction;
-import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.network.Client;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.actors.*;
 import com.mygdx.game.model.game.card.AbstractCard;
-import com.mygdx.game.model.game.GameBoard;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

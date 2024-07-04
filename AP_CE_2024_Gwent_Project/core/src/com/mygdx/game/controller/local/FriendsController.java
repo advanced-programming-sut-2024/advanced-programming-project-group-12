@@ -1,4 +1,4 @@
-package com.mygdx.game.controller;
+package com.mygdx.game.controller.local;
 
 import com.mygdx.game.model.FriendRequest;
 import com.mygdx.game.model.user.User;
