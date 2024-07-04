@@ -7,9 +7,6 @@ import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.AllCards;
 import com.mygdx.game.model.game.card.CommanderCards;
-import com.mygdx.game.model.network.Server;
-import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ClientRequest;
-import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.preGameRosponse.InviteUserToPlay;
 
 import java.io.File;

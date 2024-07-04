@@ -1,5 +1,6 @@
 package com.mygdx.game.model.network.massage.clientRequest.postSignInRequest;
 
+import com.mygdx.game.model.network.massage.clientRequest.ClientRequestType;
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.model.network.session.Session;
 

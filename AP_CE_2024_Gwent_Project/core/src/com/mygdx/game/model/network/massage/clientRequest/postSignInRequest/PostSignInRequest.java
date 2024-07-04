@@ -1,10 +1,12 @@
 package com.mygdx.game.model.network.massage.clientRequest.postSignInRequest;
 
+import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
+import com.mygdx.game.model.network.massage.clientRequest.ClientRequestType;
 import com.mygdx.game.model.network.session.InvalidSessionException;
 import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.model.network.session.SessionExpiredException;
 
-public abstract class PostSignInRequest extends ClientRequest{
+public abstract class PostSignInRequest extends ClientRequest {
     Session session;
     public PostSignInRequest(ClientRequestType type, Session session) {
         super(type);

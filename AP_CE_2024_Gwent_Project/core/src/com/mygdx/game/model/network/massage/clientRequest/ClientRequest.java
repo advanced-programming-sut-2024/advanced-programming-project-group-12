@@ -1,4 +1,4 @@
-package com.mygdx.game.model.network.massage.clientRequest.postSignInRequest;
+package com.mygdx.game.model.network.massage.clientRequest;
 
 public class ClientRequest {
     private ClientRequestType type;

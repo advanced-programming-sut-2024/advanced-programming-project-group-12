@@ -2,6 +2,6 @@ package com.mygdx.game.model.network.massage.serverResponse.gameResponse;
 
 public enum ActionResponseType {
     SELECTION,
-    REVIVE,
+    REVIVE, EMHYR_EMPEROR,
 
 }

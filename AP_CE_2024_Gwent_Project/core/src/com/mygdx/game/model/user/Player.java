@@ -1,5 +1,6 @@
 package com.mygdx.game.model.user;
 
+import com.mygdx.game.model.game.Discard;
 import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.CommanderCard;
@@ -15,6 +16,7 @@ public class Player {
     private CommanderCard leader;
     private LinkedList<AbstractCard> deck;
     private LinkedList<AbstractCard> hand;
+
     private Faction faction;
     private int roundsLost;
     private boolean won;

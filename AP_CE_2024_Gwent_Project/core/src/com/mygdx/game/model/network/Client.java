@@ -3,16 +3,18 @@ package com.mygdx.game.model.network;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.controller.ScreenManager;
-import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ClientRequest;
+import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.serverResponse.LoginResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
+import com.mygdx.game.model.network.massage.serverResponse.SignUpResponse;
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.view.screen.LoginMenuScreen;
+import com.mygdx.game.view.screen.RegisterMenuScreen;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class Client extends Thread {
+public class Client extends Thread{
     private static Client instance;
     private ClientListener clientListener;
     private DataOutputStream dataOutputStream;
@@ -64,6 +66,13 @@ public class Client extends Thread {
     private void handleRequest() {
         ServerResponse serverResponse = gson.fromJson(request , ServerResponse.class);
         switch (serverResponse.getType()) {
+            case SIGN_IN_CONFIRM:
+                //confirm the shit
+                break;
+            case SIGN_IN_DENY:
+                SignUpResponse deny = gson.fromJson(request, SignUpResponse.class);
+                ((RegisterMenuScreen) ScreenManager.getOnScreen()).showError(deny.getError(), deny.getUsername());
+
             case LOGIN_CONFIRM :
                 LoginResponse loginResponseAccept = gson.fromJson(request, LoginResponse.class);
                 user = loginResponseAccept.getUser();

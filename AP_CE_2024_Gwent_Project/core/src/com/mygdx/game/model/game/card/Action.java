@@ -11,6 +11,7 @@ import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionRe
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Function;
 
 public enum Action {
@@ -257,9 +258,8 @@ public enum Action {
             hand.remove(index);
         }
 
-        //todo
         //add mech to show the array list
-        return null;
+        return new ActionResponse(ActionResponseType.EMHYR_EMPEROR, toBeShown);
     }),
     EMHYR_WHITEFLAME(card -> {
         //play at the begining of the game
@@ -269,25 +269,21 @@ public enum Action {
     }),
     EMHYR_RELENTLESS(abstractCard -> {
         Player opponent = abstractCard.getPlayer().getGame().getOpposition();
-        //todo
+        List<PlayableCard> enemyDiscard = opponent.getGame().getGameBoard().getDiscardPlayableCards(opponent);
         //sent to secket a request to ask for the choosing card interface
-        return null;
+        abstractCard.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.ENEMY_MEDIC);
+        return new ActionResponse(ActionResponseType.SELECTION, enemyDiscard, 1);
     }),
     EMHYR_INVADER(abstractCard -> {
         //play it at the begining of the game
         abstractCard.getPlayer().getGame().setRandomMedic(true);
         return null;
     }),
-
     ERIDIN_COMMANDER(abstractCard -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(0, abstractCard.getPlayer());
         return null;
     }),
-    ERIDIN_BRINGER(abstractCard -> {
-        //medic
-        //todo
-        return new ActionResponse(ActionResponseType.REVIVE, 1);
-    }),
+    ERIDIN_BRINGER(MEDIC.action::apply),
     ERIDIN_DESTROYER(abstractCard -> {
         //discard two cards
         //draw one card of choice from deck
@@ -380,6 +376,8 @@ public enum Action {
 
     NO_ACTION(card -> null),
     ;
+    //medic
+//todo
     private final Function<AbstractCard, ActionResponse> action;
 
     Action(Function<AbstractCard, ActionResponse> action) {

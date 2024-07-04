@@ -2,6 +2,8 @@ package com.mygdx.game.controller;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SignUpRequest;
 import com.mygdx.game.model.user.SecurityQuestion;
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.view.ValidInputs;
@@ -10,8 +12,6 @@ import java.util.Random;
 
 public class RegisterMenuController {
     public static void register(String username, String nickname, String password, String email) {
-        new User(username, nickname, password, email);
-
     }
 
     public static boolean isUsernameValid(String username) {

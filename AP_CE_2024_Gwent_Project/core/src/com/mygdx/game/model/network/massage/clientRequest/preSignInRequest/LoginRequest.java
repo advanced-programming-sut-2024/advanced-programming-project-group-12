@@ -1,8 +1,6 @@
 package com.mygdx.game.model.network.massage.clientRequest.preSignInRequest;
 
-import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ClientRequest;
-import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ClientRequestType;
-import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.PostSignInRequest;
+import com.mygdx.game.model.network.massage.clientRequest.ClientRequestType;
 
 public class LoginRequest extends PreSignInRequest {
     private String username;

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ActionResponse {
     private final ActionResponseType action;
-    private final List<AbstractCard> affectedCards;
+    private final List<? extends AbstractCard> affectedCards;
     int actionCount;
 
     public ActionResponse(ActionResponseType action) {
@@ -21,12 +21,12 @@ public class ActionResponse {
         affectedCards = null;
     }
 
-    public ActionResponse(ActionResponseType action, List<AbstractCard> affectedCards) {
+    public ActionResponse(ActionResponseType action, List<? extends AbstractCard> affectedCards) {
         this.action = action;
         this.affectedCards = affectedCards;
     }
 
-    public ActionResponse(ActionResponseType actionResponseType, LinkedList<AbstractCard> selection, int actionCount) {
+    public ActionResponse(ActionResponseType actionResponseType, List<? extends AbstractCard> selection, int actionCount) {
         this.action = actionResponseType;
         this.affectedCards = selection;
         this.actionCount = actionCount;

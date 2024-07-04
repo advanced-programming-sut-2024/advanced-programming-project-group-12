@@ -12,11 +12,6 @@ public class ServerResponse {
         this.type = type;
         this.session = session;
     }
-    public ServerResponse(Exception exception) {
-
-        type = null;
-        session = null;
-    }
 
     public ServerResponseType getType() {
         return type;

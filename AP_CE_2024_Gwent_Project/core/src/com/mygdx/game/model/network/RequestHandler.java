@@ -2,17 +2,20 @@ package com.mygdx.game.model.network;
 
 import com.google.gson.Gson;
 import com.mygdx.game.controller.LoginMenuController;
+import com.mygdx.game.controller.RegisterMenuController;
 import com.mygdx.game.model.game.card.AbstractCard;
+import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.LoginRequest;
+import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SignUpRequest;
 import com.mygdx.game.model.network.massage.serverResponse.LoginResponse;
+import com.mygdx.game.model.network.massage.serverResponse.SignUpResponse;
 import com.mygdx.game.model.network.session.InvalidSessionException;
 import com.mygdx.game.model.network.session.SessionExpiredException;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponseType;
-import com.mygdx.game.model.network.massage.serverResponse.preGameRosponse.InviteUserToPlay;
 import com.mygdx.game.model.network.session.Session;
 
 import java.io.*;
@@ -60,7 +63,14 @@ public class RequestHandler extends Thread {
             }
             switch (clientRequest.getType()) {
                 case SIGN_IN:
-                    ;//handle the shit
+                    SignUpRequest signUpRequest = gson.fromJson(request, SignUpRequest.class);
+                    if(RegisterMenuController.isUsernameTaken(signUpRequest.getUsername())) {
+                        serverResponse = new SignUpResponse("this username is already taken", signUpRequest.getUsername());
+                    }
+                    else {
+                        new User(signUpRequest.getUsername(), signUpRequest.getNickname(), signUpRequest.getPassword(), signUpRequest.getEmail());
+                        serverResponse = new SignUpResponse();
+                    }
                 case LOGIN:
                     LoginRequest loginRequest = gson.fromJson(request, LoginRequest.class);
                     String username = loginRequest.getUsername();
@@ -90,7 +100,7 @@ public class RequestHandler extends Thread {
                     break;
             }
         } catch (SessionExpiredException | InvalidSessionException e) {
-            serverResponse = new ServerResponse(e);
+            serverResponse = new ServerResponse(ServerResponseType.DENY, null);
         }
 
         try {
