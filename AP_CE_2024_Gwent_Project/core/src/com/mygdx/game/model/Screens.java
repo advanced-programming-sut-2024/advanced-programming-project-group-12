@@ -5,16 +5,25 @@ import com.mygdx.game.view.screen.LoginMenuScreen;
 import com.mygdx.game.view.screen.MainMenuScreen;
 
 public enum Screens {
-    LOGIN_SCREEN,
-    MAIN_MENU_SCREEN;
+    LOGIN,
+    MAIN_MENU,
+    PROFILE_MENU,
+    GAME,
+    LEADER_MENU,
+    PRE_GAME_MENU,
+    FRIENDS,
+    REGISTER,
+    CHOOSE_SECURITY_QUESTION,
+    FORGOT_PASSWORD;
+    ;
     Screens() {}
     public Screen createScreen() {
         Screen screen = null;
         switch (this) {
-            case LOGIN_SCREEN :
+            case LOGIN:
                 screen = new LoginMenuScreen();
             break;
-            case MAIN_MENU_SCREEN :
+            case MAIN_MENU :
                 screen = new MainMenuScreen();
             break;
         }
