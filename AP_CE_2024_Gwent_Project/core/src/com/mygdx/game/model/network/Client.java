@@ -69,6 +69,8 @@ public class Client extends Thread{
         ServerResponse serverResponse = gson.fromJson(request , ServerResponse.class);
         switch (serverResponse.getType()) {
             case SIGN_IN_CONFIRM:
+                SignUpResponse confirm = gson.fromJson(request, SignUpResponse.class);
+                User
                 Gwent.singleton.changeScreen(Screens.CHOOSE_SECURITY_QUESTION);
                 break;
             case SIGN_IN_DENY:

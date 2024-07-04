@@ -22,6 +22,7 @@ import java.util.*;
 public class User {
     // static fields
     private static User loggedInUser;
+    private static User toBeSignedUp;
     private static ArrayList<User> users = new ArrayList<>();
 
     // instance fields
@@ -64,6 +65,14 @@ public class User {
     // static methods
     public static ArrayList<User> getUsers() {
         return users;
+    }
+
+    public static User getToBeSignedUp() {
+        return toBeSignedUp;
+    }
+
+    public static void setToBeSignedUp(User toBeSignedUp) {
+        User.toBeSignedUp = toBeSignedUp;
     }
 
     public static void setLoggedInUser(User user) {

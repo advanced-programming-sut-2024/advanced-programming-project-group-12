@@ -1,14 +1,14 @@
 package com.mygdx.game.model.network;
 
 import com.google.gson.Gson;
-import com.mygdx.game.controller.local.LoginMenuController;
 import com.mygdx.game.controller.remote.LoginHandler;
 import com.mygdx.game.controller.remote.RegisterHandler;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.LoginRequest;
-import com.mygdx.game.model.network.massage.serverResponse.LoginResponse;
+import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SecurityQuestionRequest;
+import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SignUpRequest;
 import com.mygdx.game.model.network.session.InvalidSessionException;
 import com.mygdx.game.model.network.session.SessionExpiredException;
 import com.mygdx.game.model.user.Player;
@@ -60,24 +60,23 @@ public class RequestHandler extends Thread {
                 Session session = ((PostSignInRequest)clientRequest).getSession();
                 user = Session.getUser(session);
             }
-            switch (clientRequest.getType()) {
-                case SIGN_IN:
-                    serverResponse = new RegisterHandler(request).handle(gson);
+            switch (clientRequest.getClass()) {
+                case SignUpRequest.class:
+                    serverResponse = new RegisterHandler(request).handleSignUp(gson);
                     break;
-                case LOGIN:
+                case SecurityQuestionRequest.class:
+                    serverResponse = new RegisterHandler(request).handleSecuritySetUp(gson);
+                    break;
+                case LoginRequest.class:
                     serverResponse = new LoginHandler(request, gson).handle();
                     break;
-                case ADD_TO_FRIEND:
-                    ;
-                case ACCEPT_FRIEND_REQUEST:
-                    ;
-                case START_GAME:
+                case StartGameRequest.class:
                     StartGameRequest startGameRequest = gson.fromJson(request, StartGameRequest.class);
                     User target = startGameRequest.getUserToBeInvited();
                     //AnswerUserInvite) target.sendMassage(new InviteUserToPlay(Session.getUser(startGameRequest.getSession())));
                     //serverResponse = new ServerResponse(answer.isAccept() ? ServerResponseType.CONFIRM : ServerResponseType.DENY, startGameRequest.getSession());
                     break;
-                case PLAY_CARD_REQUEST:
+                case PlayCardRequest.class:
                     PlayCardRequest playCardRequest = gson.fromJson(request, PlayCardRequest.class);
                     Player player = user.getPlayer();
                     AbstractCard abstractCard = playCardRequest.getCard();
