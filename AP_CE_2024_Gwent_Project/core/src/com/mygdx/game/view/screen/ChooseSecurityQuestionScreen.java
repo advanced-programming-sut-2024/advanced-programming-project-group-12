@@ -9,9 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.Gwent;
-import com.mygdx.game.controller.RegisterMenuController;
-import com.mygdx.game.controller.ScreenManager;
-import com.mygdx.game.model.SecurityQuestion;
+import com.mygdx.game.controller.local.RegisterMenuController;
+import com.mygdx.game.model.user.SecurityQuestion;
+import com.mygdx.game.view.Screens;
 
 public class ChooseSecurityQuestionScreen implements Screen {
     //
@@ -54,9 +54,9 @@ public class ChooseSecurityQuestionScreen implements Screen {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                RegisterMenuController.removeUser();
+                RegisterMenuController.abortSignUp();
                 dispose();
-                ScreenManager.setRegisterScreen();
+                Gwent.singleton.changeScreen(Screens.REGISTER);
             }
         });
         submitButton.addListener(new ClickListener() {
@@ -69,7 +69,7 @@ public class ChooseSecurityQuestionScreen implements Screen {
                 RegisterMenuController.setQuestionAndAnswerForUser(SecurityQuestion.getQuestionByString(securityQuestionSelectBox.getSelected()), answerField.getText());
                 showWelcomeMessage();
                 dispose();
-                ScreenManager.setLoginScreen();
+                Gwent.singleton.changeScreen(Screens.LOGIN);
             }
         });
     }
@@ -124,7 +124,7 @@ public class ChooseSecurityQuestionScreen implements Screen {
             public void run() {
                 welcomeDialog.hide();
                 dispose();
-                ScreenManager.setLoginScreen();
+                Gwent.singleton.changeScreen(Screens.LOGIN);
             }
         }, 3); // Delay in seconds
     }

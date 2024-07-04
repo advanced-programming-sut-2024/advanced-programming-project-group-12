@@ -3,15 +3,8 @@ package com.mygdx.game.model.actors;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.mygdx.game.controller.GameController;
-import com.mygdx.game.controller.ScreenManager;
-import com.mygdx.game.model.card.AbstractCard;
-import com.mygdx.game.view.screen.GameScreen;
+import com.mygdx.game.model.game.card.AbstractCard;
 
 public class CardActor extends Actor {
     private AbstractCard card;

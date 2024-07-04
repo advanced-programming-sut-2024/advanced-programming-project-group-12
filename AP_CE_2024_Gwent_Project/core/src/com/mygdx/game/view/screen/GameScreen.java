@@ -13,14 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
-import com.mygdx.game.controller.GameController;
-import com.mygdx.game.model.Action;
-import com.mygdx.game.model.Faction;
-import com.mygdx.game.model.Game;
-import com.mygdx.game.model.Player;
+import com.mygdx.game.controller.local.GameController;
+import com.mygdx.game.model.game.card.Action;
+import com.mygdx.game.model.game.Faction;
+import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.actors.*;
-import com.mygdx.game.model.card.AbstractCard;
-import com.mygdx.game.model.GameBoard;
+import com.mygdx.game.model.game.card.AbstractCard;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,8 +40,11 @@ public class GameScreen implements Screen {
     private PlayerInfoBox playerInfoBox;
     private PlayerInfoBox oppositionInfoBox;
     private Table playerDeck;
-
+    private final Player player;
+    private final Player opposition;
     public GameScreen() {
+        player = Client.getInstance().getUser().getPlayer();
+        opposition = Client.getInstance().getUser().getPlayer().getGame().getOpposition();
         stage = new Stage();
         background = new Texture("bg/board.jpg");
         passButton = new TextButton("Pass", Gwent.singleton.skin);
@@ -59,8 +62,8 @@ public class GameScreen implements Screen {
 
         displayLeaderCard();
         displayHand();
-        displayPlayerDeckStack(Game.getCurrentGame().getCurrentPlayer(), 97);
-        displayPlayerDeckStack(Game.getCurrentGame().getOpposition(), 785);
+        displayPlayerDeckStack(player, 97);
+        displayPlayerDeckStack(opposition, 785);
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -110,7 +113,7 @@ public class GameScreen implements Screen {
                     // Add the card to the weather box
                     weatherBox.add(selectedCardActor.getImage()).size(80, 110).expand().fill();
                     // Remove the card from the player's hand
-                    Game.getCurrentGame().getCurrentPlayer().getHand().remove(selectedCard);
+                    player.getHand().remove(selectedCard);
                     // Unselect the card
                     controller.setSelectedCard(null);
                     if (selectedCardActor != null) {
@@ -127,11 +130,11 @@ public class GameScreen implements Screen {
     }
 
     private void displayInfo() {
-        playerInfoBox = new PlayerInfoBox(Game.getCurrentGame().getCurrentPlayer().getHand().size(), Game.getCurrentGame().getCurrentPlayer().getUsername(),
-                Game.getCurrentGame().getCurrentPlayer().getFaction().toString());
+        playerInfoBox = new PlayerInfoBox(player.getHand().size(), player.getUsername(),
+                player.getFaction().toString());
         stage.addActor(playerInfoBox.getInfoTable());
-        oppositionInfoBox = new PlayerInfoBox(Game.getCurrentGame().getOpposition().getHand().size(), Game.getCurrentGame().getOpposition().getUsername(),
-                Game.getCurrentGame().getOpposition().getFaction().toString());
+        oppositionInfoBox = new PlayerInfoBox(opposition.getHand().size(), opposition.getUsername(),
+                opposition.getFaction().toString());
         stage.addActor(oppositionInfoBox.getInfoTable());
         playerInfoBox.setPosition(50, 260);
         oppositionInfoBox.setPosition(50, 610);
@@ -191,11 +194,11 @@ public class GameScreen implements Screen {
     }
 
     public void displayLeaderCard() {
-        CardActor leaderCard = new CardActor(Game.getCurrentGame().getCurrentPlayer().getLeader());
+        CardActor leaderCard = new CardActor(player.getLeader());
         leaderCard.getImage().setWidth((float) (leaderCard.getWidth() * 1.15));
         leaderCard.getImage().setPosition(115, 100);
         stage.addActor(leaderCard.getImage());
-        CardActor oppositeLeaderCard = new CardActor(Game.getCurrentGame().getOpposition().getLeader());
+        CardActor oppositeLeaderCard = new CardActor(player.getLeader());
         oppositeLeaderCard.getImage().setWidth((float) (oppositeLeaderCard.getWidth() * 1.15));
         oppositeLeaderCard.getImage().setPosition(115, 780);
         stage.addActor(oppositeLeaderCard.getImage());
@@ -283,7 +286,6 @@ public class GameScreen implements Screen {
 
     public void displayHand() {
 
-        Player player = Game.getCurrentGame().getCurrentPlayer();
         LinkedList<AbstractCard> handCards = player.getHand();
         hand = new HandTable(handCards);
         hand.addToStageAndAddListener(stage);
@@ -324,9 +326,6 @@ public class GameScreen implements Screen {
         // Get the card from the CardActor
         AbstractCard card = cardActor.getCard();
 
-        // Remove the card from the player's hand
-        Player currentPlayer = Game.getCurrentGame().getCurrentPlayer();
-        GameBoard gameBoard = Game.getCurrentGame().getGameBoard();
         controller.playCard(card, row.getRowNumber());
 
         // Unselect the card
@@ -339,7 +338,7 @@ public class GameScreen implements Screen {
         hand.clear();
         // Redraw the player's hand
         displayHand();
-        playerInfoBox.updatePlayerInfo(Game.getCurrentGame().getCurrentPlayer().getHand().size());
+        playerInfoBox.updatePlayerInfo(player.getHand().size());
     }
 
     private void playWeatherCard(CardActor card) {

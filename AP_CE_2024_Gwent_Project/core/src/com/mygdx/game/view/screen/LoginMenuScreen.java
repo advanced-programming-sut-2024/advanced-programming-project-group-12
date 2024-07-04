@@ -13,7 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.Gwent;
-import com.mygdx.game.controller.LoginMenuController;
+import com.mygdx.game.controller.local.LoginMenuController;
+import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.LoginRequest;
 
 public class LoginMenuScreen implements Screen {
     private Stage stage;
@@ -125,7 +127,7 @@ public class LoginMenuScreen implements Screen {
 
         stage.addActor(table);
     }
-    private void showError(String message) {
+    public void showError(String message) {
         errorDialog = new Dialog("Error", Gwent.singleton.getSkin());
         errorDialog.text(message);
         errorDialog.button("OK");
@@ -139,27 +141,8 @@ public class LoginMenuScreen implements Screen {
     }
     private void loginHandler() {
         String username = usernameField.getText();
-        //TODO : remove it after finilize the project
-        if(username.equals("admin")) {
-            LoginMenuController.Login(username);
-            LoginMenuController.goToMainMenu();
-        }
         String password = passwordField.getText();
-        if (username.isEmpty() || password.isEmpty()) {
-            showError("Please fill all fields");
-            return;
-        }
-        if(!LoginMenuController.doesThisUserExist(username)) {
-            showError("User does not exist");
-            return;
-        }
-        if(!LoginMenuController.doesThisPasswordMatch(username, password)) {
-            showError("Incorrect password");
-            return;
-        }
-        dispose();
-        LoginMenuController.Login(username);
-        LoginMenuController.goToMainMenu();
+        Client.getInstance().sendMassage(new LoginRequest(username, password));
     }
     private void forgotPasswordHandler() {
         String username = usernameField.getText();

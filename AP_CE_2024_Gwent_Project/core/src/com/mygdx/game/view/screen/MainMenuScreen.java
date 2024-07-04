@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
-import com.mygdx.game.controller.MainMenuController;
+import com.mygdx.game.controller.local.MainMenuController;
 
 public class MainMenuScreen implements Screen {
     private static final float FIELD_WIDTH = 400;

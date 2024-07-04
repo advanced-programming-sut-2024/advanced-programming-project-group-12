@@ -10,11 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.Gwent;
-import com.mygdx.game.controller.RegisterMenuController;
-import com.mygdx.game.controller.ScreenManager;
-import com.mygdx.game.model.SecurityQuestion;
+import com.mygdx.game.controller.local.RegisterMenuController;
+import com.mygdx.game.view.Screens;
+import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SignUpRequest;
 
 
 public class RegisterMenuScreen implements Screen {
@@ -77,7 +77,7 @@ public class RegisterMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 dispose();
-                ScreenManager.setLoginScreen();
+                Gwent.singleton.changeScreen(Screens.LOGIN);
             }
         });
         registerButton.addListener(new ClickListener() {
@@ -190,29 +190,23 @@ public class RegisterMenuScreen implements Screen {
     private void registerHandler(String username, String nickname, String password, String confirmPassword, String email) {
         if(username.isEmpty() || nickname.isEmpty() || password.isEmpty() ||
                 confirmPassword.isEmpty() || email.isEmpty()) {
-            showError("Please fill all fields");
+            showError("Please fill all fields", null);
             return;
         } else if(!RegisterMenuController.isUsernameValid(username)) {
-            showError("Invalid username");
+            showError("Invalid username", null);
             return;
         } else if(!RegisterMenuController.isPasswordValid(password, confirmPassword).equals("Valid password")) {
-            showError(RegisterMenuController.isPasswordValid(password, confirmPassword));
+            showError(RegisterMenuController.isPasswordValid(password, confirmPassword), null);
             return;
         } else if(!RegisterMenuController.isEmailValid(email)) {
-            showError("Invalid email");
+            showError("Invalid email", null);
             return;
         } else if(!password.equals(confirmPassword)) {
-            showError("Passwords do not match");
-            return;
-        } else if(RegisterMenuController.isUsernameTaken(username)) {
-            String newUsername = RegisterMenuController.generateNewUsername(username);
-            showError("this username is already taken\n you can choose this username: " + newUsername + " instead");
-            usernameField.setText(newUsername);
-
+            showError("Passwords do not match", null);
             return;
         }else {
-            RegisterMenuController.register(username, nickname, password, email);
-            ScreenManager.setChooseSecurityQuestionScreen();
+            Client.getInstance().sendMassage(new SignUpRequest(username, password, nickname, email));
+            Gwent.singleton.changeScreen(Screens.CHOOSE_SECURITY_QUESTION);
         }
     }
     private void clearFields() {
@@ -222,7 +216,13 @@ public class RegisterMenuScreen implements Screen {
         confirmPasswordField.setText("");
         emailField.setText("");
     }
-    private void showError(String message) {
+    public void showError(String message, String oldUsername) {
+        if(oldUsername != null) {
+            String newUsername = RegisterMenuController.generateNewUsername(oldUsername);
+            usernameField.setText(newUsername);
+            message = "this username is already taken, \n you can choose " +newUsername+" instead.";
+        }
+
         errorWindow = new Window("Error", Gwent.singleton.getSkin());
         errorWindow.setMovable(false);
         errorWindow.setColor(Color.RED);

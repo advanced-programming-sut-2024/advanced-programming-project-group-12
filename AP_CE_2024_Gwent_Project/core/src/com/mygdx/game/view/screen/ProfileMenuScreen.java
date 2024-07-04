@@ -11,9 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
-import com.mygdx.game.controller.ProfileMenuController;
-import com.mygdx.game.controller.ScreenManager;
-import com.mygdx.game.model.User;
+import com.mygdx.game.controller.local.ProfileMenuController;
+import com.mygdx.game.view.Screens;
 
 import java.util.ArrayList;
 
@@ -186,7 +185,7 @@ public class ProfileMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 dispose();
-                ScreenManager.setMainMenuScreen();
+                Gwent.singleton.changeScreen(Screens.MAIN_MENU);
             }
         });
 
@@ -195,7 +194,7 @@ public class ProfileMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 controller.logout();
                 dispose();
-                ScreenManager.setLoginScreen();
+                Gwent.singleton.changeScreen(Screens.LOGIN);
             }
         });
 
@@ -203,7 +202,7 @@ public class ProfileMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 dispose();
-                ScreenManager.setFriendsScreen();
+                Gwent.singleton.changeScreen(Screens.FRIENDS);
             }
         });
     }
