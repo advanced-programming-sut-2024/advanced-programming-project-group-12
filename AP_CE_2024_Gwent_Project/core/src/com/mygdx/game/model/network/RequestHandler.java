@@ -1,8 +1,7 @@
 package com.mygdx.game.model.network;
 
 import com.google.gson.Gson;
-import com.mygdx.game.controller.remote.LoginHandler;
-import com.mygdx.game.controller.remote.RegisterHandler;
+import com.mygdx.game.controller.remote.*;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
@@ -18,8 +17,12 @@ import com.mygdx.game.model.network.massage.serverResponse.ServerResponseType;
 import com.mygdx.game.model.network.session.Session;
 
 import java.io.*;
+import java.util.HashMap;
 
 public class RequestHandler extends Thread {
+    public static HashMap<User, RequestHandler> allUsers = new HashMap<>();
+
+
     private Server server;
     private String request;
     private Gson gson;
@@ -28,6 +31,10 @@ public class RequestHandler extends Thread {
     public RequestHandler(Server server, Gson gson) {
         this.server = server;
         this.gson = gson;
+    }
+
+    public void setUser(User user) {
+        allUsers.put(user, this);
     }
 
     public void setDataOutputStream(DataOutputStream dataOutputStream) {
@@ -71,17 +78,16 @@ public class RequestHandler extends Thread {
                     serverResponse = new RegisterHandler(request).handleSecurityQuestion(gson);
                     break;
                 case LOGIN:
-                    serverResponse = new LoginHandler(request, gson).handle();
+                    serverResponse = new LoginHandler(request, gson).handle(this);
                     break;
-                case ADD_TO_FRIEND:
-                    ;
-                case ACCEPT_FRIEND_REQUEST:
-                    ;
+                case FRIEND_REQUEST:
+                    new FriendRequestHandler(request, gson).handle();
+                    break;
                 case START_GAME:
-                    StartGameRequest startGameRequest = gson.fromJson(request, StartGameRequest.class);
-                    User target = startGameRequest.getUserToBeInvited();
-                    //AnswerUserInvite) target.sendMassage(new InviteUserToPlay(Session.getUser(startGameRequest.getSession())));
-                    //serverResponse = new ServerResponse(answer.isAccept() ? ServerResponseType.CONFIRM : ServerResponseType.DENY, startGameRequest.getSession());
+                   new InviteHandler(request, gson).handle();
+                   break;
+                case INVITE_ANSWER:
+                    new InviteResponseHandler(request, gson).handle();
                     break;
                 case PLAY_CARD_REQUEST:
                     PlayCardRequest playCardRequest = gson.fromJson(request, PlayCardRequest.class);
@@ -102,7 +108,7 @@ public class RequestHandler extends Thread {
         }
     }
 
-    private void sendMassage(ServerResponse massage) {
+    public void sendMassage(ServerResponse massage) {
         //perhaps wait for response
         try {
             dataOutputStream.writeUTF(gson.toJson(massage));

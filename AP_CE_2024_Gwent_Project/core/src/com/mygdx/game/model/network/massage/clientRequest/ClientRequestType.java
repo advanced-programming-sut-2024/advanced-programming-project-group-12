@@ -10,6 +10,6 @@ public enum ClientRequestType {
     FRIEND_REQUEST,
 
     PLAY_CARD_REQUEST,
-    START_GAME
+    INVITE_ANSWER, START_GAME
 
 }

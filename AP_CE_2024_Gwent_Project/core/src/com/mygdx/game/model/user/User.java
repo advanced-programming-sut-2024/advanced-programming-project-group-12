@@ -6,6 +6,7 @@ import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.AllCards;
 import com.mygdx.game.model.game.card.CommanderCards;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ClientFriendRequest;
 import com.mygdx.game.model.network.massage.serverResponse.preGameRosponse.InviteUserToPlay;
 
 import java.io.File;
@@ -295,5 +296,19 @@ public class User {
 
     public void sendMassage(InviteUserToPlay inviteUserToPlay) {
         return ;
+    }
+
+
+    //todo; my dear Ali <3
+    public void addFriendRequest() {
+        //todo
+    }
+
+    public void requestAccepted(ClientFriendRequest friendRequest) {
+        //todo
+    }
+
+    public void requestRejected(ClientFriendRequest friendRequest) {
+        //todo
     }
 }

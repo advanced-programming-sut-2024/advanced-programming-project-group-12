@@ -1,5 +1,6 @@
 package com.mygdx.game.model.network.massage.clientRequest.postSignInRequest;
 
+import com.mygdx.game.model.network.RequestHandler;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequestType;
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.model.network.session.Session;
@@ -7,8 +8,8 @@ import com.mygdx.game.model.network.session.Session;
 public class StartGameRequest extends PostSignInRequest{
     private User toBeInvited;
 
-    public StartGameRequest(ClientRequestType type, Session session, User toBeInvited) {
-        super(type, session);
+    public StartGameRequest(Session session, User toBeInvited) {
+        super(ClientRequestType.START_GAME, session);
         this.toBeInvited = toBeInvited;
     }
 

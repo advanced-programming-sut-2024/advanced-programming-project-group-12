@@ -91,7 +91,7 @@ public class Client extends Thread{
                 LoginResponse loginResponseDeny = gson.fromJson(request, LoginResponse.class);
                 ((LoginMenuScreen)Gwent.singleton.getCurrentScreen()).showError(loginResponseDeny.getError());
                 break;
-            case FRIEND_REQUEST_ACCEPT:
+            case FRIEND_REQUEST:
                 /* TODO
 //                FriendRequest friendRequest
                  */

@@ -28,6 +28,7 @@ public class FriendsController {
 //            user.save();
 //            request.getFromUser().save();
 //        }
+        //add the guy as friend locally here
         request.setStatus("accepted");
         Client.getInstance().sendMassage(new ClientFriendRequest(request));
     }

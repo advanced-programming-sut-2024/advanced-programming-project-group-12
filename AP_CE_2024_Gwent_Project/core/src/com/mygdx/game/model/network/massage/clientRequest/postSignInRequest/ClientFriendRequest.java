@@ -9,4 +9,8 @@ public class ClientFriendRequest extends PostSignInRequest {
         super(ClientRequestType.FRIEND_REQUEST, null);
         this.friendRequest = friendRequest;
     }
+
+    public FriendRequest getFriendRequest() {
+        return friendRequest;
+    }
 }
