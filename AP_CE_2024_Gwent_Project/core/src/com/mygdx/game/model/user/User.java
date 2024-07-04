@@ -278,6 +278,9 @@ public class User {
     public ArrayList<FriendRequest> getReceivedFriendRequests() {
         return receivedFriendRequests;
     }
+    public void setReceivedFriendRequests(ArrayList<FriendRequest> receivedFriendRequests) {
+        this.receivedFriendRequests = receivedFriendRequests;
+    }
 
     public ArrayList<FriendRequest> getSentFriendRequests() {
         return sentFriendRequests;
@@ -310,6 +313,4 @@ public class User {
     public void requestRejected(FriendRequest friendRequest) {
         friendRequest.setStatus("rejected");
     }
-
-
 }

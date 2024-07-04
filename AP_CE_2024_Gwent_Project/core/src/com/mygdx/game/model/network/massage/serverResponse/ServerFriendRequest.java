@@ -12,4 +12,8 @@ public class ServerFriendRequest extends ServerResponse{
         super(ServerResponseType.FRIEND_REQUEST, null);
         this.requests = requests;
     }
+
+    public ArrayList<FriendRequest> getRequests() {
+        return requests;
+    }
 }

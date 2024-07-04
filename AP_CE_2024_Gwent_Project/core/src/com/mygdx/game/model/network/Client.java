@@ -3,13 +3,10 @@ package com.mygdx.game.model.network;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
-import com.mygdx.game.model.network.massage.serverResponse.ChangeMenuResponse;
+import com.mygdx.game.model.network.massage.serverResponse.*;
 import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.view.Screens;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
-import com.mygdx.game.model.network.massage.serverResponse.LoginResponse;
-import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
-import com.mygdx.game.model.network.massage.serverResponse.SignUpResponse;
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.view.screen.ChooseSecurityQuestionScreen;
 import com.mygdx.game.view.screen.LoginMenuScreen;
@@ -100,12 +97,14 @@ public class Client extends Thread{
                 Gwent.singleton.changeScreen(Screens.MAIN_MENU);
                 break;
             case LOGIN_DENY:
-                System.out.println("login deny");
                 LoginResponse loginResponseDeny = gson.fromJson(request, LoginResponse.class);
                 ((LoginMenuScreen)Gwent.singleton.getCurrentScreen()).showError(loginResponseDeny.getError());
                 break;
             case FRIEND_REQUEST:
-
+                ServerFriendRequest serverFriendRequest = gson.fromJson(request, ServerFriendRequest.class);
+                User.getLoggedInUser().setReceivedFriendRequests(serverFriendRequest.getRequests());
+                //let friends screen know they can proceed
+                break;
 
         }
     }
