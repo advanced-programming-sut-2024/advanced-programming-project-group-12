@@ -10,10 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.RegisterMenuController;
-import com.mygdx.game.controller.ScreenManager;
+import com.mygdx.game.view.Screens;
 
 public class RegisterMenuScreen implements Screen {
     private static final float FIELD_WIDTH = 400;
@@ -75,7 +74,7 @@ public class RegisterMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 dispose();
-                ScreenManager.setLoginScreen();
+                Gwent.singleton.changeScreen(Screens.LOGIN);
             }
         });
         registerButton.addListener(new ClickListener() {
@@ -210,7 +209,7 @@ public class RegisterMenuScreen implements Screen {
             return;
         }else {
             RegisterMenuController.register(username, nickname, password, email);
-            ScreenManager.setChooseSecurityQuestionScreen();
+            Gwent.singleton.changeScreen(Screens.CHOOSE_SECURITY_QUESTION);
         }
     }
     private void clearFields() {

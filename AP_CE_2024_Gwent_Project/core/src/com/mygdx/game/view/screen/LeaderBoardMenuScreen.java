@@ -14,12 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.LeaderBoardMenuController;
-import com.mygdx.game.controller.ScreenManager;
 import com.mygdx.game.model.user.User;
+import com.mygdx.game.view.Screens;
 
 import java.util.List;
 
@@ -63,7 +62,7 @@ public class LeaderBoardMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 dispose();
-                ScreenManager.setMainMenuScreen();
+                Gwent.singleton.changeScreen(Screens.MAIN_MENU);
             }
         });
     }

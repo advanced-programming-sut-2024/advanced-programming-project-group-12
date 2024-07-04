@@ -1,5 +1,6 @@
 package com.mygdx.game.controller;
 
+import com.mygdx.game.Gwent;
 import com.mygdx.game.model.game.card.AllCards;
 import com.mygdx.game.model.game.card.CommanderCard;
 import com.mygdx.game.model.game.card.AbstractCard;
@@ -11,6 +12,7 @@ import com.mygdx.game.model.user.User;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mygdx.game.view.Screens;
 
 import javax.swing.*;
 import java.io.FileReader;
@@ -24,7 +26,7 @@ public class PreGameMenuController {
     User user = User.getLoggedInUser();
 
     public void gotoMainMenu() {
-        ScreenManager.setMainMenuScreen();
+        Gwent.singleton.changeScreen(Screens.MAIN_MENU);
     }
 
     public void startGame() {
@@ -39,7 +41,7 @@ public class PreGameMenuController {
         new Game(player, player);
 
 
-        ScreenManager.setGameScreen();
+        Gwent.singleton.changeScreen(Screens.GAME);
     }
 
     public void setFaction(String factionName) {

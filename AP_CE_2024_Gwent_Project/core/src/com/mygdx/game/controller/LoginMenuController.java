@@ -1,8 +1,10 @@
 package com.mygdx.game.controller;
 
 
+import com.mygdx.game.Gwent;
 import com.mygdx.game.model.user.SecurityQuestion;
 import com.mygdx.game.model.user.User;
+import com.mygdx.game.view.Screens;
 
 import java.util.Objects;
 
@@ -12,14 +14,14 @@ public class LoginMenuController {
         User.setLoggedInUser(User.getUserByUsername(username));
     }
     public static void goToRegisterMenu() {
-        ScreenManager.setRegisterScreen();
+        Gwent.singleton.changeScreen(Screens.REGISTER);
     }
 
     public static void goToMainMenu() {
-        ScreenManager.setMainMenuScreen();
+        Gwent.singleton.changeScreen(Screens.MAIN_MENU);
     }
     public static void goToForgotPasswordScreen() {
-        ScreenManager.setForgotPasswordScreen();
+        Gwent.singleton.changeScreen(Screens.FORGET_PASSWORD);
     }
     public static boolean doesThisUserExist(String username) {
         return User.getUserByUsername(username) != null;

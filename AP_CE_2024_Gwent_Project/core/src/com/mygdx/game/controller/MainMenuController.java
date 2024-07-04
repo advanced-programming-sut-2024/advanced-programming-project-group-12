@@ -2,6 +2,7 @@ package com.mygdx.game.controller;
 
 
 import com.mygdx.game.Gwent;
+import com.mygdx.game.view.Screens;
 import com.mygdx.game.view.screen.GameScreen;
 import com.mygdx.game.view.screen.ProfileMenuScreen;
 
@@ -10,16 +11,17 @@ public class MainMenuController {
 
 
     public void startGame() {
-        ScreenManager.setPreGameMenuScreen();
+        Gwent.singleton.changeScreen(Screens.PRE_GAME_MENU);
     }
 
 
     public void showProfile() {
-        ScreenManager.setProfileMenuScreen();
+        Gwent.singleton.changeScreen(Screens.PROFILE_MENU);
     }
 
     public void exit() { System.exit(0); }
 
     public void showLeaderBoard() {
-        ScreenManager.setLeaderBoardScreen();}
+        Gwent.singleton.changeScreen(Screens.LEADER_BOARD_MENU);
+    }
 }

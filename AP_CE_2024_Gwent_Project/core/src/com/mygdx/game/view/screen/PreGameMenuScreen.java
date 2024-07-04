@@ -12,13 +12,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.PreGameMenuController;
-import com.mygdx.game.controller.ScreenManager;
 import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.AllCards;
 import com.mygdx.game.model.game.card.CommanderCards;
 import com.mygdx.game.model.game.card.Hero;
+import com.mygdx.game.view.Screens;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -390,7 +390,7 @@ public class PreGameMenuScreen implements Screen {
         saveDeckButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 saveDeck();
-                ScreenManager.setPreGameMenuScreen();
+                Gwent.singleton.changeScreen(Screens.PRE_GAME_MENU);
             }
         });
         downloadDeckButton.addListener(new ClickListener() {
