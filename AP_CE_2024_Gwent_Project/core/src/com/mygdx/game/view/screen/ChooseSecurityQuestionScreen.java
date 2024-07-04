@@ -55,8 +55,7 @@ public class ChooseSecurityQuestionScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 RegisterMenuController.abortSignUp();
-                dispose();
-                Gwent.singleton.changeScreen(Screens.REGISTER);
+             //   Gwent.singleton.changeScreen(Screens.REGISTER);
             }
         });
         submitButton.addListener(new ClickListener() {
@@ -68,8 +67,7 @@ public class ChooseSecurityQuestionScreen implements Screen {
                 }
                 RegisterMenuController.setQuestionAndAnswerForUser(SecurityQuestion.getQuestionByString(securityQuestionSelectBox.getSelected()), answerField.getText());
                 showWelcomeMessage();
-                dispose();
-                Gwent.singleton.changeScreen(Screens.LOGIN);
+                //Gwent.singleton.changeScreen(Screens.LOGIN);
             }
         });
     }
@@ -108,7 +106,6 @@ public class ChooseSecurityQuestionScreen implements Screen {
     @Override
     public void dispose() {
         stage.clear();
-//        stage.dispose();
     }
 
     private void showWelcomeMessage() {
@@ -123,7 +120,7 @@ public class ChooseSecurityQuestionScreen implements Screen {
             @Override
             public void run() {
                 welcomeDialog.hide();
-                dispose();
+
                 Gwent.singleton.changeScreen(Screens.LOGIN);
             }
         }, 3); // Delay in seconds
