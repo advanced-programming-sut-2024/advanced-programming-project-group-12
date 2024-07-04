@@ -3,6 +3,8 @@ package com.mygdx.game.model.network;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
+import com.mygdx.game.model.FriendRequest;
+import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.view.Screens;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
@@ -23,6 +25,7 @@ public class Client extends Thread{
     private Gson gson;
     private User user;
     private String request;
+    private Session session;
 
     public Client() {
         clientListener = new ClientListener(this);
@@ -70,7 +73,7 @@ public class Client extends Thread{
         switch (serverResponse.getType()) {
             case SIGN_IN_CONFIRM:
                 SignUpResponse confirm = gson.fromJson(request, SignUpResponse.class);
-                User
+//                User
                 Gwent.singleton.changeScreen(Screens.CHOOSE_SECURITY_QUESTION);
                 break;
             case SIGN_IN_DENY:
@@ -88,6 +91,10 @@ public class Client extends Thread{
                 LoginResponse loginResponseDeny = gson.fromJson(request, LoginResponse.class);
                 ((LoginMenuScreen)Gwent.singleton.getCurrentScreen()).showError(loginResponseDeny.getError());
                 break;
+            case FRIEND_REQUEST_ACCEPT:
+                /* TODO
+//                FriendRequest friendRequest
+                 */
 
 
         }
