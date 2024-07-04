@@ -1,9 +1,10 @@
 package com.mygdx.game.model.network.massage.clientRequest.postSignInRequest;
 
+import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequestType;
 import com.mygdx.game.model.network.session.Session;
 
-public class AnswerUserInvite extends PostSignInRequest{
+public class AnswerUserInvite extends ClientRequest {
     private boolean accept;
     public AnswerUserInvite(ClientRequestType type, Session session) {
         super(type, session);

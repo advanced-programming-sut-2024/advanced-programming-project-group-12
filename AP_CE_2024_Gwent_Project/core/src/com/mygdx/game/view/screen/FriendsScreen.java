@@ -58,6 +58,7 @@ public class FriendsScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 String username = searchField.getText();
+                //put this to server side shit
                 User user = User.getUserByUsername(username);
                 table.clear();
                 table.add(searchField).width(300).padRight(100);

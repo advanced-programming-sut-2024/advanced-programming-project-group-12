@@ -6,7 +6,7 @@ import java.lang.reflect.Executable;
 
 public class ServerResponse {
     private ServerResponseType type;
-    Session session;
+    private Session session;
 
     public ServerResponse(ServerResponseType type, Session session) {
         this.type = type;
@@ -19,5 +19,9 @@ public class ServerResponse {
 
     public void setSession(Session session) {
         this.session = session;
+    }
+
+    public Session getSession() {
+        return session;
     }
 }

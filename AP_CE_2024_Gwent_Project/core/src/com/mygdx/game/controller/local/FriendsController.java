@@ -19,27 +19,18 @@ public class FriendsController {
     }
 
     public void acceptFriendRequest(User user, FriendRequest request) {
-
-//        if (user.getReceivedFriendRequests().remove(request)) {
-//            user.getFriends().add(request.getFromUser());
-//            request.getFromUser().getFriends().add(user);
-//            request.getFromUser().getSentFriendRequests().remove(request);
-//            request.setStatus("accepted");
-//            user.save();
-//            request.getFromUser().save();
-//        }
         //add the guy as friend locally here
         request.setStatus("accepted");
         Client.getInstance().sendMassage(new ClientFriendRequest(request));
     }
 
     public void rejectFriendRequest(User user, FriendRequest request) {
-        if (user.getReceivedFriendRequests().remove(request)) {
-            request.getFromUser().getSentFriendRequests().remove(request);
-            request.setStatus("rejected");
-            user.save();
-            request.getFromUser().save();
-        }
+//        if (user.getReceivedFriendRequests().remove(request)) {
+//            request.getFromUser().getSentFriendRequests().remove(request);
+//            request.setStatus("rejected");
+//            user.save();
+//            request.getFromUser().save();
+//        }
         request.setStatus("rejected");
         Client.getInstance().sendMassage(new ClientFriendRequest(request));
     }

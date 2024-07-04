@@ -30,18 +30,22 @@ public class RegisterHandler {
     }
 
     static boolean isUsernameTaken(String username) {
-        //todo
-        return false;
+        return User.getUserByUsername(username) != null;
     }
 
     public SecurityQuestionResponse handleAbort(Gson gson) {
         SecurityQuestionRequest req = gson.fromJson(request, SecurityQuestionRequest.class);
-        return new SecurityQuestionResponse(ServerResponseType.CONFIRM);
+        deleteUser(req.getUser());
+        return null;
     }
 
     public SecurityQuestionResponse handleSecurityQuestion(Gson gson) {
         SecurityQuestionRequest req = gson.fromJson(request, SecurityQuestionRequest.class);
         req.getUser().setSecurityQuestion(req.getQuestion(), req.getAnswer());
         return new SecurityQuestionResponse(ServerResponseType.SECURITY_QUESTION_SET);
+    }
+
+    private void deleteUser(User user) {
+        //todo
     }
 }

@@ -1,10 +1,11 @@
 package com.mygdx.game.model.network.massage.clientRequest.postSignInRequest;
 
+import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequestType;
 import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.model.user.User;
 
-public class ClientInviteResponse extends PostSignInRequest{
+public class ClientInviteResponse extends ClientRequest {
     private User invitor;
     private String response;
 

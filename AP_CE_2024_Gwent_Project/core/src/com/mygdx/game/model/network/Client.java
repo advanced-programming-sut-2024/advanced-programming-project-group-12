@@ -11,6 +11,7 @@ import com.mygdx.game.model.network.massage.serverResponse.LoginResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.SignUpResponse;
 import com.mygdx.game.model.user.User;
+import com.mygdx.game.view.screen.ChooseSecurityQuestionScreen;
 import com.mygdx.game.view.screen.LoginMenuScreen;
 import com.mygdx.game.view.screen.RegisterMenuScreen;
 
@@ -71,6 +72,8 @@ public class Client extends Thread{
         ServerResponse serverResponse = gson.fromJson(request , ServerResponse.class);
         if(serverResponse == null) return;
 
+        session = serverResponse.getSession();
+
         switch (serverResponse.getType()) {
             case CHANGE_SCREEN:
                 ChangeMenuResponse changeMenuResponse = gson.fromJson(request, ChangeMenuResponse.class);
@@ -78,17 +81,21 @@ public class Client extends Thread{
                 break;
             case SIGN_IN_CONFIRM:
                 SignUpResponse confirm = gson.fromJson(request, SignUpResponse.class);
-//                User
+                User.setToBeSignedUp(confirm.getUser());
                 Gwent.singleton.changeScreen(Screens.CHOOSE_SECURITY_QUESTION);
                 break;
             case SIGN_IN_DENY:
                 SignUpResponse deny = gson.fromJson(request, SignUpResponse.class);
                 ((RegisterMenuScreen) Gwent.singleton.getCurrentScreen()).showError(deny.getError(), deny.getUsername());
                 break;
+            case SECURITY_QUESTION_SET:
+                ((ChooseSecurityQuestionScreen) Gwent.singleton.getCurrentScreen()).showWelcomeMessage();
+                User.setToBeSignedUp(null);
+                Gwent.singleton.changeScreen(Screens.LOGIN);
+                break;
             case LOGIN_CONFIRM :
                 LoginResponse loginResponseAccept = gson.fromJson(request, LoginResponse.class);
                 user = loginResponseAccept.getUser();
-                User.setLoggedInUser(user);
                 Gwent.singleton.changeScreen(Screens.MAIN_MENU);
                 break;
             case LOGIN_DENY:
@@ -97,9 +104,7 @@ public class Client extends Thread{
                 ((LoginMenuScreen)Gwent.singleton.getCurrentScreen()).showError(loginResponseDeny.getError());
                 break;
             case FRIEND_REQUEST:
-                /* TODO
-//                FriendRequest friendRequest
-                 */
+
 
         }
     }

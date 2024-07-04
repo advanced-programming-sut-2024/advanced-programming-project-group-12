@@ -6,6 +6,7 @@ import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.Clie
 import com.mygdx.game.model.network.massage.serverResponse.ServerFriendRequest;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponseType;
 import com.mygdx.game.model.network.session.Session;
+import com.mygdx.game.model.user.User;
 
 public class FriendRequestHandler {
     private String request;
@@ -16,14 +17,22 @@ public class FriendRequestHandler {
         this.gson = gson;
     }
 
-    public ServerFriendRequest handle() {
+    public void handleSendingRequest() {
         ClientFriendRequest friendRequest = gson.fromJson(request, ClientFriendRequest.class);
         if(friendRequest.getFriendRequest().getStatus().equals("pending")) {
             friendRequest.getFriendRequest().getToUser().addFriendRequest();
         }
         else if(friendRequest.getFriendRequest().getStatus().equals("accepted")){
-            friendRequest.getFriendRequest().getToUser().requestAccepted(friendRequest);
+            //toUser is the user who has initially sent the request
+            friendRequest.getFriendRequest().getFromUser().requestAccepted(friendRequest);
         }
-        return null;
+        else if(friendRequest.getFriendRequest().getStatus().equals("rejected")){
+            friendRequest.getFriendRequest().getFromUser().requestRejected(friendRequest);
+        }
+    }
+
+    public ServerFriendRequest getPendingRequests(User user) {
+        User.getUserByUsername(user.getUsername());
+        return new ServerFriendRequest(user.getReceivedFriendRequests());
     }
 }

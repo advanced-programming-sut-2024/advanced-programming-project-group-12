@@ -1,10 +1,11 @@
 package com.mygdx.game.model.network.massage.clientRequest.preSignInRequest;
 
+import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequestType;
 import com.mygdx.game.model.user.SecurityQuestion;
 import com.mygdx.game.model.user.User;
 
-public class SecurityQuestionRequest extends PreSignInRequest{
+public class SecurityQuestionRequest extends ClientRequest {
     private User user;
     private SecurityQuestion question;
     private String answer;

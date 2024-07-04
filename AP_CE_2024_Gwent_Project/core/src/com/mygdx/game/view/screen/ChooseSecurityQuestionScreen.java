@@ -10,7 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.RegisterMenuController;
+import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SecurityQuestionRequest;
 import com.mygdx.game.model.user.SecurityQuestion;
+import com.mygdx.game.model.user.User;
 import com.mygdx.game.view.Screens;
 
 public class ChooseSecurityQuestionScreen implements Screen {
@@ -55,7 +58,6 @@ public class ChooseSecurityQuestionScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 RegisterMenuController.abortSignUp();
-             //   Gwent.singleton.changeScreen(Screens.REGISTER);
             }
         });
         submitButton.addListener(new ClickListener() {
@@ -65,9 +67,7 @@ public class ChooseSecurityQuestionScreen implements Screen {
                     showError("please enter your answer");
                     return;
                 }
-                RegisterMenuController.setQuestionAndAnswerForUser(SecurityQuestion.getQuestionByString(securityQuestionSelectBox.getSelected()), answerField.getText());
-                showWelcomeMessage();
-                //Gwent.singleton.changeScreen(Screens.LOGIN);
+                Client.getInstance().sendMassage(new SecurityQuestionRequest(User.getToBeSignedUp() ,SecurityQuestion.getQuestionByString(securityQuestionSelectBox.getSelected()), answerField.getText()));
             }
         });
     }
@@ -108,7 +108,7 @@ public class ChooseSecurityQuestionScreen implements Screen {
         stage.clear();
     }
 
-    private void showWelcomeMessage() {
+    public void showWelcomeMessage() {
         // Show submit message
         welcomeDialog = new Dialog("Welcome", Gwent.singleton.getSkin());
         welcomeDialog.setSize(800, 400);

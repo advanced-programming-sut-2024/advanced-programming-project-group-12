@@ -4,11 +4,11 @@ import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.model.user.User;
 
 public class SignUpResponse extends ServerResponse{
-    User user;
+    private User user;
     private String error;
     private String username;
     public SignUpResponse(User user) {
-        super(ServerResponseType.CONFIRM, null);
+        super(ServerResponseType.SIGN_IN_CONFIRM, null);
         this.user = user;
     }
     public SignUpResponse(String error, String username) {
@@ -23,5 +23,9 @@ public class SignUpResponse extends ServerResponse{
 
     public String getUsername() {
         return username;
+    }
+
+    public User getUser() {
+        return user;
     }
 }

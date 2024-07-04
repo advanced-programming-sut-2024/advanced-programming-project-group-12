@@ -64,11 +64,12 @@ public class RequestHandler extends Thread {
         ClientRequest clientRequest = gson.fromJson(request, ClientRequest.class);
         ServerResponse serverResponse = null;
         try {
+            Session session = clientRequest.getSession();
             User user = null;
-            if(clientRequest instanceof PostSignInRequest){
-                Session session = ((PostSignInRequest)clientRequest).getSession();
+            if(session != null) {
                 user = Session.getUser(session);
             }
+
             switch (clientRequest.getType()) {
                 case CHANGE_MENU:
                     ChangeMenuRequest changeMenuRequest = gson.fromJson(request, ChangeMenuRequest.class);
@@ -87,7 +88,10 @@ public class RequestHandler extends Thread {
                     serverResponse = new LoginHandler(request, gson).handle(this);
                     break;
                 case FRIEND_REQUEST:
-                    new FriendRequestHandler(request, gson).handle();
+                    new FriendRequestHandler(request, gson).handleSendingRequest();
+                    break;
+                case GET_FRIEND_REQUESTS:
+                    serverResponse = new FriendRequestHandler(request, gson).getPendingRequests(user);
                     break;
                 case START_GAME:
                    new InviteHandler(request, gson).handle();
@@ -102,12 +106,18 @@ public class RequestHandler extends Thread {
                     serverResponse = abstractCard.place(playCardRequest.getRow(), player);
                     break;
             }
+
+            if(serverResponse != null) {
+                serverResponse.setSession(session.renewSession());
+            }
+
         } catch (SessionExpiredException | InvalidSessionException e) {
             serverResponse = new ServerResponse(ServerResponseType.DENY, null);
         }
 
-        try {
 
+        try {
+            System.out.println(gson.toJson(serverResponse));
             dataOutputStream.writeUTF(gson.toJson(serverResponse));
         } catch (IOException e) {
             System.err.println("IO exception in request handler");
