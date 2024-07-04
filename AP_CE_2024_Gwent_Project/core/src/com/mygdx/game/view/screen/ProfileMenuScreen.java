@@ -184,7 +184,6 @@ public class ProfileMenuScreen implements Screen {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                dispose();
                 Gwent.singleton.changeScreen(Screens.MAIN_MENU);
             }
         });
@@ -193,7 +192,6 @@ public class ProfileMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 controller.logout();
-                dispose();
                 Gwent.singleton.changeScreen(Screens.LOGIN);
             }
         });
@@ -201,7 +199,6 @@ public class ProfileMenuScreen implements Screen {
         friendsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                dispose();
                 Gwent.singleton.changeScreen(Screens.FRIENDS);
             }
         });

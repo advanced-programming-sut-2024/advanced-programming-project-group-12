@@ -20,7 +20,7 @@ public class LoginMenuController {
     }
 
     public static void goToForgotPasswordScreen() {
-        Gwent.singleton.changeScreen(Screens.FORGET_PASSWORD);
+        //Gwent.singleton.changeScreen(Screens.FORGET_PASSWORD);
     }
     public static boolean doesThisUserExist(String username) {
         return User.getUserByUsername(username) != null;

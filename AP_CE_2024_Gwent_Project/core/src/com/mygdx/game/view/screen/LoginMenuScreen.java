@@ -57,7 +57,7 @@ public class LoginMenuScreen implements Screen {
         donNotHaveAnAccountButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                dispose();
+
                 LoginMenuController.goToRegisterMenu();
             }
         });
@@ -155,7 +155,7 @@ public class LoginMenuScreen implements Screen {
             return;
         }
         LoginMenuController.setUsernameForForgotPassword(username);
-        dispose();
+
         LoginMenuController.goToForgotPasswordScreen();
     }
 }
