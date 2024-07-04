@@ -20,15 +20,19 @@ public class FriendRequestHandler {
     public void handleSendingRequest() {
         ClientFriendRequest friendRequest = gson.fromJson(request, ClientFriendRequest.class);
         if(friendRequest.getFriendRequest().getStatus().equals("pending")) {
-            friendRequest.getFriendRequest().getToUser().addFriendRequest();
+            friendRequest.getFriendRequest().getToUser().addFriendRequest(friendRequest.getFriendRequest());
         }
         else if(friendRequest.getFriendRequest().getStatus().equals("accepted")){
             //toUser is the user who has initially sent the request
-            friendRequest.getFriendRequest().getFromUser().requestAccepted(friendRequest);
+            friendRequest.getFriendRequest().getFromUser().requestAccepted(friendRequest.getFriendRequest());
+            friendRequest.getFriendRequest().getFromUser().getFriends().add(friendRequest.getFriendRequest().getToUser());
+            friendRequest.getFriendRequest().getToUser().getFriends().add(friendRequest.getFriendRequest().getFromUser());
         }
         else if(friendRequest.getFriendRequest().getStatus().equals("rejected")){
-            friendRequest.getFriendRequest().getFromUser().requestRejected(friendRequest);
+            friendRequest.getFriendRequest().getFromUser().requestRejected(friendRequest.getFriendRequest());
         }
+        friendRequest.getFriendRequest().getFromUser().save();
+        friendRequest.getFriendRequest().getToUser().save();
     }
 
     public ServerFriendRequest getPendingRequests(User user) {

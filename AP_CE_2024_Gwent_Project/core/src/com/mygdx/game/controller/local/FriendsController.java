@@ -8,10 +8,6 @@ import com.mygdx.game.model.user.User;
 public class FriendsController {
     public void sendFriendRequest(User fromUser, User toUser) {
         Client.getInstance().sendMassage(new ClientFriendRequest(new FriendRequest(fromUser, toUser, "pending")));
-//        toUser.getReceivedFriendRequests().add(request);
-//        fromUser.getSentFriendRequests().add(request);
-//        toUser.save();
-//        fromUser.save();
     }
 
     public void receiveFriendRequest(FriendRequest friendRequest) {

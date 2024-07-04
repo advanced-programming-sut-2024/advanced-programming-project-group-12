@@ -96,6 +96,7 @@ public class Client extends Thread{
             case LOGIN_CONFIRM :
                 LoginResponse loginResponseAccept = gson.fromJson(request, LoginResponse.class);
                 user = loginResponseAccept.getUser();
+                User.setLoggedInUser(user);
                 Gwent.singleton.changeScreen(Screens.MAIN_MENU);
                 break;
             case LOGIN_DENY:

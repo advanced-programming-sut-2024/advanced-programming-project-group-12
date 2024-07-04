@@ -38,7 +38,7 @@ public class Server extends Thread {
 
     static {
         try {
-            serverSocket = new ServerSocket(5000);
+            serverSocket = new ServerSocket(5001);
         } catch (IOException e) {
             System.err.println("server error");
         }
@@ -66,6 +66,10 @@ public class Server extends Thread {
     public void listen() {
         while(true) {
             try {
+                if (serverSocket == null) {
+                    serverSocket = new ServerSocket(5001);
+                }
+                System.out.println(serverSocket.getLocalPort());
                 Socket client = serverSocket.accept();
                 synchronized (clients) {
                     clients.add(client);

@@ -107,7 +107,7 @@ public class RequestHandler extends Thread {
                     break;
             }
 
-            if(serverResponse != null) {
+            if(serverResponse != null && session!= null) {
                 serverResponse.setSession(session.renewSession());
             }
 

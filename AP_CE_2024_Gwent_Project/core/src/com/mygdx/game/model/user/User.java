@@ -299,16 +299,17 @@ public class User {
     }
 
 
-    //todo; my dear Ali <3
-    public void addFriendRequest() {
-        //todo
+    public void addFriendRequest(FriendRequest friendRequest) {
+        receivedFriendRequests.add(friendRequest);
     }
 
-    public void requestAccepted(ClientFriendRequest friendRequest) {
-        //todo
+    public void requestAccepted(FriendRequest friendRequest) {
+        friendRequest.setStatus("accepted");
     }
 
-    public void requestRejected(ClientFriendRequest friendRequest) {
-        //todo
+    public void requestRejected(FriendRequest friendRequest) {
+        friendRequest.setStatus("rejected");
     }
+
+
 }
