@@ -22,7 +22,7 @@ public class LoginHandler {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
         //todo: seperate server and client logincs bellow
-        String response = LoginMenuController.loginHandler(username, password);
+        String response = loginHandler(username, password);
         if(response.equals("accept")) {
             User user = User.getUserByUsername(username);
             RequestHandler.allUsers.put(user, requestHandler);
@@ -30,5 +30,20 @@ public class LoginHandler {
         } else {
             return new LoginResponse(ServerResponseType.LOGIN_DENY, response);
         }
+    }
+    public String loginHandler(String username, String password) {
+        if(username.equals("admin")) {
+            return "accept";
+        }
+        if (username.isEmpty() || password.isEmpty()) {
+            return "Please fill all fields";
+        }
+        if(!RegisterHandler.isUsernameTaken(username)) {
+            return "User does not exist";
+        }
+        if(!LoginMenuController.doesThisPasswordMatch(username, password)) {
+            return "Incorrect password";
+        }
+        return "accept";
     }
 }

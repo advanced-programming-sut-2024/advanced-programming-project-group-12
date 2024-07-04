@@ -29,14 +29,14 @@ public class RegisterHandler {
         }
     }
 
+    static boolean isUsernameTaken(String username) {
+        //todo
+        return false;
+    }
+
     public SecurityQuestionResponse handleAbort(Gson gson) {
         SecurityQuestionRequest req = gson.fromJson(request, SecurityQuestionRequest.class);
         return new SecurityQuestionResponse(ServerResponseType.CONFIRM);
-    }
-
-    private boolean isUsernameTaken(String username) {
-        //todo
-        return false;
     }
 
     public SecurityQuestionResponse handleSecurityQuestion(Gson gson) {
