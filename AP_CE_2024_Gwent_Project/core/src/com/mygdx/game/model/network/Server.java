@@ -53,11 +53,6 @@ public class Server extends Thread {
     }
 
     public static void main(String[] args) {
-//        Server[] threads = new Server[THREAD_NUMBER];
-//        for(int i = 0; i< THREAD_NUMBER; i++) {
-//            threads[i] = new Server();
-//            threads[i].start();
-//        }
         listen();
     }
 
