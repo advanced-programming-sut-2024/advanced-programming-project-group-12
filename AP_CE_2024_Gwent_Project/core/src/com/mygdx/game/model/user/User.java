@@ -302,16 +302,15 @@ public class User {
     }
 
 
-    //todo; my dear Ali <3
     public void addFriendRequest(FriendRequest friendRequest) {
-        //todo
+        receivedFriendRequests.add(friendRequest);
     }
 
     public void requestAccepted(FriendRequest friendRequest) {
-        //todo
+        friendRequest.setStatus("accepted");
     }
 
     public void requestRejected(FriendRequest friendRequest) {
-        //todo
+        friendRequest.setStatus("rejected");
     }
 }

@@ -27,7 +27,7 @@ public class ClientListener extends Thread{
         serverResponses = new ArrayList<>();
 
         try {
-            server = new Socket("127.0.0.1", 5000);
+            server = new Socket("127.0.0.1", 5001);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
