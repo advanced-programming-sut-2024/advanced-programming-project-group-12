@@ -110,7 +110,17 @@ public class PreGameMenuScreen implements Screen {
         dashboard.add(startGameButton).padBottom(20).center();
         startGameButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                controller.startGame();
+                if (!canUserStartGame()) {
+                    Dialog dialog = new Dialog("Error", Gwent.singleton.skin) {
+                        public void result(Object obj) {
+                            // This method is called when an option is chosen
+                        }
+                    };
+                    dialog.text("You need 22 unit cards and a leader to play");
+                    dialog.button("OK", true); // adds an "OK" button that closes the dialog
+                    dialog.show(stage); // show the dialog
+                }
+                else {controller.startGame();}
             }
         });
         dashboard.row();
@@ -191,15 +201,6 @@ public class PreGameMenuScreen implements Screen {
     private void saveDeck(){
         User.getLoggedInUser().setDeck(selectedCards);
     }
-
-//    private void selectLeader(Faction faction) {
-//        for (AbstractCard card : AllCards.getFactionCardsByFaction(faction)) {
-//            if (card instanceof Hero) {
-//                selectedCards.add(card);
-//                break;
-//            }
-//        }
-//    }
 
     private void initializeFactionButtons() {
         Table factionButtonTable = new Table();
@@ -333,8 +334,9 @@ public class PreGameMenuScreen implements Screen {
         return cardButton;
     }
 
-
-
+    public boolean canUserStartGame () {
+        return getNumberOfUnitCards() != 22 || User.getLoggedInUser().getLeader() == null || getNumberOfSpecialCards() > 10;
+    }
 
 
     private void initializeDecks() {
@@ -427,13 +429,18 @@ public class PreGameMenuScreen implements Screen {
 
 
     private int getNumberOfUnitCards() {
-        // TODO: implement this
-        return 0;
+        int numberOfUnitCards = 0;
+        for (AbstractCard card : selectedCards) {
+            if (card.getFaction() != Faction.SPECIAL && card.getFaction() != Faction.WEATHER){
+                numberOfUnitCards++;
+            }
+        }
+        return numberOfUnitCards;
     }
     private int getNumberOfSpecialCards() {
         int specialCards = 0;
         for (AbstractCard card : selectedCards) {
-            if (card.getFaction() == Faction.SPECIAL) {
+            if (card.getFaction() == Faction.SPECIAL || card.getFaction() == Faction.WEATHER) {
                 specialCards++;
             }
         }
@@ -444,8 +451,8 @@ public class PreGameMenuScreen implements Screen {
         // TODO: implement this
         int totalStrength = 0;
 //        for (AbstractCard card : selectedCards) {
-//            if (card.getFaction() != Faction.SPECIAL) {
-//                totalStrength += card.getStrength();
+//            if (card.getFaction() != Faction.SPECIAL && card.getFaction() != Faction.WEATHER) {
+//                totalStrength += card.
 //            }
 //        }
         return totalStrength;
