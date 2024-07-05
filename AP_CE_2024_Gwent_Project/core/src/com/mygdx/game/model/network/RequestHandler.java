@@ -6,9 +6,6 @@ import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.ChangeMenuRequest;
-import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.LoginRequest;
-import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SecurityQuestionRequest;
-import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SignUpRequest;
 import com.mygdx.game.model.network.massage.serverResponse.ChangeMenuResponse;
 import com.mygdx.game.model.network.session.InvalidSessionException;
 import com.mygdx.game.model.network.session.SessionExpiredException;
@@ -20,8 +17,6 @@ import com.mygdx.game.model.network.session.Session;
 
 import java.io.*;
 import java.util.HashMap;
-
-import static com.mygdx.game.model.network.massage.serverResponse.ServerResponseType.GET_FRIENDS;
 
 public class RequestHandler extends Thread {
     public static HashMap<String, RequestHandler> allUsers = new HashMap<>();
@@ -93,11 +88,11 @@ public class RequestHandler extends Thread {
                     new FriendRequestHandler(request, gson).handleSendingRequest();
                     break;
                 case GET_FRIEND_REQUESTS:
-                    serverResponse = new FriendRequestHandler(request, gson).getPendingRequests(user);
+                    serverResponse = new FriendRequestHandler(request, gson).getFriendRequests(user);
                     break;
-                case GET_FRIENDS:
-                    serverResponse = new FriendRequestHandler(request, gson).getFriends(user);
-                    break;
+//                case GET_FRIENDS:
+//                    serverResponse = new FriendRequestHandler(request, gson).getFriends(user);
+//                    break;
                 case START_GAME:
                    new InviteHandler(request, gson).handle();
                    break;
