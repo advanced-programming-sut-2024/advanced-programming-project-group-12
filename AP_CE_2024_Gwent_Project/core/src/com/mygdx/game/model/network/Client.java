@@ -10,15 +10,12 @@ import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.view.Screens;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.user.User;
-import com.mygdx.game.view.screen.ChooseSecurityQuestionScreen;
-import com.mygdx.game.view.screen.GameRequestScreen;
-import com.mygdx.game.view.screen.LoginMenuScreen;
-import com.mygdx.game.view.screen.RegisterMenuScreen;
+import com.mygdx.game.view.screen.*;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class Client extends Thread{
+public class Client extends Thread {
     private static Client instance;
     private ClientListener clientListener;
     private DataOutputStream dataOutputStream;
@@ -62,6 +59,7 @@ public class Client extends Thread{
 
     public void sendMassage(ClientRequest massage) {
         //perhaps wait for response
+        massage.setSession(session);
         try {
             dataOutputStream.writeUTF(gson.toJson(massage));
         } catch (IOException e) {
@@ -106,7 +104,10 @@ public class Client extends Thread{
                 break;
             case FRIEND_REQUEST:
                 ServerFriendRequest serverFriendRequest = gson.fromJson(request, ServerFriendRequest.class);
+                FriendsScreen.setRequestInfoReceived(true);
+                FriendsScreen.setRequestsHashMap(serverFriendRequest.getRequests());
                 //todo: add receiving requests
+
                 //User.getLoggedInUser().setReceivedFriendRequests(serverFriendRequest.getRequests());
                 //let friends screen know they can proceed
                 break;
@@ -125,6 +126,7 @@ public class Client extends Thread{
                     Gwent.singleton.changeScreen(Screens.GAME);
                 }
                 break;
+            case GAME_TURN_DECIDE:
         }
     }
     public void setUser(User user) {

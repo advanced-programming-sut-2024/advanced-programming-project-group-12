@@ -21,7 +21,7 @@ public class HandTable extends Table {
         for (AbstractCard card : hand) {
             CardActor cardActor = new CardActor(card);
             cards.add(cardActor);
-            cardActor.getImage().setSize(80, 120);
+            cardActor.getCardTable().setSize(80, 120);
         }
 
     }
@@ -47,18 +47,18 @@ public class HandTable extends Table {
 
         for (CardActor cardActor : cards) {
             // Add the card actor to the table with padding on the right
-            this.add(cardActor.getImage()).width(cardWidth).padRight(padding);
+            this.add(cardActor.getCardTable()).width(cardWidth).padRight(padding);
 
             // Add a listener to the card actor
-            cardActor.getImage().addListener(new InputListener() {
+            cardActor.getCardTable().addListener(new InputListener() {
                 @Override
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                    cardActor.getImage().addAction(Actions.moveBy(0, 20, 0.2f));
+                    cardActor.getCardTable().addAction(Actions.moveBy(0, 20, 0.2f));
                 }
 
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                    cardActor.getImage().addAction(Actions.moveBy(0, -20, 0.5f));
+                    cardActor.getCardTable().addAction(Actions.moveBy(0, -20, 0.5f));
                 }
             });
         }

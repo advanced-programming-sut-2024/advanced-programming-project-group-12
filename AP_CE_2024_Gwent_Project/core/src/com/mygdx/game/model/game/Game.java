@@ -54,9 +54,6 @@ public class Game {
     }
 
     public void switchTurn() {
-        if(currentPlayer.getHand().isEmpty() && currentPlayer.getLeader().HasPlayedAction()) {
-            currentPlayer.setPassed(true);
-        }
         Player temp = currentPlayer;
         currentPlayer = opposition;
         opposition = temp;

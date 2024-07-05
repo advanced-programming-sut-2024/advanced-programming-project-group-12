@@ -50,7 +50,7 @@ public class Gwent extends Game implements ApplicationListener {
 		return skin;
 	}
 	public void changeScreen(Screens screens) {
-		typeScreen =screens;
+		typeScreen = screens;
 		pendingScreenChange = true;
 	}
 	public Screen getCurrentScreen() {
