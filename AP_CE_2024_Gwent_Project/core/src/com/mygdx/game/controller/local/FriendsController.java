@@ -7,27 +7,25 @@ import com.mygdx.game.model.user.User;
 
 public class FriendsController {
     public void sendFriendRequest(User fromUser, User toUser) {
-        Client.getInstance().sendMassage(new ClientFriendRequest(new FriendRequest(fromUser, toUser, "pending")));
-    }
-
-    public void receiveFriendRequest(FriendRequest friendRequest) {
-        //todo: add this so it goes and is saved somewhere and is shown in gui
+        FriendRequest request = new FriendRequest(fromUser, toUser, "pending");
+        Client.getInstance().sendMassage(new ClientFriendRequest(request));
+        // Save the request to the user's sent requests list
+        fromUser.getSentFriendRequests().add(request);
+        fromUser.save();
     }
 
     public void acceptFriendRequest(User user, FriendRequest request) {
-        //add the guy as friend locally here
         request.setStatus("accepted");
+        user.getReceivedFriendRequests().remove(request);
+        user.getFriends().add(request.getFromUser());
+        user.save();
         Client.getInstance().sendMassage(new ClientFriendRequest(request));
     }
 
     public void rejectFriendRequest(User user, FriendRequest request) {
-//        if (user.getReceivedFriendRequests().remove(request)) {
-//            request.getFromUser().getSentFriendRequests().remove(request);
-//            request.setStatus("rejected");
-//            user.save();
-//            request.getFromUser().save();
-//        }
         request.setStatus("rejected");
+        user.getReceivedFriendRequests().remove(request);
+        user.save();
         Client.getInstance().sendMassage(new ClientFriendRequest(request));
     }
 }
