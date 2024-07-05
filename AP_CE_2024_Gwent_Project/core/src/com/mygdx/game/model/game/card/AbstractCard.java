@@ -102,4 +102,5 @@ public abstract class AbstractCard implements Cloneable{
         }
         return "gameCards/" + faction.getName()+ "_" + name + typeNumber + ".jpg";
     }
+
 }

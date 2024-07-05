@@ -12,6 +12,7 @@ import com.mygdx.game.model.user.User;
 
 import com.google.gson.Gson;
 import com.mygdx.game.view.Screens;
+import com.mygdx.game.view.screen.PreGameMenuScreen;
 
 import javax.swing.event.CaretListener;
 import java.io.FileWriter;
@@ -26,7 +27,6 @@ public class PreGameMenuController {
     }
 
     public void startGame() {
-        //hard coding a deck
 
         LinkedList<AbstractCard> deck = User.getLoggedInUser().getDeckAsCard();
         CommanderCard leader =(CommanderCard) User.getLoggedInUser().getLeaderAsCard();
@@ -39,6 +39,7 @@ public class PreGameMenuController {
 
         Gwent.singleton.changeScreen(Screens.GAME);
     }
+
 
     public void setFaction(String factionName) {
         Faction faction = Faction.getFactionByName(factionName);
