@@ -19,25 +19,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameRequestScreen implements Screen {
+    // essentials
     private final GameRequestController controller;
     private final Stage stage;
     private final Table table;
     private final SpriteBatch batch;
     private final Texture background;
-    private final TextField nameField;
-    private final Button searchButton;
-    private Button back;
-
-    private float timer;
+    private final Skin skin;
     private boolean requestSent;
-    private final Label timerLabel;
+    private static boolean showRequestWindow;
+    private static String from;
+    private final Window requestWindow;
+    private final List<String> receivedRequests;
+    // fields & buttons
+    private final TextField nameField;
+    private final Button sendAGameRequestButton;
+    private final Button backButton;
+    private Button acceptGameRequestButton;
+    private Button rejectGameRequestButton;
+    // labels
     private final Label requestSentLabel;
     private final Label errorLabel;
-    private final Skin skin;
-    private final Window requestWindow;
     private final Label requestListLabel;
-    private final List<String> receivedRequests;
-    private static boolean showRequestWindow;
 
     public GameRequestScreen() {
         this.controller = new GameRequestController();
@@ -48,39 +51,34 @@ public class GameRequestScreen implements Screen {
         this.skin = Gwent.singleton.getSkin();
 
         this.nameField = new TextField("", skin);
-        this.searchButton = new TextButton("Search", skin);
-        this.timerLabel = new Label("", skin);
+        this.sendAGameRequestButton = new TextButton("Play Game", skin);
         this.requestSentLabel = new Label("", skin);
         this.errorLabel = new Label("", skin);
-        this.back = new TextButton("Back", skin);
-
-        // Create the hidden window for game requests
+        this.backButton = new TextButton("Back", skin);
         this.requestListLabel = new Label("", skin);
         this.requestWindow = new Window("Game Requests", skin);
         requestWindow.add(requestListLabel).pad(10);
-        requestWindow.setSize(400, 300);
-        requestWindow.setPosition(Gdx.graphics.getWidth() / 2f - 200, Gdx.graphics.getHeight() / 2f - 150);
+        requestWindow.setSize(1000, 400);
+        requestWindow.setPosition(Gdx.graphics.getWidth() / 2f - 600, Gdx.graphics.getHeight() / 2f - 250);
         requestWindow.setVisible(false);
         stage.addActor(requestWindow);
 
         this.receivedRequests = new ArrayList<>();
 
         table.setFillParent(true);
-        table.add(nameField).width(500).pad(10);
+        table.add(nameField).width(500).height(80).pad(10);
+        table.add(sendAGameRequestButton).width(350).height(80);
         table.row();
-        table.add(searchButton).width(200).pad(10);
+        table.add(requestSentLabel);
         table.row();
-        table.add(timerLabel).pad(10);
+        table.add(errorLabel);
         table.row();
-        table.add(requestSentLabel).pad(10);
+        table.add(backButton).padLeft(330);
         table.row();
-        table.add(errorLabel).pad(10);
-        table.add(back).row();
         stage.addActor(table);
 
 
-        // Add a click listener to the search button
-        searchButton.addListener(new ClickListener() {
+        sendAGameRequestButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (!requestSent) {
@@ -90,7 +88,7 @@ public class GameRequestScreen implements Screen {
                         controller.sendGameRequest(name);
                         requestSent = true;
                         requestSentLabel.setText("Request sent to " + name);
-                        errorLabel.setText("");  // Clear any previous error
+                        errorLabel.setText("");
                         System.out.println("Request sent");
                     } else {
                         errorLabel.setText("User not found.");
@@ -98,7 +96,7 @@ public class GameRequestScreen implements Screen {
                 }
             }
         });
-        back.addListener(new ClickListener() {
+        backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gwent.singleton.changeScreen(Screens.PRE_GAME_MENU);
@@ -108,20 +106,40 @@ public class GameRequestScreen implements Screen {
         requestSent = false;
     }
 
-    public static void showRequestWindow(String from) {
+    public static void showRequestWindow(String from1) {
+        from = from1;
         showRequestWindow = true;
     }
 
     private void updateRequestWindow() {
         if (showRequestWindow) {
-            StringBuilder requestText = new StringBuilder();
-            for (String request : receivedRequests) {
-                requestText.append(request).append("\n");
-            }
-            requestListLabel.setText(requestText.toString());
-            requestWindow.setVisible(true);
-            showRequestWindow = false;
+            initializeRequestWindow();
         }
+    }
+
+    private void initializeRequestWindow () {
+        receivedRequests.add("Game request from: " + from);
+        requestListLabel.setText(String.join("\n", receivedRequests));
+        acceptGameRequestButton = new TextButton("Accept", skin);
+        rejectGameRequestButton = new TextButton("Reject", skin);
+        requestWindow.add(acceptGameRequestButton).pad(10);
+        requestWindow.add(rejectGameRequestButton).pad(10);
+        acceptGameRequestButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+//                    controller.acceptGameRequest(from);
+                requestWindow.setVisible(false);
+            }
+        });
+        rejectGameRequestButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+//                    controller.rejectGameRequest(from);
+                requestWindow.setVisible(false);
+            }
+        });
+        requestWindow.setVisible(true);
+        showRequestWindow = false;
     }
 
     @Override
@@ -131,7 +149,6 @@ public class GameRequestScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         updateRequestWindow();
 
@@ -164,6 +181,5 @@ public class GameRequestScreen implements Screen {
         stage.dispose();
         batch.dispose();
         background.dispose();
-        // Do not dispose skin if it is shared across screens
     }
 }

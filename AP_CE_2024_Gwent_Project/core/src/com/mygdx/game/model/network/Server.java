@@ -38,7 +38,7 @@ public class Server extends Thread {
 
     static {
         try {
-            serverSocket = new ServerSocket(5000);
+            serverSocket = new ServerSocket(5002);
         } catch (IOException e) {
             System.err.println("server error");
         }
