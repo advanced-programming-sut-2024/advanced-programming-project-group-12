@@ -81,15 +81,10 @@ public class GameRequestScreen implements Screen {
                     if (controller.userExists(name)) {
                         String sender = User.getLoggedInUser().getUsername();
                         controller.sendGameRequest(name);
-                        timer = 120;
                         requestSent = true;
                         requestSentLabel.setText("Request sent to " + name);
                         errorLabel.setText("");  // Clear any previous error
                         System.out.println("Request sent");
-
-                        receivedRequests.add("New request from " + sender);
-                        updateRequestWindow();
-                        requestWindow.setVisible(true);
                     } else {
                         errorLabel.setText("User not found.");
                     }
@@ -100,6 +95,9 @@ public class GameRequestScreen implements Screen {
         requestSent = false;
     }
 
+    public void showRequestWindow(String from) {
+        requestWindow.setVisible(true);
+    }
     private void updateRequestWindow() {
         StringBuilder requestText = new StringBuilder();
         for (String request : receivedRequests) {
@@ -117,21 +115,11 @@ public class GameRequestScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        updateRequestWindow();
 
         batch.begin();
         batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
-
-        if (requestSent) {
-            timer -= delta;
-            if (timer <= 0) {
-                timer = 0;
-                controller.requestTimedOut();
-                requestSent = false;
-                requestSentLabel.setText("Request timed out.");
-            }
-            timerLabel.setText("Request pending: " + (int) timer + " seconds");
-        }
 
         stage.act(delta);
         stage.draw();

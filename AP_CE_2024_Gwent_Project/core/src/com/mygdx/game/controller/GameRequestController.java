@@ -4,6 +4,7 @@ import com.mygdx.game.model.user.User;
 
 public class GameRequestController {
     public void sendGameRequest(String to) {
+
     }
 
     public void requestTimedOut() {
