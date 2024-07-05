@@ -2,6 +2,7 @@ package com.mygdx.game.model.network;
 
 import com.google.gson.Gson;
 import com.mygdx.game.controller.remote.*;
+import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
@@ -27,6 +28,10 @@ public class RequestHandler extends Thread {
     private Gson gson;
     private DataOutputStream dataOutputStream;
 
+    private Session session;
+    private GameHandler gameHandler;
+
+
     public RequestHandler(Server server, Gson gson) {
         this.server = server;
         this.gson = gson;
@@ -34,6 +39,14 @@ public class RequestHandler extends Thread {
 
     public void setUser(String user) {
         allUsers.put(user, this);
+    }
+
+    public GameHandler getGameHandler() {
+        return gameHandler;
+    }
+
+    public void setGameHandler(GameHandler gameHandler) {
+        this.gameHandler = gameHandler;
     }
 
     public void setDataOutputStream(DataOutputStream dataOutputStream) {
@@ -61,7 +74,7 @@ public class RequestHandler extends Thread {
         ClientRequest clientRequest = gson.fromJson(request, ClientRequest.class);
         ServerResponse serverResponse = null;
         try {
-            Session session = clientRequest.getSession();
+            session = clientRequest.getSession();
             User user = null;
             if(session != null) {
                 user = Session.getUser(session);
@@ -94,10 +107,14 @@ public class RequestHandler extends Thread {
 //                    serverResponse = new FriendRequestHandler(request, gson).getFriends(user);
 //                    break;
                 case START_GAME:
-                   new InviteHandler(request, gson).handle();
+                   new InviteHandler(request, gson).handle(this, user);
                    break;
                 case INVITE_ANSWER:
-                    new InviteResponseHandler(request, gson).handle();
+                    new InviteResponseHandler(request, gson).handle(this, user);
+                    break;
+                case TURN_DECIDE:
+                    TurnDecideResponse turnDecideResponse = gson.fromJson(request, TurnDecideResponse.class);
+                    gameHandler.letCurrentPlayerPlay(turnDecideResponse.getPlayerToPlay());
                     break;
                 case PLAY_CARD_REQUEST:
                     PlayCardRequest playCardRequest = gson.fromJson(request, PlayCardRequest.class);
@@ -126,6 +143,7 @@ public class RequestHandler extends Thread {
     public void sendMassage(ServerResponse massage) {
         //perhaps wait for response
         try {
+            massage.setSession(session);
             dataOutputStream.writeUTF(gson.toJson(massage));
         } catch (IOException e) {
             System.err.println("IO exception in sendMassage");

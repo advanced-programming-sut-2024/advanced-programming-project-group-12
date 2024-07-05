@@ -17,13 +17,25 @@ public class InviteResponseHandler {
         this.gson = gson;
     }
 
-    public void handle() {
+    public void handle(RequestHandler requestHandler, User user) {
         ClientInviteResponse clientInviteResponse = gson.fromJson(request, ClientInviteResponse.class);
         User invitor = User.getUserByUsername(clientInviteResponse.getInvitor());
-        if(!RequestHandler.allUsers.containsKey(invitor)) {
+        if(!RequestHandler.allUsers.containsKey(invitor.getUsername())) {
             //handle the case
         }
-        RequestHandler targetHandler = RequestHandler.allUsers.get(invitor);
+        RequestHandler targetHandler = RequestHandler.allUsers.get(invitor.getUsername());
         targetHandler.sendMassage(new ServerInviteResponse(clientInviteResponse));
+
+        if(clientInviteResponse.getResponse().equals("accept")) {
+            user.setFaction(clientInviteResponse.getFaction());
+            user.setLeader(clientInviteResponse.getCommanderCard());
+            user.setDeck(clientInviteResponse.getDeck());
+
+            requestHandler.setGameHandler(targetHandler.getGameHandler());
+            requestHandler.getGameHandler().addUser(user);
+        }
+        else {
+            targetHandler.setGameHandler(null);
+        }
     }
 }

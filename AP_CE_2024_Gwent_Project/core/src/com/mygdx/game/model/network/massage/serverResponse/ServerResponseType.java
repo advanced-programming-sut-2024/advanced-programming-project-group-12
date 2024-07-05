@@ -19,5 +19,5 @@ public enum ServerResponseType {
 
     PLAY_CARD_RESPONSE,
     CHANGE_SCREEN,
-    ;
+    GAME_TURN_DECIDE;
 }

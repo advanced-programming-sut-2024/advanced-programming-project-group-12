@@ -63,7 +63,7 @@ public enum CommanderCards {
         return (CommanderCard) commanderCard.clone();
     }
 
-    public static AbstractCard getCardByCardName(String cardName) {
+    public static CommanderCard getCardByCardName(String cardName) {
         for(CommanderCards i: CommanderCards.values()) {
             if(i.getCard().getName().equals(cardName)) {
                 return i.getCard();
