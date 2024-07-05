@@ -67,11 +67,6 @@ public class Server extends Thread {
                 Socket client = serverSocket.accept();
                 System.out.println("connected");
                 new Server(client).start();
-//                synchronized (clients) {
-//                    clients.add(client);
-//                    System.out.println("connection detected");
-//                    clients.notify();
-//                }
             } catch (IOException e) {
                 System.err.println("connection error");
                 throw new RuntimeException(e);
@@ -82,15 +77,6 @@ public class Server extends Thread {
     @Override
     public void run() {
         while(true) {
-//            synchronized (clients) {
-//                while (clients.isEmpty()) {
-//                    try {
-//                        clients.wait();
-//                    } catch (InterruptedException e) {
-//                        System.err.println("thread interrupted");
-//                    }
-//                }
-//                socket = clients.removeFirst();
                 listen = true;
                 try {
                     dataInputStream = new DataInputStream(socket.getInputStream());
