@@ -1,10 +1,9 @@
 package com.mygdx.game.controller.remote;
 
 import com.google.gson.Gson;
-import com.mygdx.game.model.network.Client;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ClientFriendRequest;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.GetFriends;
 import com.mygdx.game.model.network.massage.serverResponse.*;
-import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.model.user.User;
 
 public class FriendRequestHandler {

@@ -11,4 +11,7 @@ public class ServerFriend extends ServerResponse{
         super(ServerResponseType.GET_FRIENDS, null);
         this.friends = friends;
     }
+    public ArrayList<User> getFriends() {
+        return friends;
+    }
 }

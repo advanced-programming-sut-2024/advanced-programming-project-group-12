@@ -107,10 +107,15 @@ public class Client extends Thread{
                 //let friends screen know they can proceed
                 break;
             case GET_FRIENDS:
-
+                ServerFriend serverFriend = gson.fromJson(request, ServerFriend.class);
+                User.getLoggedInUser().setFriends(serverFriend.getFriends());
+                //let friends screen know the shit so they can proceed
                 break;
             case INVITE_TO_PLAY:
                 ServerPlayInvite serverPlayInvite = gson.fromJson(request, ServerPlayInvite.class);
+                break;
+            case INVITE_TO_PLAY_RESPONSE:
+
         }
     }
     public void setUser(User user) {
