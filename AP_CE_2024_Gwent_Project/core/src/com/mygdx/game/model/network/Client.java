@@ -28,6 +28,7 @@ public class Client extends Thread{
     private Session session;
 
     public Client() {
+        setDaemon(true);
         clientListener = new ClientListener(this);
         clientListener.start();
         gson = new GsonBuilder().create();

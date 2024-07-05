@@ -4,9 +4,13 @@ import com.google.gson.Gson;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ClientFriendRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.GetFriends;
 import com.mygdx.game.model.network.massage.serverResponse.*;
+import com.mygdx.game.model.user.FriendRequest;
 import com.mygdx.game.model.user.User;
 
+import java.util.HashMap;
+
 public class FriendRequestHandler {
+    private HashMap<String , FriendRequest> friendRequests;
     private String request;
     private Gson gson;
 
@@ -42,5 +46,12 @@ public class FriendRequestHandler {
         GetFriends getFriends = gson.fromJson(request, GetFriends.class);
         User.getUserByUsername(user.getUsername());
         return new ServerFriend(user.getFriends());
+    }
+
+    private HashMap<String, FriendRequest> loadFriendRequest() {
+        return null;
+    }
+    private void saveFriendRequest (HashMap<String, FriendRequest> friendRequests) {
+
     }
 }

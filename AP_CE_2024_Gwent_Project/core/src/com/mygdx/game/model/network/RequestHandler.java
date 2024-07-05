@@ -24,7 +24,7 @@ import java.util.HashMap;
 import static com.mygdx.game.model.network.massage.serverResponse.ServerResponseType.GET_FRIENDS;
 
 public class RequestHandler extends Thread {
-    public static HashMap<User, RequestHandler> allUsers = new HashMap<>();
+    public static HashMap<String, RequestHandler> allUsers = new HashMap<>();
 
 
     private Server server;
@@ -37,7 +37,7 @@ public class RequestHandler extends Thread {
         this.gson = gson;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         allUsers.put(user, this);
     }
 

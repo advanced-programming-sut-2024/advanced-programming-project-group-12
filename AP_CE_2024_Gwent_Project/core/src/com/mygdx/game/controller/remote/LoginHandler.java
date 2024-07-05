@@ -25,7 +25,10 @@ public class LoginHandler {
         String response = loginHandler(username, password);
         if(response.equals("accept")) {
             User user = User.getUserByUsername(username);
-            RequestHandler.allUsers.put(user, requestHandler);
+            if(user == null) {
+                System.err.println("no such user to be invited");
+            }
+            RequestHandler.allUsers.put(user.getUsername(), requestHandler);
             return new LoginResponse(ServerResponseType.LOGIN_CONFIRM , user);
         } else {
             return new LoginResponse(ServerResponseType.LOGIN_DENY, response);

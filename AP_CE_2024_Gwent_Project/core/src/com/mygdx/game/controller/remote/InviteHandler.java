@@ -18,10 +18,10 @@ public class InviteHandler {
     public void handle() {
         StartGameRequest startGameRequest = gson.fromJson(request, StartGameRequest.class);
         User toBeInvited = User.getUserByUsername(startGameRequest.getUserToBeInvited());
-        if(!RequestHandler.allUsers.containsKey(toBeInvited)) {
+        if(!RequestHandler.allUsers.containsKey(startGameRequest.getUserToBeInvited())) {
             //handle the case
         }
-        RequestHandler targetHandler = RequestHandler.allUsers.get(toBeInvited);
+        RequestHandler targetHandler = RequestHandler.allUsers.get(startGameRequest.getUserToBeInvited());
         targetHandler.sendMassage(new ServerPlayInvite(startGameRequest));
     }
 }

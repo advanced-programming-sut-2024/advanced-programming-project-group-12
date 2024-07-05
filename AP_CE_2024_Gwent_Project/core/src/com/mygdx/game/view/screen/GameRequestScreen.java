@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Gwent;
-import com.mygdx.game.controller.GameRequestController;
+import com.mygdx.game.controller.local.GameRequestController;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.mygdx.game.model.user.User;
 
