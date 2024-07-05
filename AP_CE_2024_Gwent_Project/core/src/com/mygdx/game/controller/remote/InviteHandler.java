@@ -4,7 +4,10 @@ import com.google.gson.Gson;
 import com.mygdx.game.model.network.RequestHandler;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.StartGameRequest;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ServerPlayInvite;
+import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.model.user.User;
+
+import java.util.ArrayList;
 
 public class InviteHandler {
     private String request;
@@ -15,12 +18,19 @@ public class InviteHandler {
         this.gson = gson;
     }
 
-    public void handle() {
+    public void handle(RequestHandler requestHandler, User user) {
         StartGameRequest startGameRequest = gson.fromJson(request, StartGameRequest.class);
-        User toBeInvited = User.getUserByUsername(startGameRequest.getUserToBeInvited());
+
+        //updating user in remote
+        user.setDeck(new ArrayList<>(startGameRequest.getDeck()));
+        user.setLeader(startGameRequest.getCommanderCard());
+        user.setFaction(startGameRequest.getFaction());
+
+        requestHandler.setGameHandler(new GameHandler(user));
         if(!RequestHandler.allUsers.containsKey(startGameRequest.getUserToBeInvited())) {
             //handle the case
         }
+
         RequestHandler targetHandler = RequestHandler.allUsers.get(startGameRequest.getUserToBeInvited());
         targetHandler.sendMassage(new ServerPlayInvite(startGameRequest));
     }

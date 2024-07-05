@@ -97,6 +97,14 @@ public class FriendsScreen implements Screen {
     private static boolean requestInfoReceived = false;
     private static HashMap<String, HashMap<String, FriendRequest>> requestsHashMap = new HashMap<>();
 
+    public static void setRequestInfoReceived(boolean requestInfoReceived) {
+        FriendsScreen.requestInfoReceived = requestInfoReceived;
+    }
+
+    public static void setRequestsHashMap(HashMap<String, HashMap<String, FriendRequest>> requestsHashMap) {
+        FriendsScreen.requestsHashMap = requestsHashMap;
+    }
+
     private Table showUserProfile(User user) {
         Table profileTable = new Table();
         profileTable.add(new Label(user.getUsername() + " a.k.a " + user.getNickname(), skin,  "subtitle"));

@@ -28,6 +28,9 @@ public class FriendRequestHandler {
             HashMap<String , HashMap<String , FriendRequest>> sender = loadFriendRequests(friendRequest.getFriendRequest().getFromUsername());
             HashMap<String, FriendRequest> req = new HashMap<String, FriendRequest>();
             req.put(friendRequest.getFriendRequest().getToUsername(), friendRequest.getFriendRequest());
+            if(sender == null) {
+                sender = new HashMap<>();
+            }
             sender.put("sent", req);
             saveFriendRequests(sender, friendRequest.getFriendRequest().getFromUsername());
 

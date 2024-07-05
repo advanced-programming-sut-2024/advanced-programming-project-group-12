@@ -25,4 +25,8 @@ public class ClientRequest {
     public Session getSession() throws SessionExpiredException, InvalidSessionException {
         return session;
     }
+
+    public void setSession(Session session) {
+        this.session = session;
+    }
 }

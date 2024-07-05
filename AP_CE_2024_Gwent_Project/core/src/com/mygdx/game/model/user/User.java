@@ -5,6 +5,7 @@ import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.AllCards;
+import com.mygdx.game.model.game.card.CommanderCard;
 import com.mygdx.game.model.game.card.CommanderCards;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ClientFriendRequest;
 import com.mygdx.game.model.network.massage.serverResponse.preGameRosponse.InviteUserToPlay;
@@ -265,6 +266,10 @@ public class User {
         return deck;
     }
 
+    public void setDeck(ArrayList<String> deck) {
+        this.deck = deck;
+    }
+
     public void setDeck(List<AbstractCard> selectedCards) {
         deck.clear();
         for (AbstractCard card : selectedCards) {
@@ -315,7 +320,7 @@ public class User {
     public String getLeader() {
         return leader;
     }
-    public AbstractCard getLeaderAsCard() {
+    public CommanderCard getLeaderAsCard() {
         return CommanderCards.getCardByCardName(leader);
     }
 

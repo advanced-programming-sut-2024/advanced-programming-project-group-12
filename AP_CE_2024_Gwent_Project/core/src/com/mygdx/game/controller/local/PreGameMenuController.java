@@ -32,7 +32,7 @@ public class PreGameMenuController {
         CommanderCard leader =(CommanderCard) User.getLoggedInUser().getLeaderAsCard();
         Faction faction = User.getLoggedInUser().getFaction();
 
-        Player player = new Player(User.getLoggedInUser(), leader, deck, faction);
+        Player player = new Player(User.getLoggedInUser());
 
         new Game(player, player);
 
@@ -91,7 +91,7 @@ public class PreGameMenuController {
 */
     }
 
-    public void sendGameRequest(String username) {
-        Client.getInstance().sendMassage(new StartGameRequest(username, User.getLoggedInUser().getUsername()));
-    }
+//    public void sendGameRequest(String username) {
+//        Client.getInstance().sendMassage(new StartGameRequest(username, User.getLoggedInUser().getUsername()));
+//    }
 }

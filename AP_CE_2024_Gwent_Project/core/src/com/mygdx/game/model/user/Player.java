@@ -23,9 +23,9 @@ public class Player {
     private boolean isPassed;
     private Game game;
 
-    public Player(User user, CommanderCard leader, LinkedList<AbstractCard> deck, Faction faction) {
-        this.leader = leader;
-        this.faction = faction;
+    public Player(User user) {
+        this.leader = user.getLeaderAsCard();
+        this.faction = user.getFaction();
         this.user = user;
         this.hand = new LinkedList<>();
         this.roundsLost = 0;
@@ -33,7 +33,7 @@ public class Player {
 
 
         Collections.shuffle((LinkedList)deck.clone());
-        this.deck = deck;
+        this.deck = user.getDeckAsCard();
         for(int i = 0; i< 10 ; i++) {
             drawCard();
         }

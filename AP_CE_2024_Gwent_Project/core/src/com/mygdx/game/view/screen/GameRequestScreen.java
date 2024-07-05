@@ -127,14 +127,14 @@ public class GameRequestScreen implements Screen {
         acceptGameRequestButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-//                    controller.acceptGameRequest(from);
+                    controller.acceptGameRequest(from);
                 requestWindow.setVisible(false);
             }
         });
         rejectGameRequestButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-//                    controller.rejectGameRequest(from);
+                    controller.rejectGameRequest(from);
                 requestWindow.setVisible(false);
             }
         });

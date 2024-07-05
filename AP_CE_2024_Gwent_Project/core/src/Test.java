@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import com.mygdx.game.model.game.card.Action;
 import com.mygdx.game.model.network.massage.serverResponse.LoginResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponseType;
@@ -13,7 +14,7 @@ public class Test {
     public static void main(String[] args) {
         String a = "a";
         Gson gson = new Gson();
-        System.out.println(gson.toJson(new LoginResponse(ServerResponseType.CONFIRM, new User(a,a,a,a))));
+        System.out.println(Action.BEAR);
 //        try {
 //            Writer writer = new StringWriter();
 //            User user = new User(a,a,a,a);

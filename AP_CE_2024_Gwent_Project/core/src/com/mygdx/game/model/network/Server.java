@@ -38,68 +38,68 @@ public class Server extends Thread {
 
     static {
         try {
-            serverSocket = new ServerSocket(5002);
+            serverSocket = new ServerSocket(5000);
         } catch (IOException e) {
             System.err.println("server error");
         }
     }
 
-    Server(Socket socket) {
+    Server() {
         gson = builder.create();
-        this.socket = socket;
         clientRequests = new ArrayList<>();
-        requestHandler = new RequestHandler(this,  builder.create());
+        requestHandler = new RequestHandler(this, builder.create());
         requestHandler.start();
     }
 
     public static void main(String[] args) {
-//        Server[] threads = new Server[THREAD_NUMBER];
-//        for(int i = 0; i< THREAD_NUMBER; i++) {
-//            threads[i] = new Server();
-//            threads[i].start();
-//        }
-        listen();
+        Server listener = new Server();
+
+        Server[] threads = new Server[THREAD_NUMBER];
+        for(int i = 0; i< THREAD_NUMBER; i++) {
+            threads[i] = new Server();
+            threads[i].start();
+        }
+
+        listener.listen();
     }
 
-    public static void listen() {
+    public void listen() {
         while(true) {
             try {
                 Socket client = serverSocket.accept();
-                System.out.println("connected");
-                new Server(client).start();
-//                synchronized (clients) {
-//                    clients.add(client);
-//                    System.out.println("connection detected");
-//                    clients.notify();
-//                }
+                synchronized (clients) {
+                    clients.add(client);
+                    clients.notify();
+                }
             } catch (IOException e) {
                 System.err.println("connection error");
                 throw new RuntimeException(e);
             }
+
         }
     }
 
     @Override
     public void run() {
         while(true) {
-//            synchronized (clients) {
-//                while (clients.isEmpty()) {
-//                    try {
-//                        clients.wait();
-//                    } catch (InterruptedException e) {
-//                        System.err.println("thread interrupted");
-//                    }
-//                }
-//                socket = clients.removeFirst();
+            synchronized (clients) {
+                while (clients.isEmpty()) {
+                    try {
+                        clients.wait();
+                    } catch (InterruptedException e) {
+                        System.err.println("thread interrupted");
+                    }
+                }
+                socket = clients.removeFirst();
                 listen = true;
                 try {
                     dataInputStream = new DataInputStream(socket.getInputStream());
                     requestHandler.setDataOutputStream(new DataOutputStream(socket.getOutputStream()));
                     handleConnection();
                 } catch (IOException e) {
-                    System.err.println("failure in connection in Server thread run method");
+                    System.err.println("failure in connection");
                 }
-            //}
+            }
         }
     }
 
