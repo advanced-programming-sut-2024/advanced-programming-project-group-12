@@ -9,6 +9,7 @@ import com.mygdx.game.model.game.card.CommanderCards;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ClientFriendRequest;
 import com.mygdx.game.model.network.massage.serverResponse.preGameRosponse.InviteUserToPlay;
 
+import javax.xml.stream.FactoryConfigurationError;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -51,11 +52,11 @@ public class User {
         this.nickname = nickname;
         this.password = password;
         this.email = email;
-        this.faction = Faction.getFactionByName(Faction.getFactionByName("neutral").getName());
+        this.faction = Faction.NORTHERN_REALMS;
         this.securityQuestion = new HashMap<>();
         this.allGamePlayed = new ArrayList<>();
         this.userInfo = new UserInfo();
-        this.deck = new ArrayList<>();
+        this.deck = initializeRandomDeck();
         this.friends = new ArrayList<>();
         this.receivedFriendRequests = new ArrayList<>();
         this.sentFriendRequests = new ArrayList<>();
@@ -65,6 +66,23 @@ public class User {
     // static methods
     public static ArrayList<User> getUsers() {
         return users;
+    }
+    private ArrayList<String> initializeRandomDeck() {
+        ArrayList<String> deckToAdd = new ArrayList<>();
+        int numberOfUnitCardsAdded = 0;
+        int numberOfSpecialCardsAdded = 0;
+        for (AbstractCard card : AllCards.getFactionCardsByFaction(Faction.NORTHERN_REALMS)) {
+            if (card.getFaction() == Faction.SPECIAL || card.getFaction() == Faction.WEATHER) {
+                if (numberOfSpecialCardsAdded < 10) {
+                    deckToAdd.add(card.getName());
+                    numberOfSpecialCardsAdded ++;
+                }
+            } else if (numberOfUnitCardsAdded < 22) {
+                deckToAdd.add(card.getName());
+                numberOfUnitCardsAdded ++;
+            }
+        }
+        return deckToAdd;
     }
 
     public static User getToBeSignedUp() {
