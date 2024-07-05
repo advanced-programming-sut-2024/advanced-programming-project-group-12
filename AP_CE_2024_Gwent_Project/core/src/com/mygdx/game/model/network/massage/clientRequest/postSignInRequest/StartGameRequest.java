@@ -18,7 +18,7 @@ public class StartGameRequest extends ClientRequest {
     private String toBeInvited;
 
     private Faction faction;
-    private LinkedList<AbstractCard> deck;
+    private LinkedList<String> deck;
     private CommanderCard commanderCard;
 
     public StartGameRequest(String toBeInvited, String invitor, User user) {
@@ -27,7 +27,7 @@ public class StartGameRequest extends ClientRequest {
         this.invitor = invitor;
 
         this.faction = user.getFaction();
-        this.deck = user.getDeckAsCard();
+        this.deck = new LinkedList<>(user.getDeck());
         this.commanderCard = user.getLeaderAsCard();
     }
 
@@ -43,7 +43,7 @@ public class StartGameRequest extends ClientRequest {
         return faction;
     }
 
-    public LinkedList<AbstractCard> getDeck() {
+    public LinkedList<String> getDeck() {
         return deck;
     }
 

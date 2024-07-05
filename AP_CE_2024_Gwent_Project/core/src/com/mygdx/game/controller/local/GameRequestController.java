@@ -5,6 +5,8 @@ import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.Clie
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.StartGameRequest;
 import com.mygdx.game.model.user.User;
 
+import java.util.LinkedList;
+
 public class GameRequestController {
     public void sendGameRequest(String to) {
         Client.getInstance().sendMassage(new StartGameRequest(to, User.getLoggedInUser().getUsername(), User.getLoggedInUser()));
@@ -20,7 +22,7 @@ public class GameRequestController {
 
     public void acceptGameRequest(String from) {
         User user = User.getLoggedInUser();
-        Client.getInstance().sendMassage(new ClientInviteResponse(user.getFaction(), user.getDeckAsCard(), user.getLeaderAsCard(), from));
+        Client.getInstance().sendMassage(new ClientInviteResponse(user.getFaction(), new LinkedList<>(user.getDeck()), user.getLeaderAsCard(), from));
     }
 
     public void rejectGameRequest(String from) {

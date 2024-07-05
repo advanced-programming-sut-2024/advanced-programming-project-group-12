@@ -10,6 +10,8 @@ import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ServerPl
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.view.Screens;
 
+import java.util.ArrayList;
+
 public class InviteResponseHandler {
     private String request;
     private Gson gson;
@@ -31,7 +33,7 @@ public class InviteResponseHandler {
         if(clientInviteResponse.getResponse().equals("accept")) {
             user.setFaction(clientInviteResponse.getFaction());
             user.setLeader(clientInviteResponse.getCommanderCard());
-            user.setDeck(clientInviteResponse.getDeck());
+            user.setDeck(new ArrayList<>(clientInviteResponse.getDeck()));
 
             requestHandler.setGameHandler(targetHandler.getGameHandler());
             requestHandler.getGameHandler().addUser(user);

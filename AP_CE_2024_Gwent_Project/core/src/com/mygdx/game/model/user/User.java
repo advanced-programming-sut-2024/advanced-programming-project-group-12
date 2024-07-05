@@ -248,6 +248,10 @@ public class User {
         return deck;
     }
 
+    public void setDeck(ArrayList<String> deck) {
+        this.deck = deck;
+    }
+
     public void setDeck(List<AbstractCard> selectedCards) {
         deck.clear();
         for (AbstractCard card : selectedCards) {

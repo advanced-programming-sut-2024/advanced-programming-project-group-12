@@ -104,7 +104,8 @@ public class Client extends Thread{
                 break;
             case FRIEND_REQUEST:
                 ServerFriendRequest serverFriendRequest = gson.fromJson(request, ServerFriendRequest.class);
-                Fri
+                FriendsScreen.setRequestInfoReceived(true);
+                FriendsScreen.setRequestsHashMap(serverFriendRequest.getRequests());
                 //todo: add receiving requests
 
                 //User.getLoggedInUser().setReceivedFriendRequests(serverFriendRequest.getRequests());

@@ -97,7 +97,14 @@ public class Server extends Thread {
                     requestHandler.setDataOutputStream(new DataOutputStream(socket.getOutputStream()));
                     handleConnection();
                 } catch (IOException e) {
+                    try {
+                        socket.close();
+                        dataInputStream.close();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     System.err.println("failure in connection in Server thread run method");
+                    break;
                 }
             //}
         }

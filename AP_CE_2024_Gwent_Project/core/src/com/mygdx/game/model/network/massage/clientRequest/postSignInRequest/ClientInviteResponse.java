@@ -16,7 +16,7 @@ public class ClientInviteResponse extends ClientRequest {
     private String response;
 
     private Faction faction;
-    private LinkedList<AbstractCard> deck;
+    private LinkedList<String> deck;
     private CommanderCard commanderCard;
 
     public ClientInviteResponse(String invitor) {
@@ -25,7 +25,7 @@ public class ClientInviteResponse extends ClientRequest {
         this.response = "reject";
     }
 
-    public ClientInviteResponse(Faction faction, LinkedList<AbstractCard> deck, CommanderCard commanderCard, String invitor) {
+    public ClientInviteResponse(Faction faction, LinkedList<String> deck, CommanderCard commanderCard, String invitor) {
         super(ClientRequestType.INVITE_ANSWER);
         this.response = "accept";
         this.invitor = invitor;
@@ -46,7 +46,7 @@ public class ClientInviteResponse extends ClientRequest {
         return faction;
     }
 
-    public LinkedList<AbstractCard> getDeck() {
+    public LinkedList<String> getDeck() {
         return deck;
     }
 
