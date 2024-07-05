@@ -3,7 +3,7 @@ package com.mygdx.game.controller;
 import com.mygdx.game.model.user.User;
 
 public class GameRequestController {
-    public void sendGameRequest(String to, String from) {
+    public void sendGameRequest(String to) {
     }
 
     public void requestTimedOut() {
@@ -13,4 +13,5 @@ public class GameRequestController {
         // Replace with actual implementation
         return User.getUserByUsername(username) != null;
     }
+
 }

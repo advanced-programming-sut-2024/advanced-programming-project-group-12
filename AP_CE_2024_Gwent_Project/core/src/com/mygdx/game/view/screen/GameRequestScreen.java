@@ -14,6 +14,9 @@ import com.mygdx.game.controller.GameRequestController;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.mygdx.game.model.user.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameRequestScreen implements Screen {
     private final GameRequestController controller;
     private final Stage stage;
@@ -28,6 +31,9 @@ public class GameRequestScreen implements Screen {
     private final Label requestSentLabel;
     private final Label errorLabel;
     private final Skin skin;
+    private final Window requestWindow;
+    private final Label requestListLabel;
+    private final List<String> receivedRequests;
 
     public GameRequestScreen() {
         this.controller = new GameRequestController();
@@ -43,7 +49,17 @@ public class GameRequestScreen implements Screen {
         this.requestSentLabel = new Label("", skin);
         this.errorLabel = new Label("", skin);
 
-        // Add the text field and button to the table
+        // Create the hidden window for game requests
+        this.requestWindow = new Window("Game Requests", skin);
+        this.requestListLabel = new Label("", skin);
+        requestWindow.add(requestListLabel).pad(10);
+        requestWindow.setSize(400, 300);
+        requestWindow.setPosition(Gdx.graphics.getWidth() / 2f - 200, Gdx.graphics.getHeight() / 2f - 150);
+        requestWindow.setVisible(false);
+        stage.addActor(requestWindow);
+
+        this.receivedRequests = new ArrayList<>();
+
         table.setFillParent(true);
         table.add(nameField).width(500).pad(10);
         table.row();
@@ -64,12 +80,16 @@ public class GameRequestScreen implements Screen {
                     String name = nameField.getText();
                     if (controller.userExists(name)) {
                         String sender = User.getLoggedInUser().getUsername();
-                        controller.sendGameRequest(name, sender);
-                        timer = 120;  // Set timer to 2 minutes
+                        controller.sendGameRequest(name);
+                        timer = 120;
                         requestSent = true;
                         requestSentLabel.setText("Request sent to " + name);
                         errorLabel.setText("");  // Clear any previous error
                         System.out.println("Request sent");
+
+                        receivedRequests.add("New request from " + sender);
+                        updateRequestWindow();
+                        requestWindow.setVisible(true);
                     } else {
                         errorLabel.setText("User not found.");
                     }
@@ -78,6 +98,14 @@ public class GameRequestScreen implements Screen {
         });
 
         requestSent = false;
+    }
+
+    private void updateRequestWindow() {
+        StringBuilder requestText = new StringBuilder();
+        for (String request : receivedRequests) {
+            requestText.append(request).append("\n");
+        }
+        requestListLabel.setText(requestText.toString());
     }
 
     @Override
