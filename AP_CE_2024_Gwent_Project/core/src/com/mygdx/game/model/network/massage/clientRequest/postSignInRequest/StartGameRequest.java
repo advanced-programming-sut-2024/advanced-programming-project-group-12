@@ -19,4 +19,8 @@ public class StartGameRequest extends ClientRequest {
     public String getUserToBeInvited() {
         return toBeInvited;
     }
+
+    public String getInvitor() {
+        return invitor;
+    }
 }

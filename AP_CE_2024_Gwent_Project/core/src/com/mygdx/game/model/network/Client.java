@@ -11,6 +11,7 @@ import com.mygdx.game.view.Screens;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.view.screen.ChooseSecurityQuestionScreen;
+import com.mygdx.game.view.screen.GameRequestScreen;
 import com.mygdx.game.view.screen.LoginMenuScreen;
 import com.mygdx.game.view.screen.RegisterMenuScreen;
 
@@ -114,7 +115,7 @@ public class Client extends Thread{
                 break;
             case INVITE_TO_PLAY:
                 ServerPlayInvite serverPlayInvite = gson.fromJson(request, ServerPlayInvite.class);
-                //show pop up
+                GameRequestScreen.showRequestWindow(serverPlayInvite.getClientRequest().getInvitor());
                 break;
             case INVITE_TO_PLAY_RESPONSE:
                 ServerInviteResponse response = gson.fromJson(request, ServerInviteResponse.class);
