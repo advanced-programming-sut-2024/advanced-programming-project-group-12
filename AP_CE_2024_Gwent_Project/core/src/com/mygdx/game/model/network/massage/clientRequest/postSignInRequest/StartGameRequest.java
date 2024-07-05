@@ -10,9 +10,10 @@ public class StartGameRequest extends ClientRequest {
     private String invitor;
     private String toBeInvited;
 
-    public StartGameRequest(String toBeInvited) {
+    public StartGameRequest(String toBeInvited, String invitor) {
         super(ClientRequestType.START_GAME, null);
         this.toBeInvited = toBeInvited;
+        this.invitor = invitor;
     }
 
     public String getUserToBeInvited() {

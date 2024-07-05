@@ -91,6 +91,6 @@ public class PreGameMenuController {
     }
 
     public void sendGameRequest(String username) {
-        Client.getInstance().sendMassage(new StartGameRequest(username));
+        Client.getInstance().sendMassage(new StartGameRequest(username, User.getLoggedInUser().getUsername()));
     }
 }
