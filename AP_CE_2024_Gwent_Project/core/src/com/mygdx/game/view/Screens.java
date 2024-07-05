@@ -13,7 +13,8 @@ public enum Screens {
     FRIENDS,
     REGISTER,
     CHOOSE_SECURITY_QUESTION,
-    FORGET_PASSWORD;
+    FORGET_PASSWORD,
+    GAME_REQUEST;
     ;
     public Screen createScreen() {
         Screen screen = null;
@@ -48,6 +49,8 @@ public enum Screens {
             case FORGET_PASSWORD:
                 screen = new ForgetPasswordScreen();
                 break;
+            case GAME_REQUEST:
+                screen = new GameRequestScreen();
         }
         return screen;
     }
