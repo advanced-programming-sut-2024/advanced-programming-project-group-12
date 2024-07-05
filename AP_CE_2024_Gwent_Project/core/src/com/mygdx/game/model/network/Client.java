@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.model.network.massage.serverResponse.*;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ServerPlayInvite;
 import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.view.Screens;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
@@ -105,6 +106,15 @@ public class Client extends Thread{
                 User.getLoggedInUser().setReceivedFriendRequests(serverFriendRequest.getRequests());
                 //let friends screen know they can proceed
                 break;
+            case GET_FRIENDS:
+                ServerFriend serverFriend = gson.fromJson(request, ServerFriend.class);
+                User.getLoggedInUser().setFriends(serverFriend.getFriends());
+                //let friends screen know the shit so they can proceed
+                break;
+            case INVITE_TO_PLAY:
+                ServerPlayInvite serverPlayInvite = gson.fromJson(request, ServerPlayInvite.class);
+                break;
+            case INVITE_TO_PLAY_RESPONSE:
 
         }
     }

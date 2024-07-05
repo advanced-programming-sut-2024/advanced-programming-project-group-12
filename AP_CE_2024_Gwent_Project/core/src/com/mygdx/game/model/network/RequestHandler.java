@@ -21,6 +21,8 @@ import com.mygdx.game.model.network.session.Session;
 import java.io.*;
 import java.util.HashMap;
 
+import static com.mygdx.game.model.network.massage.serverResponse.ServerResponseType.GET_FRIENDS;
+
 public class RequestHandler extends Thread {
     public static HashMap<User, RequestHandler> allUsers = new HashMap<>();
 
@@ -92,6 +94,9 @@ public class RequestHandler extends Thread {
                     break;
                 case GET_FRIEND_REQUESTS:
                     serverResponse = new FriendRequestHandler(request, gson).getPendingRequests(user);
+                    break;
+                case GET_FRIENDS:
+                    serverResponse = new FriendRequestHandler(request, gson).getFriends(user);
                     break;
                 case START_GAME:
                    new InviteHandler(request, gson).handle();

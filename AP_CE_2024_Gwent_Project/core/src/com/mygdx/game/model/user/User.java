@@ -290,6 +290,10 @@ public class User {
         save(); // Save the user's data after setting the leader
     }
 
+    public void setFriends(ArrayList<User> friends) {
+        this.friends = friends;
+    }
+
     public String getLeader() {
         return leader;
     }
