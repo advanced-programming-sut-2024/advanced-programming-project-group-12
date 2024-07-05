@@ -71,6 +71,7 @@ public class RequestHandler extends Thread {
     }
 
     private void handleRequest() {
+        System.out.println("request: " + request);
         ClientRequest clientRequest = gson.fromJson(request, ClientRequest.class);
         ServerResponse serverResponse = null;
         try {
@@ -144,6 +145,7 @@ public class RequestHandler extends Thread {
         //perhaps wait for response
         try {
             massage.setSession(session);
+            System.out.println("massage sent: " + gson.toJson(massage));
             dataOutputStream.writeUTF(gson.toJson(massage));
         } catch (IOException e) {
             System.err.println("IO exception in sendMassage");

@@ -25,8 +25,8 @@ public class ClientInviteResponse extends ClientRequest {
         this.response = "reject";
     }
 
-    public ClientInviteResponse(ClientRequestType type, Faction faction, LinkedList<AbstractCard> deck, CommanderCard commanderCard, String invitor) {
-        super(type);
+    public ClientInviteResponse(Faction faction, LinkedList<AbstractCard> deck, CommanderCard commanderCard, String invitor) {
+        super(ClientRequestType.INVITE_ANSWER);
         this.response = "accept";
         this.invitor = invitor;
         this.faction = faction;
