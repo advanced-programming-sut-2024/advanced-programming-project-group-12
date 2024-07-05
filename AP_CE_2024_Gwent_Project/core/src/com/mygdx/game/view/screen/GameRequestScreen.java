@@ -13,6 +13,7 @@ import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.GameRequestController;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.mygdx.game.model.user.User;
+import com.mygdx.game.view.Screens;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +26,18 @@ public class GameRequestScreen implements Screen {
     private final Texture background;
     private final TextField nameField;
     private final Button searchButton;
+    private Button back;
+
     private float timer;
     private boolean requestSent;
     private final Label timerLabel;
     private final Label requestSentLabel;
     private final Label errorLabel;
     private final Skin skin;
-    private static Window requestWindow;
+    private final Window requestWindow;
     private final Label requestListLabel;
     private final List<String> receivedRequests;
+    private static boolean showRequestWindow;
 
     public GameRequestScreen() {
         this.controller = new GameRequestController();
@@ -48,10 +52,11 @@ public class GameRequestScreen implements Screen {
         this.timerLabel = new Label("", skin);
         this.requestSentLabel = new Label("", skin);
         this.errorLabel = new Label("", skin);
+        this.back = new TextButton("Back", skin);
 
         // Create the hidden window for game requests
-        this.requestWindow = new Window("Game Requests", skin);
         this.requestListLabel = new Label("", skin);
+        this.requestWindow = new Window("Game Requests", skin);
         requestWindow.add(requestListLabel).pad(10);
         requestWindow.setSize(400, 300);
         requestWindow.setPosition(Gdx.graphics.getWidth() / 2f - 200, Gdx.graphics.getHeight() / 2f - 150);
@@ -70,7 +75,9 @@ public class GameRequestScreen implements Screen {
         table.add(requestSentLabel).pad(10);
         table.row();
         table.add(errorLabel).pad(10);
+        table.add(back).row();
         stage.addActor(table);
+
 
         // Add a click listener to the search button
         searchButton.addListener(new ClickListener() {
@@ -91,19 +98,30 @@ public class GameRequestScreen implements Screen {
                 }
             }
         });
+        back.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gwent.singleton.changeScreen(Screens.PRE_GAME_MENU);
+            }
+        });
 
         requestSent = false;
     }
 
     public static void showRequestWindow(String from) {
-        requestWindow.setVisible(true);
+        showRequestWindow = true;
     }
+
     private void updateRequestWindow() {
-        StringBuilder requestText = new StringBuilder();
-        for (String request : receivedRequests) {
-            requestText.append(request).append("\n");
+        if (showRequestWindow) {
+            StringBuilder requestText = new StringBuilder();
+            for (String request : receivedRequests) {
+                requestText.append(request).append("\n");
+            }
+            requestListLabel.setText(requestText.toString());
+            requestWindow.setVisible(true);
+            showRequestWindow = false;
         }
-        requestListLabel.setText(requestText.toString());
     }
 
     @Override
