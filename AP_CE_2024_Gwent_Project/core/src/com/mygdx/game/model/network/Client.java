@@ -125,6 +125,7 @@ public class Client extends Thread{
                     Gwent.singleton.changeScreen(Screens.GAME);
                 }
                 break;
+            case GAME_TURN_DECIDE:
         }
     }
     public void setUser(User user) {
