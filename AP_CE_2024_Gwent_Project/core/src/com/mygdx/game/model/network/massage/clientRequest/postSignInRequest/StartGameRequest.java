@@ -7,14 +7,15 @@ import com.mygdx.game.model.user.User;
 import com.mygdx.game.model.network.session.Session;
 
 public class StartGameRequest extends ClientRequest {
-    private User toBeInvited;
+    private String invitor;
+    private String toBeInvited;
 
-    public StartGameRequest(Session session, User toBeInvited) {
-        super(ClientRequestType.START_GAME, session);
+    public StartGameRequest(String toBeInvited) {
+        super(ClientRequestType.START_GAME, null);
         this.toBeInvited = toBeInvited;
     }
 
-    public User getUserToBeInvited() {
+    public String getUserToBeInvited() {
         return toBeInvited;
     }
 }

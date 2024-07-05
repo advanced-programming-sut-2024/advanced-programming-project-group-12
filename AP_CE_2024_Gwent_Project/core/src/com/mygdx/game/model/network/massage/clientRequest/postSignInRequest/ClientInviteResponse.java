@@ -6,16 +6,16 @@ import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.model.user.User;
 
 public class ClientInviteResponse extends ClientRequest {
-    private User invitor;
+    private String invitor;
     private String response;
 
-    public ClientInviteResponse(Session session, User invitor, String response) {
+    public ClientInviteResponse(Session session, String invitor, String response) {
         super(ClientRequestType.INVITE_ANSWER, session);
         this.invitor = invitor;
         this.response = response;
     }
 
-    public User getInvitor() {
+    public String getInvitor() {
         return invitor;
     }
 

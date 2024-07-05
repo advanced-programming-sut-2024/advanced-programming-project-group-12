@@ -17,7 +17,7 @@ public class InviteHandler {
 
     public void handle() {
         StartGameRequest startGameRequest = gson.fromJson(request, StartGameRequest.class);
-        User toBeInvited = startGameRequest.getUserToBeInvited();
+        User toBeInvited = User.getUserByUsername(startGameRequest.getUserToBeInvited());
         if(!RequestHandler.allUsers.containsKey(toBeInvited)) {
             //handle the case
         }

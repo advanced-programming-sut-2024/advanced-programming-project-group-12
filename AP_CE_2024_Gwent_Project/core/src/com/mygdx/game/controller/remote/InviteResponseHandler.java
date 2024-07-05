@@ -19,7 +19,7 @@ public class InviteResponseHandler {
 
     public void handle() {
         ClientInviteResponse clientInviteResponse = gson.fromJson(request, ClientInviteResponse.class);
-        User invitor = clientInviteResponse.getInvitor();
+        User invitor = User.getUserByUsername(clientInviteResponse.getInvitor());
         if(!RequestHandler.allUsers.containsKey(invitor)) {
             //handle the case
         }

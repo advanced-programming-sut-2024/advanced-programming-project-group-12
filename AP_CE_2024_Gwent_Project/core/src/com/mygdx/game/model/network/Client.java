@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.model.network.massage.serverResponse.*;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ServerInviteResponse;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ServerPlayInvite;
 import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.view.Screens;
@@ -113,9 +114,14 @@ public class Client extends Thread{
                 break;
             case INVITE_TO_PLAY:
                 ServerPlayInvite serverPlayInvite = gson.fromJson(request, ServerPlayInvite.class);
+                //show pop up
                 break;
             case INVITE_TO_PLAY_RESPONSE:
-
+                ServerInviteResponse response = gson.fromJson(request, ServerInviteResponse.class);
+                if(response.getResponse().getResponse().equals("accept")) {
+                    Gwent.singleton.changeScreen(Screens.GAME);
+                }
+                break;
         }
     }
     public void setUser(User user) {

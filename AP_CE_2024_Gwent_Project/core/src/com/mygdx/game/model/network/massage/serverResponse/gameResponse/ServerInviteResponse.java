@@ -6,9 +6,13 @@ import com.mygdx.game.model.network.massage.serverResponse.ServerResponseType;
 import com.mygdx.game.model.network.session.Session;
 
 public class ServerInviteResponse extends ServerResponse {
-    ClientInviteResponse response;
+    private ClientInviteResponse response;
     public ServerInviteResponse(ClientInviteResponse response) {
         super(ServerResponseType.INVITE_TO_PLAY_RESPONSE, null);
         this.response = response;
+    }
+
+    public ClientInviteResponse getResponse() {
+        return response;
     }
 }

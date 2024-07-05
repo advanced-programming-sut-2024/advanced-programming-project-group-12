@@ -5,12 +5,15 @@ import com.mygdx.game.model.game.card.CommanderCard;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.game.Game;
+import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.StartGameRequest;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
 
 import com.google.gson.Gson;
 import com.mygdx.game.view.Screens;
 
+import javax.swing.event.CaretListener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -87,6 +90,7 @@ public class PreGameMenuController {
 */
     }
 
-    public void sendGameRequest() {
+    public void sendGameRequest(String username) {
+        Client.getInstance().sendMassage(new StartGameRequest(username));
     }
 }
