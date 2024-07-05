@@ -120,7 +120,7 @@ public class PreGameMenuScreen implements Screen {
         sendAGameRequestButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                controller.sendGameRequest();
+                controller.sendGameRequest("");
             }
         });
         dashboard.row();

@@ -31,7 +31,7 @@ public class GameRequestScreen implements Screen {
     private final Label requestSentLabel;
     private final Label errorLabel;
     private final Skin skin;
-    private final Window requestWindow;
+    private static Window requestWindow;
     private final Label requestListLabel;
     private final List<String> receivedRequests;
 
@@ -95,7 +95,7 @@ public class GameRequestScreen implements Screen {
         requestSent = false;
     }
 
-    public void showRequestWindow(String from) {
+    public static void showRequestWindow(String from) {
         requestWindow.setVisible(true);
     }
     private void updateRequestWindow() {
