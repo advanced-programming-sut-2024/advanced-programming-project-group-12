@@ -111,7 +111,7 @@ public class GameScreen implements Screen {
                 if (selectedCard != null && selectedCard.getFaction().equals(Faction.WEATHER)) {
                     playWeatherCard(selectedCardActor);
                     // Add the card to the weather box
-                    weatherBox.add(selectedCardActor.getImage()).size(80, 110).expand().fill();
+                    weatherBox.add(selectedCardActor.getCardTable()).size(80, 110).expand().fill();
                     // Remove the card from the player's hand
                     player.getHand().remove(selectedCard);
                     // Unselect the card
@@ -195,21 +195,21 @@ public class GameScreen implements Screen {
 
     public void displayLeaderCard() {
         CardActor leaderCard = new CardActor(player.getLeader());
-        leaderCard.getImage().setWidth((float) (leaderCard.getWidth() * 1.15));
-        leaderCard.getImage().setPosition(115, 100);
-        stage.addActor(leaderCard.getImage());
+        leaderCard.getCardTable().setWidth((float) (leaderCard.getWidth() * 1.15));
+        leaderCard.getCardTable().setPosition(115, 100);
+        stage.addActor(leaderCard.getCardTable());
         CardActor oppositeLeaderCard = new CardActor(player.getLeader());
-        oppositeLeaderCard.getImage().setWidth((float) (oppositeLeaderCard.getWidth() * 1.15));
-        oppositeLeaderCard.getImage().setPosition(115, 780);
-        stage.addActor(oppositeLeaderCard.getImage());
-        leaderCard.getImage().setTouchable(Touchable.enabled);
-        leaderCard.getImage().addListener(new ClickListener() {
+        oppositeLeaderCard.getCardTable().setWidth((float) (oppositeLeaderCard.getWidth() * 1.15));
+        oppositeLeaderCard.getCardTable().setPosition(115, 780);
+        stage.addActor(oppositeLeaderCard.getCardTable());
+        leaderCard.getCardTable().setTouchable(Touchable.enabled);
+        leaderCard.getCardTable().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 showLeaderCard(leaderCard.getCard());
             }
         });
-        oppositeLeaderCard.getImage().addListener(new ClickListener() {
+        oppositeLeaderCard.getCardTable().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 showLeaderCard(oppositeLeaderCard.getCard());
@@ -225,14 +225,14 @@ public class GameScreen implements Screen {
 
         // Create the enlarged card
         CardActor enlargedCard = new CardActor(card);
-        enlargedCard.getImage().setSize(0, 0); // Start with size 0
-        enlargedCard.getImage().setPosition(700, 450);
+        enlargedCard.getCardTable().setSize(0, 0); // Start with size 0
+        enlargedCard.getCardTable().setPosition(700, 450);
 
         // Create the close button
         TextButton closeButton = new TextButton("X", Gwent.singleton.skin);
         closeButton.setSize(75, 75); // Adjust the size as needed
-        closeButton.setPosition(enlargedCard.getImage().getX() + 300 - closeButton.getWidth(),
-                enlargedCard.getImage().getY() + 450 - closeButton.getHeight());
+        closeButton.setPosition(enlargedCard.getCardTable().getX() + 300 - closeButton.getWidth(),
+                enlargedCard.getCardTable().getY() + 450 - closeButton.getHeight());
         // Disable all other actors on the stage
         for (Actor actor : stage.getActors()) {
             actor.setTouchable(Touchable.disabled);
@@ -240,12 +240,12 @@ public class GameScreen implements Screen {
 
         // Add the blur effect, the enlarged card, and the close button to the stage
         stage.addActor(blurEffect);
-        stage.addActor(enlargedCard.getImage());
+        stage.addActor(enlargedCard.getCardTable());
         stage.addActor(closeButton);
 
         // Enable the blur effect, the enlarged card, and the close button
         blurEffect.setTouchable(Touchable.enabled);
-        enlargedCard.getImage().setTouchable(Touchable.enabled);
+        enlargedCard.getCardTable().setTouchable(Touchable.enabled);
         closeButton.setTouchable(Touchable.enabled);
 
         // Add a ClickListener to the close button
@@ -260,11 +260,11 @@ public class GameScreen implements Screen {
                         blurEffect.remove();
                     }
                 })));
-                enlargedCard.getImage().addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run(new Runnable() {
+                enlargedCard.getCardTable().addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run(new Runnable() {
                     @Override
                     public void run() {
                         // Remove the enlarged card from the stage after the fade-out animation completes
-                        enlargedCard.getImage().remove();
+                        enlargedCard.getCardTable().remove();
                     }
                 })));
 
@@ -280,7 +280,7 @@ public class GameScreen implements Screen {
 
         // Add animations
         blurEffect.addAction(Actions.fadeIn(0.5f)); // Fade in over 0.5 seconds
-        enlargedCard.getImage().addAction(Actions.sizeTo(300, 450, 0.5f)); // Grow to size 300x450 over 0.5 seconds
+        enlargedCard.getCardTable().addAction(Actions.sizeTo(300, 450, 0.5f)); // Grow to size 300x450 over 0.5 seconds
     }
 
 
@@ -291,7 +291,7 @@ public class GameScreen implements Screen {
         hand.addToStageAndAddListener(stage);
         for (CardActor cardActor : hand.getCards()) {
             AbstractCard card = cardActor.getCard();
-            cardActor.getImage().addListener(new ClickListener() {
+            cardActor.getCardTable().addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     AbstractCard selectedCard = controller.getSelectedCard();
@@ -310,9 +310,9 @@ public class GameScreen implements Screen {
                             selectedCardActor.remove(); // Remove the currently selected card actor from the stage
                         }
                         selectedCardActor = new CardActor(card);
-                        selectedCardActor.getImage().setSize(200, 300);
-                        selectedCardActor.getImage().setPosition(1300, 400);
-                        stage.addActor(selectedCardActor.getImage());
+                        selectedCardActor.getCardTable().setSize(200, 300);
+                        selectedCardActor.getCardTable().setPosition(1300, 400);
+                        stage.addActor(selectedCardActor.getCardTable());
                         resetBackgroundColors();
                         highlightAllowablePlaces(card);
                     }

@@ -15,7 +15,7 @@ import com.mygdx.game.view.screen.*;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class Client extends Thread{
+public class Client extends Thread {
     private static Client instance;
     private ClientListener clientListener;
     private DataOutputStream dataOutputStream;
