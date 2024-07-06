@@ -13,10 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.Gwent;
-import com.mygdx.game.model.game.card.AbstractCard;
-import com.mygdx.game.model.game.card.Action;
-import com.mygdx.game.model.game.card.Hero;
-import com.mygdx.game.model.game.card.PlayableCard;
+import com.mygdx.game.model.game.card.*;
 import com.mygdx.game.model.user.Player;
 
 import java.util.List;
@@ -48,7 +45,7 @@ public class CardTable extends Table {
         Table bottomTable = new Table();
         bottomTable.align(Align.center);
         // Check and add ability image if exists
-        if (!card.getAction().equals(Action.NO_ACTION)) {
+        if (!card.getAction().equals(Action.NO_ACTION) && !(card instanceof SpellCard)) {
             abilityImage = new Image(getAbiltyTexture());
             bottomTable.add(abilityImage).size(30, 30);
         } else {
