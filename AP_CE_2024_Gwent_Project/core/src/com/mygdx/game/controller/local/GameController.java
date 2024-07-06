@@ -103,8 +103,7 @@ public class GameController {
         currentPlayer.removeCardFromHand(card);
     }
 
-    public void playWeatherCard() {
-    }
+
     /*
      this method has two inputs
      a boolean for side and this represent this : true -> player, false -> opposition

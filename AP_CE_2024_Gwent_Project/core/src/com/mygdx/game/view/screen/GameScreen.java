@@ -150,11 +150,9 @@ public class GameScreen implements Screen {
                 if (selectedCard != null && selectedCard.getFaction().equals(Faction.WEATHER)) {
                     playWeatherCard(selectedCardActor);
                     // Add the card to the weather box
-                    weatherBox.add(selectedCardActor.getCardTable()).size(80, 110).expand().fill();
                     // Remove the card from the player's hand
-                    player.getHandAsCards().remove(selectedCard);
+                    controller.playCard(selectedCard, 3);
                     // Unselect the card
-                    controller.setSelectedCard(null);
                     if (selectedCardActor != null) {
                         selectedCardActor.remove();
                         selectedCardActor = null;
@@ -226,10 +224,6 @@ public class GameScreen implements Screen {
     }
 
     private void renderShowingCardsState(float delta) {
-        // Implement logic to blur the game screen and show the player some cards
-        // This can include rendering a separate stage with the cards to show
-        // Once the card selection is done, change the game state back to NORMAL
-
         // Example:
         blurScreen(); // Add your blur effect here
     }
@@ -430,11 +424,12 @@ public class GameScreen implements Screen {
         hand.clear();
         // Redraw the player's hand
         displayHand();
+
         playerInfoBox.updatePlayerInfo(player.getHandAsCards().size());
     }
 
     private void playWeatherCard(CardActor card) {
-
+        weatherBox.add(selectedCardActor.getCardTable()).size(80, 110).expand().fill();
     }
 
     private void highlightAllowablePlaces(AbstractCard card) {
