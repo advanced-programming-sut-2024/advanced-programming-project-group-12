@@ -186,7 +186,6 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 controller.passRound();
-                playerInfoBox.kill();
             }
         });
         chatBox.getSendButton().addListener(new InputListener() {
@@ -247,11 +246,8 @@ public class GameScreen implements Screen {
         stage.act();
         stage.draw();
 
-        // End rendering to the FrameBuffer
         blurBuffer.end();
 
-        // Apply a blur effect to the FrameBuffer using shaders
-        // You can find or create a custom blur shader to apply the effect
 
         // Draw the blurred texture onto the screen
         TextureRegion blurredRegion = new TextureRegion(blurBuffer.getColorBufferTexture());
@@ -449,7 +445,7 @@ public class GameScreen implements Screen {
             weatherBox.highlight();
         }
         // Check if the card is a horn card
-        if (controller.isCardAHorn(card)) {
+        if (controller.isHorn(card)) {
             // If it is, highlight the horn areas of the allowable rows
             for (RowTable row : playerRows) {
                 if (allowableRows.contains(row.getRowNumber())) {
