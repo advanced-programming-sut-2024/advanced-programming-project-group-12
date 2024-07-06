@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
+import com.mygdx.game.controller.local.ChatController;
 import com.mygdx.game.controller.local.GameController;
 import com.mygdx.game.model.game.card.Action;
 import com.mygdx.game.model.game.Faction;
@@ -47,6 +48,9 @@ public class GameScreen implements Screen {
     private Table opposiytionDiscards;
     private Player player;
     private Player opposition;
+    //chat parts
+    private ChatBox chatBox;
+    private TextButton chatButton;
 
     public GameScreen() {
         if(Client.getInstance().getGame().getCurrentPlayer().getUsername().equals(Client.getInstance().getUser().getUsername())) {
@@ -63,6 +67,27 @@ public class GameScreen implements Screen {
         passButton.setPosition(220, 120);
         passButton.setSize(150, 80);
         weatherBox = new WeatherBox();
+
+        chatBox = new ChatBox(Gwent.singleton.skin);
+        chatBox.setPosition(400, 500); // set the position of the chat box
+        stage.addActor(chatBox);
+
+        chatButton = new TextButton("Chat", Gwent.singleton.skin);
+        chatButton.setPosition(1440, 60); // set the position of the chat button
+        stage.addActor(chatButton);
+
+        chatButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (chatBox.isVisible()) {
+                    chatBox.hide();
+                } else {
+                    chatBox.show();
+                }
+            }
+        });
+
+
         playerDiscards = new Table(Gwent.singleton.skin);
         playerDiscards.setTouchable(Touchable.enabled);
         opposiytionDiscards = new Table(Gwent.singleton.skin);
@@ -125,11 +150,9 @@ public class GameScreen implements Screen {
                 if (selectedCard != null && selectedCard.getFaction().equals(Faction.WEATHER)) {
                     playWeatherCard(selectedCardActor);
                     // Add the card to the weather box
-                    weatherBox.add(selectedCardActor.getCardTable()).size(80, 110).expand().fill();
                     // Remove the card from the player's hand
-                    player.getHandAsCards().remove(selectedCard);
+                    controller.playCard(selectedCard, 3);
                     // Unselect the card
-                    controller.setSelectedCard(null);
                     if (selectedCardActor != null) {
                         selectedCardActor.remove();
                         selectedCardActor = null;
@@ -161,7 +184,16 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 controller.passRound();
-                playerInfoBox.kill();
+            }
+        });
+        chatBox.getSendButton().addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                String message = chatBox.getInputText();
+                if(message.isEmpty()) return true;
+                ChatController.sendMessage(Client.getInstance().getUser().getUsername(), message);
+                chatBox.clearInput();
+                return true;
             }
         });
     }
@@ -192,10 +224,6 @@ public class GameScreen implements Screen {
     }
 
     private void renderShowingCardsState(float delta) {
-        // Implement logic to blur the game screen and show the player some cards
-        // This can include rendering a separate stage with the cards to show
-        // Once the card selection is done, change the game state back to NORMAL
-
         // Example:
         blurScreen(); // Add your blur effect here
     }
@@ -212,11 +240,8 @@ public class GameScreen implements Screen {
         stage.act();
         stage.draw();
 
-        // End rendering to the FrameBuffer
         blurBuffer.end();
 
-        // Apply a blur effect to the FrameBuffer using shaders
-        // You can find or create a custom blur shader to apply the effect
 
         // Draw the blurred texture onto the screen
         TextureRegion blurredRegion = new TextureRegion(blurBuffer.getColorBufferTexture());
@@ -399,11 +424,12 @@ public class GameScreen implements Screen {
         hand.clear();
         // Redraw the player's hand
         displayHand();
+
         playerInfoBox.updatePlayerInfo(player.getHandAsCards().size());
     }
 
     private void playWeatherCard(CardActor card) {
-
+        weatherBox.add(selectedCardActor.getCardTable()).size(80, 110).expand().fill();
     }
 
     private void highlightAllowablePlaces(AbstractCard card) {
@@ -414,7 +440,7 @@ public class GameScreen implements Screen {
             weatherBox.highlight();
         }
         // Check if the card is a horn card
-        if (controller.isCardAHorn(card)) {
+        if (controller.isHorn(card)) {
             // If it is, highlight the horn areas of the allowable rows
             for (RowTable row : playerRows) {
                 if (allowableRows.contains(row.getRowNumber())) {

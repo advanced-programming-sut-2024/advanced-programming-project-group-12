@@ -12,7 +12,7 @@ import com.mygdx.game.model.game.GameBoard;
 
 public class GameController {
     private AbstractCard selectedCard;
-
+    private boolean permission;
     public void setSelectedCard(AbstractCard card) {
         selectedCard = card;
     }
@@ -103,8 +103,7 @@ public class GameController {
         currentPlayer.removeCardFromHand(card);
     }
 
-    public void playWeatherCard() {
-    }
+
     /*
      this method has two inputs
      a boolean for side and this represent this : true -> player, false -> opposition
@@ -120,8 +119,14 @@ public class GameController {
         }
     }
 
-    public boolean isCardAHorn(AbstractCard card) {
+    public boolean isHorn(AbstractCard card) {
         //TODO :
         return card.equals(AllCards.COMMANDER_HORN.getAbstractCard());
+    }
+    public boolean getPermission() {
+        return permission;
+    }
+    public void setPermission(boolean permission) {
+        this.permission = permission;
     }
 }
