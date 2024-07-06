@@ -22,9 +22,11 @@ public class InviteHandler {
         StartGameRequest startGameRequest = gson.fromJson(request, StartGameRequest.class);
 
         //updating user in remote
+
         user.setDeck(new ArrayList<>(startGameRequest.getDeck()));
         user.setLeader(startGameRequest.getCommanderCard());
         user.setFaction(startGameRequest.getFaction());
+
 
         requestHandler.setGameHandler(new GameHandler(user));
         if(!RequestHandler.allUsers.containsKey(startGameRequest.getUserToBeInvited())) {

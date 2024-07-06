@@ -121,6 +121,8 @@ public class Client extends Thread {
                 GameRequestScreen.showRequestWindow(serverPlayInvite.getClientRequest().getInvitor());
                 break;
             case INVITE_TO_PLAY_RESPONSE:
+                //todo: remove the temp sout
+                System.out.println(User.getLoggedInUser());
                 ServerInviteResponse response = gson.fromJson(request, ServerInviteResponse.class);
                 if(response.getResponse().getResponse().equals("accept")) {
                     Gwent.singleton.changeScreen(Screens.GAME);
