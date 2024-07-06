@@ -39,8 +39,8 @@ public class GameHandler {
         user2.setPlayer(new Player(user2));
         game = new Game(user1.getPlayer(), user2.getPlayer(), this);
 
-        RequestHandler.allUsers.get(user1).sendMassage(new SetGameToStart(game));
-        RequestHandler.allUsers.get(user2).sendMassage(new SetGameToStart(game));
+        RequestHandler.allUsers.get(user1.getUsername()).sendMassage(new SetGameToStart(game));
+        RequestHandler.allUsers.get(user2.getUsername()).sendMassage(new SetGameToStart(game));
 
         if(user1.getFaction().equals(Faction.SCOIATAEL) && !user2.getFaction().equals(Faction.SCOIATAEL)) {
             RequestHandler.allUsers.get(user1.getUsername()).sendMassage(new TurnDecideRequest());
@@ -63,7 +63,17 @@ public class GameHandler {
 
     public void handleChat(ChatInGame chat, User user) {
         User toUser = user.equals(user1)? user2: user1;
-        RequestHandler.allUsers.get(toUser).sendMassage(new ChatInGameWrapper(chat));
+        RequestHandler.allUsers.get(toUser.getUsername()).sendMassage(new ChatInGameWrapper(chat));
+        sendMassageToSpectators(new ChatInGameWrapper(chat));
+    }
+    public void spectatorChatHandle(ChatInGame chat, User user) {
+        ChatInGameWrapper wrapper = new ChatInGameWrapper(chat);
+        RequestHandler.allUsers.get(user1.getUsername()).sendMassage(wrapper);
+        RequestHandler.allUsers.get(user2.getUsername()).sendMassage(wrapper);
+
+        for(User spectator: spectators) {
+            RequestHandler.allUsers.get(spectator.getUsername()).sendMassage(wrapper);
+        }
     }
 
     public void addAsAnSpectator(User user) {
@@ -72,7 +82,7 @@ public class GameHandler {
 
     public void sendMassageToSpectators(ServerResponse serverResponse) {
         for(User user: spectators) {
-            RequestHandler.allUsers.get(user).sendMassage(serverResponse);
+            RequestHandler.allUsers.get(user.getUsername()).sendMassage(serverResponse);
         }
     }
 }

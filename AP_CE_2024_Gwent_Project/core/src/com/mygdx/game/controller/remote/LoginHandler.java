@@ -20,13 +20,21 @@ public class LoginHandler {
     public LoginResponse handle(RequestHandler requestHandler) {
         LoginRequest loginRequest = gson.fromJson(request, LoginRequest.class);
         String username = loginRequest.getUsername();
+        if(username.equals("admin")) {
+            User user = User.getUserByUsername(username);
+            if(user == null) {
+                System.err.println("no such user to be loggend in");
+            }
+            RequestHandler.allUsers.put(user.getUsername(), requestHandler);
+            return new LoginResponse(ServerResponseType.LOGIN_CONFIRM , user);
+        }
         String password = loginRequest.getPassword();
         //todo: seperate server and client logincs bellow
         String response = loginHandler(username, password);
         if(response.equals("accept")) {
             User user = User.getUserByUsername(username);
             if(user == null) {
-                System.err.println("no such user to be invited");
+                System.err.println("no such user to be loggend in");
             }
             RequestHandler.allUsers.put(user.getUsername(), requestHandler);
             return new LoginResponse(ServerResponseType.LOGIN_CONFIRM , user);

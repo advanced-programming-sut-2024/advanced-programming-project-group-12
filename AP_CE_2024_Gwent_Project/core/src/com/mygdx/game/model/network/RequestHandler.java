@@ -80,6 +80,7 @@ public class RequestHandler extends Thread {
             User user = null;
             if(session != null) {
                 user = Session.getUser(session);
+                System.out.println("now doing session for: " + user.getUsername());
             }
 
             switch (clientRequest.getType()) {
@@ -131,6 +132,11 @@ public class RequestHandler extends Thread {
                 case CHAT:
                     ChatInGame chat = gson.fromJson(request, ChatInGame.class);
                     gameHandler.handleChat(chat, user);
+                    break;
+                case SPECTATOR_CHAT:
+                    ChatInGame spectatorChat = gson.fromJson(request, ChatInGame.class);
+                    gameHandler.spectatorChatHandle(spectatorChat, user);
+                    break;
             }
 
             if(serverResponse != null && session != null) {

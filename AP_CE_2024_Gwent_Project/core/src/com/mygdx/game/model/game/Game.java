@@ -16,23 +16,22 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Game {
-    private final List<User> allUsers;
-    private final List<Player> players;
+    private transient final List<User> allUsers;
+    private transient final List<Player> players;
 
-    @Expose
-    private CardSelectHandler cardSelectHandler;
+    private transient CardSelectHandler cardSelectHandler;
 //    private final LocalDate date;
 
-    @Expose
-    private final ArrayList<Round> rounds;
-    @Expose
-    private GameHandler gameHandler;
+    private transient final ArrayList<Round> rounds;
+    private transient GameHandler gameHandler;
     private Round currentRound;
+
 
     private final GameBoard gameBoard;
     private Player currentPlayer;
+
+
     private Player opposition;
-    private boolean pendingRoundEnd;
 
     private boolean isOver;
     private boolean randomMedic;
@@ -99,14 +98,14 @@ public class Game {
 
     private void sendEndRoundMassages(Player toStartNext) {
         Player toWait = toStartNext == currentPlayer? opposition: currentPlayer;
-        RequestHandler.allUsers.get(toStartNext).sendMassage(new EndRoundNotify(true));
-        RequestHandler.allUsers.get(toWait).sendMassage(new EndRoundNotify(false));
+        RequestHandler.allUsers.get(toStartNext.getUsername()).sendMassage(new EndRoundNotify(true));
+        RequestHandler.allUsers.get(toWait.getUsername()).sendMassage(new EndRoundNotify(false));
         gameHandler.sendMassageToSpectators(new EndRoundNotify(false));
     }
 
     private void sendEndGameMassages(EndGameNotify endGameNotify) {
-        RequestHandler.allUsers.get(currentPlayer).sendMassage(endGameNotify);
-        RequestHandler.allUsers.get(opposition).sendMassage(endGameNotify);
+        RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(endGameNotify);
+        RequestHandler.allUsers.get(opposition.getUsername()).sendMassage(endGameNotify);
         gameHandler.sendMassageToSpectators(endGameNotify);
     }
 
