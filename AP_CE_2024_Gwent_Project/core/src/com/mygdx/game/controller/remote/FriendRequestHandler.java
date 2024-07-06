@@ -87,10 +87,10 @@ public class FriendRequestHandler {
             return null;
 
         Gson gson = new Gson();
-        
+
         try {
             FileReader reader = new FileReader(file);
-            Map friendRequests = gson.fromJson(reader, HashMap.class);
+            Map<String , Map<String , FriendRequest>> friendRequests = gson.fromJson(reader, MapWrapper.class).friendRequests;
             reader.close();
             return friendRequests;
 
@@ -108,10 +108,18 @@ public class FriendRequestHandler {
         }
         try {
             FileWriter writer = new FileWriter(file);
-            gson.toJson(friendRequests, writer);
+            gson.toJson(new MapWrapper(friendRequests), writer);
             writer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+}
+
+class MapWrapper {
+    Map<String , Map<String , FriendRequest>> friendRequests;
+
+    public MapWrapper(Map<String, Map<String, FriendRequest>> friendRequests) {
+        this.friendRequests = friendRequests;
     }
 }

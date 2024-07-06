@@ -10,6 +10,7 @@ import com.mygdx.game.model.user.User;
 import java.util.ArrayList;
 
 public class InviteHandler {
+    private static GameHandler queGameHandler = null;
     private String request;
     private Gson gson;
 
@@ -27,8 +28,20 @@ public class InviteHandler {
         user.setLeader(startGameRequest.getCommanderCard());
         user.setFaction(startGameRequest.getFaction());
 
+        if(startGameRequest.isRandomOpponent()) {
+            if(queGameHandler == null) {
+                queGameHandler = new GameHandler(user);
+                requestHandler.setGameHandler(queGameHandler);
+            }
+            else {
+                queGameHandler.addUserAndStart(user);
+                queGameHandler = null;
+            }
+            return;
+        }
 
         requestHandler.setGameHandler(new GameHandler(user));
+
         if(!RequestHandler.allUsers.containsKey(startGameRequest.getUserToBeInvited())) {
             //handle the case
         }
