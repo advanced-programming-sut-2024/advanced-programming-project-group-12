@@ -130,6 +130,7 @@ public class Client extends Thread {
             case START_GAME:
                 SetGameToStart setGameToStart = gson.fromJson(request, SetGameToStart.class);
                 System.out.println("please remove this console print after implementing game start");
+                System.out.println("alaki");
                 //notification to change to game screen
                 break;
             case GAME_TURN_DECIDE:
