@@ -39,7 +39,6 @@ public class GameScreen implements Screen {
     private CardActor selectedCardActor;
     private PlayerInfoBox playerInfoBox;
     private PlayerInfoBox oppositionInfoBox;
-    private Table playerDeck;
 
     public GameScreen() {
         stage = new Stage();
