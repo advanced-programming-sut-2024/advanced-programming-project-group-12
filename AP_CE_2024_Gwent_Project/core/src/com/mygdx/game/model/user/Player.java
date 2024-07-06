@@ -18,7 +18,7 @@ public class Player {
     private CommanderCard leader;
     private LinkedList<String> deck;
     private LinkedList<String> hand;
-
+    private String username;
     private Faction faction;
     private int roundsLost;
     private boolean won;
@@ -29,6 +29,7 @@ public class Player {
         this.leader = user.getLeaderAsCard();
         this.faction = user.getFaction();
         this.user = user;
+        this.username = user.getUsername();
         this.hand = new LinkedList<>();
         this.roundsLost = 0;
         this.isPassed = false;
@@ -128,7 +129,7 @@ public class Player {
     }
 
     public String getUsername() {
-        return user.getUsername();
+        return username;
     }
 
     public int getHealth() {

@@ -81,7 +81,6 @@ public class Server extends Thread {
                     System.err.println("failure in connection in Server thread run method");
                     break;
                 }
-            //}
         }
     }
 

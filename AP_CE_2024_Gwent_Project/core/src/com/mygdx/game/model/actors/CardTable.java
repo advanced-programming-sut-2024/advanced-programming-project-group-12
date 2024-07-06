@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -64,6 +65,7 @@ public class CardTable extends Table {
         add(bottomTable).expandX().fillX();
 
         setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        setTouchable(Touchable.enabled);
     }
 
     public void updatePowerNumber(int newPower) {
@@ -88,7 +90,6 @@ public class CardTable extends Table {
     }
 
     public Texture getAbiltyTexture() {
-        //TODO: Implement logic to return the correct ability texture based on the card
         String path = "icons/card_ability_" + card.getAction().toString().toLowerCase() + ".png";
         return new Texture(path);
     }

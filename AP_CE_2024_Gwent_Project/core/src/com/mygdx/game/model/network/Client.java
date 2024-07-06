@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
+import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
 import com.mygdx.game.model.network.massage.serverResponse.*;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.*;
@@ -22,6 +23,7 @@ public class Client extends Thread {
     private DataOutputStream dataOutputStream;
     private Gson gson;
     private User user;
+    private Game game;
     private String request;
     private Session session;
 
@@ -130,7 +132,8 @@ public class Client extends Thread {
             case START_GAME:
                 SetGameToStart setGameToStart = gson.fromJson(request, SetGameToStart.class);
                 System.out.println("please remove this console print after implementing game start");
-                System.out.println("alaki");
+                this.game = setGameToStart.getGame();
+                Gwent.singleton.changeScreen(Screens.GAME);
                 //notification to change to game screen
                 break;
             case GAME_TURN_DECIDE:
@@ -162,5 +165,8 @@ public class Client extends Thread {
     }
     public User getUser() {
         return user;
+    }
+    public Game getGame() {
+        return game;
     }
 }
