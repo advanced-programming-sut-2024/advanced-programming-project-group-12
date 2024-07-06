@@ -34,9 +34,6 @@ public class PreGameMenuController {
 
         Player player = new Player(User.getLoggedInUser());
 
-        new Game(player, player);
-
-
         Gwent.singleton.changeScreen(Screens.GAME);
     }
 

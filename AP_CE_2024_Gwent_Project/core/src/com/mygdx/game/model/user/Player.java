@@ -1,5 +1,6 @@
 package com.mygdx.game.model.user;
 
+import com.google.gson.annotations.Expose;
 import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.AllCards;
@@ -12,7 +13,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 public class Player {
-    private final User user;
+
+    private transient final User user;
     private CommanderCard leader;
     private LinkedList<String> deck;
     private LinkedList<String> hand;
@@ -21,7 +23,7 @@ public class Player {
     private int roundsLost;
     private boolean won;
     private boolean isPassed;
-    private Game game;
+    private transient Game game;
 
     public Player(User user) {
         this.leader = user.getLeaderAsCard();
@@ -31,9 +33,8 @@ public class Player {
         this.roundsLost = 0;
         this.isPassed = false;
 
-
-        Collections.shuffle((LinkedList)deck.clone());
         this.deck = new LinkedList<>(user.getDeck());
+        Collections.shuffle(deck);
         for(int i = 0; i< 10 ; i++) {
             drawCard();
         }

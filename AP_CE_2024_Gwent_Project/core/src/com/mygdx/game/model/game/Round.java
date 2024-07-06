@@ -1,12 +1,15 @@
 package com.mygdx.game.model.game;
 
+import com.google.gson.annotations.Expose;
 import com.mygdx.game.model.user.Player;
 
 public class Round {
-    private Player player1;
-    private Player player2;
+    @Expose
+    private transient Player player1;
+    @Expose
+    private transient Player player2;
     private final int roundNumber;
-    GameBoard gameBoardCopy;
+    transient GameBoard gameBoardCopy;
 
     public Round(int roundNumber, Player player1, Player player2) {
         this.roundNumber = roundNumber;

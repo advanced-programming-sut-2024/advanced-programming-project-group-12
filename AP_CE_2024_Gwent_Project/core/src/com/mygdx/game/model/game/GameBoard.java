@@ -7,33 +7,33 @@ import com.mygdx.game.model.user.Player;
 import java.util.*;
 
 public class GameBoard {
-    private HashMap<Player, ArrayList<Row>> rows;
-    private HashMap<Player, Discard> discard;
+    private HashMap<String, ArrayList<Row>> rows;
+    private HashMap<String, Discard> discard;
     private HashSet<SpellCard> weatherCards;
 
 
     public GameBoard(Player player1, Player player2) {
         rows = new HashMap<>(2);
-        rows.put(player1, new ArrayList<>(3));
-        rows.put(player2, new ArrayList<>(3));
+        rows.put(player1.getUsername(), new ArrayList<>(3));
+        rows.put(player2.getUsername(), new ArrayList<>(3));
         for(int i = 0; i < 3; i++) {
-            rows.get(player1).add(new Row());
-            rows.get(player2).add(new Row());
+            rows.get(player1.getUsername()).add(new Row());
+            rows.get(player2.getUsername()).add(new Row());
         }
         discard = new HashMap<>(2);
-        discard.put(player1, new Discard());
-        discard.put(player2, new Discard());
+        discard.put(player1.getUsername(), new Discard());
+        discard.put(player2.getUsername(), new Discard());
         weatherCards = new HashSet<>();
     }
 
-    public GameBoard(HashMap<Player, ArrayList<Row>> rows, HashMap<Player, Discard> discard, HashSet<SpellCard> weatherCards) {
+    public GameBoard(HashMap<String, ArrayList<Row>> rows, HashMap<String, Discard> discard, HashSet<SpellCard> weatherCards) {
         this.rows = new HashMap<>();
-        for(Player p: rows.keySet()) {
+        for(String p: rows.keySet()) {
             this.rows.put(p, rows.get(p));
         }
 
         this.discard = new HashMap<>();
-        for(Player p: rows.keySet()) {
+        for(String p: rows.keySet()) {
             this.discard.put(p, new Discard(discard.get(p)));
         }
 
@@ -41,7 +41,7 @@ public class GameBoard {
     }
 
     public void setDoubleSpyPower() {
-        for(Player i : rows.keySet()) {
+        for(String i : rows.keySet()) {
             for(Row j : rows.get(i)) {
                 j.setDoubleSpyPower(true);
             }
@@ -49,7 +49,7 @@ public class GameBoard {
     }
 
     public void setHalfAttrition() {
-        for(Player i : rows.keySet()) {
+        for(String i : rows.keySet()) {
             for(Row j : rows.get(i)) {
                 j.setHalfAttrition(true);
             }
@@ -57,7 +57,7 @@ public class GameBoard {
     }
 
     public void addCard(Player player, int row, PlayableCard card) {
-        rows.get(player).get(row).addCard(card);
+        rows.get(player.getUsername()).get(row).addCard(card);
     }
 
     public void addCard(Player player, int row, SpellCard spellCard) {
@@ -65,13 +65,13 @@ public class GameBoard {
             weatherCards.add(spellCard);
         }
         else {
-            rows.get(player).get(row).addCard(spellCard);
+            rows.get(player.getUsername()).get(row).addCard(spellCard);
         }
     }
 
     public ArrayList<PlayableCard> allPlayerPlayableCards(Player player) {
         ArrayList<PlayableCard> cards = new ArrayList<>();
-        for(Row i: rows.get(player)) {
+        for(Row i: rows.get(player.getUsername())) {
             cards.addAll(i.getCards());
         }
         return cards;
@@ -82,7 +82,7 @@ public class GameBoard {
          * returns all cards associated with a row of index row and for the player.
          */
         if(row < 3 && row >= 0) {
-            return rows.get(player).get(row).getCards();
+            return rows.get(player.getUsername()).get(row).getCards();
         }
         else {
             System.err.println("Invalid row input");
@@ -98,7 +98,7 @@ public class GameBoard {
         /**
          * returns a row object of the current player based on the int row provided;
          */
-        return rows.get(player).get(row);
+        return rows.get(player.getUsername()).get(row);
     }
 
     public HashSet<SpellCard> getWeatherCards() {
@@ -107,7 +107,7 @@ public class GameBoard {
 
     public int getRowStrength(Player player, int rowNumber) {
         ArrayList<PlayableCard> cards = getRowCards(player, rowNumber);
-        Row row = rows.get(player).get(rowNumber);
+        Row row = rows.get(player.getUsername()).get(rowNumber);
         int totalStrength = 0;
         for(PlayableCard i: cards) {
             totalStrength += row.calculatePowerOfPlayableCard(i);
@@ -125,23 +125,23 @@ public class GameBoard {
 
     public int getPlayerStrength(Player player) {
         int totalStrength = 0;
-        for(Row r: rows.get(player)) {
+        for(Row r: rows.get(player.getUsername())) {
             totalStrength += getRowStrength(r);
         }
         return totalStrength;
     }
 
     public void increaseMorale(int row, Player player) {
-        rows.get(player).get(row).increaseMorale();
+        rows.get(player.getUsername()).get(row).increaseMorale();
     }
 
 
     public ArrayList<AbstractCard> getDiscardCards(Player player) {
-        return discard.get(player).getDiscardCards();
+        return discard.get(player.getUsername()).getDiscardCards();
     }
 
     public ArrayList<PlayableCard> getDiscardPlayableCards(Player player) {
-        return discard.get(player).getPlayableCards();
+        return discard.get(player.getUsername()).getPlayableCards();
     }
 
     public void reset() {
@@ -149,7 +149,7 @@ public class GameBoard {
 
         ArrayList<PlayableCard> cowCards = new ArrayList<>();
 
-        for(Player p: rows.keySet()) {
+        for(String p: rows.keySet()) {
             for(Row r: rows.get(p)) {
                 for(PlayableCard c: r.getCards()) {
                     if(c.getAction().equals(Action.COW)) {
@@ -167,7 +167,7 @@ public class GameBoard {
     }
 
     public void resetDiscard(Player player) {
-        discard.put(player, new Discard(discard.get(player)));
+        discard.put(player.getUsername(), new Discard(discard.get(player)));
     }
 
     public GameBoard copy() {

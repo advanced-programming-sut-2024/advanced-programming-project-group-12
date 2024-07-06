@@ -4,9 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
+import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
 import com.mygdx.game.model.network.massage.serverResponse.*;
-import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ServerInviteResponse;
-import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ServerPlayInvite;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.*;
 import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.view.Screens;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
@@ -72,7 +72,9 @@ public class Client extends Thread {
         ServerResponse serverResponse = gson.fromJson(request , ServerResponse.class);
         if(serverResponse == null) return;
 
-        session = serverResponse.getSession();
+        if(serverResponse.getSession() != null) {
+            session = serverResponse.getSession();
+        }
 
         switch (serverResponse.getType()) {
             case CHANGE_SCREEN:
@@ -124,27 +126,32 @@ public class Client extends Thread {
                 GameRequestScreen.showRequestWindow(serverPlayInvite.getClientRequest().getInvitor());
                 break;
             case INVITE_TO_PLAY_RESPONSE:
-                ServerInviteResponse response = gson.fromJson(request, ServerInviteResponse.class);
-                if(response.getResponse().getResponse().equals("accept")) {
-                    Gwent.singleton.changeScreen(Screens.GAME);
-                }
                 break;
             case START_GAME:
+                SetGameToStart setGameToStart = gson.fromJson(request, SetGameToStart.class);
+                System.out.println("please remove this console print after implementing game start");
                 //notification to change to game screen
                 break;
             case GAME_TURN_DECIDE:
+                TurnDecideRequest turnDecideRequest = gson.fromJson(request, TurnDecideRequest.class);
                 //choose who to start
                 break;
             case PLAY_CARD_PERMISSION:
+                PlayTurnPermission permission = gson.fromJson(request, PlayTurnPermission.class);
                 break;
             case PLAY_CARD_RESPONSE:
+                PlayCardResponse playCardResponse = gson.fromJson(request, PlayCardResponse.class);
                 break;
             case CHAT:
+                ChatInGameWrapper chatWrapper = gson.fromJson(request, ChatInGameWrapper.class);
+                ChatInGame chat = chatWrapper.getChat();
                 break;
             case END_ROUND:
+                EndRoundNotify endRoundNotify = gson.fromJson(request, EndRoundNotify.class);
                 //notif
                 break;
             case END_GAME:
+                EndGameNotify endGameNotify = gson.fromJson(request, EndGameNotify.class);
                 //notif
                 break;
         }

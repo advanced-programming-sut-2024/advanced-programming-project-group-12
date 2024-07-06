@@ -1,8 +1,10 @@
 package com.mygdx.game.model.game;
 
 import com.google.gson.annotations.Expose;
+import com.mygdx.game.controller.remote.GameHandler;
 import com.mygdx.game.model.game.card.PlayableCard;
 import com.mygdx.game.model.network.RequestHandler;
+import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.EndGameNotify;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.EndRoundNotify;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayTurnPermission;
@@ -14,32 +16,35 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Game {
-    private final List<User> allUsers;
-    private final List<Player> players;
+    private transient final List<User> allUsers;
+    private transient final List<Player> players;
 
-    @Expose
-    private CardSelectHandler cardSelectHandler;
+    private transient CardSelectHandler cardSelectHandler;
 //    private final LocalDate date;
 
-    @Expose
-    private final ArrayList<Round> rounds;
+    private transient final ArrayList<Round> rounds;
+    private transient GameHandler gameHandler;
     private Round currentRound;
+
 
     private final GameBoard gameBoard;
     private Player currentPlayer;
+
+
     private Player opposition;
-    private boolean pendingRoundEnd;
 
     private boolean isOver;
     private boolean randomMedic;
 
-    public Game(Player player1, Player player2) {
+    public Game(Player player1, Player player2, GameHandler gameHandler) {
         allUsers = Arrays.asList(player1.getUser(), player2.getUser());
         players = Arrays.asList(player1, player2);
         currentPlayer = player1;
         currentPlayer.setGame(this);
         opposition = player2;
         opposition.setGame(this);
+
+        this.gameHandler = gameHandler;
 
         //todo
         //date = LocalDate.now();
@@ -81,6 +86,7 @@ public class Game {
         opposition = temp;
 
         RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(new PlayTurnPermission(this));
+        gameHandler.sendMassageToSpectators(new PlayTurnPermission(this));
 
         if(currentPlayer.doesNotHaveGameToPlay()) {
             currentPlayer.setPassed(true);
@@ -92,13 +98,15 @@ public class Game {
 
     private void sendEndRoundMassages(Player toStartNext) {
         Player toWait = toStartNext == currentPlayer? opposition: currentPlayer;
-        RequestHandler.allUsers.get(toStartNext).sendMassage(new EndRoundNotify(true));
-        RequestHandler.allUsers.get(toWait).sendMassage(new EndRoundNotify(false));
+        RequestHandler.allUsers.get(toStartNext.getUsername()).sendMassage(new EndRoundNotify(true));
+        RequestHandler.allUsers.get(toWait.getUsername()).sendMassage(new EndRoundNotify(false));
+        gameHandler.sendMassageToSpectators(new EndRoundNotify(false));
     }
 
-    private void sendEndGameMassages(boolean hasWinner, String winnerUsername) {
-        RequestHandler.allUsers.get(currentPlayer).sendMassage(new EndGameNotify(hasWinner, winnerUsername));
-        RequestHandler.allUsers.get(opposition).sendMassage(new EndGameNotify(hasWinner, winnerUsername));
+    private void sendEndGameMassages(EndGameNotify endGameNotify) {
+        RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(endGameNotify);
+        RequestHandler.allUsers.get(opposition.getUsername()).sendMassage(endGameNotify);
+        gameHandler.sendMassageToSpectators(endGameNotify);
     }
 
 
@@ -133,7 +141,7 @@ public class Game {
                 gameWinner = opposition.getUsername();
             }
 
-            sendEndGameMassages(gameWinner != null, gameWinner);
+            sendEndGameMassages(new EndGameNotify(gameWinner != null, gameWinner));
             return;
         }
 
