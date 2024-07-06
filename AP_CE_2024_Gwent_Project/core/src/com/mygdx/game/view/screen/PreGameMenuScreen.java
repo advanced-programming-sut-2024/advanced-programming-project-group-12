@@ -200,14 +200,13 @@ public class PreGameMenuScreen implements Screen {
 
         selectLeaderButton = new TextButton("Select Leader", Gwent.singleton.skin);
         selectLeaderButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
-        factionButtonTable.add(selectLeaderButton).center().padBottom(20).row();
+        factionWindow.add(selectLeaderButton).center().padBottom(20).row();
 
         selectLeaderButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 showSelectLeaderWindow();
             }
         });
-
 
         northernRealmsButton = new ImageButton(new TextureRegionDrawable(new Texture(Faction.NORTHERN_REALMS.getAssetFileName())));
         factionButtonTable.add(northernRealmsButton).padBottom(20).center().padRight(20);
@@ -273,13 +272,19 @@ public class PreGameMenuScreen implements Screen {
 
     private void showSelectLeaderWindow() {
         Window selectLeaderWindow = new Window("Select Leader", Gwent.singleton.skin);
-        selectLeaderWindow.setSize(Gwent.WIDTH , Gwent.HEIGHT );
+        selectLeaderWindow.setSize(Gwent.WIDTH, Gwent.HEIGHT);
         selectLeaderWindow.setPosition(
                 (float) Gdx.graphics.getWidth() / 2 - selectLeaderWindow.getWidth() / 2,
                 (float) Gdx.graphics.getHeight() / 2 - selectLeaderWindow.getHeight() / 2
         );
         TextureRegionDrawable windowBackground = new TextureRegionDrawable(new TextureRegion(new Texture("backgrounds/faction_window_background.png")));
         selectLeaderWindow.setBackground(windowBackground);
+
+        Table mainTable = new Table();
+        mainTable.defaults().pad(10);
+
+        Label currentLeader = new Label("Current Leader: " + User.getLoggedInUser().getLeader(), Gwent.singleton.getSkin());
+        mainTable.add(currentLeader).center().top().padBottom(20).row();
 
         Table heroTable = new Table();
         heroTable.defaults().pad(10);
@@ -302,11 +307,11 @@ public class PreGameMenuScreen implements Screen {
             });
         }
 
-
-        selectLeaderWindow.add(heroTable).center();
+        mainTable.add(heroTable).center();
+        selectLeaderWindow.add(mainTable).center().fill();
         stage.addActor(selectLeaderWindow);
-
     }
+
 
     private ImageButton createCardButton(AbstractCard card) {
         TextureRegionDrawable drawable = new TextureRegionDrawable(new Texture(card.getAssetName()));
