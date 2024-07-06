@@ -6,16 +6,16 @@ import com.mygdx.game.model.network.massage.clientRequest.ClientRequestType;
 import com.mygdx.game.model.network.session.Session;
 
 public class PlayCardRequest extends ClientRequest {
-    private AbstractCard card;
+    private String card;
     private int row;
 
-    public PlayCardRequest(Session session, int row , AbstractCard abstractCard) {
+    public PlayCardRequest(Session session, int row , String abstractCard) {
         super(ClientRequestType.PLAY_CARD_REQUEST, session);
         this.row = row;
         this.card = abstractCard;
     }
 
-    public AbstractCard getCard() {
+    public String getCard() {
         return card;
     }
 

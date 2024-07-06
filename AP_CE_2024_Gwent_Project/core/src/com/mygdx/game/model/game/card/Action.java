@@ -46,7 +46,8 @@ public enum Action {
         }
 
         card.kill();
-        return null;
+        card.getPlayer().getGame().switchTurn();
+        return new ActionResponse(ActionResponseType.SCORCH, cardsToBeScorched);
     }),
     SCORCH_S(card -> {
         Player opposition = card.getPlayer().getGame().getOpposition();
@@ -67,7 +68,9 @@ public enum Action {
         for(PlayableCard i: cardsToBeKilled) {
             i.kill();
         }
-        return null;
+        card.getPlayer().getGame().switchTurn();
+
+        return new ActionResponse(ActionResponseType.SCORCH, cardsToBeKilled);
     }),
     SCORCH_R(card -> {
         Player opposition = card.getPlayer().getGame().getOpposition();
@@ -88,7 +91,9 @@ public enum Action {
         for(PlayableCard i: cardsToBeKilled) {
             i.kill();
         }
-        return null;
+        card.getPlayer().getGame().switchTurn();
+
+        return new ActionResponse(ActionResponseType.SCORCH, cardsToBeKilled);
     }),
     SCORCH_C(card -> {
         Player opposition = card.getPlayer().getGame().getOpposition();
@@ -109,29 +114,35 @@ public enum Action {
         for(PlayableCard i: cardsToBeKilled) {
             i.kill();
         }
-        return null;
+        card.getPlayer().getGame().switchTurn();
+
+        return new ActionResponse(ActionResponseType.SCORCH, cardsToBeKilled);
     }),
     TIGHT_BOND(card -> {
-        return null;
+        card.getPlayer().getGame().switchTurn();
+
+        return new ActionResponse(ActionResponseType.TIGHT_BOND);
     }),
     MEDIC(card -> {
         // should open a menu in game screen to choose from one card of the below list
-        Player player = ((PlayableCard)card).getPlayer();
-        ArrayList<PlayableCard> discard = card.getPlayer().getGame().getGameBoard().getDiscardPlayableCards(player);
         //todo
-        PlayableCard chosenCard = null;
-        chosenCard.revive();
-        return null;
+        card.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.MEDIC);
+
+        return new ActionResponse(ActionResponseType.SELECTION, 1);
     }),
     SPY(card -> {
         Player player = card.getPlayer().getGame().getCurrentPlayer();
         player.drawCard().drawCard();
+        card.getPlayer().getGame().switchTurn();
+
         return null;
     }),
     MORALE(card -> {
         Player player = card.getPlayer().getGame().getCurrentPlayer();
         GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
         gameBoard.increaseMorale(card.getRow(), card.getPlayer());
+        card.getPlayer().getGame().switchTurn();
+
         return null;
     }),
     COW(card -> {
@@ -139,16 +150,20 @@ public enum Action {
         if(playableCard.isDead()) {
             playableCard.getLegacyCard().place(card.getRow(), card.getPlayer());
         }
+        card.getPlayer().getGame().switchTurn();
+
         return null;
     }),
     HORN(card -> {
         Row row = card.getPlayer().getGame().getGameBoard().getRowForPlayer(card.getRow(), card.getPlayer());
         row.setHorn(true);
+        card.getPlayer().getGame().switchTurn();
+
         return null;
     }),
     MUSKET(card -> {
         Player player = card.getPlayer().getGame().getCurrentPlayer();
-        LinkedList<AbstractCard> deck = player.getDeck();
+        LinkedList<AbstractCard> deck = player.getDeckAsCards();
         int row = card.getRow();
         for (AbstractCard i : deck) {
             if (i.getName().equals(card.getName())) {
@@ -161,7 +176,7 @@ public enum Action {
             }
         }
 
-        LinkedList<AbstractCard> hand = player.getHand();
+        LinkedList<AbstractCard> hand = player.getHandAsCards();
         for (AbstractCard i : hand) {
             if (i.getName().equals(card.getName())) {
                 if (i.getAllowableRows().contains(row)) {
@@ -171,7 +186,9 @@ public enum Action {
                 }
             }
         }
-        return null;
+        card.getPlayer().getGame().switchTurn();
+
+        return new ActionResponse(ActionResponseType.MUSKET);
     }),
     BEAR(card -> {
         Player player = card.getPlayer();
@@ -182,7 +199,9 @@ public enum Action {
             card.kill();
             ((PlayableCard) card).getLegacyCard().place(card.getDefaultRow(), player);
         }
-        return null;
+        card.getPlayer().getGame().switchTurn();
+
+        return new ActionResponse(ActionResponseType.BEAR);
     }),
     MUSHROOM(card -> {
         GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
@@ -195,10 +214,13 @@ public enum Action {
                 i.doAction();
             }
         }
-        return null;
+        card.getPlayer().getGame().switchTurn();
+
+        return new ActionResponse(ActionResponseType.MUSHROOM);
     }),
     DECOY(abstractCard -> {
         //todo
+        abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
 
@@ -209,54 +231,63 @@ public enum Action {
             Row row = gameBoard.getRowForPlayer(i, card.getPlayer());
             row.setWeatherBuffer(false);
         }
-        return null;
+        card.getPlayer().getGame().switchTurn();
+        return new ActionResponse(ActionResponseType.CLEAR);
     }),
     FOG(card -> {
         card.getPlayer().getGame().getGameBoard().getRowForPlayer(1, card.getPlayer()).setWeatherBuffer(true);
-        return null;
+        card.getPlayer().getGame().switchTurn();
+        return new ActionResponse(ActionResponseType.FOG);
     }),
     FROST(card -> {
         card.getPlayer().getGame().getGameBoard().getRowForPlayer(0, card.getPlayer()).setWeatherBuffer(true);
-        return null;
+        card.getPlayer().getGame().switchTurn();
+        return new ActionResponse(ActionResponseType.FROST);
     }),
     RAIN(card -> {
         card.getPlayer().getGame().getGameBoard().getRowForPlayer(2, card.getPlayer()).setWeatherBuffer(true);
-        return null;
+        card.getPlayer().getGame().switchTurn();
+        return new ActionResponse(ActionResponseType.RAIN);
     }),
     STORM(card -> {
         FOG.action.apply(card);
         RAIN.action.apply(card);
-        //consider output of the previous
-        return null;
+        card.getPlayer().getGame().switchTurn();
+        return new ActionResponse(ActionResponseType.STORM);
     }),
 
     //leader actions,
     FOLTEST_SIEGE(card -> {
         AllCards.FOG.getAbstractCard().place(3, card.getPlayer());
+        card.getPlayer().getGame().switchTurn();
         return null;
     }),
     FOLTEST_STEEL(card -> {
         AllCards.CLEAR.getAbstractCard().place(3, card.getPlayer());
+        card.getPlayer().getGame().switchTurn();
         return null;
     }),
     FOLTEST_KING(card -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(2, card.getPlayer());
+        card.getPlayer().getGame().switchTurn();
         return null;
     }),
 
     EMHYR_EMPERIAL(card -> {
        AllCards.RAIN.getAbstractCard().place(3, card.getPlayer());
+        card.getPlayer().getGame().switchTurn();
         return null;
     }),
     EMHYR_EMPEROR(card -> {
         Player opponent = card.getPlayer().getGame().getOpposition();
-        LinkedList<AbstractCard> hand =(LinkedList<AbstractCard>) opponent.getHand().clone();
+        LinkedList<AbstractCard> hand =(LinkedList<AbstractCard>) opponent.getHandAsCards().clone();
         ArrayList<AbstractCard> toBeShown = new ArrayList<>(3);
         for(int i = 0; i< 3 ;i++) {
             int index = (int) (hand.size() * Math.random());
             toBeShown.add(hand.get(index));
             hand.remove(index);
         }
+        card.getPlayer().getGame().switchTurn();
 
         //add mech to show the array list
         return new ActionResponse(ActionResponseType.EMHYR_EMPEROR, toBeShown);
@@ -265,7 +296,7 @@ public enum Action {
         //play at the begining of the game
        Player opponent = card.getPlayer().getGame().getOpposition();
        opponent.getLeader().setHasPlayedAction(true);
-       return null;
+        return null;
     }),
     EMHYR_RELENTLESS(abstractCard -> {
         Player opponent = abstractCard.getPlayer().getGame().getOpposition();
@@ -277,18 +308,20 @@ public enum Action {
     EMHYR_INVADER(abstractCard -> {
         //play it at the begining of the game
         abstractCard.getPlayer().getGame().setRandomMedic(true);
+        abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
     ERIDIN_COMMANDER(abstractCard -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(0, abstractCard.getPlayer());
+        abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
-    ERIDIN_BRINGER(MEDIC.action::apply),
+    ERIDIN_BRINGER(MEDIC.action),
     ERIDIN_DESTROYER(abstractCard -> {
         //discard two cards
         //draw one card of choice from deck
         abstractCard.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.ERIDIN_DESTROYER_DISCARD);
-        return new ActionResponse(ActionResponseType.SELECTION, abstractCard.getPlayer().getHand(), 2);
+        return new ActionResponse(ActionResponseType.SELECTION, abstractCard.getPlayer().getHandAsCards(), 2);
     }),
     ERIDIN_KING(abstractCard -> {
         ArrayList<AbstractCard> selectionList = new ArrayList<>();
@@ -307,10 +340,7 @@ public enum Action {
         abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
-    FRANCESCA_QUEEN(abstractCard -> {
-        return SCORCH_C.execute(abstractCard);
-        //make sure to include the above response
-    }),
+    FRANCESCA_QUEEN(SCORCH_C::execute),
     FRANCESCA_BEAUTIFUL(abstractCard -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(1, abstractCard.getPlayer());
         abstractCard.getPlayer().getGame().switchTurn();
@@ -374,10 +404,12 @@ public enum Action {
         return null;
     }),
 
-    NO_ACTION(card -> null),
+    NO_ACTION(card -> {
+        card.getPlayer().getGame().switchTurn();
+        return null;
+    }),
     ;
-    //medic
-//todo
+
     private final Function<AbstractCard, ActionResponse> action;
 
     Action(Function<AbstractCard, ActionResponse> action) {

@@ -29,7 +29,7 @@ public abstract class AbstractCard implements Cloneable{
     }
 
     public String getName() {
-        return name;
+        return name+typeNumber;
     }
 
     public Player getPlayer() {
@@ -61,12 +61,12 @@ public abstract class AbstractCard implements Cloneable{
 
     public abstract void kill();
     public void discard() {
-        player.getHand().remove(this);
+        player.getHandAsCards().remove(this);
     }
 
     public PlayCardResponse place(int row, Player player) {
         this.player = player;
-        player.getHand().remove(this);
+        player.getHandAsCards().remove(this);
         this.row = row;
         return null;
     }

@@ -1,8 +1,8 @@
 package com.mygdx.game.model.user;
 
-import com.mygdx.game.model.game.Discard;
 import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.game.Game;
+import com.mygdx.game.model.game.card.AllCards;
 import com.mygdx.game.model.game.card.CommanderCard;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.CommanderCards;
@@ -14,8 +14,8 @@ import java.util.LinkedList;
 public class Player {
     private final User user;
     private CommanderCard leader;
-    private LinkedList<AbstractCard> deck;
-    private LinkedList<AbstractCard> hand;
+    private LinkedList<String> deck;
+    private LinkedList<String> hand;
 
     private Faction faction;
     private int roundsLost;
@@ -33,7 +33,7 @@ public class Player {
 
 
         Collections.shuffle((LinkedList)deck.clone());
-        this.deck = user.getDeckAsCard();
+        this.deck = new LinkedList<>(user.getDeck());
         for(int i = 0; i< 10 ; i++) {
             drawCard();
         }
@@ -55,20 +55,33 @@ public class Player {
         return leader;
     }
 
-    public LinkedList<AbstractCard> getDeck() {
+    public LinkedList<String> getDeck() {
         return deck;
     }
 
-    public LinkedList<AbstractCard> getHand() {
+    public LinkedList<AbstractCard> getDeckAsCards() {
+        LinkedList<AbstractCard> deckCards = new LinkedList<>();
+        for (String cardName : deck) {
+            deckCards.add(AllCards.getCardByCardName(cardName));
+        }
+        return deckCards;
+    }
+
+
+
+    public LinkedList<String> getHand() {
         return hand;
+    }
+    public LinkedList<AbstractCard> getHandAsCards() {
+        LinkedList<AbstractCard> deckCards = new LinkedList<>();
+        for (String cardName : deck) {
+            deckCards.add(AllCards.getCardByCardName(cardName));
+        }
+        return deckCards;
     }
 
     public void reDraw(int cardIndex) {
         deck.add(hand.remove(cardIndex));
-    }
-
-    public boolean isWon() {
-        return won;
     }
 
     public void setWon(boolean won) {
@@ -93,14 +106,16 @@ public class Player {
 
     public Player drawCard() {
         if(!deck.isEmpty()) {
-            hand.add(deck.get(0));
-            deck.remove(0);
+            hand.add(deck.getFirst());
+            deck.removeFirst();
         }
         return this;
     }
 
     public void addCardsToDeck(ArrayList<AbstractCard> cards) {
-        deck.addAll(cards);
+        for(AbstractCard c: cards) {
+            deck.add(c.getName());
+        }
     }
 
     public void loseRound() {
@@ -119,7 +134,7 @@ public class Player {
         return 2 - roundsLost;
     }
     public void removeCardFromHand(AbstractCard card) {
-        hand.remove(card);
+        hand.remove(card.getName());
     }
 
     public boolean doesNotHaveGameToPlay() {

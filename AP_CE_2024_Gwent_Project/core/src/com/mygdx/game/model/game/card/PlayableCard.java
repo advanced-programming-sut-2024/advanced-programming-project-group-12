@@ -3,6 +3,7 @@ package com.mygdx.game.model.game.card;
 import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.GameBoard;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionResponse;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.game.Row;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayCardResponse;
@@ -54,11 +55,12 @@ public class PlayableCard extends AbstractCard implements Comparable<PlayableCar
         gameBoard.addCard(player, rowNumber, this);
     }
 
-    public void revive() {
+    public PlayCardResponse revive() {
         if(isDead) {
             isDead = false;
             place(super.row, player);
         }
+        return new PlayCardResponse(player.getGame(), null);
     }
 
     @Override

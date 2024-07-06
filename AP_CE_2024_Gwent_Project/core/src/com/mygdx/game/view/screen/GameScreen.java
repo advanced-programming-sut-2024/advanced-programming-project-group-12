@@ -113,7 +113,7 @@ public class GameScreen implements Screen {
                     // Add the card to the weather box
                     weatherBox.add(selectedCardActor.getCardTable()).size(80, 110).expand().fill();
                     // Remove the card from the player's hand
-                    player.getHand().remove(selectedCard);
+                    player.getHandAsCards().remove(selectedCard);
                     // Unselect the card
                     controller.setSelectedCard(null);
                     if (selectedCardActor != null) {
@@ -130,10 +130,10 @@ public class GameScreen implements Screen {
     }
 
     private void displayInfo() {
-        playerInfoBox = new PlayerInfoBox(player.getHand().size(), player.getUsername(),
+        playerInfoBox = new PlayerInfoBox(player.getHandAsCards().size(), player.getUsername(),
                 player.getFaction().toString());
         stage.addActor(playerInfoBox.getInfoTable());
-        oppositionInfoBox = new PlayerInfoBox(opposition.getHand().size(), opposition.getUsername(),
+        oppositionInfoBox = new PlayerInfoBox(opposition.getHandAsCards().size(), opposition.getUsername(),
                 opposition.getFaction().toString());
         stage.addActor(oppositionInfoBox.getInfoTable());
         playerInfoBox.setPosition(50, 260);
@@ -286,7 +286,7 @@ public class GameScreen implements Screen {
 
     public void displayHand() {
 
-        LinkedList<AbstractCard> handCards = player.getHand();
+        LinkedList<AbstractCard> handCards = player.getHandAsCards();
         hand = new HandTable(handCards);
         hand.addToStageAndAddListener(stage);
         for (CardActor cardActor : hand.getCards()) {
@@ -338,7 +338,7 @@ public class GameScreen implements Screen {
         hand.clear();
         // Redraw the player's hand
         displayHand();
-        playerInfoBox.updatePlayerInfo(player.getHand().size());
+        playerInfoBox.updatePlayerInfo(player.getHandAsCards().size());
     }
 
     private void playWeatherCard(CardActor card) {

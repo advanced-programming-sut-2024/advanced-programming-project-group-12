@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.mygdx.game.controller.remote.*;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.AbstractCard;
+import com.mygdx.game.model.game.card.AllCards;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.ChangeMenuRequest;
@@ -120,9 +121,12 @@ public class RequestHandler extends Thread {
                 case PLAY_CARD_REQUEST:
                     PlayCardRequest playCardRequest = gson.fromJson(request, PlayCardRequest.class);
                     Player player = user.getPlayer();
-                    AbstractCard abstractCard = playCardRequest.getCard();
+                    AbstractCard abstractCard = AllCards.getCardByCardName(playCardRequest.getCard());
                     serverResponse = abstractCard.place(playCardRequest.getRow(), player);
                     break;
+                case CARD_SELECT_ANSWER:
+                    CardSelectionAnswer answer = gson.fromJson(request, CardSelectionAnswer.class);
+                    serverResponse = user.getPlayer().getGame().getCardSelectHandler().handle(answer, user.getPlayer());
             }
 
             if(serverResponse != null && session != null) {

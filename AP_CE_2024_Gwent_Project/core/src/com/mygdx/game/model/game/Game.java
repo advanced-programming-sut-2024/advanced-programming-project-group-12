@@ -1,5 +1,6 @@
 package com.mygdx.game.model.game;
 
+import com.google.gson.annotations.Expose;
 import com.mygdx.game.model.game.card.PlayableCard;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
@@ -11,9 +12,12 @@ import java.util.List;
 public class Game {
     private final List<User> allUsers;
     private final List<Player> players;
+
+    @Expose
     private CardSelectHandler cardSelectHandler;
 //    private final LocalDate date;
 
+    @Expose
     private final ArrayList<Round> rounds;
     private Round currentRound;
 
@@ -28,7 +32,9 @@ public class Game {
         allUsers = Arrays.asList(player1.getUser(), player2.getUser());
         players = Arrays.asList(player1, player2);
         currentPlayer = player1;
+        currentPlayer.setGame(this);
         opposition = player2;
+        opposition.setGame(this);
 
         //todo
         //date = LocalDate.now();

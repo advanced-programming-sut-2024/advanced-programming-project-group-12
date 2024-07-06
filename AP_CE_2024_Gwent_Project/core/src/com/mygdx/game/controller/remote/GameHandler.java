@@ -23,7 +23,9 @@ public class GameHandler {
     }
 
     private void start() {
-        game = new Game(new Player(user1), new Player(user2));
+        user1.setPlayer(new Player(user1));
+        user2.setPlayer(new Player(user2));
+        game = new Game(user1.getPlayer(), user2.getPlayer());
 
         if(user1.getFaction().equals(Faction.SCOIATAEL) && !user2.getFaction().equals(Faction.SCOIATAEL)) {
             RequestHandler.allUsers.get(user1.getUsername()).sendMassage(new TurnDecideRequest());
