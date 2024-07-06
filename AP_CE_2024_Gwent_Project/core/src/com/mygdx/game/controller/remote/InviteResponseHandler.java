@@ -3,10 +3,8 @@ package com.mygdx.game.controller.remote;
 import com.google.gson.Gson;
 import com.mygdx.game.model.network.RequestHandler;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ClientInviteResponse;
-import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.StartGameRequest;
 import com.mygdx.game.model.network.massage.serverResponse.ChangeMenuResponse;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ServerInviteResponse;
-import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ServerPlayInvite;
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.view.Screens;
 
@@ -36,10 +34,8 @@ public class InviteResponseHandler {
             user.setDeck(new ArrayList<>(clientInviteResponse.getDeck()));
 
             requestHandler.setGameHandler(targetHandler.getGameHandler());
-            requestHandler.getGameHandler().addUser(user);
+            requestHandler.getGameHandler().addUserAndStart(user);
 
-            requestHandler.sendMassage(new ChangeMenuResponse(Screens.GAME));
-            targetHandler.sendMassage(new ChangeMenuResponse(Screens.GAME));
         }
         else {
             targetHandler.setGameHandler(null);

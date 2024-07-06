@@ -2,6 +2,10 @@ package com.mygdx.game.model.game;
 
 import com.google.gson.annotations.Expose;
 import com.mygdx.game.model.game.card.PlayableCard;
+import com.mygdx.game.model.network.RequestHandler;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.EndGameNotify;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.EndRoundNotify;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayTurnPermission;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
 
@@ -24,6 +28,7 @@ public class Game {
     private final GameBoard gameBoard;
     private Player currentPlayer;
     private Player opposition;
+    private boolean pendingRoundEnd;
 
     private boolean isOver;
     private boolean randomMedic;
@@ -55,23 +60,6 @@ public class Game {
         return opposition;
     }
 
-    public GameBoard getGameBoard() {
-        return gameBoard;
-    }
-
-    public void switchTurn() {
-        Player temp = currentPlayer;
-        currentPlayer = opposition;
-        opposition = temp;
-
-        if(currentPlayer.doesNotHaveGameToPlay()) {
-            currentPlayer.setPassed(true);
-        }
-        if(currentPlayer.isPassed() && opposition.isPassed()) {
-            endRound();
-        }
-    }
-
     public CardSelectHandler getCardSelectHandler() {
         return cardSelectHandler;
     }
@@ -83,9 +71,39 @@ public class Game {
     public void setRandomMedic(boolean randomMedic) {
         this.randomMedic = randomMedic;
     }
+    public GameBoard getGameBoard() {
+        return gameBoard;
+    }
+
+    public void switchTurn() {
+        Player temp = currentPlayer;
+        currentPlayer = opposition;
+        opposition = temp;
+
+        RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(new PlayTurnPermission(this));
+
+        if(currentPlayer.doesNotHaveGameToPlay()) {
+            currentPlayer.setPassed(true);
+        }
+        if(currentPlayer.isPassed() && opposition.isPassed()) {
+            endRound();
+        }
+    }
+
+    private void sendEndRoundMassages(Player toStartNext) {
+        Player toWait = toStartNext == currentPlayer? opposition: currentPlayer;
+        RequestHandler.allUsers.get(toStartNext).sendMassage(new EndRoundNotify(true));
+        RequestHandler.allUsers.get(toWait).sendMassage(new EndRoundNotify(false));
+    }
+
+    private void sendEndGameMassages(boolean hasWinner, String winnerUsername) {
+        RequestHandler.allUsers.get(currentPlayer).sendMassage(new EndGameNotify(hasWinner, winnerUsername));
+        RequestHandler.allUsers.get(opposition).sendMassage(new EndGameNotify(hasWinner, winnerUsername));
+    }
+
 
     private void endRound() {
-        currentRound.endRound(gameBoard);
+        Player winner = currentRound.endRound(gameBoard);
         gameBoard.reset();
         rounds.add(currentRound);
 
@@ -101,8 +119,21 @@ public class Game {
 
         if(!isOver) {
             currentRound = new Round(rounds.size() + 1, currentPlayer, opposition);
+            sendEndRoundMassages(winner);
         } else {
             finishGame();
+            String gameWinner;
+            if(currentPlayer.getHealth() == 0 && opposition.getHealth() == 0) {
+                gameWinner = null;
+            }
+            else if(currentPlayer.getHealth() == 0) {
+                gameWinner = currentPlayer.getUsername();
+            }
+            else {
+                gameWinner = opposition.getUsername();
+            }
+
+            sendEndGameMassages(gameWinner != null, gameWinner);
             return;
         }
 

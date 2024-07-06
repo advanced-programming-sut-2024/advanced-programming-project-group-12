@@ -4,6 +4,8 @@ import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.network.RequestHandler;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayCardResponse;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayTurnPermission;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.SetGameToStart;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.TurnDecideRequest;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
@@ -17,7 +19,7 @@ public class GameHandler {
         this.user1 = user1;
     }
 
-    public void addUser(User user) {
+    public void addUserAndStart(User user) {
         this.user2 = user;
         start();
     }
@@ -26,6 +28,9 @@ public class GameHandler {
         user1.setPlayer(new Player(user1));
         user2.setPlayer(new Player(user2));
         game = new Game(user1.getPlayer(), user2.getPlayer());
+
+        RequestHandler.allUsers.get(user1).sendMassage(new SetGameToStart(game));
+        RequestHandler.allUsers.get(user2).sendMassage(new SetGameToStart(game));
 
         if(user1.getFaction().equals(Faction.SCOIATAEL) && !user2.getFaction().equals(Faction.SCOIATAEL)) {
             RequestHandler.allUsers.get(user1.getUsername()).sendMassage(new TurnDecideRequest());
@@ -43,6 +48,6 @@ public class GameHandler {
         if(playerToStart.equals("opponent")) {
             game.switchTurn();
         }
-        RequestHandler.allUsers.get(game.getCurrentPlayer().getUsername()).sendMassage(new PlayCardResponse(game, null));
+        RequestHandler.allUsers.get(game.getCurrentPlayer().getUsername()).sendMassage(new PlayTurnPermission(game));
     }
 }

@@ -21,28 +21,34 @@ public class Round {
 
     public void startRound() {}
 
-    public void endRound(GameBoard gameBoard) {
+    public Player endRound(GameBoard gameBoard) {
+        gameBoardCopy = gameBoard.copy();
+
+        if(player1.getHealth() == 0 || player2.getHealth() == 0 ) {
+            player1.getGame().isOver();
+        }
+
+
         if (gameBoard.getPlayerStrength(player1) > gameBoard.getPlayerStrength(player2)) {
             handleWinCase(player1, player2);
+            return player1;
         } else if (gameBoard.getPlayerStrength(player1) < gameBoard.getPlayerStrength(player2)) {
             handleWinCase(player2, player1);
+            return player2;
         } else {
             if (player1.getFaction().equals(Faction.NILFGAARD) && player2.getFaction().equals(Faction.NILFGAARD)) {
                 handleWinCase(player1, player2);
+                return player1;
             }
             else if (player2.getFaction().equals(Faction.NILFGAARD) && player1.getFaction().equals(Faction.NILFGAARD)) {
                 handleWinCase(player2, player1);
+                return player2;
             }
             else {
                 player1.loseRound();
                 player2.loseRound();
+                return player2;
             }
-        }
-
-        gameBoardCopy = gameBoard.copy();
-
-        if(roundNumber == 3) {
-            player1.getGame().isOver();
         }
     }
 
