@@ -2,9 +2,9 @@ package com.mygdx.game.model.network;
 
 import com.google.gson.Gson;
 import com.mygdx.game.controller.remote.*;
-import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.AllCards;
+import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.ChangeMenuRequest;
@@ -128,6 +128,9 @@ public class RequestHandler extends Thread {
                     CardSelectionAnswer answer = gson.fromJson(request, CardSelectionAnswer.class);
                     serverResponse = user.getPlayer().getGame().getCardSelectHandler().handle(answer, user.getPlayer());
                     break;
+                case CHAT:
+                    ChatInGame chat = gson.fromJson(request, ChatInGame.class);
+                    gameHandler.handleChat(chat, user);
             }
 
             if(serverResponse != null && session != null) {

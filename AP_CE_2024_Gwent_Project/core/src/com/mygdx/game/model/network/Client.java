@@ -136,6 +136,8 @@ public class Client extends Thread {
                 break;
             case PLAY_CARD_RESPONSE:
                 break;
+            case CHAT:
+                break;
             case END_ROUND:
                 //notif
                 break;

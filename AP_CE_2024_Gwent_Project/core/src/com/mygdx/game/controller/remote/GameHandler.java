@@ -3,7 +3,8 @@ package com.mygdx.game.controller.remote;
 import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.network.RequestHandler;
-import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayCardResponse;
+import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
+import com.mygdx.game.model.network.massage.serverResponse.ChatInGameWrapper;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayTurnPermission;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.SetGameToStart;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.TurnDecideRequest;
@@ -49,5 +50,10 @@ public class GameHandler {
             game.switchTurn();
         }
         RequestHandler.allUsers.get(game.getCurrentPlayer().getUsername()).sendMassage(new PlayTurnPermission(game));
+    }
+
+    public void handleChat(ChatInGame chat, User user) {
+        User toUser = user.equals(user1)? user2: user1;
+        RequestHandler.allUsers.get(toUser).sendMassage(new ChatInGameWrapper(chat));
     }
 }
