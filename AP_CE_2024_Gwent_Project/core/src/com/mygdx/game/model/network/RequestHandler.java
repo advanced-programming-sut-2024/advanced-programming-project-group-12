@@ -110,7 +110,7 @@ public class RequestHandler extends Thread {
 //                    serverResponse = new FriendRequestHandler(request, gson).getFriends(user);
 //                    break;
                 case START_GAME:
-                   new InviteHandler(request, gson).handle(this, user);
+                    new InviteHandler(request, gson).handle(this, user);
                    break;
                 case INVITE_ANSWER:
                     new InviteResponseHandler(request, gson).handle(this, user);
