@@ -15,7 +15,6 @@ import com.mygdx.game.controller.local.FriendsController;
 import com.mygdx.game.model.user.FriendRequest;
 import com.mygdx.game.model.user.User;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FriendsScreen implements Screen {
@@ -29,6 +28,7 @@ public class FriendsScreen implements Screen {
     private TextField searchField;
     private TextButton searchButton;
     private TextButton viewRequestsButton;
+    private TextButton viewFriendsButton;
     private TextButton back;
     private Skin skin;
 
@@ -48,6 +48,7 @@ public class FriendsScreen implements Screen {
         searchField = new TextField("", skin);
         searchButton = new TextButton("Search", skin);
         viewRequestsButton = new TextButton("View Friend Requests", skin);
+        viewFriendsButton = new TextButton("View Friends", skin);
         back = new TextButton("Back", skin);
         table.add(back).width(200).padRight(70);
         back.addListener(new ChangeListener() {
@@ -66,12 +67,13 @@ public class FriendsScreen implements Screen {
                 table.clear();
                 table.add(searchField).width(300).padRight(100);
                 table.add(searchButton).width(200);
-                table.add(viewRequestsButton).width(550).padLeft(50);
+                table.add(viewRequestsButton).width(200).padLeft(50);
+                table.add(viewFriendsButton).width(200).padLeft(50);
                 table.row();
                 if (user != null) {
-                    table.add(showUserProfile(user)).colspan(3).expand().fill();
+                    table.add(showUserProfile(user)).colspan(4).expand().fill();
                 } else {
-                    table.add(new Label("User not found", skin)).colspan(3);
+                    table.add(new Label("User not found", skin)).colspan(4);
                 }
             }
         });
@@ -79,21 +81,25 @@ public class FriendsScreen implements Screen {
         viewRequestsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                table.clear();
-                table.add(searchField).width(300).padRight(100);
-                table.add(searchButton).width(200);
-                table.add(viewRequestsButton).width(550).padLeft(50);
-                table.row();
                 controller.getFriendRequests();
+            }
+        });
+
+        viewFriendsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                showFriendsList();
             }
         });
 
         // Layout
         table.add(searchField).width(300).padRight(100);
         table.add(searchButton).width(200);
-        table.add(viewRequestsButton).width(550).padLeft(50);
+        table.add(viewRequestsButton).width(200).padLeft(50);
+        table.add(viewFriendsButton).width(200).padLeft(50);
         table.row();
     }
+
     private static boolean requestInfoReceived = false;
     private static HashMap<String, HashMap<String, FriendRequest>> requestsHashMap = new HashMap<>();
 
@@ -107,15 +113,12 @@ public class FriendsScreen implements Screen {
 
     private Table showUserProfile(User user) {
         Table profileTable = new Table();
-        profileTable.add(new Label(user.getUsername() + " a.k.a " + user.getNickname(), skin,  "subtitle"));
+        profileTable.add(new Label(user.getUsername() + " a.k.a " + user.getNickname(), skin, "subtitle"));
         profileTable.row();
         profileTable.add(new Label("Faction: " + user.getFaction().getName(), skin, "subtitle")).padRight(20).row();
         profileTable.add(new Label("Wins: " + user.getUserInfo().getWins(), skin, "subtitle")).padRight(20).row();
         profileTable.add(new Label("Losses: " + user.getUserInfo().getLosses(), skin, "subtitle")).padRight(20).row();
         profileTable.row();
-
-
-
 
         // Determine if there's an existing friend request
         FriendRequest existingRequest = null;
@@ -144,33 +147,94 @@ public class FriendsScreen implements Screen {
 
         // Display request status if there's an existing request
         if (existingRequest != null) {
-            Label statusLabel = new Label("Friend request " + existingRequest.getStatus(), skin);
-            profileTable.add(statusLabel).colspan(2);
-            profileTable.row();
+            Label requestStatusLabel = new Label("Friend request status: " + existingRequest.getStatus(), skin);
+            profileTable.add(requestStatusLabel).row();
         }
 
         return profileTable;
     }
 
     private Table showPendingRequests() {
-
         Table requestsTable = new Table();
 
-        // TODO : show the friend requests received from server
+        if (requestsHashMap == null || requestsHashMap.isEmpty()) {
+            Gdx.app.log("FriendsScreen", "No pending friend requests.");
+            return requestsTable;
+        }
+
+        for (HashMap<String, FriendRequest> requestMap : requestsHashMap.values()) {
+            for (FriendRequest request : requestMap.values()) {
+                if ("pending".equals(request.getStatus())) {
+                    Table requestRow = new Table();
+                    requestRow.add(new Label("From: " + request.getFromUser().getUsername(), skin)).padRight(20);
+
+                    TextButton acceptButton = new TextButton("Accept", skin);
+                    TextButton rejectButton = new TextButton("Reject", skin);
+
+                    acceptButton.addListener(new ChangeListener() {
+                        @Override
+                        public void changed(ChangeEvent event, Actor actor) {
+                            controller.acceptFriendRequest(loggedInUser, request);
+                            refreshRequestsTable(); // Refresh the table after accepting
+                        }
+                    });
+
+                    rejectButton.addListener(new ChangeListener() {
+                        @Override
+                        public void changed(ChangeEvent event, Actor actor) {
+                            controller.rejectFriendRequest(loggedInUser, request);
+                            refreshRequestsTable(); // Refresh the table after rejecting
+                        }
+                    });
+
+                    requestRow.add(acceptButton).padRight(10);
+                    requestRow.add(rejectButton);
+                    requestsTable.add(requestRow).expandX().fillX().row();
+                }
+            }
+        }
 
         return requestsTable;
+    }
+
+    private void showFriendsList() {
+        table.clear();
+        table.add(searchField).width(300).padRight(100);
+        table.add(searchButton).width(200);
+        table.add(viewRequestsButton).width(200).padLeft(50);
+        table.add(viewFriendsButton).width(200).padLeft(50);
+        table.row();
+
+        Table friendsTable = new Table();
+        if (requestsHashMap != null && !requestsHashMap.isEmpty()) {
+            for (HashMap<String, FriendRequest> requestMap : requestsHashMap.values()) {
+                for (FriendRequest request : requestMap.values()) {
+                    if ("accepted".equals(request.getStatus())) {
+                        Label friendLabel = new Label(request.getFromUser().getUsername(), skin);
+                        friendsTable.add(friendLabel).expandX().fillX().row();
+                    }
+                }
+            }
+        } else {
+            friendsTable.add(new Label("No friends found.", skin)).colspan(3);
+        }
+
+        table.add(friendsTable).colspan(4).expand().fill();
     }
 
     private void refreshRequestsTable() {
         table.clear();
         table.add(searchField).width(300).padRight(100);
         table.add(searchButton).width(200);
-        table.add(viewRequestsButton).width(550).padLeft(50);
+        table.add(viewRequestsButton).width(200).padLeft(50);
+        table.add(viewFriendsButton).width(200).padLeft(50);
         table.row();
+        table.add(showPendingRequests()).colspan(4).expand().fill();
     }
 
     @Override
-    public void show() {}
+    public void show() {
+    }
 
     @Override
     public void render(float delta) {
@@ -180,7 +244,7 @@ public class FriendsScreen implements Screen {
         batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
         if (requestInfoReceived) {
-            table.add(showPendingRequests()).colspan(3).expand().fill();
+            refreshRequestsTable();
             requestInfoReceived = false;
         }
         stage.act(delta);
@@ -189,20 +253,21 @@ public class FriendsScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
     }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
-    public void hide() {}
+    public void hide() {
+    }
 
     @Override
     public void dispose() {
-        stage.dispose();
     }
 }

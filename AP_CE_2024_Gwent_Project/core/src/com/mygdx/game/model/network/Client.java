@@ -1,5 +1,6 @@
 package com.mygdx.game.model.network;
 
+import com.badlogic.gdx.Gdx;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
@@ -106,7 +107,9 @@ public class Client extends Thread {
                 ServerFriendRequest serverFriendRequest = gson.fromJson(request, ServerFriendRequest.class);
                 FriendsScreen.setRequestInfoReceived(true);
                 FriendsScreen.setRequestsHashMap(serverFriendRequest.getRequests());
-                //todo: add receiving requests
+                Gdx.app.log("FriendsScreen", "Friend requests received: " + serverFriendRequest.getRequests());
+
+            //todo: add receiving requests
 
                 //User.getLoggedInUser().setReceivedFriendRequests(serverFriendRequest.getRequests());
                 //let friends screen know they can proceed
