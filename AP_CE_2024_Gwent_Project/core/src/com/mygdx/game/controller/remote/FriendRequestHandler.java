@@ -26,7 +26,7 @@ public class FriendRequestHandler {
         ClientFriendRequest friendRequest = gson.fromJson(request, ClientFriendRequest.class);
         if(friendRequest.getFriendRequest().getStatus().equals("pending")) {
             HashMap<String , HashMap<String , FriendRequest>> sender = loadFriendRequests(friendRequest.getFriendRequest().getFromUsername());
-            HashMap<String, FriendRequest> req = new HashMap<String, FriendRequest>();
+            HashMap<String, FriendRequest> req = new HashMap<>();
             req.put(friendRequest.getFriendRequest().getToUsername(), friendRequest.getFriendRequest());
             if(sender == null) {
                 sender = new HashMap<>();
@@ -35,8 +35,11 @@ public class FriendRequestHandler {
             saveFriendRequests(sender, friendRequest.getFriendRequest().getFromUsername());
 
 
-            HashMap<String , HashMap<String , FriendRequest>> receiver = loadFriendRequests(friendRequest.getFriendRequest().getFromUsername());
-            req = new HashMap<String, FriendRequest>();
+            HashMap<String , HashMap<String , FriendRequest>> receiver = loadFriendRequests(friendRequest.getFriendRequest().getToUsername());
+            if(receiver == null) {
+                receiver = new HashMap<>();
+            }
+            req = new HashMap<>();
             req.put(friendRequest.getFriendRequest().getFromUsername(), friendRequest.getFriendRequest());
             sender.put("received", req);
             saveFriendRequests(receiver, friendRequest.getFriendRequest().getToUsername());
@@ -49,7 +52,7 @@ public class FriendRequestHandler {
             //add to friends
 
 
-            HashMap<String , HashMap<String , FriendRequest>> receiver = loadFriendRequests(friendRequest.getFriendRequest().getFromUsername());
+            HashMap<String , HashMap<String , FriendRequest>> receiver = loadFriendRequests(friendRequest.getFriendRequest().getToUsername());
             sender.get("received").get(friendRequest.getFriendRequest().getFromUsername()).setStatus("accepted");
             //add to friends
             saveFriendRequests(receiver, friendRequest.getFriendRequest().getToUsername());
@@ -62,10 +65,11 @@ public class FriendRequestHandler {
             //add to friends
 
 
-            HashMap<String , HashMap<String , FriendRequest>> receiver = loadFriendRequests(friendRequest.getFriendRequest().getFromUsername());
+            HashMap<String , HashMap<String , FriendRequest>> receiver = loadFriendRequests(friendRequest.getFriendRequest().getToUsername());
             sender.get("received").get(friendRequest.getFriendRequest().getFromUsername()).setStatus("rejected");
             //add to friends
-            saveFriendRequests(receiver, friendRequest.getFriendRequest().getToUsername());        }
+            saveFriendRequests(receiver, friendRequest.getFriendRequest().getToUsername());
+        }
 
     }
 
