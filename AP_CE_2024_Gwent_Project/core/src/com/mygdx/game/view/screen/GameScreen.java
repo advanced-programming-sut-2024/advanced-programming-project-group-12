@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
+import com.mygdx.game.controller.local.ChatController;
 import com.mygdx.game.controller.local.GameController;
 import com.mygdx.game.model.game.card.Action;
 import com.mygdx.game.model.game.Faction;
@@ -192,7 +193,8 @@ public class GameScreen implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 String message = chatBox.getInputText();
-                chatBox.addMessage(Client.getInstance().getUser().getUsername(), message);
+                if(message.isEmpty()) return true;
+                ChatController.sendMessage(Client.getInstance().getUser().getUsername(), message);
                 chatBox.clearInput();
                 return true;
             }
