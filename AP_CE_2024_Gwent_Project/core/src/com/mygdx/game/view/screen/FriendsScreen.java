@@ -15,6 +15,7 @@ import com.mygdx.game.controller.local.FriendsController;
 import com.mygdx.game.model.user.FriendRequest;
 import com.mygdx.game.model.user.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +52,13 @@ public class FriendsScreen implements Screen {
         viewRequestsButton = new TextButton("View Friend Requests", skin);
         viewFriendsButton = new TextButton("View Friends", skin);
         back = new TextButton("Back", skin);
-        table.add(back).width(200).padRight(70);
+
+        // Layout for back button
+        Table bottomTable = new Table();
+        bottomTable.bottom().left().pad(10);
+        bottomTable.add(back).width(200);
+        stage.addActor(bottomTable);
+
         back.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -63,14 +70,9 @@ public class FriendsScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 String username = searchField.getText();
-                //put this to server side shit
                 User user = User.getUserByUsername(username);
                 table.clear();
-                table.add(searchField).width(300).padRight(100);
-                table.add(searchButton).width(200);
-                table.add(viewRequestsButton).width(200).padLeft(50);
-                table.add(viewFriendsButton).width(200).padLeft(50);
-                table.row();
+                addSearchUI();
                 if (user != null) {
                     table.add(showUserProfile(user)).colspan(4).expand().fill();
                 } else {
@@ -93,12 +95,24 @@ public class FriendsScreen implements Screen {
             }
         });
 
-        // Layout
-        table.add(searchField).width(300).padRight(100);
-        table.add(searchButton).width(200);
-        table.add(viewRequestsButton).width(200).padLeft(50);
-        table.add(viewFriendsButton).width(200).padLeft(50);
-        table.row();
+        addSearchUI();
+    }
+
+    private void addSearchUI() {
+        table.clear();
+        table.top().padTop(20);
+
+        // Top center layout for viewRequestsButton and viewFriendsButton
+        Table topTable = new Table();
+        topTable.add(viewRequestsButton).width(570).padRight(20);
+        topTable.add(viewFriendsButton).width(400);
+        table.add(topTable).colspan(4).center().row();
+
+        // Center layout for searchField and searchButton
+        Table searchTable = new Table();
+        searchTable.add(searchField).width(500).padRight(10);
+        searchTable.add(searchButton).width(300);
+        table.add(searchTable).colspan(4).padTop(50).center().row();
     }
 
     private static boolean requestInfoReceived = false;
@@ -167,30 +181,38 @@ public class FriendsScreen implements Screen {
             for (FriendRequest request : requestMap.values()) {
                 if ("pending".equals(request.getStatus())) {
                     Table requestRow = new Table();
-                    requestRow.add(new Label("From: " + request.getFromUser().getUsername(), skin)).padRight(20);
+                    if (request.getFromUser().getUsername().equals(loggedInUser.getUsername())) {
+                        // If logged-in user is the sender, show "Pending"
+                        requestRow.add(new Label("To: " + request.getToUsername(), skin)).padRight(20);
+                        requestRow.add(new Label("Pending", skin));
+                    } else {
+                        // If logged-in user is the receiver, show accept/reject buttons
+                        requestRow.add(new Label("From: " + request.getFromUsername(), skin)).padRight(20);
 
-                    TextButton acceptButton = new TextButton("Accept", skin);
-                    TextButton rejectButton = new TextButton("Reject", skin);
+                        TextButton acceptButton = new TextButton("Accept", skin);
+                        TextButton rejectButton = new TextButton("Reject", skin);
 
-                    acceptButton.addListener(new ChangeListener() {
-                        @Override
-                        public void changed(ChangeEvent event, Actor actor) {
-                            controller.acceptFriendRequest(loggedInUser, request);
-                            refreshRequestsTable(); // Refresh the table after accepting
-                        }
-                    });
+                        acceptButton.addListener(new ChangeListener() {
+                            @Override
+                            public void changed(ChangeEvent event, Actor actor) {
+                                controller.acceptFriendRequest(loggedInUser, request);
+                                refreshPendingRequests();
+                            }
+                        });
 
-                    rejectButton.addListener(new ChangeListener() {
-                        @Override
-                        public void changed(ChangeEvent event, Actor actor) {
-                            controller.rejectFriendRequest(loggedInUser, request);
-                            refreshRequestsTable(); // Refresh the table after rejecting
-                        }
-                    });
+                        rejectButton.addListener(new ChangeListener() {
+                            @Override
+                            public void changed(ChangeEvent event, Actor actor) {
+                                controller.rejectFriendRequest(loggedInUser, request);
+                                refreshPendingRequests();
+                            }
+                        });
 
-                    requestRow.add(acceptButton).padRight(10);
-                    requestRow.add(rejectButton);
-                    requestsTable.add(requestRow).expandX().fillX().row();
+                        requestRow.add(acceptButton).padRight(10);
+                        requestRow.add(rejectButton);
+                    }
+
+                    requestsTable.add(requestRow).padBottom(10).row();
                 }
             }
         }
@@ -198,77 +220,73 @@ public class FriendsScreen implements Screen {
         return requestsTable;
     }
 
+    private void refreshPendingRequests() {
+        table.clear();
+        addSearchUI();
+        table.add(showPendingRequests()).expand().fill().colspan(4).row();
+    }
+
     private void showFriendsList() {
         table.clear();
-        table.add(searchField).width(300).padRight(100);
-        table.add(searchButton).width(200);
-        table.add(viewRequestsButton).width(200).padLeft(50);
-        table.add(viewFriendsButton).width(200).padLeft(50);
-        table.row();
+        addSearchUI();
 
-        Table friendsTable = new Table();
-        if (requestsHashMap != null && !requestsHashMap.isEmpty()) {
-            for (Map<String, FriendRequest> requestMap : requestsHashMap.values()) {
-                for (FriendRequest request : requestMap.values()) {
-                    if ("accepted".equals(request.getStatus())) {
-                        Label friendLabel = new Label(request.getFromUser().getUsername(), skin);
-                        friendsTable.add(friendLabel).expandX().fillX().row();
-                    }
-                }
-            }
-        } else {
-            friendsTable.add(new Label("No friends found.", skin)).colspan(3);
+        ArrayList<User> friends = loggedInUser.getFriendsList();
+        if (friends.isEmpty()) {
+            table.add(new Label("You have no friends.", skin)).colspan(4).center().row();
+            return;
         }
 
-        table.add(friendsTable).colspan(4).expand().fill();
-    }
-
-    private void refreshRequestsTable() {
-        table.clear();
-        table.add(searchField).width(300).padRight(100);
-        table.add(searchButton).width(200);
-        table.add(viewRequestsButton).width(200).padLeft(50);
-        table.add(viewFriendsButton).width(200).padLeft(50);
-        table.row();
-        table.add(showPendingRequests()).colspan(4).expand().fill();
-    }
+        for (User friend : friends) {
+            Table friendRow = new Table();
+            friendRow.add(new Label(friend.getUsername() + " a.k.a " + friend.getNickname(), skin)).padRight(20);
+            TextButton viewProfileButton = new TextButton("View Profile", skin);
+            viewProfileButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    table.clear();
+                    addSearchUI();
+                    table.add(showUserProfile(friend)).colspan(4).expand().fill();
+                }
+            });
+            friendRow.add(viewProfileButton);
+            table.add(friendRow).padBottom(10).row();
+        }
+        }
 
     @Override
-    public void show() {
-    }
+    public void show() {}
 
     @Override
     public void render(float delta) {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        SpriteBatch batch = Gwent.singleton.getBatch();
-        batch.begin();
-        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.end();
-        if (requestInfoReceived) {
-            refreshRequestsTable();
-            requestInfoReceived = false;
-        }
-        stage.act(delta);
+        stage.getBatch().begin();
+        stage.getBatch().draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        stage.getBatch().end();
+        stage.act();
         stage.draw();
+        if (requestInfoReceived) {
+            refreshPendingRequests();
+            setRequestInfoReceived(false);
+        }
     }
 
     @Override
     public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
-    public void pause() {
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-    }
+    public void resume() {}
 
     @Override
-    public void hide() {
-    }
+    public void hide() {}
 
     @Override
     public void dispose() {
+        stage.dispose();
     }
 }

@@ -16,20 +16,28 @@ public class FriendsController {
 
     public void acceptFriendRequest(User user, FriendRequest request) {
         request.setStatus("accepted");
-//        user.getReceivedFriendRequests().remove(request);
-//        user.getFriends().add(request.getFromUser());
-//        user.save();
         Client.getInstance().sendMassage(new ClientFriendRequest(request));
+
+        // Add each user to the other's friend list
+        User fromUser = request.getFromUser();
+        user.addFriend(fromUser);
+        fromUser.addFriend(user);
+
+        updateFriendRequests(user);
     }
 
     public void rejectFriendRequest(User user, FriendRequest request) {
         request.setStatus("rejected");
-//        user.getReceivedFriendRequests().remove(request);
-//        user.save();
         Client.getInstance().sendMassage(new ClientFriendRequest(request));
+        updateFriendRequests(user);
     }
 
     public void getFriendRequests() {
         Client.getInstance().sendMassage(new GetFriendRequestsRequest());
+    }
+
+    private void updateFriendRequests(User user) {
+        // Refresh the requests list after accepting/rejecting a request
+        getFriendRequests();
     }
 }
