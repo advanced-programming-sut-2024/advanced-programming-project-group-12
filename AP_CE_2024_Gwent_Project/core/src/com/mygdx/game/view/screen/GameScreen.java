@@ -47,6 +47,9 @@ public class GameScreen implements Screen {
     private Table opposiytionDiscards;
     private Player player;
     private Player opposition;
+    //chat parts
+    private ChatBox chatBox;
+    private TextButton chatButton;
 
     public GameScreen() {
         if(Client.getInstance().getGame().getCurrentPlayer().getUsername().equals(Client.getInstance().getUser().getUsername())) {
@@ -63,6 +66,27 @@ public class GameScreen implements Screen {
         passButton.setPosition(220, 120);
         passButton.setSize(150, 80);
         weatherBox = new WeatherBox();
+
+        chatBox = new ChatBox(Gwent.singleton.skin);
+        chatBox.setPosition(400, 500); // set the position of the chat box
+        stage.addActor(chatBox);
+
+        chatButton = new TextButton("Chat", Gwent.singleton.skin);
+        chatButton.setPosition(1440, 60); // set the position of the chat button
+        stage.addActor(chatButton);
+
+        chatButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (chatBox.isVisible()) {
+                    chatBox.hide();
+                } else {
+                    chatBox.show();
+                }
+            }
+        });
+
+
         playerDiscards = new Table(Gwent.singleton.skin);
         playerDiscards.setTouchable(Touchable.enabled);
         opposiytionDiscards = new Table(Gwent.singleton.skin);
@@ -162,6 +186,15 @@ public class GameScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 controller.passRound();
                 playerInfoBox.kill();
+            }
+        });
+        chatBox.getSendButton().addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                String message = chatBox.getInputText();
+                chatBox.addMessage(Client.getInstance().getUser().getUsername(), message);
+                chatBox.clearInput();
+                return true;
             }
         });
     }
