@@ -43,7 +43,8 @@ public class LoginHandler {
         }
     }
     public String loginHandler(String username, String password) {
-        if(username.equals("admin")) {
+        //TODO: remove it
+        if(User.getUserByUsername(username) != null) {
             return "accept";
         }
         if (username.isEmpty() || password.isEmpty()) {
