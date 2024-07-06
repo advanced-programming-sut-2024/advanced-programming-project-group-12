@@ -1,6 +1,8 @@
 package com.mygdx.game.controller.remote;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ClientFriendRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.GetFriends;
 import com.mygdx.game.model.network.massage.serverResponse.*;
@@ -83,7 +85,9 @@ public class FriendRequestHandler {
         File file = new File("Data/Users/" + username + "/friendRequests.json");
         if(!file.exists())
             return null;
+
         Gson gson = new Gson();
+        
         try {
             FileReader reader = new FileReader(file);
             Map friendRequests = gson.fromJson(reader, HashMap.class);

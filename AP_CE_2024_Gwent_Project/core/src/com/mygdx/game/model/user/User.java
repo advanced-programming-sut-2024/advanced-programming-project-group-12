@@ -336,4 +336,8 @@ public class User {
     public void requestRejected(FriendRequest friendRequest) {
         friendRequest.setStatus("rejected");
     }
+
+    public int getScore() {
+        return getUserInfo().getGamesWon();
+    }
 }

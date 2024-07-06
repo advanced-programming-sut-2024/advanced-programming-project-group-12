@@ -5,6 +5,7 @@ import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.network.RequestHandler;
 import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
 import com.mygdx.game.model.network.massage.serverResponse.ChatInGameWrapper;
+import com.mygdx.game.model.network.massage.serverResponse.GetPublicGamesResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayTurnPermission;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.SetGameToStart;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 
 public class GameHandler {
     private static final ArrayList<GameHandler> allGames = new ArrayList<>();
+    private final boolean isPrivate = false;
 
     private User user1;
     private User user2;
@@ -32,6 +34,17 @@ public class GameHandler {
         allGames.add(this);
         spectators = new ArrayList<>();
         start();
+    }
+
+    public static ServerResponse sendAllGamesList() {
+        ArrayList<String> games = new ArrayList<>();
+        for(GameHandler i: allGames) {
+            if(!i.isPrivate) {
+                games.add(i.user1.getUsername()+ " : " + i.user2.getUsername() );
+            }
+        }
+        return new GetPublicGamesResponse(games);
+        //
     }
 
     private void start() {
@@ -76,7 +89,7 @@ public class GameHandler {
         }
     }
 
-    public void addAsAnSpectator(User user) {
+    public void addAsAnSpectator(User user ) {
         spectators.add(user);
     }
 

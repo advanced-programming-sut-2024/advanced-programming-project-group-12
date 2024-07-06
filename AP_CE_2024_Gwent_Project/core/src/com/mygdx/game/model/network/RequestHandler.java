@@ -9,6 +9,7 @@ import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.ChangeMenuRequest;
 import com.mygdx.game.model.network.massage.serverResponse.ChangeMenuResponse;
+import com.mygdx.game.model.network.massage.serverResponse.GetAllUsersResponse;
 import com.mygdx.game.model.network.session.InvalidSessionException;
 import com.mygdx.game.model.network.session.SessionExpiredException;
 import com.mygdx.game.model.user.Player;
@@ -135,6 +136,17 @@ public class RequestHandler extends Thread {
                 case SPECTATOR_CHAT:
                     ChatInGame spectatorChat = gson.fromJson(request, ChatInGame.class);
                     gameHandler.spectatorChatHandle(spectatorChat, user);
+                    break;
+                case GET_PUBLIC_GAMES:
+                    serverResponse = GameHandler.sendAllGamesList();
+                    break;
+                case JOIN_AS_SPECTATOR:
+                    JoinPublicGame joinPublicGame = gson.fromJson(request, JoinPublicGame.class);
+                    String username = joinPublicGame.getServerName().split(" ")[0];
+                    allUsers.get(username).gameHandler.addAsAnSpectator(user);
+                    break;
+                case GET_ALL_USERS:
+                    serverResponse = new GetAllUsersResponse(User.getAllUsers());
                     break;
             }
 

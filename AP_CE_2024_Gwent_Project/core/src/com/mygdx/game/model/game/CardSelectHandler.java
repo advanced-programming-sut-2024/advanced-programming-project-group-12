@@ -54,8 +54,8 @@ public enum CardSelectHandler {
         List<AbstractCard> abstractCards = cardSelectionAnswer.getSelection();
         //if(abstractCards.size() != 1) return new ServerResponse(new InvalidRequestException());
         ArrayList<AbstractCard>discardCards = player.getGame().getGameBoard().getDiscardCards(player.getGame().getOpposition());
-        //might get problems due to diffrence in reffrences, if so work with indexes
-        AbstractCard abstractCard = abstractCards.get(0);
+        //might get problems due to difference in references, if so work with indexes
+        AbstractCard abstractCard = abstractCards.getFirst();
         discardCards.remove(abstractCard);
         player.getGame().switchTurn();
         return abstractCard.place(abstractCard.getRow(), player);

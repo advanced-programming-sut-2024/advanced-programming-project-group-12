@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
+import com.mygdx.game.controller.local.ChatController;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.GetAllUsersRequest;
 import com.mygdx.game.model.network.massage.serverResponse.*;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.*;
 import com.mygdx.game.model.network.session.Session;
@@ -149,6 +151,7 @@ public class Client extends Thread {
             case CHAT:
                 ChatInGameWrapper chatWrapper = gson.fromJson(request, ChatInGameWrapper.class);
                 ChatInGame chat = chatWrapper.getChat();
+                ChatController.receiveMassage(chat.getMassage(), chat.getUsername());
                 break;
             case END_ROUND:
                 EndRoundNotify endRoundNotify = gson.fromJson(request, EndRoundNotify.class);
@@ -157,6 +160,12 @@ public class Client extends Thread {
             case END_GAME:
                 EndGameNotify endGameNotify = gson.fromJson(request, EndGameNotify.class);
                 //notif
+                break;
+            case GET_PUBLIC_GAMES:
+                GetPublicGamesResponse publicGames = gson.fromJson(request, GetPublicGamesResponse.class);
+                break;
+            case GET_ALL_USERS:
+                GetAllUsersResponse getAllUsersResponse = gson.fromJson(request, GetAllUsersResponse.class);
                 break;
         }
     }
