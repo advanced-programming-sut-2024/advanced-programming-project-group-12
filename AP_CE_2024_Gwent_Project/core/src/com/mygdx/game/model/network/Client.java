@@ -126,7 +126,22 @@ public class Client extends Thread {
                     Gwent.singleton.changeScreen(Screens.GAME);
                 }
                 break;
+            case START_GAME:
+                //notification to change to game screen
+                break;
             case GAME_TURN_DECIDE:
+                //choose who to start
+                break;
+            case PLAY_CARD_PERMISSION:
+                break;
+            case PLAY_CARD_RESPONSE:
+                break;
+            case END_ROUND:
+                //notif
+                break;
+            case END_GAME:
+                //notif
+                break;
         }
     }
     public void setUser(User user) {

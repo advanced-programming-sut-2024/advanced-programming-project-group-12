@@ -127,6 +127,7 @@ public class RequestHandler extends Thread {
                 case CARD_SELECT_ANSWER:
                     CardSelectionAnswer answer = gson.fromJson(request, CardSelectionAnswer.class);
                     serverResponse = user.getPlayer().getGame().getCardSelectHandler().handle(answer, user.getPlayer());
+                    break;
             }
 
             if(serverResponse != null && session != null) {
