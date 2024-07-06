@@ -2,11 +2,13 @@ package com.mygdx.game.model.game;
 
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.PlayableCard;
+import com.mygdx.game.model.network.RequestHandler;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.CardSelectionAnswer;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionResponse;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionResponseType;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayCardResponse;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayTurnPermission;
 import com.mygdx.game.model.user.Player;
 
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ public enum CardSelectHandler {
         List<AbstractCard> abstractCards = cardSelectionAnswer.getSelection();
         //if(abstractCards.size() != 1) return new ServerResponse(new InvalidRequestException());
 
+        player.getGame().switchTurn();
         return ((PlayableCard)abstractCards.getFirst()).revive();
     }),
     ERIDIN_DESTROYER_ADD((cardSelectionAnswer, player) -> {
@@ -37,6 +40,7 @@ public enum CardSelectHandler {
         }
 
         player.getGame().setCardSelectHandler(ERIDIN_DESTROYER_ADD);
+        RequestHandler.allUsers.get(player.getUsername()).sendMassage(new PlayTurnPermission(player.getGame()));
         return new PlayCardResponse(player.getGame(), new ActionResponse(ActionResponseType.SELECTION, player.getDeckAsCards(), 1));
     })),
     ERIDIN_KING((answer,player) -> {

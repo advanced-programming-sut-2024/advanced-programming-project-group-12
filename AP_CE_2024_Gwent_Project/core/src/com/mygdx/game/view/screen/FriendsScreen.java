@@ -16,6 +16,7 @@ import com.mygdx.game.model.user.FriendRequest;
 import com.mygdx.game.model.user.User;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class FriendsScreen implements Screen {
     private User loggedInUser;
@@ -101,13 +102,13 @@ public class FriendsScreen implements Screen {
     }
 
     private static boolean requestInfoReceived = false;
-    private static HashMap<String, HashMap<String, FriendRequest>> requestsHashMap = new HashMap<>();
+    private static Map<String, Map<String, FriendRequest>> requestsHashMap = new HashMap<>();
 
     public static void setRequestInfoReceived(boolean requestInfoReceived) {
         FriendsScreen.requestInfoReceived = requestInfoReceived;
     }
 
-    public static void setRequestsHashMap(HashMap<String, HashMap<String, FriendRequest>> requestsHashMap) {
+    public static void setRequestsHashMap(Map<String, Map<String, FriendRequest>> requestsHashMap) {
         FriendsScreen.requestsHashMap = requestsHashMap;
     }
 
@@ -162,7 +163,7 @@ public class FriendsScreen implements Screen {
             return requestsTable;
         }
 
-        for (HashMap<String, FriendRequest> requestMap : requestsHashMap.values()) {
+        for (Map<String, FriendRequest> requestMap : requestsHashMap.values()) {
             for (FriendRequest request : requestMap.values()) {
                 if ("pending".equals(request.getStatus())) {
                     Table requestRow = new Table();
@@ -207,7 +208,7 @@ public class FriendsScreen implements Screen {
 
         Table friendsTable = new Table();
         if (requestsHashMap != null && !requestsHashMap.isEmpty()) {
-            for (HashMap<String, FriendRequest> requestMap : requestsHashMap.values()) {
+            for (Map<String, FriendRequest> requestMap : requestsHashMap.values()) {
                 for (FriendRequest request : requestMap.values()) {
                     if ("accepted".equals(request.getStatus())) {
                         Label friendLabel = new Label(request.getFromUser().getUsername(), skin);

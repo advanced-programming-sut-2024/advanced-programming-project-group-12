@@ -108,8 +108,7 @@ public class Player {
 
     public Player drawCard() {
         if(!deck.isEmpty()) {
-            hand.add(deck.getFirst());
-            deck.removeFirst();
+            hand.add(deck.removeFirst());
         }
         return this;
     }

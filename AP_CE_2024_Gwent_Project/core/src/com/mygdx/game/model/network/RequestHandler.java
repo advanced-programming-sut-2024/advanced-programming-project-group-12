@@ -80,7 +80,6 @@ public class RequestHandler extends Thread {
             User user = null;
             if(session != null) {
                 user = Session.getUser(session);
-                System.out.println("now doing session for: " + user.getUsername());
             }
 
             switch (clientRequest.getType()) {
@@ -148,7 +147,7 @@ public class RequestHandler extends Thread {
         }
 
         try {
-            System.out.println(gson.toJson(serverResponse));
+            System.out.println("request response: " + gson.toJson(serverResponse));
             dataOutputStream.writeUTF(gson.toJson(serverResponse));
         } catch (IOException e) {
             System.err.println("IO exception in request handler");

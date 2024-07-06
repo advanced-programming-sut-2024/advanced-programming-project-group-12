@@ -3,7 +3,10 @@ package com.mygdx.game.model.game.card;
 import com.mygdx.game.model.game.CardSelectHandler;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.GameBoard;
+import com.mygdx.game.model.network.RequestHandler;
+import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionResponseType;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayTurnPermission;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.game.Row;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionResponse;
@@ -127,6 +130,7 @@ public enum Action {
         // should open a menu in game screen to choose from one card of the below list
         //todo
         card.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.MEDIC);
+        RequestHandler.allUsers.get(card.getPlayer().getUsername()).sendMassage(new PlayTurnPermission(card.getPlayer().getGame()));
 
         return new ActionResponse(ActionResponseType.SELECTION, 1);
     }),
@@ -303,6 +307,7 @@ public enum Action {
         List<PlayableCard> enemyDiscard = opponent.getGame().getGameBoard().getDiscardPlayableCards(opponent);
         //sent to secket a request to ask for the choosing card interface
         abstractCard.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.ENEMY_MEDIC);
+        RequestHandler.allUsers.get(abstractCard.getPlayer().getUsername()).sendMassage(new PlayTurnPermission(abstractCard.getPlayer().getGame()));
         return new ActionResponse(ActionResponseType.SELECTION, enemyDiscard, 1);
     }),
     EMHYR_INVADER(abstractCard -> {
@@ -321,6 +326,7 @@ public enum Action {
         //discard two cards
         //draw one card of choice from deck
         abstractCard.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.ERIDIN_DESTROYER_DISCARD);
+        RequestHandler.allUsers.get(abstractCard.getPlayer().getUsername()).sendMassage(new PlayTurnPermission(abstractCard.getPlayer().getGame()));
         return new ActionResponse(ActionResponseType.SELECTION, abstractCard.getPlayer().getHandAsCards(), 2);
     }),
     ERIDIN_KING(abstractCard -> {
@@ -332,6 +338,7 @@ public enum Action {
         selectionList.add(AllCards.STORM.getAbstractCard());
 
         abstractCard.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.ERIDIN_KING);
+        RequestHandler.allUsers.get(abstractCard.getPlayer().getUsername()).sendMassage(new PlayTurnPermission(abstractCard.getPlayer().getGame()));
 
         return new ActionResponse(ActionResponseType.SELECTION, selectionList);
     }),
