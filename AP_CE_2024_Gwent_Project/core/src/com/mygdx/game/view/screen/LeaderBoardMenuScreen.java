@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.LeaderBoardMenuController;
-import com.mygdx.game.model.user.User;
+import com.mygdx.game.model.UserScoreAndOnline;
 import com.mygdx.game.view.Screens;
 
 import java.util.List;
@@ -50,8 +50,8 @@ public class LeaderBoardMenuScreen implements Screen {
         populateTable();
 
         backButton = new TextButton("Back", Gwent.singleton.getSkin());
-        backButton.setSize(FIELD_WIDTH/2, FIELD_HEIGHT);
-        backButton.setPosition(Gwent.WIDTH / 2 - 100 , 150);
+        backButton.setSize(FIELD_WIDTH / 2, FIELD_HEIGHT);
+        backButton.setPosition(Gwent.WIDTH / 2 - 100, 150);
         stage.addActor(backButton);
 
         setupListeners();
@@ -67,22 +67,26 @@ public class LeaderBoardMenuScreen implements Screen {
     }
 
     private void populateTable() {
-        List<User> sortedUsers = controller.sortedUsers();
+        List<UserScoreAndOnline> sortedUsers = controller.getSortedUsers();
 
         // Header
         Label nameHeader = new Label("Name", Gwent.singleton.getSkin(), "title");
         Label winCountHeader = new Label("Wins", Gwent.singleton.getSkin(), "title");
+        Label statusHeader = new Label("Status", Gwent.singleton.getSkin(), "title");
         table.add(nameHeader).pad(10).expandX().padBottom(5);
         table.add(winCountHeader).pad(10).expandX().padBottom(5);
+        table.add(statusHeader).pad(10).expandX().padBottom(5);
         table.row();
 
         int rank = 1;
         // Rows
-        for (User user : sortedUsers) {
-            Label nameLabel = new Label(rank + "." + user.getUsername(), Gwent.singleton.getSkin(), "subtitle");
-            Label winCountLabel = new Label(String.valueOf(controller.getUserWinCount(user)), Gwent.singleton.getSkin(), "subtitle");
+        for (UserScoreAndOnline user : sortedUsers) {
+            Label nameLabel = new Label(rank + ". " + user.getUsername(), Gwent.singleton.getSkin(), "subtitle");
+            Label winCountLabel = new Label(String.valueOf(user.getScore()), Gwent.singleton.getSkin(), "subtitle");
+            Label statusLabel = new Label(user.isOnline() ? "Online" : "Offline", Gwent.singleton.getSkin(), "subtitle");
             table.add(nameLabel).pad(10).expandX().padBottom(5);
             table.add(winCountLabel).pad(10).expandX().padBottom(5);
+            table.add(statusLabel).pad(10).expandX().padBottom(5);
             table.row().padTop(5);
             rank++;
         }

@@ -6,12 +6,12 @@ import com.mygdx.game.model.user.User;
 import java.util.ArrayList;
 
 public class ServerFriend extends ServerResponse{
-    private ArrayList<User> friends;
-    public ServerFriend( ArrayList<User> friends) {
+    private ArrayList<String> friends;
+    public ServerFriend( ArrayList<String> friends) {
         super(ServerResponseType.GET_FRIENDS, null);
         this.friends = friends;
     }
-    public ArrayList<User> getFriends() {
+    public ArrayList<String> getFriends() {
         return friends;
     }
 }

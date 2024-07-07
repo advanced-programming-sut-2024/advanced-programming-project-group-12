@@ -41,7 +41,7 @@ public class User {
     private String leader;
     private ArrayList <String> deck;
 
-    private ArrayList<User> friends;
+    private ArrayList<String> friends;
     private ArrayList<FriendRequest> receivedFriendRequests;
     private ArrayList<FriendRequest> sentFriendRequests;
 
@@ -65,14 +65,14 @@ public class User {
     }
 
     public void addFriend(User user) {
-        if (!this.friends.contains(user)) {
-            this.friends.add(user);
+        if (!this.friends.contains(user.getUsername())) {
+            this.friends.add(user.getUsername());
             this.save(); // Save the updated friends list
         }
     }
 
     // New method to get a list of friends
-    public ArrayList<User> getFriendsList() {
+    public ArrayList<String> getFriendsList() {
         return new ArrayList<>(this.friends);
     }
 
@@ -176,7 +176,7 @@ public class User {
         return userInfo;
     }
 
-    public ArrayList<User> getFriends() {
+    public ArrayList<String> getFriends() {
         return friends;
     }
 
@@ -321,7 +321,7 @@ public class User {
         save(); // Save the user's data after setting the leader
     }
 
-    public void setFriends(ArrayList<User> friends) {
+    public void setFriends(ArrayList<String> friends) {
         this.friends = friends;
     }
 

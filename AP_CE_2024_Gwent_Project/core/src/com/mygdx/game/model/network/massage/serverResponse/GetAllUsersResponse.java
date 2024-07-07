@@ -1,15 +1,14 @@
 package com.mygdx.game.model.network.massage.serverResponse;
 
+import com.mygdx.game.model.UserScoreAndOnline;
 import com.mygdx.game.model.network.RequestHandler;
 import com.mygdx.game.model.user.User;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 
 public class GetAllUsersResponse extends ServerResponse{
-    private ArrayList<UserScoreAndOnline> allUsers = new ArrayList<>();
+    private static ArrayList<UserScoreAndOnline> allUsers = new ArrayList<>();
 
     public GetAllUsersResponse(ArrayList<User> users) {
         super(ServerResponseType.GET_ALL_USERS, null);
@@ -19,7 +18,7 @@ public class GetAllUsersResponse extends ServerResponse{
         }
     }
 
-    public ArrayList<UserScoreAndOnline> getAllUsers() {
+    public static ArrayList<UserScoreAndOnline> getAllUsers() {
         Collections.sort(allUsers);
         return allUsers;
     }

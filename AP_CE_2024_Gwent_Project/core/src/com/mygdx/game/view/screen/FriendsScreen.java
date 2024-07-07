@@ -14,6 +14,7 @@ import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.FriendsController;
 import com.mygdx.game.model.user.FriendRequest;
 import com.mygdx.game.model.user.User;
+import com.mygdx.game.view.Screens;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,7 +63,7 @@ public class FriendsScreen implements Screen {
         back.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gwent.singleton.setScreen(new MainMenuScreen());
+                Gwent.singleton.changeScreen(Screens.PROFILE_MENU);
             }
         });
 
@@ -230,22 +231,22 @@ public class FriendsScreen implements Screen {
         table.clear();
         addSearchUI();
 
-        ArrayList<User> friends = loggedInUser.getFriendsList();
+        ArrayList<String> friends = loggedInUser.getFriendsList();
         if (friends.isEmpty()) {
             table.add(new Label("You have no friends.", skin)).colspan(4).center().row();
             return;
         }
 
-        for (User friend : friends) {
+        for (String friend : friends) {
             Table friendRow = new Table();
-            friendRow.add(new Label(friend.getUsername() + " a.k.a " + friend.getNickname(), skin)).padRight(20);
+            friendRow.add(new Label(friend + " a.k.a " + User.getUserByUsername(friend), skin)).padRight(20);
             TextButton viewProfileButton = new TextButton("View Profile", skin);
             viewProfileButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     table.clear();
                     addSearchUI();
-                    table.add(showUserProfile(friend)).colspan(4).expand().fill();
+                    table.add(showUserProfile(User.getUserByUsername(friend))).colspan(4).expand().fill();
                 }
             });
             friendRow.add(viewProfileButton);

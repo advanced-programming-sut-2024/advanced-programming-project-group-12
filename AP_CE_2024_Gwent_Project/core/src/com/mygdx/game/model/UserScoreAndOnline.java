@@ -1,4 +1,4 @@
-package com.mygdx.game.model.network.massage.serverResponse;
+package com.mygdx.game.model;
 
 public class UserScoreAndOnline implements Comparable<UserScoreAndOnline> {
     String username;
