@@ -561,6 +561,10 @@ public class GameScreen implements Screen {
             }
         });
     }
+
+    public void addMessageToMessageLog(String message, String username) {
+        chatBox.addMessage(username, message);
+    }
 }
 
 enum GameState {
