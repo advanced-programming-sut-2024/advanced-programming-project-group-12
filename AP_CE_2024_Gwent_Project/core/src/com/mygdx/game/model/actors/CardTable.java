@@ -26,7 +26,7 @@ public class CardTable extends Table {
 
     public CardTable(AbstractCard card) {
         this.card = card;
-        setSize(90, 150); // Set the size of the card
+        setSize(85, 130); // Set the size of the card
         setBackground(new NinePatchDrawable(new NinePatch(new Texture(card.getInGameAssetName())))); // Set the card background
 
         // Power Type and Number
@@ -38,8 +38,8 @@ public class CardTable extends Table {
             powerLabel.setColor(Color.SKY);
 
         }
-        powerTable.add(powerLabel).padRight(22).padBottom(22);
-        add(powerTable).size(55, 55).padBottom(65).padRight(40);
+        powerTable.add(powerLabel).padRight(19).padBottom(19);
+        add(powerTable).size(55, 55).padBottom(50).padRight(33);
 
         // Ability and Range
         Table bottomTable = new Table();
@@ -54,14 +54,13 @@ public class CardTable extends Table {
         // Check and add range label if exists
         if (getRangeTexture() != null) {
             rangeImage = new Image(getRangeTexture());
-            bottomTable.add(rangeImage).size(30, 30).padLeft(7);
+            bottomTable.add(rangeImage).size(30, 30).padLeft(6);
         } else {
-            bottomTable.add().size(30, 30).padLeft(7);
+            bottomTable.add().size(30, 30).padLeft(6);
         }
         row().padBottom(5);
         add(bottomTable).expandX().fillX();
 
-        setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         setTouchable(Touchable.enabled);
     }
 

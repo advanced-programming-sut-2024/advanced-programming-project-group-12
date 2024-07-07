@@ -16,11 +16,13 @@ import com.mygdx.game.controller.local.ChatController;
 import com.mygdx.game.controller.local.GameController;
 import com.mygdx.game.model.game.card.Action;
 import com.mygdx.game.model.game.Faction;
+import com.mygdx.game.model.game.card.AllCards;
 import com.mygdx.game.model.network.Client;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.actors.*;
 import com.mygdx.game.model.game.card.AbstractCard;
 
+import javax.smartcardio.Card;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,8 +43,8 @@ public class GameScreen implements Screen {
     private Container<Actor> selectedCardPlace;
     private PlayerInfoBox playerInfoBox;
     private PlayerInfoBox oppositionInfoBox;
-    private Table playerDiscards;
-    private Table opposiytionDiscards;
+    private Container playerDiscards;
+    private Container oppositionDiscards;
     private Player player;
     private Player opposition;
     //chat parts
@@ -87,10 +89,16 @@ public class GameScreen implements Screen {
         });
 
 
-        playerDiscards = new Table(Gwent.singleton.skin);
+        playerDiscards = new Container<Actor>();
+        oppositionDiscards = new Container<Actor>();
         playerDiscards.setTouchable(Touchable.enabled);
-        opposiytionDiscards = new Table(Gwent.singleton.skin);
-        playerDiscards.setTouchable(Touchable.enabled);
+        oppositionDiscards.setTouchable(Touchable.enabled);
+        playerDiscards.setPosition(1290, 97);
+        oppositionDiscards.setPosition(1290, 785);
+        playerDiscards.setSize(85,130);
+        oppositionDiscards.setSize(85,130);
+        stage.addActor(playerDiscards);
+        stage.addActor(oppositionDiscards);
         stage.addActor(weatherBox);
         weatherBoxListener();
         stage.addActor(passButton);
@@ -101,6 +109,7 @@ public class GameScreen implements Screen {
         displayHand();
         displayPlayerDeckStack(player, 97);
         displayPlayerDeckStack(opposition, 785);
+
         //TODO : complete this part
         //showCards(, 2);
     }
@@ -148,12 +157,9 @@ public class GameScreen implements Screen {
                 AbstractCard selectedCard = controller.getSelectedCard();
                 if (selectedCard != null && selectedCard.getFaction().equals(Faction.WEATHER)) {
                     playWeatherCard(new CardActor(controller.getSelectedCard()));
-                    // Add the card to the weather box
-                    // Remove the card from the player's hand
                     controller.playCard(selectedCard, 3);
                     selectedCardPlace.clear();
-                    // Unselect the card
-                    // Redraw the player's hand
+                    controller.setSelectedCard(null);
                     resetBackgroundColors();
                     hand.clear();
                     displayHand();
@@ -193,6 +199,28 @@ public class GameScreen implements Screen {
                 return true;
             }
         });
+        TextButton plDiscards = new TextButton("plds", Gwent.singleton.skin);
+        plDiscards.setVisible(true);
+        plDiscards.setPosition(100, 200);
+        stage.addActor(plDiscards);
+        plDiscards.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+                addCardToDiscard(true, AllCards.ENDREGA.getAbstractCard());
+            }
+        });
+        TextButton opDiscards = new TextButton("opds", Gwent.singleton.skin);
+        opDiscards.setVisible(true);
+        stage.addActor(opDiscards);
+        opDiscards.setPosition(100, 700);
+        opDiscards.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                addCardToDiscard(false, AllCards.IDA.getAbstractCard());
+            }
+        });
+
     }
 
     @Override
@@ -446,26 +474,32 @@ public class GameScreen implements Screen {
         numberOfCards.setPosition(1440 + 45 - numberOfCards.getWidth() / 2, y - 60);
         stage.addActor(numberOfCards);
     }
-    public void putCardToDiscard(boolean side, CardActor cardActor) {
+    public void addCardToDiscard(boolean side, AbstractCard card) {
+        CardActor cardActor = new CardActor(card);
         if(side) {
             playerDiscards.clear();
-            playerDiscards.addActor(cardActor);
+            playerDiscards.setActor(cardActor);
             playerDiscards.addListener(new ClickListener() {
                @Override
                public void clicked(InputEvent event, float x, float y) {
-                   showCards(player.getGame().getGameBoard().getDiscardCards(player), -1);
+                   showCards(Client.getInstance().getGame().getGameBoard().getDiscardCards(player), -1);
                }
             });
+            cardActor.setPosition(1290, 97);
         } else {
-            opposiytionDiscards.clear();
-            opposiytionDiscards.addActor(cardActor);
-            opposiytionDiscards.addListener(new ClickListener() {
+            oppositionDiscards.clear();
+            oppositionDiscards.setActor(cardActor);
+
+            oppositionDiscards.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    showCards(player.getGame().getGameBoard().getDiscardCards(opposition), -1);
+                    System.out.println("touched");
+                    showCards(Client.getInstance().getGame().getGameBoard().getDiscardCards(opposition), -1);
                 }
             });
+            cardActor.setPosition(1290, 785);
         }
+
     }
 
     public void showCards(ArrayList<AbstractCard> cards, int numberOfCards) {

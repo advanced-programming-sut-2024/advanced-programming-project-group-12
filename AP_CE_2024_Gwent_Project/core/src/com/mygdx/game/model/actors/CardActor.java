@@ -14,9 +14,6 @@ public class CardActor extends Actor {
         cardTable = new CardTable(card);
 
         // Set the size of the card
-        cardTable.setSize(100, 150);
-        //Add click listener to the card
-
 
     }
 

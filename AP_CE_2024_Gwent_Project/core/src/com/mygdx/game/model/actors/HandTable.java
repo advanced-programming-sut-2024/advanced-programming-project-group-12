@@ -21,7 +21,6 @@ public class HandTable extends Table {
         for (AbstractCard card : hand) {
             CardActor cardActor = new CardActor(card);
             cards.add(cardActor);
-            cardActor.getCardTable().setSize(80, 120);
         }
 
     }
@@ -38,7 +37,6 @@ public class HandTable extends Table {
         this.clearChildren();
     }
     public void addToStageAndAddListener(Stage stage) {
-        //this.setDebug(true);
         float cardWidth = 80;
         float padding = 10; // adjust this value to add space between cards
 
@@ -53,12 +51,12 @@ public class HandTable extends Table {
             cardActor.getCardTable().addListener(new InputListener() {
                 @Override
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                    cardActor.getCardTable().addAction(Actions.moveBy(0, 20, 0.2f));
+                    cardActor.getCardTable().addAction(Actions.moveBy(0, 20, 0.35f));
                 }
 
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                    cardActor.getCardTable().addAction(Actions.moveBy(0, -20, 0.5f));
+                    cardActor.getCardTable().addAction(Actions.moveBy(0, -20, 0.35f));
                 }
             });
         }
