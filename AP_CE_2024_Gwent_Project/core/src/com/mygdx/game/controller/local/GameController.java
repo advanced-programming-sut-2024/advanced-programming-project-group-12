@@ -136,15 +136,8 @@ public class GameController {
     in this method i assume that player is in select mode
     and i give you card's that is selected and you should handle it
      */
-    public void chooseCardInSelectCardMode(AbstractCard card) {
+    public void chooseCardInSelectCardMode(ArrayList<AbstractCard> cards) {
         //TODO :
-        System.out.println(card.getName());
     }
-    /*
-    when player choose a card if showCards is over this class should return true so i remove this from screen
-     */
-    public boolean closeShowCards() {
-        //TODO :
-        return true;
-    }
+
 }
