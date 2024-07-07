@@ -4,17 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.ChatController;
 import com.mygdx.game.controller.local.GameController;
@@ -32,7 +28,7 @@ import java.util.List;
 public class GameScreen implements Screen {
     private final Stage stage;
     private final Texture background;
-    private GameState gameState = GameState.NORMAL;
+    private Sprite blurredSprite;
     //Buttons for veto, pass round, end round, end game
     private final TextButton passButton;
     private final GameController controller;
@@ -41,7 +37,8 @@ public class GameScreen implements Screen {
     private HandTable hand;
     private ArrayList<RowTable> playerRows;
     private ArrayList<RowTable> enemyRows;
-    private CardActor selectedCardActor;
+
+    private Container<Actor> selectedCardPlace;
     private PlayerInfoBox playerInfoBox;
     private PlayerInfoBox oppositionInfoBox;
     private Table playerDiscards;
@@ -53,6 +50,9 @@ public class GameScreen implements Screen {
     private TextButton chatButton;
 
     public GameScreen() {
+        controller = new GameController();
+        stage = new Stage(new ScreenViewport());
+        background = new Texture("bg/board.jpg");
         if(Client.getInstance().getGame().getCurrentPlayer().getUsername().equals(Client.getInstance().getUser().getUsername())) {
             player = Client.getInstance().getGame().getCurrentPlayer();
             opposition = Client.getInstance().getGame().getOpposition();
@@ -60,9 +60,8 @@ public class GameScreen implements Screen {
             player = Client.getInstance().getGame().getOpposition();
             opposition = Client.getInstance().getGame().getCurrentPlayer();
         }
-
-        stage = new Stage();
-        background = new Texture("bg/board.jpg");
+        selectedCardPlace = new Container<>();
+        stage.addActor(selectedCardPlace);
         passButton = new TextButton("Pass", Gwent.singleton.skin);
         passButton.setPosition(220, 120);
         passButton.setSize(150, 80);
@@ -95,7 +94,6 @@ public class GameScreen implements Screen {
         stage.addActor(weatherBox);
         weatherBoxListener();
         stage.addActor(passButton);
-        controller = new GameController();
         initialRows();
         displayInfo();
 
@@ -103,7 +101,6 @@ public class GameScreen implements Screen {
         displayHand();
         displayPlayerDeckStack(player, 97);
         displayPlayerDeckStack(opposition, 785);
-        Gdx.input.setInputProcessor(stage);
     }
 
     private void initialRows() {
@@ -118,7 +115,7 @@ public class GameScreen implements Screen {
                 public void clicked(InputEvent event, float x, float y) {
                    if (controller.getSelectedCard() != null) {
                         if (controller.isAllowedToPlay(controller.getSelectedCard(), playerRow.getSide(), playerRow.getRowNumber())) {
-                            playCard(selectedCardActor, playerRow);
+                            playCard(controller.getSelectedCard() ,playerRow);
                         }
                    }
                 }
@@ -133,7 +130,7 @@ public class GameScreen implements Screen {
                 public void clicked(InputEvent event, float x, float y) {
                     if (controller.getSelectedCard() != null) {
                         if (controller.isAllowedToPlay(controller.getSelectedCard(), enemyRow.getSide(), enemyRow.getRowNumber())) {
-                            playCard(selectedCardActor, enemyRow);
+                            playCard(controller.getSelectedCard(), enemyRow);
                         }
                     }
                 }
@@ -148,15 +145,12 @@ public class GameScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 AbstractCard selectedCard = controller.getSelectedCard();
                 if (selectedCard != null && selectedCard.getFaction().equals(Faction.WEATHER)) {
-                    playWeatherCard(selectedCardActor);
+                    playWeatherCard(new CardActor(controller.getSelectedCard()));
                     // Add the card to the weather box
                     // Remove the card from the player's hand
                     controller.playCard(selectedCard, 3);
+                    selectedCardPlace.clear();
                     // Unselect the card
-                    if (selectedCardActor != null) {
-                        selectedCardActor.remove();
-                        selectedCardActor = null;
-                    }
                     // Redraw the player's hand
                     resetBackgroundColors();
                     hand.clear();
@@ -179,6 +173,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(stage);
         passButton.setVisible(true);
         passButton.addListener(new ClickListener() {
             @Override
@@ -203,51 +198,11 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClearColor(0, 0, 0, 1);
 
-        // Check the current game state
-        switch(gameState) {
-            case NORMAL:
-                renderNormalState(delta);
-                break;
-            case SHOW_CARD:
-                renderShowingCardsState(delta);
-                break;
-        }
-    }
-    private void renderNormalState(float delta) {
-        // Render the game normally
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.getBatch().end();
         stage.act(delta);
         stage.draw();
-        // Add your normal game rendering logic here
-    }
-
-    private void renderShowingCardsState(float delta) {
-        // Example:
-        blurScreen(); // Add your blur effect here
-    }
-    private void blurScreen() {
-        // Create a new FrameBuffer for rendering the blurred screen
-        FrameBuffer blurBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-
-        // Begin rendering to the FrameBuffer
-        blurBuffer.begin();
-
-        // Render the game screen to the FrameBuffer
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act();
-        stage.draw();
-
-        blurBuffer.end();
-
-
-        // Draw the blurred texture onto the screen
-        TextureRegion blurredRegion = new TextureRegion(blurBuffer.getColorBufferTexture());
-        blurredRegion.flip(false, true);
-        Image blurredImage = new Image(blurredRegion);
-        stage.addActor(blurredImage);
     }
 
     @Override
@@ -280,11 +235,11 @@ public class GameScreen implements Screen {
     }
 
     public void displayLeaderCard() {
-        LeaderActor leaderCard = new LeaderActor(player.getLeader());
+        InfoCardActor leaderCard = new InfoCardActor(player.getLeader());
         leaderCard.getImage().setWidth((float) (leaderCard.getWidth() * 1.15));
         leaderCard.getImage().setPosition(115, 100);
         stage.addActor(leaderCard.getImage());
-        LeaderActor oppositeLeaderCard = new LeaderActor(opposition.getLeader());
+        InfoCardActor oppositeLeaderCard = new InfoCardActor(opposition.getLeader());
         oppositeLeaderCard.getImage().setWidth((float) (oppositeLeaderCard.getWidth() * 1.15));
         oppositeLeaderCard.getImage().setPosition(115, 780);
         stage.addActor(oppositeLeaderCard.getImage());
@@ -295,6 +250,7 @@ public class GameScreen implements Screen {
                 showLeaderCard(leaderCard.getCard());
             }
         });
+
         oppositeLeaderCard.getImage().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -310,7 +266,7 @@ public class GameScreen implements Screen {
         blurEffect.setColor(new Color(0, 0, 0, 0)); // Start with fully transparent black
 
         // Create the enlarged card
-        LeaderActor enlargedCard = new LeaderActor(card);
+        InfoCardActor enlargedCard = new InfoCardActor(card);
         enlargedCard.getImage().setSize(0, 0); // Start with size 0
         enlargedCard.getImage().setPosition(700, 450);
 
@@ -384,21 +340,18 @@ public class GameScreen implements Screen {
                     if (selectedCard != null && selectedCard.equals(card)) {
                         // If the clicked card is already the selected card, unselect it
                         controller.setSelectedCard(null);
-                        if (selectedCardActor != null) {
-                            selectedCardActor.remove(); // Remove the currently selected card actor from the stage
-                            selectedCardActor = null;
-                        }
+                        selectedCardPlace.setActor(null);
                         resetBackgroundColors();
                     } else {
                         // Otherwise, select the clicked card
                         controller.setSelectedCard(card);
-                        if (selectedCardActor != null) {
-                            selectedCardActor.remove(); // Remove the currently selected card actor from the stage
-                        }
-                        selectedCardActor = new CardActor(card);
-                        selectedCardActor.getCardTable().setSize(200, 300);
-                        selectedCardActor.getCardTable().setPosition(1300, 400);
-                        stage.addActor(selectedCardActor.getCardTable());
+                        selectedCardPlace.setActor(null);
+                        InfoCardActor showCard = new InfoCardActor(card);
+                        selectedCardPlace.setActor(showCard);
+                        showCard.setSize(200, 300);
+                        showCard.setPosition(1300, 400);
+                        selectedCardPlace.setPosition(1300, 400);
+
                         resetBackgroundColors();
                         highlightAllowablePlaces(card);
                     }
@@ -408,18 +361,12 @@ public class GameScreen implements Screen {
     }
 
 
-    private void playCard(CardActor cardActor, RowTable row) {
+    private void playCard(AbstractCard card, RowTable row) {
         // Get the card from the CardActor
-        AbstractCard card = cardActor.getCard();
 
         controller.playCard(card, row.getRowNumber());
 
         // Unselect the card
-        controller.setSelectedCard(null);
-        if (selectedCardActor != null) {
-            selectedCardActor.remove();
-            selectedCardActor = null;
-        }
         resetBackgroundColors();
         hand.clear();
         // Redraw the player's hand
@@ -429,7 +376,7 @@ public class GameScreen implements Screen {
     }
 
     private void playWeatherCard(CardActor card) {
-        weatherBox.add(selectedCardActor.getCardTable()).size(80, 110).expand().fill();
+        weatherBox.add(card.getCardTable()).size(80, 110).expand().fill();
     }
 
     private void highlightAllowablePlaces(AbstractCard card) {
@@ -520,27 +467,49 @@ public class GameScreen implements Screen {
     }
 
     private void showCards(ArrayList<AbstractCard> cards, boolean touch) {
+        Image bgImage = new Image(new Texture("bg/black.jpg"));
+        bgImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        stage.addActor(bgImage);
+        ArrayList<Image> cardImages = new ArrayList<>();
+
+        for(Actor actor : stage.getActors()) {
+            actor.setTouchable(Touchable.disabled);
+        }
         TextButton closeButton = new TextButton("X", Gwent.singleton.skin);
         closeButton.setSize(80, 80);
         closeButton.setPosition(Gdx.graphics.getWidth() - closeButton.getWidth(), Gdx.graphics.getHeight() - closeButton.getHeight());
-
+        stage.addActor(closeButton);
         float x = 200;
-        float y = 800;
+        float y = 700;
         for(int i = 0; i < cards.size(); i++) {
-            Texture texture = new Texture(cards.get(i).getAssetName());
+            AbstractCard card = cards.get(i);
+            Texture texture = new Texture(card.getAssetName());
             Image cardImage = new Image(texture);
-            cardImage.setSize(80, 120);
+            cardImage.setSize(160, 240);
             cardImage.setPosition(x, y);
-            x += 100;
-            if(i % 4 == 0) {
-                y -= 150;
+            stage.addActor(cardImage);
+            cardImages.add(cardImage);
+            x += 180;
+            if(i > 0 && i % 6 == 0) {
+                System.out.println(i);
+                y -= 280;
                 x = 200;
             }
             if(touch) {
                 cardImage.addListener(new ClickListener() {
                    @Override
                    public void clicked(InputEvent event, float x, float y) {
-                       //TODO
+                       controller.chooseCardInSelectCardMode(card);
+                       if(controller.closeShowCards()) {
+                           for (Image cardImage : cardImages) {
+                               cardImage.remove();
+                           }
+                           for (Actor actor : stage.getActors()) {
+                               actor.setTouchable(Touchable.enabled);
+                           }
+                           bgImage.remove();
+                           closeButton.remove();
+                       }
                    }
                 });
             }
@@ -549,21 +518,16 @@ public class GameScreen implements Screen {
         closeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //TODO : close screen
-
-                // Remove the close button from the stage immediately
-                closeButton.remove();
-                gameState = GameState.NORMAL;
-                // Re-enable all other actors on the stage
+                for (Image cardImage : cardImages) {
+                    cardImage.remove();
+                }
                 for (Actor actor : stage.getActors()) {
                     actor.setTouchable(Touchable.enabled);
                 }
+                bgImage.remove();
+                closeButton.remove();
             }
         });
-    }
-}
 
-enum GameState {
-    SHOW_CARD,
-    NORMAL;
+    }
 }

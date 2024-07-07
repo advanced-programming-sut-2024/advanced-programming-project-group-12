@@ -6,23 +6,26 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.mygdx.game.model.game.card.AbstractCard;
 
-import java.awt.*;
-
-public class LeaderActor extends Actor {
+public class InfoCardActor extends Actor {
     private AbstractCard card;
     private Image image;
 
-    public LeaderActor(AbstractCard card) {
+    public InfoCardActor(AbstractCard card) {
         this.card = card;
 
         image = new Image(new Texture(card.getAssetName()));
-        this.setSize(100, 150);
+        super.setSize(100, 150);
         image.setSize(100 ,150);
         // Set the size of the card
 
         //Add click listener to the card
 
 
+    }
+    @Override
+    public void setSize(float width, float height) {
+        super.setSize(width, height);
+        image.setSize(width ,height);
     }
 
 
