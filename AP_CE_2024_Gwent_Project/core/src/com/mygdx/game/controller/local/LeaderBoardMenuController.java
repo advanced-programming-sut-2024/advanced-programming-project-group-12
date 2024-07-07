@@ -10,8 +10,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class LeaderBoardMenuController {
+    private static ArrayList<UserScoreAndOnline> users ;
 
     public LeaderBoardMenuController() {
+    }
+
+    public static void setUsers(ArrayList<UserScoreAndOnline> users) {
+        LeaderBoardMenuController.users = users;
     }
 
     public int getUserWinCount(User user) {
@@ -20,11 +25,13 @@ public class LeaderBoardMenuController {
 
     public ArrayList<UserScoreAndOnline> getSortedUsers() {
         Client.getInstance().sendMassage(new GetAllUsersRequest());
-        ArrayList<UserScoreAndOnline> users = GetAllUsersResponse.getAllUsers();
+
         for (UserScoreAndOnline user : users) {
             System.out.println(user.getUsername() + " " + user.getScore() + user.isOnline());
         }
 
         return users;
     }
+
+
 }
