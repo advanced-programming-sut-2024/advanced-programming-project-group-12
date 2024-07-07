@@ -233,13 +233,13 @@ public class FriendsScreen implements Screen {
 
         ArrayList<String> friends = loggedInUser.getFriendsList();
         if (friends.isEmpty()) {
-            table.add(new Label("You have no friends.", skin)).colspan(4).center().row();
+            table.add(new Label("You have no friends", skin)).colspan(4).center().row();
             return;
         }
 
         for (String friend : friends) {
             Table friendRow = new Table();
-            friendRow.add(new Label(friend + " a.k.a " + User.getUserByUsername(friend), skin)).padRight(20);
+            friendRow.add(new Label(friend + " a.k.a " + User.getUserByUsername(friend).getNickname(), skin)).padRight(20);
             TextButton viewProfileButton = new TextButton("View Profile", skin);
             viewProfileButton.addListener(new ChangeListener() {
                 @Override
