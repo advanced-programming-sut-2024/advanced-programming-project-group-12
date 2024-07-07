@@ -28,7 +28,6 @@ import java.util.List;
 public class GameScreen implements Screen {
     private final Stage stage;
     private final Texture background;
-    private Sprite blurredSprite;
     //Buttons for veto, pass round, end round, end game
     private final TextButton passButton;
     private final GameController controller;
