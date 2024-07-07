@@ -4,12 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -503,7 +499,6 @@ public class GameScreen implements Screen {
                 cardImage.addListener(new ClickListener() {
                    @Override
                    public void clicked(InputEvent event, float x, float y) {
-                       //TODO
                        controller.chooseCardInSelectCardMode(card);
                        if(controller.closeShowCards()) {
                            for (Image cardImage : cardImages) {
@@ -535,24 +530,4 @@ public class GameScreen implements Screen {
         });
 
     }
-    public void blurScreen() {
-        FrameBuffer frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-        SpriteBatch batch = new SpriteBatch();
-
-        frameBuffer.begin();
-        batch.begin();
-        // Draw the blurred background
-        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.end();
-        frameBuffer.end();
-
-        // Create a new blurred background texture
-        Texture blurredTexture = frameBuffer.getColorBufferTexture();
-        blurredSprite = new Sprite(blurredTexture);
-    }
-
-    public void unblurScreen() {
-        blurredSprite = null; // Remove the blurred background texture
-    }
-
 }
