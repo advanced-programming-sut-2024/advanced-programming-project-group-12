@@ -38,6 +38,7 @@ public class ProfileMenuScreen implements Screen {
     private TextButton backButton;
     private TextButton logoutButton;
     private TextButton friendsButton;
+    private TextButton tvButton;
     // Text Fields
     private TextField oldPasswordField;
     private TextField newPasswordField;
@@ -80,6 +81,7 @@ public class ProfileMenuScreen implements Screen {
         backButton = new TextButton("Back", Gwent.singleton.getSkin());
         logoutButton = new TextButton("Logout", Gwent.singleton.getSkin());
         friendsButton = new TextButton("Friends", Gwent.singleton.getSkin());
+        tvButton =  new TextButton("TV", Gwent.singleton.getSkin());
 
         oldPasswordField = new TextField("", Gwent.singleton.getSkin());
         oldPasswordField.setMessageText("Old Password");
@@ -129,9 +131,10 @@ public class ProfileMenuScreen implements Screen {
         table.add(changeEmailButton).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.row().pad(20);
         table.add(friendsButton).width(FIELD_WIDTH/2).height(FIELD_HEIGHT).center();
-        table.add(backButton).width(FIELD_WIDTH/2).height(FIELD_HEIGHT);
-        table.row();
         table.add(logoutButton).width(FIELD_WIDTH/2).height(FIELD_HEIGHT);
+        table.row();
+        table.add(backButton).width(FIELD_WIDTH/2).height(FIELD_HEIGHT);
+        table.add(tvButton).width(FIELD_WIDTH/2).height(FIELD_HEIGHT);
     }
 
     private void setupListeners() {
@@ -200,6 +203,12 @@ public class ProfileMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gwent.singleton.changeScreen(Screens.FRIENDS);
+            }
+        });
+        tvButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gwent.singleton.changeScreen(Screens.TV);
             }
         });
     }

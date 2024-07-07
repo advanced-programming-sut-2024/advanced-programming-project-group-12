@@ -14,7 +14,7 @@ public enum Screens {
     REGISTER,
     CHOOSE_SECURITY_QUESTION,
     FORGET_PASSWORD,
-    GAME_REQUEST;
+    GAME_REQUEST, TV;
     ;
     public Screen createScreen() {
         Screen screen = null;
