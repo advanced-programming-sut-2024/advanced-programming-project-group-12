@@ -10,6 +10,8 @@ import com.mygdx.game.model.game.card.PlayableCard;
 import com.mygdx.game.model.game.card.SpellCard;
 import com.mygdx.game.model.game.GameBoard;
 
+import java.util.ArrayList;
+
 public class GameController {
     private AbstractCard selectedCard;
     private boolean permission;
@@ -128,5 +130,35 @@ public class GameController {
     }
     public void setPermission(boolean permission) {
         this.permission = permission;
+    }
+
+    /*
+    in this method i assume that player is in select mode
+    and i give you card's that is selected and you should handle it
+     */
+    public void chooseCardInSelectCardMode(AbstractCard card) {
+        //TODO :
+        System.out.println(card.getName());
+    }
+    public ArrayList<AbstractCard> getTemp() {
+        ArrayList<AbstractCard> temp = new ArrayList<>();
+        temp.add(AllCards.ASSIRE.getAbstractCard());
+        temp.add(AllCards.COW.getAbstractCard());
+        temp.add(AllCards.DUN_BANNER_MEDIC.getAbstractCard());
+        temp.add(AllCards.FOG.getAbstractCard());
+        temp.add(AllCards.COMMANDER_HORN.getAbstractCard());
+        temp.add(AllCards.FROST.getAbstractCard());
+        temp.add(AllCards.KEIRA_METZ.getAbstractCard());
+        temp.add(AllCards.DRAIG.getAbstractCard());
+        temp.add(AllCards.HEYMAEY.getAbstractCard());
+        return temp;
+
+    }
+    /*
+    when player choose a card if showCards is over this class should return true so i remove this from screen
+     */
+    public boolean closeShowCards() {
+        //TODO :
+        return true;
     }
 }
