@@ -155,9 +155,12 @@ public class Client extends Thread {
                 PlayCardResponse playCardResponse = gson.fromJson(request, PlayCardResponse.class);
                 this.game = playCardResponse.getGame();
                 //handle permission case
-                playCardResponse.isPermission();
+                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setPermission(playCardResponse.isPermission());
                 //handle special cases
-                playCardResponse.getActionResponse();
+                ActionResponse actionResponse = playCardResponse.getActionResponse();
+                if (actionResponse.getAction().equals(ActionResponseType.SELECTION)) {
+                    ((GameScreen)Gwent.singleton.getCurrentScreen()).showCards(actionResponse.getAffectedCards(), actionResponse.getActionCount());
+                }
                 break;
             case CHAT:
                 ChatInGameWrapper chatWrapper = gson.fromJson(request, ChatInGameWrapper.class);
@@ -166,10 +169,12 @@ public class Client extends Thread {
                 break;
             case END_ROUND:
                 EndRoundNotify endRoundNotify = gson.fromJson(request, EndRoundNotify.class);
+                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().endRound();
                 //notif
                 break;
             case END_GAME:
                 EndGameNotify endGameNotify = gson.fromJson(request, EndGameNotify.class);
+                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().endGame(endGameNotify.getWinner(), endGameNotify.isHasWinner());
                 //notif
                 break;
             case GET_PUBLIC_GAMES:

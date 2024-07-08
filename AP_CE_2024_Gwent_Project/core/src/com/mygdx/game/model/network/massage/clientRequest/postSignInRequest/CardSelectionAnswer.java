@@ -13,10 +13,9 @@ public class CardSelectionAnswer extends ClientRequest {
     private List<String> selection;
     private int row;
 
-    public CardSelectionAnswer(List<String> selection, int row) {
+    public CardSelectionAnswer(List<String> selection) {
         super(ClientRequestType.CARD_SELECT_ANSWER);
         this.selection = selection;
-        this.row = row;
     }
 
     public List<AbstractCard> getSelection() {

@@ -4,6 +4,10 @@ package com.mygdx.game.controller.local;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.*;
 import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.CardSelectionAnswer;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.PassRoundRequest;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.PlayCardRequest;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.TurnDecideResponse;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.game.GameBoard;
 
@@ -20,83 +24,22 @@ public class GameController {
     public AbstractCard getSelectedCard() {
         return selectedCard;
     }
-    public void playCard(PlayableCard card) {
-        // Play a card
-
-    }
-    public void vetoCard(int cardNumber) {
-        // Veto a card
-    }
-
-    public void inHandDeck(int cardNumber) {
-
-    }
-
-    public void remainingCardsToPlay() {
-
-    }
-
-    public void outOfPlayCards() {
-
-    }
-
-    public void cardsInRow(int rowNumber) {
-
-    }
-
-    public void spellsInPlay() {
-
-    }
-
-    public void putCard(int cardNumber, int rowNumber) {
-
-    }
-
-    public void CommanderInfo() {
-
-    }
-
-    public void PlayersInfo() {
-
-    }
-
-    public void PlayersLivesInfo() {
-
-    }
-
-    public void NumberOfCardsInHand() {
-
-    }
-
-    public void TurnInfo() {
-
-    }
-
-    public void totalScore() {
-
-    }
-
-    public void totalScoreOfRow(int rowNumber) {
-
-    }
 
     public void passRound() {
 
     }
 
     public void endRound() {
-
+        Client.getInstance().sendMassage(new PassRoundRequest());
     }
 
-    public void endGame() {
+    public void endGame(String winnerName, boolean hasWinner) {
 
     }
 
     public void playCard(AbstractCard card, int row) {
-        //todo
+        Client.getInstance().sendMassage(new PlayCardRequest(row, card.toString()));
     }
-
-
 
     /*
      this method has two inputs
@@ -114,8 +57,7 @@ public class GameController {
     }
 
     public boolean isHorn(AbstractCard card) {
-        //TODO :
-        return card.equals(AllCards.COMMANDER_HORN.getAbstractCard());
+        return card.equals(AllCards.COMMANDER_HORN.getAbstractCard()) || card.equals(AllCards.MARDROEME.getAbstractCard());
     }
     public boolean getPermission() {
         return permission;
@@ -129,21 +71,21 @@ public class GameController {
     and i give you card's that is selected and you should handle it
      */
     public void chooseCardInSelectCardMode(ArrayList<AbstractCard> cards) {
-        //TODO :
+        ArrayList<String> cardList = new ArrayList<>();
+        for(AbstractCard abstractCard: cards) {
+            cardList.add(abstractCard.getName());
+        }
+        Client.getInstance().sendMassage(new CardSelectionAnswer(cardList));
     }
     public void setGame(Game game) {
         this.game = game;
     }
-    public Game getGme() {
+    public Game getGame() {
         return game;
     }
 
-    public void playLeader(CommanderCard leader) {
-        //Play leader
-    }
-
     public void chooseWhichPlayerStartFirst(String username) {
-
+        Client.getInstance().sendMassage(new TurnDecideResponse(username));
     }
 
     public void goToMainMenu() {

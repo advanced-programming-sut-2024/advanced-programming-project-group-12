@@ -21,9 +21,10 @@ public enum CardSelectHandler {
             player.getGame().switchTurn();
             return new PlayCardResponse(player.getGame());
         }
-        //if(abstractCards.size() != 1) return new ServerResponse(new InvalidRequestException());
+//        if(abstractCards.size() != 1) return null;
 
         player.getGame().switchTurn();
+        player.getGame().setCardSelectHandler(null);
         return ((PlayableCard)abstractCards.getFirst()).revive();
     }),
     ERIDIN_DESTROYER_ADD((cardSelectionAnswer, player) -> {
@@ -35,6 +36,7 @@ public enum CardSelectHandler {
         //if(abstractCards.size() != 1) return new ServerResponse(new InvalidRequestException());
 
         player.getDeckAsCards().add(abstractCards.getFirst());
+        player.getGame().setCardSelectHandler(null);
         return new PlayCardResponse(player.getGame(), null);
     }),
     ERIDIN_DESTROYER_DISCARD(((cardSelectionAnswer, player) -> {
@@ -60,7 +62,7 @@ public enum CardSelectHandler {
         }
         //if(abstractCards.size() != 1) return new ServerResponse(new InvalidRequestException());
         player.getGame().setCardSelectHandler(null);
-        return abstractCards.getFirst().place(answer.getRow(), player);
+        return abstractCards.getFirst().place(3, player);
     }),
     ENEMY_MEDIC((cardSelectionAnswer, player) -> {
         List<AbstractCard> abstractCards = cardSelectionAnswer.getSelection();
@@ -73,6 +75,7 @@ public enum CardSelectHandler {
         //might get problems due to difference in references, if so work with indexes
         AbstractCard abstractCard = abstractCards.getFirst();
         discardCards.remove(abstractCard);
+        player.getGame().setCardSelectHandler(null);
         return abstractCard.place(abstractCard.getRow(), player);
     });
     private final BiFunction<CardSelectionAnswer, Player, ServerResponse> handler;

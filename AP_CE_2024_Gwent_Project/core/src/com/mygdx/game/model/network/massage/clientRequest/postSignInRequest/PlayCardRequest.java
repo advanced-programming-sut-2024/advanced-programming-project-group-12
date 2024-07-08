@@ -9,8 +9,8 @@ public class PlayCardRequest extends ClientRequest {
     private String card;
     private int row;
 
-    public PlayCardRequest(Session session, int row , String abstractCard) {
-        super(ClientRequestType.PLAY_CARD_REQUEST, session);
+    public PlayCardRequest(int row , String abstractCard) {
+        super(ClientRequestType.PLAY_CARD_REQUEST, null);
         this.row = row;
         this.card = abstractCard;
     }

@@ -137,6 +137,8 @@ public class RequestHandler extends Thread {
                     CardSelectionAnswer answer = gson.fromJson(request, CardSelectionAnswer.class);
                     serverResponse = user.getPlayer().getGame().getCardSelectHandler().handle(answer, user.getPlayer());
                     break;
+                case PASS_ROUND:
+                    user.getPlayer().pass();
                 case CHAT:
                     ChatInGame chat = gson.fromJson(request, ChatInGame.class);
                     gameHandler.handleChat(chat, user);
