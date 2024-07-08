@@ -267,7 +267,7 @@ public class GameScreen implements Screen {
     private void displayWeatherBox() {
         HashSet<SpellCard> cards = Client.getInstance().getGame().getGameBoard().getWeatherCards();
         for (SpellCard card : cards) {
-            addCardToWeatherBox(new CardActor(card));
+            weatherBox.addCard(card);
         }
         weatherBox.setTouchable(Touchable.enabled);
         weatherBox.addListener(new ClickListener() {
@@ -531,9 +531,7 @@ public class GameScreen implements Screen {
 
     }
 
-    private void addCardToWeatherBox(CardActor card) {
-        weatherBox.add(card.getCardTable()).size(80, 110).expand().fill();
-    }
+
 
     private void highlightAllowablePlaces(AbstractCard card) {
         if (card.getAllowableRows() == null) return;
