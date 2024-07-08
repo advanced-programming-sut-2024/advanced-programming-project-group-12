@@ -608,7 +608,7 @@ public class GameScreen implements Screen {
 
     }
 
-    public void showCardsToSelect(ArrayList<AbstractCard> cards, int numberOfCards) {
+    public void showCardsToSelect(List<AbstractCard> cards, int numberOfCards) {
         ArrayList<AbstractCard> selectedCards = new ArrayList<>();
         Image bgImage = new Image(new Texture("bg/black.jpg"));
         bgImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
