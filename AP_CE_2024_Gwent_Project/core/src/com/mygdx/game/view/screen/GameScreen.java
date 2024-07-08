@@ -618,7 +618,7 @@ public class GameScreen implements Screen {
     }
 
     public void showCardsToSelect(List<? extends AbstractCard> cards, int numberOfCards, boolean canChooseLess) {
-        System.out.println("now i am here");
+
         ArrayList<AbstractCard> selectedCards = new ArrayList<>();
         Image bgImage = new Image(new Texture("bg/black.jpg"));
         bgImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -656,7 +656,6 @@ public class GameScreen implements Screen {
                         if (selectedCards.contains(card)) {
                             cardImage.addAction(Actions.scaleTo(1.0f, 1.0f, 0.2f));
                             selectedCards.remove(card);
-                            System.out.println(selectedCards.size());
                         } else {
                             cardImage.addAction(Actions.scaleBy(0.1f, 0.1f, 0.2f));
                             selectedCards.add(card);
@@ -671,6 +670,7 @@ public class GameScreen implements Screen {
                             bgImage.remove();
                             closeButton.remove();
                             controller.chooseCardInSelectCardMode(selectedCards, canChooseLess);
+                            updateStage();
                         }
                     }
                 });
@@ -689,6 +689,7 @@ public class GameScreen implements Screen {
                 bgImage.remove();
                 closeButton.remove();
                 controller.chooseCardInSelectCardMode(selectedCards, canChooseLess);
+                updateStage();
             }
         });
     }
