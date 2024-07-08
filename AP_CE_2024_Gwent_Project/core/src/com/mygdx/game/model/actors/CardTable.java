@@ -1,20 +1,18 @@
 package com.mygdx.game.model.actors;
 
-import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.model.game.card.*;
-import com.mygdx.game.model.user.Player;
 
 import java.util.List;
 
@@ -26,7 +24,7 @@ public class CardTable extends Table {
 
     public CardTable(AbstractCard card) {
         this.card = card;
-        setSize(90, 150); // Set the size of the card
+        setSize(85, 130); // Set the size of the card
         setBackground(new NinePatchDrawable(new NinePatch(new Texture(card.getInGameAssetName())))); // Set the card background
 
         // Power Type and Number
@@ -35,11 +33,16 @@ public class CardTable extends Table {
         powerTable.setBackground(powerBackground);
         if (card instanceof PlayableCard) {
             powerLabel = new Label(Integer.toString(((PlayableCard) card).getPower()), Gwent.singleton.skin);
-            powerLabel.setColor(Color.SKY);
+            if(card instanceof Hero) {
+                powerLabel.setColor(Color.WHITE);
+            } else {
+                powerLabel.setColor(Color.BLACK);
+            }
+
 
         }
-        powerTable.add(powerLabel).padRight(22).padBottom(22);
-        add(powerTable).size(55, 55).padBottom(65).padRight(40);
+        powerTable.add(powerLabel).padRight(19).padBottom(19);
+        add(powerTable).size(55, 55).padBottom(50).padRight(33);
 
         // Ability and Range
         Table bottomTable = new Table();
@@ -54,19 +57,17 @@ public class CardTable extends Table {
         // Check and add range label if exists
         if (getRangeTexture() != null) {
             rangeImage = new Image(getRangeTexture());
-            bottomTable.add(rangeImage).size(30, 30).padLeft(7);
+            bottomTable.add(rangeImage).size(30, 30).padLeft(6);
         } else {
-            bottomTable.add().size(30, 30).padLeft(7);
+            bottomTable.add().size(30, 30).padLeft(6);
         }
         row().padBottom(5);
         add(bottomTable).expandX().fillX();
-
-        setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         setTouchable(Touchable.enabled);
     }
 
     public void updatePowerNumber(int newPower) {
-        int oldPower = Integer.parseInt(String.valueOf(powerLabel.getText()));
+        int oldPower = ((PlayableCard)card).getPower();
         if(oldPower > newPower) {
             powerLabel.setColor(Color.RED);
         } else if(oldPower < newPower) {

@@ -24,8 +24,8 @@ public class Client extends Thread {
     private ClientListener clientListener;
     private DataOutputStream dataOutputStream;
     private Gson gson;
-    private User user;
     private Game game;
+    private User user;
     private String request;
     private Session session;
 

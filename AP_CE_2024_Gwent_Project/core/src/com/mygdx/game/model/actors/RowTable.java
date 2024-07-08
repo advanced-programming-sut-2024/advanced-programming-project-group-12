@@ -8,6 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.mygdx.game.model.game.card.AbstractCard;
+import com.mygdx.game.model.game.card.PlayableCard;
+import com.mygdx.game.model.network.Client;
 
 
 import java.util.ArrayList;
@@ -17,16 +20,19 @@ public class RowTable extends Table {
     private final List<CardActor> cardActors;
     private final HornArea hornArea;
     private final int rowNumber;
-    private final boolean side;
     private final Image background;
     private RepeatAction blinkAction;
+    private final boolean side;
     /*
     true : player
     false : enemy
      */
-    public RowTable(int rowNumber, boolean side) {
+    public RowTable(int rowNumber, boolean side, ArrayList<PlayableCard> cards) {
         this.setSize(680, 110);
         this.cardActors = new ArrayList<>();
+        for(PlayableCard card : cards) {
+            cardActors.add(new CardActor(card));
+        }
         // Create the hornArea and set its position
         this.hornArea = new HornArea();
         hornArea.setPosition(this.getX() - hornArea.getWidth(), this.getY());

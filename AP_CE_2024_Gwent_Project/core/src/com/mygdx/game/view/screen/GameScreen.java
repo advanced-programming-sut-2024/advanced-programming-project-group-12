@@ -5,35 +5,36 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.ChatController;
 import com.mygdx.game.controller.local.GameController;
 import com.mygdx.game.model.game.card.Action;
 import com.mygdx.game.model.game.Faction;
+import com.mygdx.game.model.game.card.PlayableCard;
+import com.mygdx.game.model.game.card.SpellCard;
 import com.mygdx.game.model.network.Client;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.actors.*;
 import com.mygdx.game.model.game.card.AbstractCard;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 
 public class GameScreen implements Screen {
     private final Stage stage;
     private final Texture background;
-    private Sprite blurredSprite;
+
     //Buttons for veto, pass round, end round, end game
-    private final TextButton passButton;
+    private TextButton passButton;
     private final GameController controller;
     // info boxes and Actor
-    private final WeatherBox weatherBox;
+    private WeatherBox weatherBox;
     private HandTable hand;
     private ArrayList<RowTable> playerRows;
     private ArrayList<RowTable> enemyRows;
@@ -41,8 +42,8 @@ public class GameScreen implements Screen {
     private Container<Actor> selectedCardPlace;
     private PlayerInfoBox playerInfoBox;
     private PlayerInfoBox oppositionInfoBox;
-    private Table playerDiscards;
-    private Table opposiytionDiscards;
+    private Container playerDiscards;
+    private Container oppositionDiscards;
     private Player player;
     private Player opposition;
     //chat parts
@@ -53,28 +54,101 @@ public class GameScreen implements Screen {
         controller = new GameController();
         stage = new Stage(new ScreenViewport());
         background = new Texture("bg/board.jpg");
-        if(Client.getInstance().getGame().getCurrentPlayer().getUsername().equals(Client.getInstance().getUser().getUsername())) {
+        if(true) {
+            showChooseStarter();
+            return;
+        }
+        if (Client.getInstance().getGame().getCurrentPlayer().getUsername().equals(Client.getInstance().getUser().getUsername())) {
             player = Client.getInstance().getGame().getCurrentPlayer();
             opposition = Client.getInstance().getGame().getOpposition();
         } else {
             player = Client.getInstance().getGame().getOpposition();
             opposition = Client.getInstance().getGame().getCurrentPlayer();
         }
-        selectedCardPlace = new Container<>();
-        stage.addActor(selectedCardPlace);
+
+        initialStageObjects();
+
+        //TODO : complete this part
+        //showCards(, 2);
+    }
+
+    private void showChooseStarter() {
+        Window window = new Window("", Gwent.singleton.skin);
+        window.setSize(900, 700);
+        window.setPosition((float) Gwent.WIDTH / 2 - (float) Gwent.WIDTH / 4, (float) Gwent.HEIGHT / 2 - (float) Gwent.HEIGHT / 4);
+        Label label = new Label("choose which player start game :", Gwent.singleton.skin);
+        label.setColor(Color.SKY);
+        window.add(label).padBottom(200).align(Align.center);
+        window.row();
+        String playerUsername = Client.getInstance().getGame().getCurrentPlayer().getUsername();
+        TextButton playerButton = new TextButton(playerUsername, Gwent.singleton.skin);
+        playerButton.setSize(200, 100);
+        String oppositionUsername = Client.getInstance().getGame().getOpposition().getUsername();
+        TextButton oppositionButton = new TextButton(oppositionUsername, Gwent.singleton.skin);
+        oppositionButton.setSize(200, 100);
+        window.setMovable(false);
+        window.add(playerButton);
+        window.padRight(20);
+        window.add(oppositionButton);
+        playerButton.addListener(new ClickListener() {
+           @Override
+           public void clicked(InputEvent event, float x, float y) {
+               controller.chooseWhichPlayerStartFirst(playerUsername);
+               if (Client.getInstance().getGame().getCurrentPlayer().getUsername().equals(Client.getInstance().getUser().getUsername())) {
+                   player = Client.getInstance().getGame().getCurrentPlayer();
+                   opposition = Client.getInstance().getGame().getOpposition();
+               } else {
+                   player = Client.getInstance().getGame().getOpposition();
+                   opposition = Client.getInstance().getGame().getCurrentPlayer();
+               }
+               updateStage();
+               window.addAction(Actions.fadeOut(0.6f));
+               window.remove();
+           }
+        });
+        oppositionButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.chooseWhichPlayerStartFirst(oppositionUsername);
+                if (Client.getInstance().getGame().getCurrentPlayer().getUsername().equals(Client.getInstance().getUser().getUsername())) {
+                    player = Client.getInstance().getGame().getCurrentPlayer();
+                    opposition = Client.getInstance().getGame().getOpposition();
+                } else {
+                    player = Client.getInstance().getGame().getOpposition();
+                    opposition = Client.getInstance().getGame().getCurrentPlayer();
+                }
+                updateStage();
+                window.addAction(Actions.fadeOut(0.6f));
+                window.remove();
+            }
+        });
+        stage.addActor(window);
+        window.addAction(Actions.fadeIn(0.6f));
+    }
+
+    public void clearStage() {
+        for (Actor actor : stage.getActors()) {
+            if (actor instanceof TextButton) continue;
+            actor.clear();
+            actor.remove();
+        }
+
+    }
+
+    private void initialStageObjects() {
+        //Buttons
         passButton = new TextButton("Pass", Gwent.singleton.skin);
         passButton.setPosition(220, 120);
         passButton.setSize(150, 80);
-        weatherBox = new WeatherBox();
-
-        chatBox = new ChatBox(Gwent.singleton.skin);
-        chatBox.setPosition(400, 500); // set the position of the chat box
-        stage.addActor(chatBox);
-
+        passButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.passRound();
+                updateStage();
+            }
+        });
         chatButton = new TextButton("Chat", Gwent.singleton.skin);
         chatButton.setPosition(1440, 60); // set the position of the chat button
-        stage.addActor(chatButton);
-
         chatButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -85,46 +159,84 @@ public class GameScreen implements Screen {
                 }
             }
         });
+        stage.addActor(chatButton);
 
+        // select card area
+        selectedCardPlace = new Container<>();
+        stage.addActor(selectedCardPlace);
 
-        playerDiscards = new Table(Gwent.singleton.skin);
-        playerDiscards.setTouchable(Touchable.enabled);
-        opposiytionDiscards = new Table(Gwent.singleton.skin);
-        playerDiscards.setTouchable(Touchable.enabled);
+        //weather box
+        weatherBox = new WeatherBox();
+        displayWeatherBox();
         stage.addActor(weatherBox);
-        weatherBoxListener();
+
+        //chat box
+        chatBox = new ChatBox(Gwent.singleton.skin);
+        chatBox.setPosition(400, 500); // set the position of the chat box
+        chatBox.getSendButton().addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                String message = chatBox.getInputText();
+                if (message.isEmpty()) return true;
+                ChatController.sendMessage(Client.getInstance().getUser().getUsername(), message);
+                chatBox.clearInput();
+                return true;
+            }
+        });
+        stage.addActor(chatBox);
+
+        //discards
+        playerDiscards = new Container<Actor>();
+        oppositionDiscards = new Container<Actor>();
+        playerDiscards.setTouchable(Touchable.enabled);
+        oppositionDiscards.setTouchable(Touchable.enabled);
+        playerDiscards.setPosition(1290, 97);
+        oppositionDiscards.setPosition(1290, 785);
+        playerDiscards.setSize(85, 130);
+        oppositionDiscards.setSize(85, 130);
+        stage.addActor(playerDiscards);
+        stage.addActor(oppositionDiscards);
         stage.addActor(passButton);
+
+        //rows
         initialRows();
+
+        //infos
         displayInfo();
 
+        //leader cards
         displayLeaderCard();
+
+        //hand
         displayHand();
+
+        //deck stack
         displayPlayerDeckStack(player, 97);
         displayPlayerDeckStack(opposition, 785);
-        //TODO : complete this part
-        //showCards(, 2);
     }
 
     private void initialRows() {
         playerRows = new ArrayList<>();
         enemyRows = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            RowTable playerRow = new RowTable(i, true);
+            ArrayList<PlayableCard> cards = Client.getInstance().getGame().getGameBoard().getRowCards(player, i);
+            RowTable playerRow = new RowTable(i, true, cards);
             playerRows.add(playerRow);
             stage.addActor(playerRow);
             playerRow.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                   if (controller.getSelectedCard() != null) {
+                    if (controller.getSelectedCard() != null) {
                         if (controller.isAllowedToPlay(controller.getSelectedCard(), playerRow.getSide(), playerRow.getRowNumber())) {
-                            playCard(controller.getSelectedCard() ,playerRow);
+                            playCard(controller.getSelectedCard(), playerRow);
                         }
-                   }
+                    }
                 }
             });
         }
         for (int i = 0; i < 3; i++) {
-            RowTable enemyRow = new RowTable(i, false);
+            ArrayList<PlayableCard> cards = Client.getInstance().getGame().getGameBoard().getRowCards(opposition, i);
+            RowTable enemyRow = new RowTable(i, false, cards);
             enemyRows.add(enemyRow);
             stage.addActor(enemyRow);
             enemyRow.addListener(new ClickListener() {
@@ -140,23 +252,22 @@ public class GameScreen implements Screen {
         }
     }
 
-    private void weatherBoxListener() {
+    private void displayWeatherBox() {
+        HashSet<SpellCard> cards = Client.getInstance().getGame().getGameBoard().getWeatherCards();
+        for(SpellCard card : cards) {
+            addCardToWeatherBox(new CardActor(card));
+        }
         weatherBox.setTouchable(Touchable.enabled);
         weatherBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 AbstractCard selectedCard = controller.getSelectedCard();
                 if (selectedCard != null && selectedCard.getFaction().equals(Faction.WEATHER)) {
-                    playWeatherCard(new CardActor(controller.getSelectedCard()));
-                    // Add the card to the weather box
-                    // Remove the card from the player's hand
                     controller.playCard(selectedCard, 3);
                     selectedCardPlace.clear();
-                    // Unselect the card
-                    // Redraw the player's hand
+                    controller.setSelectedCard(null);
                     resetBackgroundColors();
-                    hand.clear();
-                    displayHand();
+                    updateStage();
                 }
             }
         });
@@ -176,23 +287,6 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        passButton.setVisible(true);
-        passButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                controller.passRound();
-            }
-        });
-        chatBox.getSendButton().addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                String message = chatBox.getInputText();
-                if(message.isEmpty()) return true;
-                ChatController.sendMessage(Client.getInstance().getUser().getUsername(), message);
-                chatBox.clearInput();
-                return true;
-            }
-        });
     }
 
     @Override
@@ -249,19 +343,19 @@ public class GameScreen implements Screen {
         leaderCard.getImage().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                showLeaderCard(leaderCard.getCard());
+                showLeaderCard(leaderCard.getCard(), true);
             }
         });
 
         oppositeLeaderCard.getImage().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                showLeaderCard(oppositeLeaderCard.getCard());
+                showLeaderCard(oppositeLeaderCard.getCard(), false);
             }
         });
     }
 
-    private void showLeaderCard(AbstractCard card) {
+    private void showLeaderCard(AbstractCard card, boolean isPlayerLeader) {
         // Create the blur effect
         Image blurEffect = new Image(new Texture("bg/Blur-Effect.png")); // Replace with the path to your blur effect
         blurEffect.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -272,6 +366,7 @@ public class GameScreen implements Screen {
         enlargedCard.getImage().setSize(0, 0); // Start with size 0
         enlargedCard.getImage().setPosition(700, 450);
 
+        TextButton playButton = new TextButton("play", Gwent.singleton.skin);
         // Create the close button
         TextButton closeButton = new TextButton("X", Gwent.singleton.skin);
         closeButton.setSize(75, 75); // Adjust the size as needed
@@ -291,7 +386,6 @@ public class GameScreen implements Screen {
         blurEffect.setTouchable(Touchable.enabled);
         enlargedCard.getImage().setTouchable(Touchable.enabled);
         closeButton.setTouchable(Touchable.enabled);
-
         // Add a ClickListener to the close button
         closeButton.addListener(new ClickListener() {
             @Override
@@ -314,7 +408,8 @@ public class GameScreen implements Screen {
 
                 // Remove the close button from the stage immediately
                 closeButton.remove();
-
+                if (controller.getPermission())
+                    playButton.remove();
                 // Re-enable all other actors on the stage
                 for (Actor actor : stage.getActors()) {
                     actor.setTouchable(Touchable.enabled);
@@ -322,7 +417,46 @@ public class GameScreen implements Screen {
             }
         });
 
+        //play button
+        if (controller.getPermission() && isPlayerLeader) {
+            //create play button for leader card
+            playButton.setSize(200, 100);
+            playButton.setPosition(enlargedCard.getImage().getX() + 60, enlargedCard.getImage().getY() - playButton.getHeight());
+            playButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    controller.playLeader(player.getLeader());
+                    // Add fade-out animations
+                    blurEffect.addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Remove the blur effect from the stage after the fade-out animation completes
+                            blurEffect.remove();
+                        }
+                    })));
+                    enlargedCard.getImage().addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Remove the enlarged card from the stage after the fade-out animation completes
+                            enlargedCard.getImage().remove();
+                        }
+                    })));
+
+                    // Remove the close button from the stage immediately
+                    closeButton.remove();
+                    playButton.remove();
+                    // Re-enable all other actors on the stage
+                    for (Actor actor : stage.getActors()) {
+                        actor.setTouchable(Touchable.enabled);
+                    }
+                }
+            });
+            stage.addActor(playButton);
+            playButton.addAction(Actions.fadeIn(0.7f));
+        }
+
         // Add animations
+        closeButton.addAction(Actions.fadeIn(0.7f));
         blurEffect.addAction(Actions.fadeIn(0.5f)); // Fade in over 0.5 seconds
         enlargedCard.getImage().addAction(Actions.sizeTo(300, 450, 0.5f)); // Grow to size 300x450 over 0.5 seconds
     }
@@ -370,14 +504,10 @@ public class GameScreen implements Screen {
 
         // Unselect the card
         resetBackgroundColors();
-        hand.clear();
-        // Redraw the player's hand
-        displayHand();
-
-        playerInfoBox.updatePlayerInfo(player.getHandAsCards().size());
+        updateStage();
     }
 
-    private void playWeatherCard(CardActor card) {
+    private void addCardToWeatherBox(CardActor card) {
         weatherBox.add(card.getCardTable()).size(80, 110).expand().fill();
     }
 
@@ -385,7 +515,7 @@ public class GameScreen implements Screen {
         if (card.getAllowableRows() == null) return;
         List<Integer> allowableRows = card.getAllowableRows();
 
-        if(allowableRows.contains(3)) {
+        if (allowableRows.contains(3)) {
             weatherBox.highlight();
         }
         // Check if the card is a horn card
@@ -446,26 +576,32 @@ public class GameScreen implements Screen {
         numberOfCards.setPosition(1440 + 45 - numberOfCards.getWidth() / 2, y - 60);
         stage.addActor(numberOfCards);
     }
-    public void putCardToDiscard(boolean side, CardActor cardActor) {
-        if(side) {
+
+    public void addCardToDiscard(boolean side, AbstractCard card) {
+        CardActor cardActor = new CardActor(card);
+        if (side) {
             playerDiscards.clear();
-            playerDiscards.addActor(cardActor);
+            playerDiscards.setActor(cardActor);
             playerDiscards.addListener(new ClickListener() {
-               @Override
-               public void clicked(InputEvent event, float x, float y) {
-                   showCards(player.getGame().getGameBoard().getDiscardCards(player), -1);
-               }
-            });
-        } else {
-            opposiytionDiscards.clear();
-            opposiytionDiscards.addActor(cardActor);
-            opposiytionDiscards.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    showCards(player.getGame().getGameBoard().getDiscardCards(opposition), -1);
+                    showCards(Client.getInstance().getGame().getGameBoard().getDiscardCards(player), -1);
                 }
             });
+            cardActor.setPosition(1290, 97);
+        } else {
+            oppositionDiscards.clear();
+            oppositionDiscards.setActor(cardActor);
+
+            oppositionDiscards.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    showCards(Client.getInstance().getGame().getGameBoard().getDiscardCards(opposition), -1);
+                }
+            });
+            cardActor.setPosition(1290, 785);
         }
+
     }
 
     public void showCards(ArrayList<AbstractCard> cards, int numberOfCards) {
@@ -475,7 +611,7 @@ public class GameScreen implements Screen {
         stage.addActor(bgImage);
         ArrayList<Image> cardImages = new ArrayList<>();
 
-        for(Actor actor : stage.getActors()) {
+        for (Actor actor : stage.getActors()) {
             actor.setTouchable(Touchable.disabled);
         }
         TextButton closeButton = new TextButton("X", Gwent.singleton.skin);
@@ -484,7 +620,7 @@ public class GameScreen implements Screen {
         stage.addActor(closeButton);
         float x = 200;
         float y = 700;
-        for(int i = 0; i < cards.size(); i++) {
+        for (int i = 0; i < cards.size(); i++) {
             AbstractCard card = cards.get(i);
             Texture texture = new Texture(card.getAssetName());
             Image cardImage = new Image(texture);
@@ -494,34 +630,34 @@ public class GameScreen implements Screen {
             cardImage.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.5f)));
             cardImages.add(cardImage);
             x += 180;
-            if(i > 0 && i % 6 == 0) {
+            if (i > 0 && i % 6 == 0) {
                 y -= 280;
                 x = 200;
             }
-            if(numberOfCards > 0) {
+            if (numberOfCards > 0) {
                 cardImage.addListener(new ClickListener() {
-                   @Override
-                   public void clicked(InputEvent event, float x, float y) {
-                       if(selectedCards.contains(card)) {
-                           cardImage.addAction(Actions.scaleTo(1.0f, 1.0f, 0.2f));
-                           selectedCards.remove(card);
-                           System.out.println(selectedCards.size());
-                       } else {
-                           cardImage.addAction(Actions.scaleBy(0.1f, 0.1f, 0.2f));
-                           selectedCards.add(card);
-                       }
-                       if(numberOfCards == selectedCards.size()) {
-                           for (Image cardImage : cardImages) {
-                               cardImage.remove();
-                           }
-                           for (Actor actor : stage.getActors()) {
-                               actor.setTouchable(Touchable.enabled);
-                           }
-                           bgImage.remove();
-                           closeButton.remove();
-                           controller.chooseCardInSelectCardMode(selectedCards);
-                       }
-                   }
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        if (selectedCards.contains(card)) {
+                            cardImage.addAction(Actions.scaleTo(1.0f, 1.0f, 0.2f));
+                            selectedCards.remove(card);
+                            System.out.println(selectedCards.size());
+                        } else {
+                            cardImage.addAction(Actions.scaleBy(0.1f, 0.1f, 0.2f));
+                            selectedCards.add(card);
+                        }
+                        if (numberOfCards == selectedCards.size()) {
+                            for (Image cardImage : cardImages) {
+                                cardImage.remove();
+                            }
+                            for (Actor actor : stage.getActors()) {
+                                actor.setTouchable(Touchable.enabled);
+                            }
+                            bgImage.remove();
+                            closeButton.remove();
+                            controller.chooseCardInSelectCardMode(selectedCards);
+                        }
+                    }
                 });
             }
         }
@@ -539,6 +675,16 @@ public class GameScreen implements Screen {
                 closeButton.remove();
             }
         });
+    }
+
+    private void updateStage() {
+        stage.clear();
+        initialStageObjects();
+    }
+    public void passRound() {
+
+    }
+    public void endGame() {
 
     }
 }
