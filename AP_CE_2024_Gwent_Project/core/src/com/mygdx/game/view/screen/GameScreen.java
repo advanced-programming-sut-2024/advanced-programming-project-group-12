@@ -213,6 +213,7 @@ public class GameScreen implements Screen {
             AbstractCard oppositionDiscard = Client.getInstance().getGame().getGameBoard().getDiscardCards(opposition).getLast();
             displayDiscard(false, oppositionDiscard);
         }
+
     }
 
     private void displayRows() {
@@ -301,6 +302,10 @@ public class GameScreen implements Screen {
         stage.getBatch().end();
         stage.act(delta);
         stage.draw();
+        if(controller.isShowSelectCardCalled()) {
+            showCardsToSelect(controller.getCardsToShow(), controller.getNumberOfCardsToChoose(), controller.isCanChooseLess());
+            controller.setOffShowCardToSelect();
+        }
     }
 
     @Override
@@ -613,6 +618,7 @@ public class GameScreen implements Screen {
     }
 
     public void showCardsToSelect(List<? extends AbstractCard> cards, int numberOfCards, boolean canChooseLess) {
+
         ArrayList<AbstractCard> selectedCards = new ArrayList<>();
         Image bgImage = new Image(new Texture("bg/black.jpg"));
         bgImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -650,7 +656,6 @@ public class GameScreen implements Screen {
                         if (selectedCards.contains(card)) {
                             cardImage.addAction(Actions.scaleTo(1.0f, 1.0f, 0.2f));
                             selectedCards.remove(card);
-                            System.out.println(selectedCards.size());
                         } else {
                             cardImage.addAction(Actions.scaleBy(0.1f, 0.1f, 0.2f));
                             selectedCards.add(card);
@@ -665,6 +670,7 @@ public class GameScreen implements Screen {
                             bgImage.remove();
                             closeButton.remove();
                             controller.chooseCardInSelectCardMode(selectedCards, canChooseLess);
+                            updateStage();
                         }
                     }
                 });
@@ -683,6 +689,7 @@ public class GameScreen implements Screen {
                 bgImage.remove();
                 closeButton.remove();
                 controller.chooseCardInSelectCardMode(selectedCards, canChooseLess);
+                updateStage();
             }
         });
     }
