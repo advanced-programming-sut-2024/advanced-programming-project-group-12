@@ -183,8 +183,7 @@ public class GameScreen implements Screen {
         oppositionDiscards.setPosition(1290, 785);
         playerDiscards.setSize(85, 130);
         oppositionDiscards.setSize(85, 130);
-        stage.addActor(playerDiscards);
-        stage.addActor(oppositionDiscards);
+
 
 
         //display rows
@@ -209,10 +208,12 @@ public class GameScreen implements Screen {
 
             AbstractCard playerDiscard = Client.getInstance().getGame().getGameBoard().getDiscardCards(player).getLast();
             displayDiscard(true, playerDiscard);
+            stage.addActor(playerDiscards);
         }
         if (!Client.getInstance().getGame().getGameBoard().getDiscardCards(opposition).isEmpty()) {
             AbstractCard oppositionDiscard = Client.getInstance().getGame().getGameBoard().getDiscardCards(opposition).getLast();
             displayDiscard(false, oppositionDiscard);
+            stage.addActor(oppositionDiscards);
         }
 
     }
@@ -223,7 +224,9 @@ public class GameScreen implements Screen {
         for (int i = 0; i < 3; i++) {
             ArrayList<PlayableCard> cards = Client.getInstance().getGame().getGameBoard().getRowCards(player, i);
             String path = Client.getInstance().getGame().getGameBoard().getWeatherAssetForRow(i);
-            RowTable playerRow = new RowTable(i, true, cards, path);
+            HashSet<SpellCard> spellCards = Client.getInstance().getGame().
+                    getGameBoard().getRowForPlayer(i, player).getSpellCards();
+            RowTable playerRow = new RowTable(i, true, cards, path, spellCards);
             playerRows.add(playerRow);
             stage.addActor(playerRow);
             playerRow.addListener(new ClickListener() {
@@ -240,7 +243,9 @@ public class GameScreen implements Screen {
         for (int i = 0; i < 3; i++) {
             ArrayList<PlayableCard> cards = Client.getInstance().getGame().getGameBoard().getRowCards(opposition, i);
             String path = Client.getInstance().getGame().getGameBoard().getWeatherAssetForRow(i);
-            RowTable enemyRow = new RowTable(i, false, cards, path);
+            HashSet<SpellCard> spellCards = Client.getInstance().getGame().
+                    getGameBoard().getRowForPlayer(i, opposition).getSpellCards();
+            RowTable enemyRow = new RowTable(i, false, cards, path, spellCards);
             enemyRows.add(enemyRow);
             stage.addActor(enemyRow);
             enemyRow.addListener(new ClickListener() {
@@ -262,7 +267,7 @@ public class GameScreen implements Screen {
     private void displayWeatherBox() {
         HashSet<SpellCard> cards = Client.getInstance().getGame().getGameBoard().getWeatherCards();
         for (SpellCard card : cards) {
-            addCardToWeatherBox(new CardActor(card));
+            weatherBox.addCard(card);
         }
         weatherBox.setTouchable(Touchable.enabled);
         weatherBox.addListener(new ClickListener() {
@@ -274,7 +279,6 @@ public class GameScreen implements Screen {
                     selectedCardPlace.clear();
                     controller.setSelectedCard(null);
                     resetBackgroundColors();
-
                 }
             }
         });
@@ -527,9 +531,7 @@ public class GameScreen implements Screen {
 
     }
 
-    private void addCardToWeatherBox(CardActor card) {
-        weatherBox.add(card.getCardTable()).size(80, 110).expand().fill();
-    }
+
 
     private void highlightAllowablePlaces(AbstractCard card) {
         if (card.getAllowableRows() == null) return;
