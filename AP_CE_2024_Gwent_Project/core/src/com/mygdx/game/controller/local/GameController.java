@@ -9,8 +9,7 @@ import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.Card
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.PassRoundRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.PlayCardRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.TurnDecideResponse;
-import com.mygdx.game.model.user.Player;
-import com.mygdx.game.model.game.GameBoard;
+
 import com.mygdx.game.view.screen.GameScreen;
 
 import java.util.ArrayList;
@@ -35,7 +34,13 @@ public class GameController {
     }
 
     public void endGame(String winnerName, boolean hasWinner) {
-
+        int state = 0;
+        if(hasWinner) {
+            if(Client.getInstance().getUser().getUsername().equals(winnerName))
+                state = 1;
+             else state = -1;
+        }
+        ((GameScreen)Gwent.singleton.getCurrentScreen()).endGame(state);
     }
 
     public void playCard(AbstractCard card, int row) {
