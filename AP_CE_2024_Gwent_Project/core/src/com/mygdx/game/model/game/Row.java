@@ -116,4 +116,8 @@ public class Row {
         }
         return power;
     }
+
+    public HashSet<SpellCard> getSpellCards() {
+        return spellCards;
+    }
 }

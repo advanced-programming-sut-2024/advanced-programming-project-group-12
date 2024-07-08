@@ -14,7 +14,7 @@ public class CardActor extends Actor {
         cardTable = new CardTable(card);
 
         // Set the size of the card
-
+        setSize(85, 130);
     }
 
 
@@ -38,6 +38,11 @@ public class CardActor extends Actor {
     @Override
     public void setPosition(float x, float y) {
         cardTable.setPosition(x, y);
+    }
+    @Override
+    public void setSize(float width , float height) {
+        super.setSize(width, height);
+        cardTable.setSize(width, height);
     }
 }
 

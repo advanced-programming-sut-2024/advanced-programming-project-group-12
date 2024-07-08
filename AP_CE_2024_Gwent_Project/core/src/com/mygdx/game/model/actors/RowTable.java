@@ -11,12 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.mygdx.game.Gwent;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.PlayableCard;
+import com.mygdx.game.model.game.card.SpellCard;
 import com.mygdx.game.model.network.Client;
+import com.mygdx.game.view.screen.GameScreen;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class RowTable extends Table {
@@ -31,14 +35,18 @@ public class RowTable extends Table {
     true : player
     false : enemy
      */
-    public RowTable(int rowNumber, boolean side, ArrayList<PlayableCard> cards, String pathToOverLayImage) {
+    public RowTable(int rowNumber, boolean side, ArrayList<PlayableCard> cards, String pathToOverLayImage, HashSet<SpellCard> spellCards) {
         this.setSize(680, 110);
         this.cardActors = new ArrayList<>();
+        this.hornArea = new HornArea();
         for(PlayableCard card : cards) {
-            cardActors.add(new CardActor(card));
+            this.add(new CardActor(card).getCardTable()).size(85,130);
+        }
+
+        for(SpellCard spellCard : spellCards) {
+            hornArea.addCard(spellCard);
         }
         // Create the hornArea and set its position
-        this.hornArea = new HornArea();
         hornArea.setPosition(this.getX() - hornArea.getWidth(), this.getY());
 
         // Add the hornArea to the RowTable
