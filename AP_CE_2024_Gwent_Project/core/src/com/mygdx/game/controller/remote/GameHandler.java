@@ -16,6 +16,8 @@ import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameHandler {
     private static final ArrayList<GameHandler> allGames = new ArrayList<>();
@@ -27,17 +29,6 @@ public class GameHandler {
 
     private ArrayList<User> spectators;
 
-    public GameHandler(User user1) {
-        this.user1 = user1;
-    }
-
-    public void addUserAndStart(User user) {
-        this.user2 = user;
-        allGames.add(this);
-        spectators = new ArrayList<>();
-        start();
-    }
-
     public static ServerResponse sendAllGamesList() {
         ArrayList<String> games = new ArrayList<>();
         for(GameHandler i: allGames) {
@@ -47,6 +38,17 @@ public class GameHandler {
         }
         return new GetPublicGamesResponse(games);
         //
+    }
+
+    public GameHandler(User user1) {
+        this.user1 = user1;
+    }
+
+    public void addUserAndStart(User user) {
+        this.user2 = user;
+        allGames.add(this);
+        spectators = new ArrayList<>();
+        start();
     }
 
     private void start() {
@@ -131,5 +133,16 @@ public class GameHandler {
         else {
             return new PlayCardResponse(game);
         }
+    }
+
+    public void gameAborted(User user) {
+        String otherUserName = getTheOtherUser(user).getUsername();
+        if(RequestHandler.allUsers.get(otherUserName) == null) return;
+        getTheOtherUser(user).addToWin();
+        RequestHandler.allUsers.get(otherUserName).sendMassage(new EndGameNotify(true, otherUserName));
+    }
+
+    public Game getGame() {
+        return game;
     }
 }

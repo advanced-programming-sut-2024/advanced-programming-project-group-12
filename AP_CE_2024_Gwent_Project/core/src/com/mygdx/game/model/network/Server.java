@@ -79,6 +79,7 @@ public class Server extends Thread {
                     handleConnection();
                 } catch (IOException e) {
                     System.err.println("failure in connection in Server thread run method");
+                    requestHandler.connectionLost();
                     break;
                 }
         }

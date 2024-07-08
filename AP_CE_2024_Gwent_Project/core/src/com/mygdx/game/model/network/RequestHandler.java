@@ -20,6 +20,8 @@ import com.mygdx.game.model.network.session.Session;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class RequestHandler extends Thread {
     public static HashMap<String, RequestHandler> allUsers = new HashMap<>();
@@ -32,6 +34,8 @@ public class RequestHandler extends Thread {
 
     private Session session;
     private GameHandler gameHandler;
+    private User user;
+    private Timer unfinishedGame;
 
 
     public RequestHandler(Server server, Gson gson) {
@@ -45,6 +49,10 @@ public class RequestHandler extends Thread {
 
     public GameHandler getGameHandler() {
         return gameHandler;
+    }
+
+    public boolean hasUnfinishedGame() {
+        return unfinishedGame != null;
     }
 
     public void setGameHandler(GameHandler gameHandler) {
@@ -78,7 +86,6 @@ public class RequestHandler extends Thread {
         ServerResponse serverResponse = null;
         try {
             session = clientRequest.getSession();
-            User user = null;
             if(session != null) {
                 user = Session.getUser(session);
             }
@@ -180,9 +187,28 @@ public class RequestHandler extends Thread {
 
     public void terminate() {
         try {
+            allUsers.remove(user.getUsername());
             dataOutputStream.close();
         } catch (IOException e) {
             System.err.println("IO exception in request handler ");
+        } catch (NullPointerException ignored) {}
+    }
+
+    public void connectionLost() {
+        if(gameHandler != null) {
+            unfinishedGame = new Timer();
+            unfinishedGame.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    gameHandler.gameAborted(user);
+                    terminate();
+                }
+            }, 60);
         }
+    }
+
+    public void connectionReturned() {
+        unfinishedGame.cancel();
+        terminate();
     }
 }
