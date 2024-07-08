@@ -101,6 +101,8 @@ public class GameScreen implements Screen {
         displayHand();
         displayPlayerDeckStack(player, 97);
         displayPlayerDeckStack(opposition, 785);
+        //TODO : complete this part
+        //showCards(, 2);
     }
 
     private void initialRows() {
@@ -451,7 +453,7 @@ public class GameScreen implements Screen {
             playerDiscards.addListener(new ClickListener() {
                @Override
                public void clicked(InputEvent event, float x, float y) {
-                   showCards(player.getGame().getGameBoard().getDiscardCards(player), false);
+                   showCards(player.getGame().getGameBoard().getDiscardCards(player), -1);
                }
             });
         } else {
@@ -460,13 +462,14 @@ public class GameScreen implements Screen {
             opposiytionDiscards.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    showCards(player.getGame().getGameBoard().getDiscardCards(opposition), false);
+                    showCards(player.getGame().getGameBoard().getDiscardCards(opposition), -1);
                 }
             });
         }
     }
 
-    private void showCards(ArrayList<AbstractCard> cards, boolean touch) {
+    public void showCards(ArrayList<AbstractCard> cards, int numberOfCards) {
+        ArrayList<AbstractCard> selectedCards = new ArrayList<>();
         Image bgImage = new Image(new Texture("bg/black.jpg"));
         bgImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.addActor(bgImage);
@@ -488,19 +491,26 @@ public class GameScreen implements Screen {
             cardImage.setSize(160, 240);
             cardImage.setPosition(x, y);
             stage.addActor(cardImage);
+            cardImage.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.5f)));
             cardImages.add(cardImage);
             x += 180;
             if(i > 0 && i % 6 == 0) {
-                System.out.println(i);
                 y -= 280;
                 x = 200;
             }
-            if(touch) {
+            if(numberOfCards > 0) {
                 cardImage.addListener(new ClickListener() {
                    @Override
                    public void clicked(InputEvent event, float x, float y) {
-                       controller.chooseCardInSelectCardMode(card);
-                       if(controller.closeShowCards()) {
+                       if(selectedCards.contains(card)) {
+                           cardImage.addAction(Actions.scaleTo(1.0f, 1.0f, 0.2f));
+                           selectedCards.remove(card);
+                           System.out.println(selectedCards.size());
+                       } else {
+                           cardImage.addAction(Actions.scaleBy(0.1f, 0.1f, 0.2f));
+                           selectedCards.add(card);
+                       }
+                       if(numberOfCards == selectedCards.size()) {
                            for (Image cardImage : cardImages) {
                                cardImage.remove();
                            }
@@ -509,6 +519,7 @@ public class GameScreen implements Screen {
                            }
                            bgImage.remove();
                            closeButton.remove();
+                           controller.chooseCardInSelectCardMode(selectedCards);
                        }
                    }
                 });
