@@ -352,4 +352,8 @@ public class User {
     public int getScore() {
         return getUserInfo().getGamesWon();
     }
+
+    public void addToWin() {
+
+    }
 }

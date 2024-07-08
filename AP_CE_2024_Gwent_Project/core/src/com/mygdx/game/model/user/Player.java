@@ -29,6 +29,7 @@ public class Player {
         this.leader = user.getLeaderAsCard();
         this.faction = user.getFaction();
         this.user = user;
+        user.setPlayer(this);
         this.username = user.getUsername();
         this.hand = new LinkedList<>();
         this.roundsLost = 0;
@@ -82,8 +83,10 @@ public class Player {
         return deckCards;
     }
 
-    public void reDraw(int cardIndex) {
-        deck.add(hand.remove(cardIndex));
+    public void reDraw(String card) {
+        hand.remove(card);
+        deck.add(card);
+        drawCard();
     }
 
     public void setWon(boolean won) {
@@ -136,6 +139,11 @@ public class Player {
     }
     public void removeCardFromHand(AbstractCard card) {
         hand.remove(card.getName());
+    }
+
+    public void pass() {
+        isPassed = true;
+        game.switchTurn();
     }
 
     public boolean doesNotHaveGameToPlay() {

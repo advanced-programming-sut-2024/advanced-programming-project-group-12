@@ -142,11 +142,19 @@ public class Client extends Thread {
                 TurnDecideRequest turnDecideRequest = gson.fromJson(request, TurnDecideRequest.class);
                 //choose who to start
                 break;
-            case PLAY_CARD_PERMISSION:
-                PlayTurnPermission permission = gson.fromJson(request, PlayTurnPermission.class);
+            case RE_DRAW:
+                ReDrawRequest reDrawRequest = gson.fromJson(request, ReDrawRequest.class);
                 break;
+//            case PLAY_CARD_PERMISSION:
+//                PlayTurnPermission permission = gson.fromJson(request, PlayTurnPermission.class);
+//                break;
             case PLAY_CARD_RESPONSE:
                 PlayCardResponse playCardResponse = gson.fromJson(request, PlayCardResponse.class);
+                this.game = playCardResponse.getGame();
+                //handle permission case
+                playCardResponse.isPermission();
+                //handle special cases
+                playCardResponse.getActionResponse();
                 break;
             case CHAT:
                 ChatInGameWrapper chatWrapper = gson.fromJson(request, ChatInGameWrapper.class);

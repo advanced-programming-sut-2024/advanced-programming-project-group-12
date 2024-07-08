@@ -119,11 +119,12 @@ public class RequestHandler extends Thread {
                     TurnDecideResponse turnDecideResponse = gson.fromJson(request, TurnDecideResponse.class);
                     gameHandler.letCurrentPlayerPlay(turnDecideResponse.getPlayerToPlay());
                     break;
+                case RE_DRAW:
+                    ReDrawResponse response = gson.fromJson(request, ReDrawResponse.class);
+                    gameHandler.reDraw(user.getPlayer(), response);
                 case PLAY_CARD_REQUEST:
                     PlayCardRequest playCardRequest = gson.fromJson(request, PlayCardRequest.class);
-                    Player player = user.getPlayer();
-                    AbstractCard abstractCard = AllCards.getCardByCardName(playCardRequest.getCard());
-                    serverResponse = abstractCard.place(playCardRequest.getRow(), player);
+                    serverResponse = gameHandler.playCard(playCardRequest, user);
                     break;
                 case CARD_SELECT_ANSWER:
                     CardSelectionAnswer answer = gson.fromJson(request, CardSelectionAnswer.class);

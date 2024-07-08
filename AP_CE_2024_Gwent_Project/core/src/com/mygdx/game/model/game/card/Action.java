@@ -130,7 +130,6 @@ public enum Action {
         // should open a menu in game screen to choose from one card of the below list
         //todo
         card.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.MEDIC);
-        RequestHandler.allUsers.get(card.getPlayer().getUsername()).sendMassage(new PlayTurnPermission(card.getPlayer().getGame()));
 
         return new ActionResponse(ActionResponseType.SELECTION, 1);
     }),
@@ -231,6 +230,7 @@ public enum Action {
     //weather actions
     CLEAR(card -> {
         GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
+        gameBoard.clearWeather();
         for(int i = 0; i< 3; i++ ){
             Row row = gameBoard.getRowForPlayer(i, card.getPlayer());
             row.setWeatherBuffer(false);
@@ -307,7 +307,6 @@ public enum Action {
         List<PlayableCard> enemyDiscard = opponent.getGame().getGameBoard().getDiscardPlayableCards(opponent);
         //sent to secket a request to ask for the choosing card interface
         abstractCard.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.ENEMY_MEDIC);
-        RequestHandler.allUsers.get(abstractCard.getPlayer().getUsername()).sendMassage(new PlayTurnPermission(abstractCard.getPlayer().getGame()));
         return new ActionResponse(ActionResponseType.SELECTION, enemyDiscard, 1);
     }),
     EMHYR_INVADER(abstractCard -> {
@@ -326,7 +325,6 @@ public enum Action {
         //discard two cards
         //draw one card of choice from deck
         abstractCard.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.ERIDIN_DESTROYER_DISCARD);
-        RequestHandler.allUsers.get(abstractCard.getPlayer().getUsername()).sendMassage(new PlayTurnPermission(abstractCard.getPlayer().getGame()));
         return new ActionResponse(ActionResponseType.SELECTION, abstractCard.getPlayer().getHandAsCards(), 2);
     }),
     ERIDIN_KING(abstractCard -> {
@@ -338,7 +336,6 @@ public enum Action {
         selectionList.add(AllCards.STORM.getAbstractCard());
 
         abstractCard.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.ERIDIN_KING);
-        RequestHandler.allUsers.get(abstractCard.getPlayer().getUsername()).sendMassage(new PlayTurnPermission(abstractCard.getPlayer().getGame()));
 
         return new ActionResponse(ActionResponseType.SELECTION, selectionList);
     }),

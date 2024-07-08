@@ -40,6 +40,11 @@ public class GameBoard {
         this.weatherCards = weatherCards;
     }
 
+    public int getCardFinalPower(PlayableCard playableCard) {
+        Row row = rows.get(playableCard.getPlayer().getUsername()).get(playableCard.getRow());
+        return row.calculatePowerOfPlayableCard(playableCard);
+    }
+
     public void setDoubleSpyPower() {
         for(String i : rows.keySet()) {
             for(Row j : rows.get(i)) {
@@ -174,6 +179,9 @@ public class GameBoard {
         return new GameBoard(rows, discard, weatherCards);
     }
 
+    public void clearWeather() {
+        weatherCards = new HashSet<>();
+    }
 }
 
 

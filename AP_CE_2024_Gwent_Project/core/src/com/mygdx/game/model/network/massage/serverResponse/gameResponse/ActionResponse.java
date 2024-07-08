@@ -8,7 +8,7 @@ import java.util.List;
 public class ActionResponse {
     private final ActionResponseType action;
     private final List<? extends AbstractCard> affectedCards;
-    int actionCount;
+    private int actionCount;
 
     public ActionResponse(ActionResponseType action) {
         this.action = action;
@@ -30,5 +30,17 @@ public class ActionResponse {
         this.action = actionResponseType;
         this.affectedCards = selection;
         this.actionCount = actionCount;
+    }
+
+    public ActionResponseType getAction() {
+        return action;
+    }
+
+    public List<? extends AbstractCard> getAffectedCards() {
+        return affectedCards;
+    }
+
+    public int getActionCount() {
+        return actionCount;
     }
 }
