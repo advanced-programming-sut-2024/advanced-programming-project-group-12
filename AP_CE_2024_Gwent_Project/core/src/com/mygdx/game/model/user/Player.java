@@ -77,7 +77,7 @@ public class Player {
     }
     public LinkedList<AbstractCard> getHandAsCards() {
         LinkedList<AbstractCard> deckCards = new LinkedList<>();
-        for (String cardName : deck) {
+        for (String cardName : hand) {
             deckCards.add(AllCards.getCardByCardName(cardName));
         }
         return deckCards;
