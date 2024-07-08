@@ -36,7 +36,7 @@ public class PlayerInfoBox {
     private final String faction;
     private Label cardsRemainingLabel;
 
-    public PlayerInfoBox(int numberOfCardsRemaining, String username, String faction) {
+    public PlayerInfoBox(int numberOfCardsRemaining, String username, String faction, int playerHealth) {
         skin = Gwent.singleton.skin;
         infoTable = new Table();
 
@@ -48,7 +48,7 @@ public class PlayerInfoBox {
         cards = new Image(new Texture(CARDS_TEXTURE_PATH));
         gems = new ArrayList<>();
         this.numberOfCardsRemaining = numberOfCardsRemaining;
-        this.playerHealth = 2;
+        this.playerHealth = playerHealth;
         this.username = username;
         this.faction = faction;
 
@@ -61,13 +61,13 @@ public class PlayerInfoBox {
         infoTable.row(); // Move to the next row
         infoTable.row(); // Move to the next row
         infoTable.add(new Label(username, new Label.LabelStyle(new BitmapFont(), Color.WHITE))).width(100).height(30);
-        updateHealth(playerHealth);
+        displayHealth(playerHealth);
         infoTable.add(gemsTable);
         infoTable.setSize(300, 120);
 
     }
 
-    private void updateHealth(int playerHealth) {
+    private void displayHealth(int playerHealth) {
         gemsTable.clear(); // Clear the gems table
         for (int i = 0; i < playerHealth; i++) {
             Image gem = new Image(new Texture(GEM_ON_PATH));
@@ -80,25 +80,12 @@ public class PlayerInfoBox {
             gemsTable.add(gem).width(30).height(30).padRight(10);
         }
     }
-
-    public void updatePlayerInfo(int numberOfCardsRemaining) {
-        this.numberOfCardsRemaining = numberOfCardsRemaining;
-        cardsRemainingLabel.setText(Integer.toString(numberOfCardsRemaining));
-        updateHealth(playerHealth);
-    }
     public Table getInfoTable() {
         return infoTable;
     }
     public void setPosition(int x, int y) {
         infoTable.setPosition(x, y);
     }
-    public void kill() {
-        if(playerHealth > 0) {
-            playerHealth--;
-            updateHealth(playerHealth);
-        } else {
-            infoTable.addAction(Actions.fadeOut(1));
-        }
-    }
+
 
 }

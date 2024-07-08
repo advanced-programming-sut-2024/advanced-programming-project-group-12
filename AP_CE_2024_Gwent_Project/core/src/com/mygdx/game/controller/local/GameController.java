@@ -1,6 +1,7 @@
 package com.mygdx.game.controller.local;
 
 
+import com.mygdx.game.Gwent;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.*;
 import com.mygdx.game.model.network.Client;
@@ -10,6 +11,7 @@ import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.Play
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.TurnDecideResponse;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.game.GameBoard;
+import com.mygdx.game.view.screen.GameScreen;
 
 import java.util.ArrayList;
 
@@ -67,8 +69,8 @@ public class GameController {
     }
 
     /*
-    in this method i assume that player is in select mode
-    and i give you card's that is selected and you should handle it
+    in this method I assume that player is in select mode
+    and I give you card's that is selected and you should handle it
      */
     public void chooseCardInSelectCardMode(ArrayList<AbstractCard> cards) {
         ArrayList<String> cardList = new ArrayList<>();
@@ -77,12 +79,14 @@ public class GameController {
         }
         Client.getInstance().sendMassage(new CardSelectionAnswer(cardList));
     }
+
     public void setGame(Game game) {
         this.game = game;
     }
     public Game getGame() {
         return game;
     }
+
 
     public void chooseWhichPlayerStartFirst(String username) {
         Client.getInstance().sendMassage(new TurnDecideResponse(username));
@@ -91,4 +95,8 @@ public class GameController {
     public void goToMainMenu() {
 
     }
+    public void chooseStarter() {
+        ((GameScreen)Gwent.singleton.getCurrentScreen()).showChooseStarter();
+    }
+
 }

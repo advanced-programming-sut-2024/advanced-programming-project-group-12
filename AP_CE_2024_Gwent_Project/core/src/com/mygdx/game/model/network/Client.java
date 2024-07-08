@@ -159,7 +159,7 @@ public class Client extends Thread {
                 //handle special cases
                 ActionResponse actionResponse = playCardResponse.getActionResponse();
                 if (actionResponse.getAction().equals(ActionResponseType.SELECTION)) {
-                    ((GameScreen)Gwent.singleton.getCurrentScreen()).showCards(actionResponse.getAffectedCards(), actionResponse.getActionCount());
+                    ((GameScreen)Gwent.singleton.getCurrentScreen()).showCardsToSelect(actionResponse.getAffectedCards(), actionResponse.getActionCount());
                 }
                 break;
             case CHAT:

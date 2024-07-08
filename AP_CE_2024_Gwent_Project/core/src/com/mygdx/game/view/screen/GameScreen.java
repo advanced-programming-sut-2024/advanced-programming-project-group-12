@@ -14,14 +14,12 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.ChatController;
 import com.mygdx.game.controller.local.GameController;
-import com.mygdx.game.model.game.card.Action;
+import com.mygdx.game.model.game.card.*;
 import com.mygdx.game.model.game.Faction;
-import com.mygdx.game.model.game.card.PlayableCard;
-import com.mygdx.game.model.game.card.SpellCard;
+import com.mygdx.game.model.game.card.Action;
 import com.mygdx.game.model.network.Client;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.actors.*;
-import com.mygdx.game.model.game.card.AbstractCard;
 
 import java.util.*;
 import java.util.List;
@@ -54,10 +52,6 @@ public class GameScreen implements Screen {
         controller = new GameController();
         stage = new Stage(new ScreenViewport());
         background = new Texture("bg/board.jpg");
-        if(true) {
-            showChooseStarter();
-            return;
-        }
         if (Client.getInstance().getGame().getCurrentPlayer().getUsername().equals(Client.getInstance().getUser().getUsername())) {
             player = Client.getInstance().getGame().getCurrentPlayer();
             opposition = Client.getInstance().getGame().getOpposition();
@@ -72,7 +66,7 @@ public class GameScreen implements Screen {
         //showCards(, 2);
     }
 
-    private void showChooseStarter() {
+    public void showChooseStarter() {
         Window window = new Window("", Gwent.singleton.skin);
         window.setSize(900, 700);
         window.setPosition((float) Gwent.WIDTH / 2 - (float) Gwent.WIDTH / 4, (float) Gwent.HEIGHT / 2 - (float) Gwent.HEIGHT / 4);
@@ -123,7 +117,7 @@ public class GameScreen implements Screen {
             }
         });
         stage.addActor(window);
-        window.addAction(Actions.fadeIn(0.6f));
+        window.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.6f)));
     }
 
     public void clearStage() {
@@ -281,10 +275,10 @@ public class GameScreen implements Screen {
 
     private void displayInfo() {
         playerInfoBox = new PlayerInfoBox(player.getHandAsCards().size(), player.getUsername(),
-                player.getFaction().toString());
+                player.getFaction().toString(), player.getHealth());
         stage.addActor(playerInfoBox.getInfoTable());
         oppositionInfoBox = new PlayerInfoBox(opposition.getHandAsCards().size(), opposition.getUsername(),
-                opposition.getFaction().toString());
+                opposition.getFaction().toString(), player.getHealth());
         stage.addActor(oppositionInfoBox.getInfoTable());
         playerInfoBox.setPosition(50, 260);
         oppositionInfoBox.setPosition(50, 610);
@@ -431,7 +425,11 @@ public class GameScreen implements Screen {
             playButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    controller.playLeader(player.getLeader());
+                    if(((CommanderCard)card).HasPlayedAction()) {
+                        //TODO : don't let him play and show error
+                        return;
+                    }
+                    controller.playCard(player.getLeader(), -1);
                     // Add fade-out animations
                     blurEffect.addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run(new Runnable() {
                         @Override
@@ -591,7 +589,7 @@ public class GameScreen implements Screen {
             playerDiscards.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    showCards(Client.getInstance().getGame().getGameBoard().getDiscardCards(player), -1);
+                    showCardsToSelect(Client.getInstance().getGame().getGameBoard().getDiscardCards(player), -1);
                 }
             });
             cardActor.setPosition(1290, 97);
@@ -602,7 +600,7 @@ public class GameScreen implements Screen {
             oppositionDiscards.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    showCards(Client.getInstance().getGame().getGameBoard().getDiscardCards(opposition), -1);
+                    showCardsToSelect(Client.getInstance().getGame().getGameBoard().getDiscardCards(opposition), -1);
                 }
             });
             cardActor.setPosition(1290, 785);
@@ -610,7 +608,7 @@ public class GameScreen implements Screen {
 
     }
 
-    public void showCards(ArrayList<AbstractCard> cards, int numberOfCards) {
+    public void showCardsToSelect(List<? extends AbstractCard> cards, int numberOfCards) {
         ArrayList<AbstractCard> selectedCards = new ArrayList<>();
         Image bgImage = new Image(new Texture("bg/black.jpg"));
         bgImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -679,6 +677,7 @@ public class GameScreen implements Screen {
                 }
                 bgImage.remove();
                 closeButton.remove();
+                controller.chooseCardInSelectCardMode(selectedCards);
             }
         });
     }
