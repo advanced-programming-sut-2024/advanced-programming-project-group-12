@@ -14,7 +14,7 @@ public enum Screens {
     REGISTER,
     CHOOSE_SECURITY_QUESTION,
     FORGET_PASSWORD,
-    GAME_REQUEST, TV;
+    GAME_REQUEST, BROADCAST;
     ;
     public Screen createScreen() {
         Screen screen = null;
@@ -51,6 +51,9 @@ public enum Screens {
                 break;
             case GAME_REQUEST:
                 screen = new GameRequestScreen();
+                break;
+            case BROADCAST:
+                screen = new BroadCastScreen();
         }
         return screen;
     }

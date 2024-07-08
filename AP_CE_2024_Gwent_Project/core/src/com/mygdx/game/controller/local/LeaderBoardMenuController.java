@@ -20,11 +20,8 @@ public class LeaderBoardMenuController {
 
     public ArrayList<UserScoreAndOnline> getSortedUsers() {
         Client.getInstance().sendMassage(new GetAllUsersRequest());
-        ArrayList<UserScoreAndOnline> users = GetAllUsersResponse.getAllUsers();
-        for (UserScoreAndOnline user : users) {
-            System.out.println(user.getUsername() + " " + user.getScore() + user.isOnline());
-        }
+        ArrayList<UserScoreAndOnline> users = new ArrayList<>();
 
-        return users;
+        return null;
     }
 }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class GetAllUsersResponse extends ServerResponse{
-    private static ArrayList<UserScoreAndOnline> allUsers = new ArrayList<>();
+    private  ArrayList<UserScoreAndOnline> allUsers = new ArrayList<>();
 
     public GetAllUsersResponse(ArrayList<User> users) {
         super(ServerResponseType.GET_ALL_USERS, null);
@@ -18,7 +18,7 @@ public class GetAllUsersResponse extends ServerResponse{
         }
     }
 
-    public static ArrayList<UserScoreAndOnline> getAllUsers() {
+    public ArrayList<UserScoreAndOnline> getAllUsers() {
         Collections.sort(allUsers);
         return allUsers;
     }
