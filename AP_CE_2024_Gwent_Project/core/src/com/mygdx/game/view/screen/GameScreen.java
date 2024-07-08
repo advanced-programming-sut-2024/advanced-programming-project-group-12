@@ -686,9 +686,6 @@ public class GameScreen implements Screen {
         stage.clear();
         initialStageObjects();
     }
-    public void passRound() {
-
-    }
     public void endGame(int state) {
         stage.clear();
         Image endGameBackground = new Image(new Texture("bg/end-game.jpg"));
@@ -813,5 +810,10 @@ public class GameScreen implements Screen {
         stage.addActor(oppositionToatalStrengthLabel);
         
         
+    }
+
+    public void endRound() {
+        //TODO : show notif
+        showNotification("end round", "notif_draw_round");
     }
 }
