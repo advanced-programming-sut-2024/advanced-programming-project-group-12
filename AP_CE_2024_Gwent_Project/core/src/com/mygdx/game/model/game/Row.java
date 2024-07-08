@@ -65,7 +65,7 @@ public class Row {
         return hasMushroom;
     }
 
-    public boolean HasWeatherBuffer() {
+    public boolean hasWeatherBuffer() {
         return hasWeatherBuffer;
     }
 
