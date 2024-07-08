@@ -128,7 +128,7 @@ public class GameHandler {
             player.reDraw(card);
         }
         if(player.equals(game.getCurrentPlayer())) {
-            return new PlayCardResponse(game, null);
+            return new PlayCardResponse(game, true);
         }
         else {
             return new PlayCardResponse(game);
