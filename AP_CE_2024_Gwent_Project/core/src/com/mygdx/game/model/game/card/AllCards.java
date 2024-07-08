@@ -33,7 +33,7 @@ public enum AllCards {
     POOR_FUCKING_INFANTRY(new PlayableCard("poor fucking infantry", "", Action.TIGHT_BOND, Arrays.asList(0), 1, null, Faction.NORTHERN_REALMS), 4),
     BALLISTA(new PlayableCard("ballista", "", Action.NO_ACTION, Arrays.asList(2), 6, null, Faction.NORTHERN_REALMS)),
     BLUE_STRIPES_COMMANDO(new PlayableCard("blue stripes commando", "", Action.TIGHT_BOND, Arrays.asList(0), 4, null, Faction.NORTHERN_REALMS), 3),
-    CATAPULT(new PlayableCard("catapult", "", Action.NO_ACTION, Arrays.asList(2), 8, null, Faction.NORTHERN_REALMS), 2),
+    CATAPULT(new PlayableCard("catapult", "", Action.TIGHT_BOND, Arrays.asList(2), 8, null, Faction.NORTHERN_REALMS), 2),
     CRINFRID(new PlayableCard("crinfrid", "", Action.TIGHT_BOND, Arrays.asList(1), 5, null, Faction.NORTHERN_REALMS), 3),
     DETHMOLD(new PlayableCard("dethmold", "", Action.NO_ACTION, Arrays.asList(1), 6, null, Faction.NORTHERN_REALMS)),
     DIJKSTARA(new PlayableCard("dijkstara", "", Action.SPY, Arrays.asList(0), 4, null, Faction.NORTHERN_REALMS)),
