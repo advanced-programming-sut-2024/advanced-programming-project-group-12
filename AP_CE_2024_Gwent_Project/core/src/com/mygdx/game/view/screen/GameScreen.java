@@ -27,7 +27,7 @@ import java.util.List;
 public class GameScreen implements Screen {
     private final Stage stage;
     private final Texture background;
-
+    private boolean update = false;
     //Buttons for veto, pass round, end round, end game
     private TextButton passButton;
     private final GameController controller;
@@ -95,7 +95,7 @@ public class GameScreen implements Screen {
                     player = Client.getInstance().getGame().getOpposition();
                     opposition = Client.getInstance().getGame().getCurrentPlayer();
                 }
-                updateStage();
+
                 window.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeOut(0.6f)));
                 window.remove();
             }
@@ -111,7 +111,7 @@ public class GameScreen implements Screen {
                     player = Client.getInstance().getGame().getOpposition();
                     opposition = Client.getInstance().getGame().getCurrentPlayer();
                 }
-                updateStage();
+
                 window.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeOut(0.6f)));
                 window.remove();
             }
@@ -130,7 +130,8 @@ public class GameScreen implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     controller.passRound();
-                    updateStage();
+                    controller.update();
+
                 }
             });
             stage.addActor(passButton);
@@ -248,6 +249,9 @@ public class GameScreen implements Screen {
                     if (controller.getSelectedCard() != null && controller.getPermission()) {
                         if (controller.isAllowedToPlay(controller.getSelectedCard(), enemyRow.getSide(), enemyRow.getRowNumber())) {
                             playCard(controller.getSelectedCard(), enemyRow);
+                            selectedCardPlace.clear();
+                            controller.setSelectedCard(null);
+                            resetBackgroundColors();
                         }
                     }
                 }
@@ -270,7 +274,7 @@ public class GameScreen implements Screen {
                     selectedCardPlace.clear();
                     controller.setSelectedCard(null);
                     resetBackgroundColors();
-                    updateStage();
+
                 }
             }
         });
@@ -305,6 +309,10 @@ public class GameScreen implements Screen {
         if(controller.isShowSelectCardCalled()) {
             showCardsToSelect(controller.getCardsToShow(), controller.getNumberOfCardsToChoose(), controller.isCanChooseLess());
             controller.setOffShowCardToSelect();
+        }
+        if(update) {
+            this.updateStage();
+            update = false;
         }
     }
 
@@ -460,7 +468,7 @@ public class GameScreen implements Screen {
                     for (Actor actor : stage.getActors()) {
                         actor.setTouchable(Touchable.enabled);
                     }
-                    updateStage();
+
                 }
             });
             stage.addActor(playButton);
@@ -516,7 +524,7 @@ public class GameScreen implements Screen {
 
         // Unselect the card
         resetBackgroundColors();
-        updateStage();
+
     }
 
     private void addCardToWeatherBox(CardActor card) {
@@ -670,7 +678,6 @@ public class GameScreen implements Screen {
                             bgImage.remove();
                             closeButton.remove();
                             controller.chooseCardInSelectCardMode(selectedCards, canChooseLess);
-                            updateStage();
                         }
                     }
                 });
@@ -689,12 +696,20 @@ public class GameScreen implements Screen {
                 bgImage.remove();
                 closeButton.remove();
                 controller.chooseCardInSelectCardMode(selectedCards, canChooseLess);
-                updateStage();
             }
         });
     }
 
     private void updateStage() {
+        if(controller.getPermission()) {
+            System.out.println("player");
+            player = Client.getInstance().getGame().getCurrentPlayer();
+            opposition = Client.getInstance().getGame().getOpposition();
+        } else {
+            System.out.println("opposition");
+            player = Client.getInstance().getGame().getOpposition();
+            opposition = Client.getInstance().getGame().getCurrentPlayer();
+        }
         stage.clear();
         initialStageObjects();
     }
@@ -831,5 +846,9 @@ public class GameScreen implements Screen {
     public void endRound() {
         //TODO : show notif
         showNotification("end round", "notif_draw_round");
+    }
+
+    public void setUpdate() {
+        this.update = true;
     }
 }

@@ -174,6 +174,7 @@ public class Client extends Thread {
                 if (actionResponse!= null && actionResponse.getAction().equals(ActionResponseType.SELECTION)) {
                     ((GameScreen)Gwent.singleton.getCurrentScreen()).showCardsToSelect(actionResponse.getAffectedCards(), actionResponse.getActionCount(), false);
                 }
+                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().update();
                 break;
             case CHAT:
                 ChatInGameWrapper chatWrapper = gson.fromJson(request, ChatInGameWrapper.class);

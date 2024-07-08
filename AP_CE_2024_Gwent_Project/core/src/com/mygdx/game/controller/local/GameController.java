@@ -7,6 +7,7 @@ import com.mygdx.game.model.game.card.*;
 import com.mygdx.game.model.network.Client;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
 
+import com.mygdx.game.view.Screens;
 import com.mygdx.game.view.screen.GameScreen;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class GameController {
     }
 
     public void playCard(AbstractCard card, int row) {
-        Client.getInstance().sendMassage(new PlayCardRequest(row, card.getName()));
+        Client.getInstance().sendMassage(new PlayCardRequest(row, card.toString()));
     }
 
     /*
@@ -95,7 +96,7 @@ public class GameController {
     }
 
     public void goToMainMenu() {
-
+        Gwent.singleton.changeScreen(Screens.MAIN_MENU);
     }
     public void chooseStarter() {
         ((GameScreen)Gwent.singleton.getCurrentScreen()).showChooseStarter();
@@ -128,4 +129,10 @@ public class GameController {
     public boolean isCanChooseLess() {
         return canChooseLess;
     }
+
+    public void update() {
+        ((GameScreen)Gwent.singleton.getCurrentScreen()).setUpdate();
+    }
+
+
 }
