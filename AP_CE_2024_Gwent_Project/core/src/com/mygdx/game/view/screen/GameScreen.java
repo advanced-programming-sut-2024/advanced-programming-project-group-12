@@ -102,7 +102,7 @@ public class GameScreen implements Screen {
                    opposition = Client.getInstance().getGame().getCurrentPlayer();
                }
                updateStage();
-               window.addAction(Actions.fadeOut(0.6f));
+               window.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeOut(0.6f)));
                window.remove();
            }
         });
@@ -118,7 +118,7 @@ public class GameScreen implements Screen {
                     opposition = Client.getInstance().getGame().getCurrentPlayer();
                 }
                 updateStage();
-                window.addAction(Actions.fadeOut(0.6f));
+                window.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeOut(0.6f)));
                 window.remove();
             }
         });
@@ -198,29 +198,33 @@ public class GameScreen implements Screen {
         stage.addActor(oppositionDiscards);
         stage.addActor(passButton);
 
-        //rows
-        initialRows();
+        //display rows
+        displayRows();
 
-        //infos
+        //display infos
         displayInfo();
 
-        //leader cards
+        //display leader cards
         displayLeaderCard();
 
-        //hand
+        //display hand
         displayHand();
 
-        //deck stack
+        //display deck stack
         displayPlayerDeckStack(player, 97);
         displayPlayerDeckStack(opposition, 785);
+
+        //display strength
+        displayStrengths();
     }
 
-    private void initialRows() {
+    private void displayRows() {
         playerRows = new ArrayList<>();
         enemyRows = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             ArrayList<PlayableCard> cards = Client.getInstance().getGame().getGameBoard().getRowCards(player, i);
-            RowTable playerRow = new RowTable(i, true, cards);
+            //TODO : complete path to overlay
+            RowTable playerRow = new RowTable(i, true, cards, null);
             playerRows.add(playerRow);
             stage.addActor(playerRow);
             playerRow.addListener(new ClickListener() {
@@ -236,7 +240,7 @@ public class GameScreen implements Screen {
         }
         for (int i = 0; i < 3; i++) {
             ArrayList<PlayableCard> cards = Client.getInstance().getGame().getGameBoard().getRowCards(opposition, i);
-            RowTable enemyRow = new RowTable(i, false, cards);
+            RowTable enemyRow = new RowTable(i, false, cards, null);
             enemyRows.add(enemyRow);
             stage.addActor(enemyRow);
             enemyRow.addListener(new ClickListener() {
@@ -452,12 +456,12 @@ public class GameScreen implements Screen {
                 }
             });
             stage.addActor(playButton);
-            playButton.addAction(Actions.fadeIn(0.7f));
+            playButton.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.7f)));
         }
 
         // Add animations
-        closeButton.addAction(Actions.fadeIn(0.7f));
-        blurEffect.addAction(Actions.fadeIn(0.5f)); // Fade in over 0.5 seconds
+        closeButton.addAction(Actions.sequence(Actions.alpha(0),Actions.fadeIn(0.7f)));
+        blurEffect.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.5f))); // Fade in over 0.5 seconds
         enlargedCard.getImage().addAction(Actions.sizeTo(300, 450, 0.5f)); // Grow to size 300x450 over 0.5 seconds
     }
 
@@ -685,6 +689,129 @@ public class GameScreen implements Screen {
 
     }
     public void endGame() {
+        stage.clear();
+        Image endGameBackground = new Image(new Texture("bg/end-game.jpg"));
+        endGameBackground.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        stage.addActor(endGameBackground);
+        //TODO : complete this part
+        int state = -1;
+        /*
+        win : 1
+        draw : 0
+        lose : -1
+         */
+        Image status;
+                switch (state) {
+            case 1 :
+                status = new Image(new Texture("icons/end_win.png"));
+            break;
+            case 0 :
+                status = new Image(new Texture("icons/end_draw.png"));
+            break;
+            case -1 :
+                status = new Image(new Texture("icons/end_lose.png"));
+            break;
+            default :
+                status = new Image(new Texture("icons/"));
+        };
+        status.setSize(800, 600);
+        status.setPosition(400, 400);
+        stage.addActor(status);
+        status.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.8f)));
+        Table endGameInfo = new Table();
+        endGameInfo.add(new Label("players", Gwent.singleton.skin)).align(Align.center).padLeft(40);
 
+        for(int i = 1; i <= 3; i++) {
+            endGameInfo.add(new Label("Round " + i, Gwent.singleton.skin)).align(Align.center).padLeft(40);
+        }
+        endGameInfo.row().padTop(50);
+        endGameInfo.add(new Label(player.getUsername(), Gwent.singleton.skin)).align(Align.center).padLeft(40);
+        for(int i = 1; i <= 3; i++) {
+            Label label = new Label("hichi", Gwent.singleton.skin);
+            label.setColor(Color.GOLD);
+            endGameInfo.add(label).align(Align.center).padLeft(40);
+        }
+        endGameInfo.row().padTop(40);
+        endGameInfo.add(new Label(opposition.getUsername(), Gwent.singleton.skin)).align(Align.center).padLeft(40);
+        for(int i = 1; i <= 3; i++) {
+            Label label = new Label("hichi", Gwent.singleton.skin);
+            label.setColor(Color.LIGHT_GRAY);
+            endGameInfo.add(label).align(Align.center).padLeft(40);
+        }
+        endGameInfo.row().padBottom(40);
+        endGameInfo.setBounds(600, 150, 400, 300);
+        stage.addActor(endGameInfo);
+        TextButton exitButton = new TextButton("exit", Gwent.singleton.skin);
+        exitButton.setSize(300, 120);
+        exitButton.setPosition(650, 60);
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.goToMainMenu();
+            }
+        });
+        stage.addActor(exitButton);
+    }
+    public void showNotification(String message, String pathToAsset) {
+        Image image = new Image(new Texture(pathToAsset));
+        Label label = new Label(message, Gwent.singleton.skin);
+        image.setSize(200, 200);
+        image.setPosition(580, 500);
+        label.setPosition(750, 550);
+        label.setScale(3);
+
+        // Fade in for image
+        image.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.6f)));
+        // Fade out for image
+        image.addAction(Actions.sequence(Actions.delay(1), Actions.fadeOut(0.6f), Actions.removeActor()));
+
+        label.setColor(Color.GOLD);
+
+        // Fade in for label
+        label.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.6f)));
+        // Fade out for label
+        label.addAction(Actions.sequence(Actions.delay(1), Actions.fadeOut(0.6f), Actions.removeActor()));
+
+        stage.addActor(image);
+        stage.addActor(label);
+    }
+    public void displayStrengths() {
+        int playerTotalStrength = Client.getInstance().getGame().getGameBoard().getPlayerStrength(player);
+        Label playerToatalStrengthLabel = new Label(Integer.toString(playerTotalStrength), Gwent.singleton.skin);
+        int oppositionTotalStrength = Client.getInstance().getGame().getGameBoard().getPlayerStrength(opposition);
+        Label oppositionToatalStrengthLabel = new Label(Integer.toString(oppositionTotalStrength), Gwent.singleton.skin);
+        ArrayList<Label> playerRowsStrengthLabels = new ArrayList<>();
+        ArrayList<Label> oppositionRowsStrengthLabels = new ArrayList<>();
+        for(int i = 0; i < 3; i++) {
+            int playerRowStrength = Client.getInstance().getGame().getGameBoard().getRowStrength(player, i);
+            int oppositionRowStrength = Client.getInstance().getGame().getGameBoard().getRowStrength(opposition, i);
+            playerRowsStrengthLabels.add(new Label(Integer.toString(playerRowStrength), Gwent.singleton.skin));
+            oppositionRowsStrengthLabels.add(new Label(Integer.toString(oppositionRowStrength), Gwent.singleton.skin));
+        }
+        float rowX = 440;
+        float midY = (float) Gwent.HEIGHT / 2 + 95;
+        for (int i = 0; i < 3; i++) {
+            playerRowsStrengthLabels.get(i).setPosition(rowX, midY - (i * 125 + 65));
+            playerRowsStrengthLabels.get(i).setScale(2);
+            oppositionRowsStrengthLabels.get(i).setPosition(rowX, midY + (i * 125 + 65));
+            stage.addActor(playerRowsStrengthLabels.get(i));
+            stage.addActor(oppositionRowsStrengthLabels.get(i));
+        }
+        Image highScoreImage = new Image(new Texture("icons/icon_high_score.png"));
+        highScoreImage.setSize(70,70);
+        if(playerTotalStrength < oppositionTotalStrength) {
+            highScoreImage.setPosition(345, 635);
+        } else {
+            highScoreImage.setPosition(345, 270);
+        }
+        stage.addActor(highScoreImage);
+        playerToatalStrengthLabel.setScale(3.5f);
+        playerToatalStrengthLabel.setPosition(375, 295);
+        stage.addActor(playerToatalStrengthLabel);
+        oppositionToatalStrengthLabel.setScale(4f);
+        oppositionToatalStrengthLabel.setPosition(375, 660);
+        stage.addActor(oppositionToatalStrengthLabel);
+        
+        
     }
 }

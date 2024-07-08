@@ -1,13 +1,16 @@
 package com.mygdx.game.model.actors;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.PlayableCard;
 import com.mygdx.game.model.network.Client;
@@ -21,13 +24,14 @@ public class RowTable extends Table {
     private final HornArea hornArea;
     private final int rowNumber;
     private final Image background;
+    private Image overlayImage;
     private RepeatAction blinkAction;
     private final boolean side;
     /*
     true : player
     false : enemy
      */
-    public RowTable(int rowNumber, boolean side, ArrayList<PlayableCard> cards) {
+    public RowTable(int rowNumber, boolean side, ArrayList<PlayableCard> cards, String pathToOverLayImage) {
         this.setSize(680, 110);
         this.cardActors = new ArrayList<>();
         for(PlayableCard card : cards) {
@@ -52,6 +56,16 @@ public class RowTable extends Table {
 
         // Create the blinking action
         blinkAction = Actions.forever(Actions.sequence(Actions.color(highlightColor, 1.5f), Actions.color(Color.CLEAR, 1.5f)));
+        overlayImage = new Image(new Texture("icons/overlay_rain.png"));
+        overlayImage.setSize(this.getWidth(), this.getHeight());
+        overlayImage.setPosition(0, 0);
+        overlayImage.setColor(Color.CLEAR);
+        this.addActor(overlayImage);
+        if(pathToOverLayImage != null) {
+            showOverLayImage(pathToOverLayImage);
+        } else {
+            hideOverLayImage();
+        }
         this.addActor(background);
         setPosition();
         this.center();
@@ -108,4 +122,12 @@ public class RowTable extends Table {
         background.setColor(Color.CLEAR);
         hornArea.unhighlight();
     }
+    public void showOverLayImage(String overlayImagePath) {
+        overlayImage.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(overlayImagePath)))));
+        overlayImage.setColor(Color.WHITE);
+    }
+    public void hideOverLayImage() {
+        overlayImage.setColor(Color.CLEAR);
+    }
+
 }

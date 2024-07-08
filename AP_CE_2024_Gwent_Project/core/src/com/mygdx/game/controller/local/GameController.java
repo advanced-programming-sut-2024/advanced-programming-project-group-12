@@ -145,4 +145,8 @@ public class GameController {
     public void chooseWhichPlayerStartFirst(String username) {
 
     }
+
+    public void goToMainMenu() {
+
+    }
 }
