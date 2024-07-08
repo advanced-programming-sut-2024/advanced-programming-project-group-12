@@ -31,8 +31,7 @@ public class GameController {
         Client.getInstance().sendMassage(new PassRoundRequest());
     }
 
-    public void endRound() {
-        Client.getInstance().sendMassage(new PassRoundRequest());
+    public void endRound(String winner) {
     }
 
     public void endGame(String winnerName, boolean hasWinner) {
