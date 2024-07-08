@@ -1,20 +1,18 @@
 package com.mygdx.game.model.actors;
 
-import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.model.game.card.*;
-import com.mygdx.game.model.user.Player;
 
 import java.util.List;
 
@@ -35,7 +33,12 @@ public class CardTable extends Table {
         powerTable.setBackground(powerBackground);
         if (card instanceof PlayableCard) {
             powerLabel = new Label(Integer.toString(((PlayableCard) card).getPower()), Gwent.singleton.skin);
-            powerLabel.setColor(Color.SKY);
+            if(card instanceof Hero) {
+                powerLabel.setColor(Color.WHITE);
+            } else {
+                powerLabel.setColor(Color.BLACK);
+            }
+
 
         }
         powerTable.add(powerLabel).padRight(19).padBottom(19);
@@ -60,12 +63,11 @@ public class CardTable extends Table {
         }
         row().padBottom(5);
         add(bottomTable).expandX().fillX();
-
         setTouchable(Touchable.enabled);
     }
 
     public void updatePowerNumber(int newPower) {
-        int oldPower = Integer.parseInt(String.valueOf(powerLabel.getText()));
+        int oldPower = ((PlayableCard)card).getPower();
         if(oldPower > newPower) {
             powerLabel.setColor(Color.RED);
         } else if(oldPower < newPower) {

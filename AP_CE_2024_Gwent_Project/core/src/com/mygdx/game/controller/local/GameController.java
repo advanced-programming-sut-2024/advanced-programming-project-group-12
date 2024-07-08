@@ -1,13 +1,10 @@
 package com.mygdx.game.controller.local;
 
 
-import com.mygdx.game.model.game.card.Action;
+import com.mygdx.game.model.game.Game;
+import com.mygdx.game.model.game.card.*;
 import com.mygdx.game.model.network.Client;
 import com.mygdx.game.model.user.Player;
-import com.mygdx.game.model.game.card.AbstractCard;
-import com.mygdx.game.model.game.card.AllCards;
-import com.mygdx.game.model.game.card.PlayableCard;
-import com.mygdx.game.model.game.card.SpellCard;
 import com.mygdx.game.model.game.GameBoard;
 
 import java.util.ArrayList;
@@ -15,6 +12,8 @@ import java.util.ArrayList;
 public class GameController {
     private AbstractCard selectedCard;
     private boolean permission;
+    private boolean changeTurn = false;
+    private Game game;
     public void setSelectedCard(AbstractCard card) {
         selectedCard = card;
     }
@@ -95,15 +94,8 @@ public class GameController {
 
     public void playCard(AbstractCard card, int row) {
         //todo
-        Player currentPlayer = Client.getInstance().getUser().getPlayer();
-        GameBoard gameBoard = Client.getInstance().getUser().getPlayer().getGame().getGameBoard();
-        if(card instanceof PlayableCard) {
-            gameBoard.addCard(currentPlayer, row, (PlayableCard)card);
-        } else {
-            gameBoard.addCard(currentPlayer, row,(SpellCard)card);
-        }
-        currentPlayer.removeCardFromHand(card);
     }
+
 
 
     /*
@@ -139,5 +131,18 @@ public class GameController {
     public void chooseCardInSelectCardMode(ArrayList<AbstractCard> cards) {
         //TODO :
     }
+    public void setGame(Game game) {
+        this.game = game;
+    }
+    public Game getGme() {
+        return game;
+    }
 
+    public void playLeader(CommanderCard leader) {
+        //Play leader
+    }
+
+    public void chooseWhichPlayerStartFirst(String username) {
+
+    }
 }
