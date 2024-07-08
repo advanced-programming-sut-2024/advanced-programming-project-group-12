@@ -48,8 +48,8 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
-        implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.46.0.0'
-
+        implementation 'javax.mail:javax.mail-api:1.6.2'
+        implementation 'com.sun.mail:javax.mail:1.6.2'
 
     }
 }
