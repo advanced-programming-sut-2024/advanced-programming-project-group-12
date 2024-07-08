@@ -136,10 +136,9 @@ public class GameHandler {
     }
 
     public void gameAborted(User user) {
-        String otherUserName = getTheOtherUser(user).getUsername();
-        if(RequestHandler.allUsers.get(otherUserName) == null) return;
-        getTheOtherUser(user).addToWin();
-        RequestHandler.allUsers.get(otherUserName).sendMassage(new EndGameNotify(true, otherUserName));
+        User otherUser = getTheOtherUser(user);
+        if(RequestHandler.allUsers.get(otherUser.getUsername()) == null) return;
+        game.finishGame(otherUser);
     }
 
     public Game getGame() {

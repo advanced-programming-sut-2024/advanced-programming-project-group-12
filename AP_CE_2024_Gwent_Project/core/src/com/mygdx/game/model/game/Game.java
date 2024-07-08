@@ -112,8 +112,10 @@ public class Game {
     }
 
     private void sendEndGameMassages(EndGameNotify endGameNotify) {
-        RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(endGameNotify);
-        RequestHandler.allUsers.get(opposition.getUsername()).sendMassage(endGameNotify);
+        if(RequestHandler.allUsers.get(currentPlayer.getUsername()) != null)
+            RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(endGameNotify);
+        if(RequestHandler.allUsers.get(opposition.getUsername()) != null)
+            RequestHandler.allUsers.get(opposition.getUsername()).sendMassage(endGameNotify);
         gameHandler.sendMassageToSpectators(endGameNotify);
     }
 
@@ -148,8 +150,6 @@ public class Game {
                 gameWinner = opposition.getUser();
             }
             finishGame(gameWinner);
-
-            sendEndGameMassages(new EndGameNotify(gameWinner != null, gameWinner == null? null:gameWinner.getUsername()));
             return;
         }
 
@@ -164,14 +164,15 @@ public class Game {
         }
     }
 
-    private void finishGame(User winner) {
+    public void finishGame(User winner) {
         for(User u: allUsers) {
             u.addGame(this);
+            u.save();
         }
         if(winner != null) {
             winner.addToWin();
         }
-        //todo
+        sendEndGameMassages(new EndGameNotify(winner != null, winner == null? null:winner.getUsername()));
     }
 
     public void isOver() {
