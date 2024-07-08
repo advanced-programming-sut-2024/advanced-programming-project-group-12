@@ -85,20 +85,20 @@ public class GameScreen implements Screen {
         window.padRight(20);
         window.add(oppositionButton);
         playerButton.addListener(new ClickListener() {
-           @Override
-           public void clicked(InputEvent event, float x, float y) {
-               controller.chooseWhichPlayerStartFirst(playerUsername);
-               if (Client.getInstance().getGame().getCurrentPlayer().getUsername().equals(Client.getInstance().getUser().getUsername())) {
-                   player = Client.getInstance().getGame().getCurrentPlayer();
-                   opposition = Client.getInstance().getGame().getOpposition();
-               } else {
-                   player = Client.getInstance().getGame().getOpposition();
-                   opposition = Client.getInstance().getGame().getCurrentPlayer();
-               }
-               updateStage();
-               window.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeOut(0.6f)));
-               window.remove();
-           }
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.chooseWhichPlayerStartFirst(playerUsername);
+                if (Client.getInstance().getGame().getCurrentPlayer().getUsername().equals(Client.getInstance().getUser().getUsername())) {
+                    player = Client.getInstance().getGame().getCurrentPlayer();
+                    opposition = Client.getInstance().getGame().getOpposition();
+                } else {
+                    player = Client.getInstance().getGame().getOpposition();
+                    opposition = Client.getInstance().getGame().getCurrentPlayer();
+                }
+                updateStage();
+                window.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeOut(0.6f)));
+                window.remove();
+            }
         });
         oppositionButton.addListener(new ClickListener() {
             @Override
@@ -119,18 +119,22 @@ public class GameScreen implements Screen {
         stage.addActor(window);
         window.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.6f)));
     }
+
     private void initialStageObjects() {
         //Buttons
-        passButton = new TextButton("Pass", Gwent.singleton.skin);
-        passButton.setPosition(220, 120);
-        passButton.setSize(150, 80);
-        passButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                controller.passRound();
-                updateStage();
-            }
-        });
+        if (controller.getPermission()) {
+            passButton = new TextButton("Pass", Gwent.singleton.skin);
+            passButton.setPosition(220, 120);
+            passButton.setSize(150, 80);
+            passButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    controller.passRound();
+                    updateStage();
+                }
+            });
+            stage.addActor(passButton);
+        }
         chatButton = new TextButton("Chat", Gwent.singleton.skin);
         chatButton.setPosition(1440, 60); // set the position of the chat button
         chatButton.addListener(new ClickListener() {
@@ -180,7 +184,7 @@ public class GameScreen implements Screen {
         oppositionDiscards.setSize(85, 130);
         stage.addActor(playerDiscards);
         stage.addActor(oppositionDiscards);
-        stage.addActor(passButton);
+
 
         //display rows
         displayRows();
@@ -200,12 +204,12 @@ public class GameScreen implements Screen {
 
         //display strength
         displayStrengths();
-        if(!Client.getInstance().getGame().getGameBoard().getDiscardCards(player).isEmpty()) {
+        if (!Client.getInstance().getGame().getGameBoard().getDiscardCards(player).isEmpty()) {
 
             AbstractCard playerDiscard = Client.getInstance().getGame().getGameBoard().getDiscardCards(player).getLast();
             displayDiscard(true, playerDiscard);
         }
-        if(!Client.getInstance().getGame().getGameBoard().getDiscardCards(opposition).isEmpty()) {
+        if (!Client.getInstance().getGame().getGameBoard().getDiscardCards(opposition).isEmpty()) {
             AbstractCard oppositionDiscard = Client.getInstance().getGame().getGameBoard().getDiscardCards(opposition).getLast();
             displayDiscard(false, oppositionDiscard);
         }
@@ -252,7 +256,7 @@ public class GameScreen implements Screen {
 
     private void displayWeatherBox() {
         HashSet<SpellCard> cards = Client.getInstance().getGame().getGameBoard().getWeatherCards();
-        for(SpellCard card : cards) {
+        for (SpellCard card : cards) {
             addCardToWeatherBox(new CardActor(card));
         }
         weatherBox.setTouchable(Touchable.enabled);
@@ -423,7 +427,7 @@ public class GameScreen implements Screen {
             playButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if(((CommanderCard)card).HasPlayedAction()) {
+                    if (((CommanderCard) card).HasPlayedAction()) {
                         //TODO : don't let him play and show error
                         return;
                     }
@@ -459,7 +463,7 @@ public class GameScreen implements Screen {
         }
 
         // Add animations
-        closeButton.addAction(Actions.sequence(Actions.alpha(0),Actions.fadeIn(0.7f)));
+        closeButton.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.7f)));
         blurEffect.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.5f))); // Fade in over 0.5 seconds
         enlargedCard.getImage().addAction(Actions.sizeTo(300, 450, 0.5f)); // Grow to size 300x450 over 0.5 seconds
     }
@@ -581,7 +585,7 @@ public class GameScreen implements Screen {
     }
 
     public void displayDiscard(boolean side, AbstractCard card) {
-        if(card == null) return;
+        if (card == null) return;
         CardActor cardActor = new CardActor(card);
         if (side) {
             playerDiscards.clear();
@@ -589,7 +593,7 @@ public class GameScreen implements Screen {
             playerDiscards.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    showCardsToSelect(Client.getInstance().getGame().getGameBoard().getDiscardCards(player), -1);
+                    showCardsToSelect(Client.getInstance().getGame().getGameBoard().getDiscardCards(player), -1, true);
                 }
             });
             cardActor.setPosition(1290, 97);
@@ -600,7 +604,7 @@ public class GameScreen implements Screen {
             oppositionDiscards.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    showCardsToSelect(Client.getInstance().getGame().getGameBoard().getDiscardCards(opposition), -1);
+                    showCardsToSelect(Client.getInstance().getGame().getGameBoard().getDiscardCards(opposition), -1, true);
                 }
             });
             cardActor.setPosition(1290, 785);
@@ -608,7 +612,7 @@ public class GameScreen implements Screen {
 
     }
 
-    public void showCardsToSelect(List<? extends AbstractCard> cards, int numberOfCards) {
+    public void showCardsToSelect(List<? extends AbstractCard> cards, int numberOfCards, boolean canChooseLess) {
         ArrayList<AbstractCard> selectedCards = new ArrayList<>();
         Image bgImage = new Image(new Texture("bg/black.jpg"));
         bgImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -621,7 +625,8 @@ public class GameScreen implements Screen {
         TextButton closeButton = new TextButton("X", Gwent.singleton.skin);
         closeButton.setSize(80, 80);
         closeButton.setPosition(Gdx.graphics.getWidth() - closeButton.getWidth(), Gdx.graphics.getHeight() - closeButton.getHeight());
-        stage.addActor(closeButton);
+        if(canChooseLess) stage.addActor(closeButton);
+
         float x = 200;
         float y = 700;
         for (int i = 0; i < cards.size(); i++) {
@@ -686,6 +691,7 @@ public class GameScreen implements Screen {
         stage.clear();
         initialStageObjects();
     }
+
     public void endGame(int state) {
         stage.clear();
         Image endGameBackground = new Image(new Texture("bg/end-game.jpg"));
@@ -698,19 +704,20 @@ public class GameScreen implements Screen {
         lose : -1
          */
         Image status;
-                switch (state) {
-            case 1 :
+        switch (state) {
+            case 1:
                 status = new Image(new Texture("icons/end_win.png"));
-            break;
-            case 0 :
+                break;
+            case 0:
                 status = new Image(new Texture("icons/end_draw.png"));
-            break;
-            case -1 :
+                break;
+            case -1:
                 status = new Image(new Texture("icons/end_lose.png"));
-            break;
-            default :
+                break;
+            default:
                 status = new Image(new Texture("icons/"));
-        };
+        }
+        ;
         status.setSize(800, 600);
         status.setPosition(400, 400);
         stage.addActor(status);
@@ -718,19 +725,19 @@ public class GameScreen implements Screen {
         Table endGameInfo = new Table();
         endGameInfo.add(new Label("players", Gwent.singleton.skin)).align(Align.center).padLeft(40);
 
-        for(int i = 1; i <= 3; i++) {
+        for (int i = 1; i <= 3; i++) {
             endGameInfo.add(new Label("Round " + i, Gwent.singleton.skin)).align(Align.center).padLeft(40);
         }
         endGameInfo.row().padTop(50);
         endGameInfo.add(new Label(player.getUsername(), Gwent.singleton.skin)).align(Align.center).padLeft(40);
-        for(int i = 1; i <= 3; i++) {
+        for (int i = 1; i <= 3; i++) {
             Label label = new Label("hichi", Gwent.singleton.skin);
             label.setColor(Color.GOLD);
             endGameInfo.add(label).align(Align.center).padLeft(40);
         }
         endGameInfo.row().padTop(40);
         endGameInfo.add(new Label(opposition.getUsername(), Gwent.singleton.skin)).align(Align.center).padLeft(40);
-        for(int i = 1; i <= 3; i++) {
+        for (int i = 1; i <= 3; i++) {
             Label label = new Label("hichi", Gwent.singleton.skin);
             label.setColor(Color.LIGHT_GRAY);
             endGameInfo.add(label).align(Align.center).padLeft(40);
@@ -749,6 +756,7 @@ public class GameScreen implements Screen {
         });
         stage.addActor(exitButton);
     }
+
     public void showNotification(String message, String pathToAsset) {
         Image image = new Image(new Texture(pathToAsset));
         Label label = new Label(message, Gwent.singleton.skin);
@@ -772,6 +780,7 @@ public class GameScreen implements Screen {
         stage.addActor(image);
         stage.addActor(label);
     }
+
     public void displayStrengths() {
         int playerTotalStrength = Client.getInstance().getGame().getGameBoard().getPlayerStrength(player);
         Label playerToatalStrengthLabel = new Label(Integer.toString(playerTotalStrength), Gwent.singleton.skin);
@@ -779,7 +788,7 @@ public class GameScreen implements Screen {
         Label oppositionToatalStrengthLabel = new Label(Integer.toString(oppositionTotalStrength), Gwent.singleton.skin);
         ArrayList<Label> playerRowsStrengthLabels = new ArrayList<>();
         ArrayList<Label> oppositionRowsStrengthLabels = new ArrayList<>();
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             int playerRowStrength = Client.getInstance().getGame().getGameBoard().getRowStrength(player, i);
             int oppositionRowStrength = Client.getInstance().getGame().getGameBoard().getRowStrength(opposition, i);
             playerRowsStrengthLabels.add(new Label(Integer.toString(playerRowStrength), Gwent.singleton.skin));
@@ -795,8 +804,8 @@ public class GameScreen implements Screen {
             stage.addActor(oppositionRowsStrengthLabels.get(i));
         }
         Image highScoreImage = new Image(new Texture("icons/icon_high_score.png"));
-        highScoreImage.setSize(70,70);
-        if(playerTotalStrength < oppositionTotalStrength) {
+        highScoreImage.setSize(70, 70);
+        if (playerTotalStrength < oppositionTotalStrength) {
             highScoreImage.setPosition(345, 635);
         } else {
             highScoreImage.setPosition(345, 270);
@@ -808,8 +817,8 @@ public class GameScreen implements Screen {
         oppositionToatalStrengthLabel.setScale(4f);
         oppositionToatalStrengthLabel.setPosition(375, 660);
         stage.addActor(oppositionToatalStrengthLabel);
-        
-        
+
+
     }
 
     public void endRound() {

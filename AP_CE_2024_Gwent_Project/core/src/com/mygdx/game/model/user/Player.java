@@ -76,11 +76,11 @@ public class Player {
         return hand;
     }
     public LinkedList<AbstractCard> getHandAsCards() {
-        LinkedList<AbstractCard> deckCards = new LinkedList<>();
-        for (String cardName : deck) {
-            deckCards.add(AllCards.getCardByCardName(cardName));
+        LinkedList<AbstractCard> handCards = new LinkedList<>();
+        for (String cardName : hand) {
+            handCards.add(AllCards.getCardByCardName(cardName));
         }
-        return deckCards;
+        return handCards;
     }
 
     public void reDraw(String card) {
