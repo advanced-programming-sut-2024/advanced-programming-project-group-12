@@ -37,6 +37,7 @@ public class GameRequestScreen implements Screen {
     private final Button backButton;
     private Button acceptGameRequestButton;
     private Button rejectGameRequestButton;
+    private Button startAGameWithARandomPlayerButton;
     // labels
     private final Label requestSentLabel;
     private final Label errorLabel;
@@ -57,6 +58,7 @@ public class GameRequestScreen implements Screen {
         this.backButton = new TextButton("Back", skin);
         this.requestListLabel = new Label("", skin);
         this.requestWindow = new Window("Game Requests", skin);
+        this.startAGameWithARandomPlayerButton = new TextButton("Random Player", skin);
         requestWindow.add(requestListLabel).pad(10);
         requestWindow.setSize(1000, 400);
         requestWindow.setPosition(Gdx.graphics.getWidth() / 2f - 600, Gdx.graphics.getHeight() / 2f - 250);
@@ -66,8 +68,10 @@ public class GameRequestScreen implements Screen {
         this.receivedRequests = new ArrayList<>();
 
         table.setFillParent(true);
-        table.add(nameField).width(500).height(80).pad(10);
+        table.add(nameField).width(500).height(80);
         table.add(sendAGameRequestButton).width(350).height(80);
+        table.row();
+        table.add(startAGameWithARandomPlayerButton).width(450).height(80).padLeft(330);
         table.row();
         table.add(requestSentLabel);
         table.row();
@@ -104,6 +108,16 @@ public class GameRequestScreen implements Screen {
         });
 
         requestSent = false;
+
+        startAGameWithARandomPlayerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.sendGameRequest("random");
+                requestSent = true;
+                requestSentLabel.setText("Request sent to random player");
+                errorLabel.setText("");
+            }
+        });
     }
 
     public static void showRequestWindow(String from1) {
