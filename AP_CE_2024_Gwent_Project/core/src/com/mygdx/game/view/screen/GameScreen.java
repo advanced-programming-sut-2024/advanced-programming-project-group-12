@@ -213,6 +213,7 @@ public class GameScreen implements Screen {
             AbstractCard oppositionDiscard = Client.getInstance().getGame().getGameBoard().getDiscardCards(opposition).getLast();
             displayDiscard(false, oppositionDiscard);
         }
+
     }
 
     private void displayRows() {
@@ -301,6 +302,10 @@ public class GameScreen implements Screen {
         stage.getBatch().end();
         stage.act(delta);
         stage.draw();
+        if(controller.isShowSelectCardCalled()) {
+            showCardsToSelect(controller.getCardsToShow(), controller.getNumberOfCardsToChoose(), controller.isCanChooseLess());
+            controller.setOffShowCardToSelect();
+        }
     }
 
     @Override
@@ -613,6 +618,7 @@ public class GameScreen implements Screen {
     }
 
     public void showCardsToSelect(List<? extends AbstractCard> cards, int numberOfCards, boolean canChooseLess) {
+        System.out.println("now i am here");
         ArrayList<AbstractCard> selectedCards = new ArrayList<>();
         Image bgImage = new Image(new Texture("bg/black.jpg"));
         bgImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

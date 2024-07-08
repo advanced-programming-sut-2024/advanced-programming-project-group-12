@@ -48,12 +48,12 @@ public class CardTable extends Table {
         Table bottomTable = new Table();
         bottomTable.align(Align.center);
         // Check and add ability image if exists
-        if (!card.getAction().equals(Action.NO_ACTION) && !(card instanceof SpellCard)) {
-            abilityImage = new Image(getAbiltyTexture());
-            bottomTable.add(abilityImage).size(30, 30);
-        } else {
-            bottomTable.add().size(30, 30);
-        }
+//        if (!card.getAction().equals(Action.NO_ACTION) && !(card instanceof SpellCard)) {
+//            abilityImage = new Image(getAbiltyTexture());
+//            bottomTable.add(abilityImage).size(30, 30);
+//        } else {
+//            bottomTable.add().size(30, 30);
+//        }
         // Check and add range label if exists
         if (getRangeTexture() != null) {
             rangeImage = new Image(getRangeTexture());

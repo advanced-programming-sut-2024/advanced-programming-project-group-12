@@ -10,12 +10,16 @@ import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
 import com.mygdx.game.view.screen.GameScreen;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameController {
     private AbstractCard selectedCard;
     private boolean permission;
     private boolean changeTurn = false;
-    private Game game;
+    private ArrayList<AbstractCard> cardsToShow;
+    private int numberOfCardsToChoose;
+    private boolean canChooseLess;
+    private boolean showSelectCardCalled = false;
     public void setSelectedCard(AbstractCard card) {
         selectedCard = card;
     }
@@ -86,14 +90,6 @@ public class GameController {
         }
     }
 
-    public void setGame(Game game) {
-        this.game = game;
-    }
-    public Game getGame() {
-        return game;
-    }
-
-
     public void chooseWhichPlayerStartFirst(String username) {
         Client.getInstance().sendMassage(new TurnDecideResponse(username));
     }
@@ -105,4 +101,31 @@ public class GameController {
         ((GameScreen)Gwent.singleton.getCurrentScreen()).showChooseStarter();
     }
 
+    public void setShowSelectedCard(List<AbstractCard> cards, int numberOfCards, boolean canChooseLess) {
+        showSelectCardCalled = true;
+        this.cardsToShow = new ArrayList<>(cards);
+        this.numberOfCardsToChoose = numberOfCards;
+        this.canChooseLess = canChooseLess;
+    }
+    public void setOffShowCardToSelect() {
+        this.cardsToShow = null;
+        this.numberOfCardsToChoose = -1;
+        this.canChooseLess = false;
+        showSelectCardCalled = false;
+    }
+    public boolean isShowSelectCardCalled() {
+        return showSelectCardCalled;
+    }
+
+    public ArrayList<AbstractCard> getCardsToShow() {
+        return cardsToShow;
+    }
+
+    public int getNumberOfCardsToChoose() {
+        return numberOfCardsToChoose;
+    }
+
+    public boolean isCanChooseLess() {
+        return canChooseLess;
+    }
 }

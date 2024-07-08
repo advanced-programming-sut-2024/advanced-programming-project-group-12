@@ -19,6 +19,7 @@ import com.mygdx.game.view.screen.*;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Client extends Thread {
     private static Client instance;
@@ -146,9 +147,14 @@ public class Client extends Thread {
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().chooseStarter();
                 break;
             case RE_DRAW:
+                try {
+                    sleep(700);
+                } catch (Exception e) {
+                    System.out.println(Arrays.toString(e.getStackTrace()));
+                }
                 ReDrawRequest reDrawRequest = gson.fromJson(request, ReDrawRequest.class);
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setPermission(reDrawRequest.isPermission());
-                ((GameScreen)Gwent.singleton.getCurrentScreen()).showCardsToSelect(reDrawRequest.getHandAsCards(), 2, true);
+                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setShowSelectedCard(reDrawRequest.getHandAsCards(), 2, true);
                 break;
             case PLAY_CARD_RESPONSE:
                 PlayCardResponse playCardResponse = gson.fromJson(request, PlayCardResponse.class);
