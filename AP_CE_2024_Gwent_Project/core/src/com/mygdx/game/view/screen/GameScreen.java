@@ -223,8 +223,9 @@ public class GameScreen implements Screen {
         enemyRows = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             ArrayList<PlayableCard> cards = Client.getInstance().getGame().getGameBoard().getRowCards(player, i);
-            //TODO : complete path to overlay
-            RowTable playerRow = new RowTable(i, true, cards, null);
+            //TODO : complete path to
+            String path = Client.getInstance().getGame().getGameBoard().getWeatherAssetForRow(i);
+            RowTable playerRow = new RowTable(i, true, cards, path);
             playerRows.add(playerRow);
             stage.addActor(playerRow);
             playerRow.addListener(new ClickListener() {
@@ -240,7 +241,8 @@ public class GameScreen implements Screen {
         }
         for (int i = 0; i < 3; i++) {
             ArrayList<PlayableCard> cards = Client.getInstance().getGame().getGameBoard().getRowCards(opposition, i);
-            RowTable enemyRow = new RowTable(i, false, cards, null);
+            String path = Client.getInstance().getGame().getGameBoard().getWeatherAssetForRow(i);
+            RowTable enemyRow = new RowTable(i, false, cards, path);
             enemyRows.add(enemyRow);
             stage.addActor(enemyRow);
             enemyRow.addListener(new ClickListener() {
@@ -688,13 +690,12 @@ public class GameScreen implements Screen {
     public void passRound() {
 
     }
-    public void endGame() {
+    public void endGame(int state) {
         stage.clear();
         Image endGameBackground = new Image(new Texture("bg/end-game.jpg"));
         endGameBackground.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.addActor(endGameBackground);
-        //TODO : complete this part
-        int state = -1;
+
         /*
         win : 1
         draw : 0
