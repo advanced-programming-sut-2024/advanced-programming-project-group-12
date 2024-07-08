@@ -111,7 +111,9 @@ public class GameHandler {
         Player player = user.getPlayer();
         AbstractCard abstractCard = AllCards.getCardByCardName(playCardRequest.getCard());
         PlayCardResponse response = abstractCard.place(playCardRequest.getRow(), player);
-        RequestHandler.allUsers.get(getTheOtherUser(user).getUsername()).sendMassage(new PlayCardResponse(game));
+        if(response.isPermission()) {
+            RequestHandler.allUsers.get(getTheOtherUser(user).getUsername()).sendMassage(new PlayCardResponse(game));
+        }
         return response;
     }
 

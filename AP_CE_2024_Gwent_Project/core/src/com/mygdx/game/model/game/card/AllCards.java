@@ -293,6 +293,7 @@ public enum AllCards {
                 return i.getCard();
             }
         }
+        System.err.println("could not find card:" + cardName);
         return null;
     }
 

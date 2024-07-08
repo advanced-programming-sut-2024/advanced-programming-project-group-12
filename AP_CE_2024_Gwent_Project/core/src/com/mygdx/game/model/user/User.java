@@ -34,7 +34,7 @@ public class User {
     private String email;
     private HashMap<SecurityQuestion, String> securityQuestion;
 
-    private ArrayList<Game> allGamePlayed;
+    private transient ArrayList<Game> allGamePlayed;
     private UserInfo userInfo;
 
     private Faction faction;
@@ -291,6 +291,9 @@ public class User {
     }
 
     public void addGame(Game game) {
+        if(allGamePlayed == null) {
+            allGamePlayed = new ArrayList<>();
+        }
         allGamePlayed.add(game);
     }
 
@@ -354,6 +357,5 @@ public class User {
     }
 
     public void addToWin() {
-
     }
 }

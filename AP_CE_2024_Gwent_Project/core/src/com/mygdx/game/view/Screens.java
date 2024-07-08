@@ -1,6 +1,7 @@
 package com.mygdx.game.view;
 
 import com.badlogic.gdx.Screen;
+import com.mygdx.game.model.network.Client;
 import com.mygdx.game.view.screen.*;
 
 public enum Screens {

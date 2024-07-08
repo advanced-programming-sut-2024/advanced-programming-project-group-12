@@ -76,6 +76,8 @@ public class Client extends Thread {
     }
 
     private void handleRequest() {
+        System.out.println("response at client side ->> " + request);
+
         ServerResponse serverResponse = gson.fromJson(request , ServerResponse.class);
         if(serverResponse == null) return;
 
@@ -141,6 +143,13 @@ public class Client extends Thread {
                 System.out.println("please remove this console print after implementing game start");
                 this.game = setGameToStart.getGame();
                 Gwent.singleton.changeScreen(Screens.GAME);
+                try{
+                    synchronized (this) {
+                        wait();
+                    }
+                } catch (InterruptedException e) {
+                    System.err.println("Interruption in client");
+                }
                 break;
             case GAME_TURN_DECIDE:
                 TurnDecideRequest turnDecideRequest = gson.fromJson(request, TurnDecideRequest.class);
@@ -159,9 +168,10 @@ public class Client extends Thread {
             case PLAY_CARD_RESPONSE:
                 PlayCardResponse playCardResponse = gson.fromJson(request, PlayCardResponse.class);
                 this.game = playCardResponse.getGame();
+                System.out.println("your hand:" + game.getOpposition().getHand());
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setPermission(playCardResponse.isPermission());
                 ActionResponse actionResponse = playCardResponse.getActionResponse();
-                if (actionResponse.getAction().equals(ActionResponseType.SELECTION)) {
+                if (actionResponse!= null && actionResponse.getAction().equals(ActionResponseType.SELECTION)) {
                     ((GameScreen)Gwent.singleton.getCurrentScreen()).showCardsToSelect(actionResponse.getAffectedCards(), actionResponse.getActionCount(), false);
                 }
                 break;

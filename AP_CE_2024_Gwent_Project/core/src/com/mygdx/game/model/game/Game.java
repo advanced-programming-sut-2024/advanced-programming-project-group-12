@@ -93,7 +93,7 @@ public class Game {
         currentPlayer = opposition;
         opposition = temp;
 
-        RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(new PlayCardResponse(this, null));
+        RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(new PlayCardResponse(this, true));
         gameHandler.sendMassageToSpectators(new PlayCardResponse(this));
 
         if(currentPlayer.doesNotHaveGameToPlay()) {

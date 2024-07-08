@@ -24,6 +24,13 @@ public class PlayCardResponse extends ServerResponse {
         permission = false;
     }
 
+    public PlayCardResponse(Game game, boolean permission) {
+        super(ServerResponseType.PLAY_CARD_RESPONSE, null);
+        this.game = game;
+        actionResponse = null;
+        this.permission = true;
+    }
+
     public Game getGame() {
         return game;
     }

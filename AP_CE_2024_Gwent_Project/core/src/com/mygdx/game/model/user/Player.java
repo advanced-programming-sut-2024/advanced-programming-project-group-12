@@ -15,10 +15,10 @@ import java.util.LinkedList;
 public class Player {
 
     private transient final User user;
-    private CommanderCard leader;
-    private LinkedList<String> deck;
-    private LinkedList<String> hand;
-    private String username;
+    private final CommanderCard leader;
+    private final LinkedList<String> deck;
+    private final LinkedList<String> hand;
+    private final String username;
     private Faction faction;
     private int roundsLost;
     private boolean won;

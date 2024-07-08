@@ -129,6 +129,7 @@ public class RequestHandler extends Thread {
                 case RE_DRAW:
                     ReDrawResponse response = gson.fromJson(request, ReDrawResponse.class);
                     gameHandler.reDraw(user.getPlayer(), response);
+                    break;
                 case PLAY_CARD_REQUEST:
                     PlayCardRequest playCardRequest = gson.fromJson(request, PlayCardRequest.class);
                     serverResponse = gameHandler.playCard(playCardRequest, user);
@@ -173,6 +174,7 @@ public class RequestHandler extends Thread {
             dataOutputStream.writeUTF(gson.toJson(serverResponse));
         } catch (IOException e) {
             System.err.println("IO exception in request handler");
+            terminate();
         }
     }
 
