@@ -133,6 +133,7 @@ public class Client extends Thread {
                 GameRequestScreen.showRequestWindow(serverPlayInvite.getClientRequest().getInvitor());
                 break;
             case INVITE_TO_PLAY_RESPONSE:
+                System.out.println("nothing");
                 break;
             case START_GAME:
                 SetGameToStart setGameToStart = gson.fromJson(request, SetGameToStart.class);
