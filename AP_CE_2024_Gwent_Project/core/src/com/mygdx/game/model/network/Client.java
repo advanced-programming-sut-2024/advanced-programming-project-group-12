@@ -18,6 +18,8 @@ import com.mygdx.game.model.user.User;
 import com.mygdx.game.view.screen.*;
 
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class Client extends Thread {
@@ -120,8 +122,6 @@ public class Client extends Thread {
 
             //todo: add receiving requests
 
-                //User.getLoggedInUser().setReceivedFriendRequests(serverFriendRequest.getRequests());
-                //let friends screen know they can proceed
                 break;
             case GET_FRIENDS:
                 ServerFriend serverFriend = gson.fromJson(request, ServerFriend.class);

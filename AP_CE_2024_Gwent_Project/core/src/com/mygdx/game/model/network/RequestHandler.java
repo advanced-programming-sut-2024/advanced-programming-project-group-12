@@ -213,4 +213,21 @@ public class RequestHandler extends Thread {
         unfinishedGame.cancel();
         terminate();
     }
+
+    private void writeLog(String string) {
+        File file = new File("Data/Users/" + user.getUsername() + "/gameLog/friendRequests.json");
+        Gson gson = new Gson();
+        if(file.exists()) {
+            file.delete();
+        } else {
+            file.getParentFile().mkdirs();
+        }
+        try {
+            FileWriter writer = new FileWriter(file, true);
+            gson.toJson(string, writer);
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
