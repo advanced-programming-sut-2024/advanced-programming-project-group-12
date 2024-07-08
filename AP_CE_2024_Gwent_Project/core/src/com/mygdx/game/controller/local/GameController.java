@@ -28,7 +28,7 @@ public class GameController {
     }
 
     public void passRound() {
-
+        Client.getInstance().sendMassage(new PassRoundRequest());
     }
 
     public void endRound() {
