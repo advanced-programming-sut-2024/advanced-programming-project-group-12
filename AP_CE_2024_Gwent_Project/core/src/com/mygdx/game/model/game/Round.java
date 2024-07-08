@@ -17,6 +17,8 @@ public class Round {
     private final int roundNumber;
     transient GameBoard gameBoardCopy;
 
+    String winnerName;
+
     public Round(int roundNumber, Player player1, Player player2) {
         this.roundNumber = roundNumber;
         this.player1 = player1;
@@ -67,6 +69,7 @@ public class Round {
     }
 
     private void handleWinCase(Player winner, Player loser) {
+        winnerName = winner.getUsername();
         winner.setWon(true);
         loser.loseRound();
         if (winner.getFaction().equals(Faction.NORTHERN_REALMS)) {
@@ -96,5 +99,9 @@ public class Round {
 
     public int getPlayer2Score() {
         return player2Score;
+    }
+
+    public String getWinnerName() {
+        return winnerName;
     }
 }

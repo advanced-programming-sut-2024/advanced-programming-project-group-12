@@ -17,4 +17,8 @@ public class EndRoundNotify extends ServerResponse {
     public boolean isToStart() {
         return isToStart;
     }
+
+    public Round getRound() {
+        return round;
+    }
 }

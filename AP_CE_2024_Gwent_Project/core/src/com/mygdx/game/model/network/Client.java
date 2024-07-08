@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.ChatController;
 import com.mygdx.game.model.game.Game;
+import com.mygdx.game.model.game.Round;
 import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.GetAllUsersRequest;
 import com.mygdx.game.model.network.massage.serverResponse.*;
@@ -63,7 +64,6 @@ public class Client extends Thread {
     }
 
     public void sendMassage(ClientRequest massage) {
-        //perhaps wait for response
         massage.setSession(session);
         try {
             dataOutputStream.writeUTF(gson.toJson(massage));
@@ -140,24 +140,18 @@ public class Client extends Thread {
                 System.out.println("please remove this console print after implementing game start");
                 this.game = setGameToStart.getGame();
                 Gwent.singleton.changeScreen(Screens.GAME);
-                //notification to change to game screen
                 break;
             case GAME_TURN_DECIDE:
                 TurnDecideRequest turnDecideRequest = gson.fromJson(request, TurnDecideRequest.class);
-                //choose who to start
+                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().chooseStarter();
                 break;
             case RE_DRAW:
                 ReDrawRequest reDrawRequest = gson.fromJson(request, ReDrawRequest.class);
                 break;
-//            case PLAY_CARD_PERMISSION:
-//                PlayTurnPermission permission = gson.fromJson(request, PlayTurnPermission.class);
-//                break;
             case PLAY_CARD_RESPONSE:
                 PlayCardResponse playCardResponse = gson.fromJson(request, PlayCardResponse.class);
                 this.game = playCardResponse.getGame();
-                //handle permission case
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setPermission(playCardResponse.isPermission());
-                //handle special cases
                 ActionResponse actionResponse = playCardResponse.getActionResponse();
                 if (actionResponse.getAction().equals(ActionResponseType.SELECTION)) {
                     ((GameScreen)Gwent.singleton.getCurrentScreen()).showCardsToSelect(actionResponse.getAffectedCards(), actionResponse.getActionCount());
@@ -170,13 +164,13 @@ public class Client extends Thread {
                 break;
             case END_ROUND:
                 EndRoundNotify endRoundNotify = gson.fromJson(request, EndRoundNotify.class);
-                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().endRound();
-                //notif
+                Round round = endRoundNotify.getRound();
+                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().endRound(round.getWinnerName());
+                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setPermission(endRoundNotify.isToStart());
                 break;
             case END_GAME:
                 EndGameNotify endGameNotify = gson.fromJson(request, EndGameNotify.class);
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().endGame(endGameNotify.getWinner(), endGameNotify.isHasWinner());
-                //notif
                 break;
             case GET_PUBLIC_GAMES:
                 GetPublicGamesResponse publicGames = gson.fromJson(request, GetPublicGamesResponse.class);
