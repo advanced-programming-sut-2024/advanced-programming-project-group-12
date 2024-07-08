@@ -68,7 +68,6 @@ public class LeaderBoardMenuScreen implements Screen {
 
     private void populateTable() {
         List<UserScoreAndOnline> sortedUsers = controller.getSortedUsers();
-
         // Header
         Label nameHeader = new Label("Name", Gwent.singleton.getSkin(), "title");
         Label winCountHeader = new Label("Wins", Gwent.singleton.getSkin(), "title");
@@ -81,6 +80,7 @@ public class LeaderBoardMenuScreen implements Screen {
         int rank = 1;
         // Rows
         for (UserScoreAndOnline user : sortedUsers) {
+            System.out.println(rank + ". " + user.getUsername() + user.getScore() + user.isOnline());
             Label nameLabel = new Label(rank + ". " + user.getUsername(), Gwent.singleton.getSkin(), "subtitle");
             Label winCountLabel = new Label(String.valueOf(user.getScore()), Gwent.singleton.getSkin(), "subtitle");
             Label statusLabel = new Label(user.isOnline() ? "Online" : "Offline", Gwent.singleton.getSkin(), "subtitle");
