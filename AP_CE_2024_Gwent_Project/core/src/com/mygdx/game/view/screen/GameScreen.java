@@ -119,16 +119,6 @@ public class GameScreen implements Screen {
         stage.addActor(window);
         window.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.6f)));
     }
-
-    public void clearStage() {
-        for (Actor actor : stage.getActors()) {
-            if (actor instanceof TextButton) continue;
-            actor.clear();
-            actor.remove();
-        }
-
-    }
-
     private void initialStageObjects() {
         //Buttons
         passButton = new TextButton("Pass", Gwent.singleton.skin);
@@ -210,6 +200,15 @@ public class GameScreen implements Screen {
 
         //display strength
         displayStrengths();
+        if(!Client.getInstance().getGame().getGameBoard().getDiscardCards(player).isEmpty()) {
+
+            AbstractCard playerDiscard = Client.getInstance().getGame().getGameBoard().getDiscardCards(player).getLast();
+            displayDiscard(true, playerDiscard);
+        }
+        if(!Client.getInstance().getGame().getGameBoard().getDiscardCards(opposition).isEmpty()) {
+            AbstractCard oppositionDiscard = Client.getInstance().getGame().getGameBoard().getDiscardCards(opposition).getLast();
+            displayDiscard(false, oppositionDiscard);
+        }
     }
 
     private void displayRows() {
@@ -217,7 +216,6 @@ public class GameScreen implements Screen {
         enemyRows = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             ArrayList<PlayableCard> cards = Client.getInstance().getGame().getGameBoard().getRowCards(player, i);
-            //TODO : complete path to
             String path = Client.getInstance().getGame().getGameBoard().getWeatherAssetForRow(i);
             RowTable playerRow = new RowTable(i, true, cards, path);
             playerRows.add(playerRow);
@@ -225,7 +223,7 @@ public class GameScreen implements Screen {
             playerRow.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (controller.getSelectedCard() != null) {
+                    if (controller.getSelectedCard() != null && controller.getPermission()) {
                         if (controller.isAllowedToPlay(controller.getSelectedCard(), playerRow.getSide(), playerRow.getRowNumber())) {
                             playCard(controller.getSelectedCard(), playerRow);
                         }
@@ -242,7 +240,7 @@ public class GameScreen implements Screen {
             enemyRow.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (controller.getSelectedCard() != null) {
+                    if (controller.getSelectedCard() != null && controller.getPermission()) {
                         if (controller.isAllowedToPlay(controller.getSelectedCard(), enemyRow.getSide(), enemyRow.getRowNumber())) {
                             playCard(controller.getSelectedCard(), enemyRow);
                         }
@@ -262,7 +260,7 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 AbstractCard selectedCard = controller.getSelectedCard();
-                if (selectedCard != null && selectedCard.getFaction().equals(Faction.WEATHER)) {
+                if (selectedCard != null && selectedCard.getFaction().equals(Faction.WEATHER) && controller.getPermission()) {
                     controller.playCard(selectedCard, 3);
                     selectedCardPlace.clear();
                     controller.setSelectedCard(null);
@@ -453,6 +451,7 @@ public class GameScreen implements Screen {
                     for (Actor actor : stage.getActors()) {
                         actor.setTouchable(Touchable.enabled);
                     }
+                    updateStage();
                 }
             });
             stage.addActor(playButton);
@@ -581,7 +580,8 @@ public class GameScreen implements Screen {
         stage.addActor(numberOfCards);
     }
 
-    public void addCardToDiscard(boolean side, AbstractCard card) {
+    public void displayDiscard(boolean side, AbstractCard card) {
+        if(card == null) return;
         CardActor cardActor = new CardActor(card);
         if (side) {
             playerDiscards.clear();
