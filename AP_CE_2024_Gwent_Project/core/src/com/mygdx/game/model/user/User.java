@@ -64,6 +64,18 @@ public class User {
         this.save();
     }
 
+    public void addFriend(User user) {
+        if (!this.friends.contains(user)) {
+            this.friends.add(user);
+            this.save(); // Save the updated friends list
+        }
+    }
+
+    // New method to get a list of friends
+    public ArrayList<User> getFriendsList() {
+        return new ArrayList<>(this.friends);
+    }
+
     // static methods
     public static ArrayList<User> getUsers() {
         return users;
@@ -335,5 +347,13 @@ public class User {
 
     public void requestRejected(FriendRequest friendRequest) {
         friendRequest.setStatus("rejected");
+    }
+
+    public int getScore() {
+        return getUserInfo().getGamesWon();
+    }
+
+    public void addToWin() {
+
     }
 }

@@ -41,9 +41,8 @@ public class PreGameMenuScreen implements Screen {
 
     // Buttons
     private Button backButton;
-    private Button sendAGameRequestButton;
-    private Button changeFactionButton;
     private Button startGameButton;
+    private Button changeFactionButton;
     private Button deckButton;
     private Button saveDeckButton;
     private Button downloadDeckButton;
@@ -105,32 +104,26 @@ public class PreGameMenuScreen implements Screen {
     private void dashboardInit() {
         dashboard = new Table();
 
-        startGameButton = new TextButton("Start Game", Gwent.singleton.skin);
+
+        startGameButton = new TextButton("Start Game", Gwent.singleton.getSkin());
         startGameButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
         dashboard.add(startGameButton).padBottom(20).center();
         startGameButton.addListener(new ClickListener() {
+            @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (!canUserStartGame()) {
                     Dialog dialog = new Dialog("Error", Gwent.singleton.skin) {
                         public void result(Object obj) {
-                            // This method is called when an option is chosen
                         }
                     };
-                    dialog.text("You need 22 unit cards and a leader to play");
-                    dialog.button("OK", true); // adds an "OK" button that closes the dialog
-                    dialog.show(stage); // show the dialog
+                    dialog.row();
+                    dialog.text("You need 22 unit cards and a leader to play").row();
+                    dialog.button("OK", true);
+                    dialog.show(stage);
                 }
-                else {controller.startGame();}
-            }
-        });
-        dashboard.row();
-        sendAGameRequestButton = new TextButton("Send A Game Request", Gwent.singleton.getSkin());
-        sendAGameRequestButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
-        dashboard.add(sendAGameRequestButton).padBottom(20).center();
-        sendAGameRequestButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
+                else {
                 Gwent.singleton.changeScreen(Screens.GAME_REQUEST);
+                }
             }
         });
         dashboard.row();
@@ -207,14 +200,13 @@ public class PreGameMenuScreen implements Screen {
 
         selectLeaderButton = new TextButton("Select Leader", Gwent.singleton.skin);
         selectLeaderButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
-        factionButtonTable.add(selectLeaderButton).center().padBottom(20).row();
+        factionWindow.add(selectLeaderButton).center().padBottom(20).row();
 
         selectLeaderButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 showSelectLeaderWindow();
             }
         });
-
 
         northernRealmsButton = new ImageButton(new TextureRegionDrawable(new Texture(Faction.NORTHERN_REALMS.getAssetFileName())));
         factionButtonTable.add(northernRealmsButton).padBottom(20).center().padRight(20);
@@ -280,13 +272,19 @@ public class PreGameMenuScreen implements Screen {
 
     private void showSelectLeaderWindow() {
         Window selectLeaderWindow = new Window("Select Leader", Gwent.singleton.skin);
-        selectLeaderWindow.setSize(Gwent.WIDTH , Gwent.HEIGHT );
+        selectLeaderWindow.setSize(Gwent.WIDTH, Gwent.HEIGHT);
         selectLeaderWindow.setPosition(
                 (float) Gdx.graphics.getWidth() / 2 - selectLeaderWindow.getWidth() / 2,
                 (float) Gdx.graphics.getHeight() / 2 - selectLeaderWindow.getHeight() / 2
         );
         TextureRegionDrawable windowBackground = new TextureRegionDrawable(new TextureRegion(new Texture("backgrounds/faction_window_background.png")));
         selectLeaderWindow.setBackground(windowBackground);
+
+        Table mainTable = new Table();
+        mainTable.defaults().pad(10);
+
+        Label currentLeader = new Label("Current Leader: " + User.getLoggedInUser().getLeader(), Gwent.singleton.getSkin());
+        mainTable.add(currentLeader).center().top().padBottom(20).row();
 
         Table heroTable = new Table();
         heroTable.defaults().pad(10);
@@ -309,11 +307,11 @@ public class PreGameMenuScreen implements Screen {
             });
         }
 
-
-        selectLeaderWindow.add(heroTable).center();
+        mainTable.add(heroTable).center();
+        selectLeaderWindow.add(mainTable).center().fill();
         stage.addActor(selectLeaderWindow);
-
     }
+
 
     private ImageButton createCardButton(AbstractCard card) {
         TextureRegionDrawable drawable = new TextureRegionDrawable(new Texture(card.getAssetName()));
@@ -335,7 +333,7 @@ public class PreGameMenuScreen implements Screen {
     }
 
     public boolean canUserStartGame () {
-        return getNumberOfUnitCards() != 22 || User.getLoggedInUser().getLeader() == null || getNumberOfSpecialCards() > 10;
+        return getNumberOfUnitCards() == 22 && User.getLoggedInUser().getLeader() != null && getNumberOfSpecialCards() <= 10;
     }
 
 

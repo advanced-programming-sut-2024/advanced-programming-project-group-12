@@ -16,6 +16,7 @@ import java.util.LinkedList;
 public class StartGameRequest extends ClientRequest {
     private String invitor;
     private String toBeInvited;
+    private boolean randomOpponent;
 
     private Faction faction;
     private LinkedList<String> deck;
@@ -25,6 +26,7 @@ public class StartGameRequest extends ClientRequest {
         super(ClientRequestType.START_GAME, null);
         this.toBeInvited = toBeInvited;
         this.invitor = invitor;
+        randomOpponent = false;
 
         this.faction = user.getFaction();
         this.deck = new LinkedList<>(user.getDeck());
@@ -49,5 +51,9 @@ public class StartGameRequest extends ClientRequest {
 
     public CommanderCard getCommanderCard() {
         return commanderCard;
+    }
+
+    public boolean isRandomOpponent() {
+        return randomOpponent;
     }
 }

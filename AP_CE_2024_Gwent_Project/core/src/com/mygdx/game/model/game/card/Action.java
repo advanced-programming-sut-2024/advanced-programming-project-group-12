@@ -3,7 +3,10 @@ package com.mygdx.game.model.game.card;
 import com.mygdx.game.model.game.CardSelectHandler;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.GameBoard;
+import com.mygdx.game.model.network.RequestHandler;
+import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionResponseType;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayTurnPermission;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.game.Row;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionResponse;
@@ -227,6 +230,7 @@ public enum Action {
     //weather actions
     CLEAR(card -> {
         GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
+        gameBoard.clearWeather();
         for(int i = 0; i< 3; i++ ){
             Row row = gameBoard.getRowForPlayer(i, card.getPlayer());
             row.setWeatherBuffer(false);

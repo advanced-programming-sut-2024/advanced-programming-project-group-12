@@ -1,6 +1,8 @@
 package com.mygdx.game.controller.remote;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ClientFriendRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.GetFriends;
 import com.mygdx.game.model.network.massage.serverResponse.*;
@@ -12,6 +14,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class FriendRequestHandler {
     private String request;
@@ -23,54 +26,51 @@ public class FriendRequestHandler {
     }
 
     public void handleSendingRequest() {
-        ClientFriendRequest friendRequest = gson.fromJson(request, ClientFriendRequest.class);
-        if(friendRequest.getFriendRequest().getStatus().equals("pending")) {
-            HashMap<String , HashMap<String , FriendRequest>> sender = loadFriendRequests(friendRequest.getFriendRequest().getFromUsername());
-            HashMap<String, FriendRequest> req = new HashMap<String, FriendRequest>();
-            req.put(friendRequest.getFriendRequest().getToUsername(), friendRequest.getFriendRequest());
+        ClientFriendRequest friendRequestData = gson.fromJson(request, ClientFriendRequest.class);
+        FriendRequest friendRequest = friendRequestData.getFriendRequest();
+
+        Map<String , Map<String , FriendRequest>> sender = loadFriendRequests(friendRequest.getFromUsername());
+        Map<String , Map<String , FriendRequest>> receiver = loadFriendRequests(friendRequest.getToUsername());
+
+        if(friendRequest.getStatus().equals("pending")) {
             if(sender == null) {
                 sender = new HashMap<>();
             }
+            Map<String, FriendRequest> req = sender.get("sent");
+            if(req == null) {
+                req = new HashMap<>();
+            }
+            if(req.get(friendRequest.getToUsername()) != null) return;
+            req.put(friendRequest.getToUsername(), friendRequest);
             sender.put("sent", req);
-            saveFriendRequests(sender, friendRequest.getFriendRequest().getFromUsername());
 
 
-            HashMap<String , HashMap<String , FriendRequest>> receiver = loadFriendRequests(friendRequest.getFriendRequest().getFromUsername());
-            req = new HashMap<String, FriendRequest>();
-            req.put(friendRequest.getFriendRequest().getFromUsername(), friendRequest.getFriendRequest());
-            sender.put("received", req);
-            saveFriendRequests(receiver, friendRequest.getFriendRequest().getToUsername());
+            if(receiver == null) {
+                receiver = new HashMap<>();
+            }
+            req = receiver.get("received");
+            if(req == null) {
+                req = new HashMap<>();
+            }
+            req.put(friendRequest.getFromUsername(), friendRequest);
+            receiver.put("received", req);
         }
-        else if(friendRequest.getFriendRequest().getStatus().equals("accepted")){
-            HashMap<String , HashMap<String , FriendRequest>> sender = loadFriendRequests(friendRequest.getFriendRequest().getFromUsername());
-            sender.get("sent").get(friendRequest.getFriendRequest().getToUsername()).setStatus("accepted");
-            saveFriendRequests(sender, friendRequest.getFriendRequest().getFromUsername());
-            //todo:
-            //add to friends
-
-
-            HashMap<String , HashMap<String , FriendRequest>> receiver = loadFriendRequests(friendRequest.getFriendRequest().getFromUsername());
-            sender.get("received").get(friendRequest.getFriendRequest().getFromUsername()).setStatus("accepted");
-            //add to friends
-            saveFriendRequests(receiver, friendRequest.getFriendRequest().getToUsername());
+        else if(friendRequest.getStatus().equals("accepted")){
+            sender.get("sent").get(friendRequest.getToUsername()).setStatus("accepted");
+            //todo: add to friends
+            receiver.get("received").get(friendRequest.getFromUsername()).setStatus("accepted");
         }
-        else if(friendRequest.getFriendRequest().getStatus().equals("rejected")){
-            HashMap<String , HashMap<String , FriendRequest>> sender = loadFriendRequests(friendRequest.getFriendRequest().getFromUsername());
-            sender.get("sent").get(friendRequest.getFriendRequest().getToUsername()).setStatus("rejected");
-            saveFriendRequests(sender, friendRequest.getFriendRequest().getFromUsername());
-            //todo:
-            //add to friends
+        else if(friendRequest.getStatus().equals("rejected")){
+            sender.get("sent").get(friendRequest.getToUsername()).setStatus("rejected");
+            receiver.get("received").get(friendRequest.getFromUsername()).setStatus("rejected");
+        }
 
-
-            HashMap<String , HashMap<String , FriendRequest>> receiver = loadFriendRequests(friendRequest.getFriendRequest().getFromUsername());
-            sender.get("received").get(friendRequest.getFriendRequest().getFromUsername()).setStatus("rejected");
-            //add to friends
-            saveFriendRequests(receiver, friendRequest.getFriendRequest().getToUsername());        }
-
+        saveFriendRequests(sender, friendRequest.getFromUsername());
+        saveFriendRequests(receiver, friendRequest.getToUsername());
     }
 
     public ServerFriendRequest getFriendRequests(User user) {
-        HashMap<String , HashMap<String , FriendRequest>> requests = loadFriendRequests(user.getUsername());
+        Map<String , Map<String , FriendRequest>> requests = loadFriendRequests(user.getUsername());
         return new ServerFriendRequest(requests);
     }
 
@@ -80,15 +80,17 @@ public class FriendRequestHandler {
         return new ServerFriend(user.getFriends());
     }
 
-    private static HashMap<String , HashMap<String , FriendRequest>> loadFriendRequests(String username) {
+    private static Map<String , Map<String , FriendRequest>> loadFriendRequests(String username) {
 
         File file = new File("Data/Users/" + username + "/friendRequests.json");
         if(!file.exists())
             return null;
+
         Gson gson = new Gson();
+
         try {
             FileReader reader = new FileReader(file);
-            HashMap<String , HashMap<String , FriendRequest>> friendRequests = gson.fromJson(reader, HashMap.class);
+            Map<String , Map<String , FriendRequest>> friendRequests = gson.fromJson(reader, MapWrapper.class).friendRequests;
             reader.close();
             return friendRequests;
 
@@ -96,7 +98,7 @@ public class FriendRequestHandler {
             throw new RuntimeException(e);
         }
     }
-    private static void saveFriendRequests (HashMap<String , HashMap<String , FriendRequest>> friendRequests, String username) {
+    private static void saveFriendRequests (Map<String , Map<String , FriendRequest>> friendRequests, String username) {
         File file = new File("Data/Users/" + username + "/friendRequests.json");
         Gson gson = new Gson();
         if(file.exists()) {
@@ -106,10 +108,18 @@ public class FriendRequestHandler {
         }
         try {
             FileWriter writer = new FileWriter(file);
-            gson.toJson(friendRequests, writer);
+            gson.toJson(new MapWrapper(friendRequests), writer);
             writer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+}
+
+class MapWrapper {
+    Map<String , Map<String , FriendRequest>> friendRequests;
+
+    public MapWrapper(Map<String, Map<String, FriendRequest>> friendRequests) {
+        this.friendRequests = friendRequests;
     }
 }

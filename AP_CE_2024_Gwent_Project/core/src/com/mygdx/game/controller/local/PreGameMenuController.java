@@ -1,6 +1,10 @@
 package com.mygdx.game.controller.local;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Json;
 import com.mygdx.game.Gwent;
+import com.mygdx.game.model.game.card.AllCards;
 import com.mygdx.game.model.game.card.CommanderCard;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.Faction;
@@ -14,10 +18,14 @@ import com.google.gson.Gson;
 import com.mygdx.game.view.Screens;
 import com.mygdx.game.view.screen.PreGameMenuScreen;
 
+import javax.swing.*;
 import javax.swing.event.CaretListener;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class PreGameMenuController {
     User user = User.getLoggedInUser();
@@ -29,7 +37,7 @@ public class PreGameMenuController {
     public void startGame() {
 
         LinkedList<AbstractCard> deck = User.getLoggedInUser().getDeckAsCard();
-        CommanderCard leader =(CommanderCard) User.getLoggedInUser().getLeaderAsCard();
+        CommanderCard leader = (CommanderCard) User.getLoggedInUser().getLeaderAsCard();
         Faction faction = User.getLoggedInUser().getFaction();
 
         Player player = new Player(User.getLoggedInUser());
@@ -62,33 +70,42 @@ public class PreGameMenuController {
     }
 
     public void uploadDeck() {
-        /* TODO : fix this method
+        // Run the file chooser on the UI thread
+        Gdx.app.postRunnable(() -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int returnValue = fileChooser.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                processDeckFile(selectedFile);
+            }
+        });
+    }
 
-        // Open a file chooser dialog
-//        JFileChooser fileChooser = new JFileChooser();
-//        int returnValue = fileChooser.showOpenDialog(null);
-//
-//        If the user selected a file
-//        if (returnValue == JFileChooser.APPROVE_OPTION) {
-//        Read the JSON string from the file
-//            try (FileReader file = new FileReader(fileChooser.getSelectedFile().getPath())) {
-//                Gson gson = new Gson();
-//                Type deckType = new TypeToken<LinkedList<AbstractCard>>() {}.getType();
-//                LinkedList<AbstractCard> deck = gson.fromJson(file, deckType);
-//
-//        Set the user 's deck to the deck read from the file
-//                User.getLoggedInUser().setDeck(deck);
-//                System.out.println("Deck successfully uploaded from " + fileChooser.getSelectedFile().getName());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+    private void processDeckFile(File file) {
+        try {
+            FileHandle fileHandle = new FileHandle(file);
+            String deckJson = fileHandle.readString();
+            Gson gson = new Gson();
+            String[] cardNames = gson.fromJson(deckJson, String[].class);
+            List<AbstractCard> newDeck = new ArrayList<>();
+            for (String cardName : cardNames) {
+                AbstractCard card = AllCards.getCardByCardName(cardName);
+                if (card != null) {
+                    newDeck.add(card);
+                }
+            }
+            User.getLoggedInUser().setDeck(newDeck);
+            User.getLoggedInUser().updateInfo();
+            Gdx.app.postRunnable(() -> {
+                Gwent.singleton.changeScreen(Screens.PRE_GAME_MENU);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-*/
-    }
+}
+
 
 //    public void sendGameRequest(String username) {
 //        Client.getInstance().sendMassage(new StartGameRequest(username, User.getLoggedInUser().getUsername()));
 //    }
-}

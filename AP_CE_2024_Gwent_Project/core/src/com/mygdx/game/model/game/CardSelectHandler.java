@@ -2,6 +2,7 @@ package com.mygdx.game.model.game;
 
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.PlayableCard;
+import com.mygdx.game.model.network.RequestHandler;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.CardSelectionAnswer;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ActionResponse;
@@ -16,20 +17,32 @@ import java.util.function.BiFunction;
 public enum CardSelectHandler {
     MEDIC((cardSelectionAnswer, player) -> {
         List<AbstractCard> abstractCards = cardSelectionAnswer.getSelection();
+        if(abstractCards.isEmpty()) {
+            player.getGame().switchTurn();
+            return new PlayCardResponse(player.getGame());
+        }
         //if(abstractCards.size() != 1) return new ServerResponse(new InvalidRequestException());
 
+        player.getGame().switchTurn();
         return ((PlayableCard)abstractCards.getFirst()).revive();
     }),
     ERIDIN_DESTROYER_ADD((cardSelectionAnswer, player) -> {
         List<AbstractCard> abstractCards = cardSelectionAnswer.getSelection();
+        if(abstractCards.isEmpty()) {
+            player.getGame().switchTurn();
+            return new PlayCardResponse(player.getGame());
+        }
         //if(abstractCards.size() != 1) return new ServerResponse(new InvalidRequestException());
 
         player.getDeckAsCards().add(abstractCards.getFirst());
-        player.getGame().switchTurn();
         return new PlayCardResponse(player.getGame(), null);
     }),
     ERIDIN_DESTROYER_DISCARD(((cardSelectionAnswer, player) -> {
         List<AbstractCard> abstractCards = cardSelectionAnswer.getSelection();
+        if(abstractCards.isEmpty()) {
+            player.getGame().switchTurn();
+            return new PlayCardResponse(player.getGame());
+        }
         //if(abstractCards.size() != 2) return new ServerResponse(new InvalidRequestException());
 
         for(AbstractCard card : abstractCards) {
@@ -41,19 +54,25 @@ public enum CardSelectHandler {
     })),
     ERIDIN_KING((answer,player) -> {
         List<AbstractCard> abstractCards = answer.getSelection();
+        if(abstractCards.isEmpty()) {
+            player.getGame().switchTurn();
+            return new PlayCardResponse(player.getGame());
+        }
         //if(abstractCards.size() != 1) return new ServerResponse(new InvalidRequestException());
         player.getGame().setCardSelectHandler(null);
-        player.getGame().switchTurn();
-        return abstractCards.get(0).place(answer.getRow(), player);
+        return abstractCards.getFirst().place(answer.getRow(), player);
     }),
     ENEMY_MEDIC((cardSelectionAnswer, player) -> {
         List<AbstractCard> abstractCards = cardSelectionAnswer.getSelection();
+        if(abstractCards.isEmpty()) {
+            player.getGame().switchTurn();
+            return new PlayCardResponse(player.getGame());
+        }
         //if(abstractCards.size() != 1) return new ServerResponse(new InvalidRequestException());
         ArrayList<AbstractCard>discardCards = player.getGame().getGameBoard().getDiscardCards(player.getGame().getOpposition());
-        //might get problems due to diffrence in reffrences, if so work with indexes
-        AbstractCard abstractCard = abstractCards.get(0);
+        //might get problems due to difference in references, if so work with indexes
+        AbstractCard abstractCard = abstractCards.getFirst();
         discardCards.remove(abstractCard);
-        player.getGame().switchTurn();
         return abstractCard.place(abstractCard.getRow(), player);
     });
     private final BiFunction<CardSelectionAnswer, Player, ServerResponse> handler;

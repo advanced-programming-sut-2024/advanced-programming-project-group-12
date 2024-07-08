@@ -12,4 +12,8 @@ public class ChatInGame extends ClientRequest {
     public String getMassage() {
         return massage;
     }
+
+    public String getUsername() {
+        return username;
+    }
 }

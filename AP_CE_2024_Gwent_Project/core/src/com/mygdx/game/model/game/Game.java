@@ -7,7 +7,7 @@ import com.mygdx.game.model.network.RequestHandler;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.EndGameNotify;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.EndRoundNotify;
-import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayTurnPermission;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayCardResponse;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
 
@@ -80,13 +80,21 @@ public class Game {
         return gameBoard;
     }
 
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public void setOpposition(Player opposition) {
+        this.opposition = opposition;
+    }
+
     public void switchTurn() {
         Player temp = currentPlayer;
         currentPlayer = opposition;
         opposition = temp;
 
-        RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(new PlayTurnPermission(this));
-        gameHandler.sendMassageToSpectators(new PlayTurnPermission(this));
+        RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(new PlayCardResponse(this, null));
+        gameHandler.sendMassageToSpectators(new PlayCardResponse(this));
 
         if(currentPlayer.doesNotHaveGameToPlay()) {
             currentPlayer.setPassed(true);
@@ -104,8 +112,10 @@ public class Game {
     }
 
     private void sendEndGameMassages(EndGameNotify endGameNotify) {
-        RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(endGameNotify);
-        RequestHandler.allUsers.get(opposition.getUsername()).sendMassage(endGameNotify);
+        if(RequestHandler.allUsers.get(currentPlayer.getUsername()) != null)
+            RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(endGameNotify);
+        if(RequestHandler.allUsers.get(opposition.getUsername()) != null)
+            RequestHandler.allUsers.get(opposition.getUsername()).sendMassage(endGameNotify);
         gameHandler.sendMassageToSpectators(endGameNotify);
     }
 
@@ -129,19 +139,17 @@ public class Game {
             currentRound = new Round(rounds.size() + 1, currentPlayer, opposition);
             sendEndRoundMassages(winner);
         } else {
-            finishGame();
-            String gameWinner;
+            User gameWinner;
             if(currentPlayer.getHealth() == 0 && opposition.getHealth() == 0) {
                 gameWinner = null;
             }
             else if(currentPlayer.getHealth() == 0) {
-                gameWinner = currentPlayer.getUsername();
+                gameWinner = currentPlayer.getUser();
             }
             else {
-                gameWinner = opposition.getUsername();
+                gameWinner = opposition.getUser();
             }
-
-            sendEndGameMassages(new EndGameNotify(gameWinner != null, gameWinner));
+            finishGame(gameWinner);
             return;
         }
 
@@ -156,11 +164,15 @@ public class Game {
         }
     }
 
-    private void finishGame() {
+    public void finishGame(User winner) {
         for(User u: allUsers) {
             u.addGame(this);
+            u.save();
         }
-        //todo
+        if(winner != null) {
+            winner.addToWin();
+        }
+        sendEndGameMassages(new EndGameNotify(winner != null, winner == null? null:winner.getUsername()));
     }
 
     public void isOver() {

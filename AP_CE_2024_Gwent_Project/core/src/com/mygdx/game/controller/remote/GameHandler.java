@@ -2,26 +2,43 @@ package com.mygdx.game.controller.remote;
 
 import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.game.Game;
+import com.mygdx.game.model.game.card.AbstractCard;
+import com.mygdx.game.model.game.card.AllCards;
 import com.mygdx.game.model.network.RequestHandler;
 import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.PlayCardRequest;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ReDrawResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ChatInGameWrapper;
+import com.mygdx.game.model.network.massage.serverResponse.GetPublicGamesResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
-import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayTurnPermission;
-import com.mygdx.game.model.network.massage.serverResponse.gameResponse.SetGameToStart;
-import com.mygdx.game.model.network.massage.serverResponse.gameResponse.TurnDecideRequest;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.*;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameHandler {
     private static final ArrayList<GameHandler> allGames = new ArrayList<>();
+    private final boolean isPrivate = false;
 
     private User user1;
     private User user2;
     private Game game;
 
     private ArrayList<User> spectators;
+
+    public static ServerResponse sendAllGamesList() {
+        ArrayList<String> games = new ArrayList<>();
+        for(GameHandler i: allGames) {
+            if(!i.isPrivate) {
+                games.add(i.user1.getUsername()+ " : " + i.user2.getUsername() );
+            }
+        }
+        return new GetPublicGamesResponse(games);
+        //
+    }
 
     public GameHandler(User user1) {
         this.user1 = user1;
@@ -50,15 +67,17 @@ public class GameHandler {
         }
         else {
             //let current player start
-            letCurrentPlayerPlay("currentPlayer");
+            letCurrentPlayerPlay(user1.getPlayer().getUsername());
         }
     }
 
-    public void letCurrentPlayerPlay(String playerToStart) {
-        if(playerToStart.equals("opponent")) {
-            game.switchTurn();
-        }
-        RequestHandler.allUsers.get(game.getCurrentPlayer().getUsername()).sendMassage(new PlayTurnPermission(game));
+    public void letCurrentPlayerPlay(String playerToStartName) {
+        Player playerToStart = user1.getUsername().equals(playerToStartName)? user1.getPlayer(): user2.getPlayer();
+        game.setCurrentPlayer(playerToStart);
+        User otherUser = getTheOtherUser(playerToStart.getUser());
+        game.setOpposition(otherUser.getPlayer());
+        RequestHandler.allUsers.get(playerToStart.getUsername()).sendMassage(new ReDrawRequest(playerToStart.getHand()));
+        RequestHandler.allUsers.get(otherUser.getUsername()).sendMassage(new ReDrawRequest(otherUser.getPlayer().getHand()));
     }
 
     public void handleChat(ChatInGame chat, User user) {
@@ -76,7 +95,7 @@ public class GameHandler {
         }
     }
 
-    public void addAsAnSpectator(User user) {
+    public void addAsAnSpectator(User user ) {
         spectators.add(user);
     }
 
@@ -84,5 +103,45 @@ public class GameHandler {
         for(User user: spectators) {
             RequestHandler.allUsers.get(user.getUsername()).sendMassage(serverResponse);
         }
+    }
+
+    public void updateOpponent() {
+        RequestHandler.allUsers.get(game.getOpposition().getUsername()).sendMassage(new PlayCardResponse(game));
+    }
+
+    public ServerResponse playCard(PlayCardRequest playCardRequest, User user) {
+        Player player = user.getPlayer();
+        AbstractCard abstractCard = AllCards.getCardByCardName(playCardRequest.getCard());
+        PlayCardResponse response = abstractCard.place(playCardRequest.getRow(), player);
+        RequestHandler.allUsers.get(getTheOtherUser(user).getUsername()).sendMassage(new PlayCardResponse(game));
+        return response;
+    }
+
+    private User getTheOtherUser(User user) {
+        if(user == user1) return user2;
+        else if(user == user2) return user1;
+        else return null;
+    }
+
+    public ServerResponse reDraw(Player player, ReDrawResponse response) {
+        for(AbstractCard card: response.getRemovedHand()) {
+            player.reDraw(card.getName());
+        }
+        if(player.equals(game.getCurrentPlayer())) {
+            return new PlayCardResponse(game, null);
+        }
+        else {
+            return new PlayCardResponse(game);
+        }
+    }
+
+    public void gameAborted(User user) {
+        User otherUser = getTheOtherUser(user);
+        if(RequestHandler.allUsers.get(otherUser.getUsername()) == null) return;
+        game.finishGame(otherUser);
+    }
+
+    public Game getGame() {
+        return game;
     }
 }

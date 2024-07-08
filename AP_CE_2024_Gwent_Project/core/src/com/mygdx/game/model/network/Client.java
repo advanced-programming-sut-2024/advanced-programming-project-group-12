@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
+import com.mygdx.game.controller.local.ChatController;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.GetAllUsersRequest;
 import com.mygdx.game.model.network.massage.serverResponse.*;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.*;
 import com.mygdx.game.model.network.session.Session;
@@ -107,6 +109,9 @@ public class Client extends Thread {
                 LoginResponse loginResponseDeny = gson.fromJson(request, LoginResponse.class);
                 ((LoginMenuScreen)Gwent.singleton.getCurrentScreen()).showError(loginResponseDeny.getError());
                 break;
+            case RETURN_TO_GAME:
+                ReturnToGameResponse returnToGameResponse = gson.fromJson(request, ReturnToGameResponse.class);
+                break;
             case FRIEND_REQUEST:
                 ServerFriendRequest serverFriendRequest = gson.fromJson(request, ServerFriendRequest.class);
                 FriendsScreen.setRequestInfoReceived(true);
@@ -140,15 +145,24 @@ public class Client extends Thread {
                 TurnDecideRequest turnDecideRequest = gson.fromJson(request, TurnDecideRequest.class);
                 //choose who to start
                 break;
-            case PLAY_CARD_PERMISSION:
-                PlayTurnPermission permission = gson.fromJson(request, PlayTurnPermission.class);
+            case RE_DRAW:
+                ReDrawRequest reDrawRequest = gson.fromJson(request, ReDrawRequest.class);
                 break;
+//            case PLAY_CARD_PERMISSION:
+//                PlayTurnPermission permission = gson.fromJson(request, PlayTurnPermission.class);
+//                break;
             case PLAY_CARD_RESPONSE:
                 PlayCardResponse playCardResponse = gson.fromJson(request, PlayCardResponse.class);
+                this.game = playCardResponse.getGame();
+                //handle permission case
+                playCardResponse.isPermission();
+                //handle special cases
+                playCardResponse.getActionResponse();
                 break;
             case CHAT:
                 ChatInGameWrapper chatWrapper = gson.fromJson(request, ChatInGameWrapper.class);
                 ChatInGame chat = chatWrapper.getChat();
+                ChatController.receiveMassage(chat.getMassage(), chat.getUsername());
                 break;
             case END_ROUND:
                 EndRoundNotify endRoundNotify = gson.fromJson(request, EndRoundNotify.class);
@@ -157,6 +171,12 @@ public class Client extends Thread {
             case END_GAME:
                 EndGameNotify endGameNotify = gson.fromJson(request, EndGameNotify.class);
                 //notif
+                break;
+            case GET_PUBLIC_GAMES:
+                GetPublicGamesResponse publicGames = gson.fromJson(request, GetPublicGamesResponse.class);
+                break;
+            case GET_ALL_USERS:
+                GetAllUsersResponse getAllUsersResponse = gson.fromJson(request, GetAllUsersResponse.class);
                 break;
         }
     }

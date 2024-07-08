@@ -5,7 +5,9 @@ import com.mygdx.game.controller.local.LoginMenuController;
 import com.mygdx.game.model.network.RequestHandler;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.LoginRequest;
 import com.mygdx.game.model.network.massage.serverResponse.LoginResponse;
+import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponseType;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ReturnToGameResponse;
 import com.mygdx.game.model.user.User;
 
 public class LoginHandler {
@@ -17,34 +19,41 @@ public class LoginHandler {
         this.gson = gson;
     }
 
-    public LoginResponse handle(RequestHandler requestHandler) {
+    public ServerResponse handle(RequestHandler requestHandler) {
         LoginRequest loginRequest = gson.fromJson(request, LoginRequest.class);
         String username = loginRequest.getUsername();
-        if(username.equals("admin")) {
-            User user = User.getUserByUsername(username);
-            if(user == null) {
-                System.err.println("no such user to be loggend in");
-            }
-            RequestHandler.allUsers.put(user.getUsername(), requestHandler);
-            return new LoginResponse(ServerResponseType.LOGIN_CONFIRM , user);
-        }
         String password = loginRequest.getPassword();
-        //todo: seperate server and client logincs bellow
+
         String response = loginHandler(username, password);
         if(response.equals("accept")) {
             User user = User.getUserByUsername(username);
             if(user == null) {
                 System.err.println("no such user to be loggend in");
+                return new LoginResponse(ServerResponseType.LOGIN_DENY, "denied");
             }
+
             RequestHandler.allUsers.put(user.getUsername(), requestHandler);
+            if(checkForUnfinishedGame(username, requestHandler)) {
+                return new ReturnToGameResponse(user, requestHandler.getGameHandler().getGame());
+            }
+
             return new LoginResponse(ServerResponseType.LOGIN_CONFIRM , user);
         } else {
             return new LoginResponse(ServerResponseType.LOGIN_DENY, response);
         }
     }
+
+    private boolean checkForUnfinishedGame(String username, RequestHandler newRequestHandler) {
+        RequestHandler requestHandler = RequestHandler.allUsers.get(username);
+        if(requestHandler == null || !requestHandler.hasUnfinishedGame()) return false;
+        requestHandler.connectionReturned();
+        newRequestHandler.setGameHandler(requestHandler.getGameHandler());
+        return true;
+    }
+
     public String loginHandler(String username, String password) {
         //TODO: remove it
-        if(User.getUserByUsername(username) != null) {
+        if(User.getUserByUsername(username) != null || username.equals("admin")) {
             return "accept";
         }
         if (username.isEmpty() || password.isEmpty()) {

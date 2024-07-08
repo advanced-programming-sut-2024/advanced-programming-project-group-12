@@ -64,7 +64,7 @@ public class MainMenuScreen implements Screen {
     }
 
     private void buttonAndFieldInit() {
-        startGameButton = new TextButton("Start Game", Gwent.singleton.skin);
+        startGameButton = new TextButton("PreGame Menu", Gwent.singleton.skin);
         startGameButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
         table.add(startGameButton).padBottom(20);
         table.row();
