@@ -106,9 +106,9 @@ public class Game {
 
     private void sendEndRoundMassages(Player toStartNext) {
         Player toWait = toStartNext == currentPlayer? opposition: currentPlayer;
-        RequestHandler.allUsers.get(toStartNext.getUsername()).sendMassage(new EndRoundNotify(true));
-        RequestHandler.allUsers.get(toWait.getUsername()).sendMassage(new EndRoundNotify(false));
-        gameHandler.sendMassageToSpectators(new EndRoundNotify(false));
+        RequestHandler.allUsers.get(toStartNext.getUsername()).sendMassage(new EndRoundNotify(true, rounds.getLast()));
+        RequestHandler.allUsers.get(toWait.getUsername()).sendMassage(new EndRoundNotify(false, rounds.getLast()));
+        gameHandler.sendMassageToSpectators(new EndRoundNotify(false, rounds.getLast()));
     }
 
     private void sendEndGameMassages(EndGameNotify endGameNotify) {
