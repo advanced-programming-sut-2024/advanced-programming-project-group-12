@@ -169,7 +169,7 @@ public class Client extends Thread {
                 PlayCardResponse playCardResponse = gson.fromJson(request, PlayCardResponse.class);
                 this.game = playCardResponse.getGame();
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setPermission(playCardResponse.isPermission());
-                ((GameScreen)Gwent.singleton.getCurrentScreen()).
+                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().update();
                 ActionResponse actionResponse = playCardResponse.getActionResponse();
                 if (actionResponse!= null && actionResponse.getAction().equals(ActionResponseType.SELECTION)) {
                     ((GameScreen)Gwent.singleton.getCurrentScreen()).showCardsToSelect(actionResponse.getAffectedCards(), actionResponse.getActionCount(), false);

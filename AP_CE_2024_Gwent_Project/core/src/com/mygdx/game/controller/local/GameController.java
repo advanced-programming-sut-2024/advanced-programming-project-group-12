@@ -46,7 +46,7 @@ public class GameController {
     }
 
     public void playCard(AbstractCard card, int row) {
-        Client.getInstance().sendMassage(new PlayCardRequest(row, card.toString()));
+        Client.getInstance().sendMassage(new PlayCardRequest(row, card.getName()));
     }
 
     /*
