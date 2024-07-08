@@ -16,8 +16,6 @@ import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class GameHandler {
     private static final ArrayList<GameHandler> allGames = new ArrayList<>();
@@ -76,8 +74,8 @@ public class GameHandler {
         game.setCurrentPlayer(playerToStart);
         User otherUser = getTheOtherUser(playerToStart.getUser());
         game.setOpposition(otherUser.getPlayer());
-        RequestHandler.allUsers.get(playerToStart.getUsername()).sendMassage(new ReDrawRequest(playerToStart.getHand()));
-        RequestHandler.allUsers.get(otherUser.getUsername()).sendMassage(new ReDrawRequest(otherUser.getPlayer().getHand()));
+        RequestHandler.allUsers.get(playerToStart.getUsername()).sendMassage(new ReDrawRequest(playerToStart.getHand(), true));
+        RequestHandler.allUsers.get(otherUser.getUsername()).sendMassage(new ReDrawRequest(otherUser.getPlayer().getHand(), false));
     }
 
     public void handleChat(ChatInGame chat, User user) {
@@ -124,8 +122,8 @@ public class GameHandler {
     }
 
     public ServerResponse reDraw(Player player, ReDrawResponse response) {
-        for(AbstractCard card: response.getRemovedHand()) {
-            player.reDraw(card.getName());
+        for(String card: response.getRemovedCards()) {
+            player.reDraw(card);
         }
         if(player.equals(game.getCurrentPlayer())) {
             return new PlayCardResponse(game, null);

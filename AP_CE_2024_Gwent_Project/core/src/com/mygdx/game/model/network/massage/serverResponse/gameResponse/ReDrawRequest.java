@@ -12,8 +12,10 @@ import java.util.List;
 
 public class ReDrawRequest extends ServerResponse {
     private List<String> hand;
-    public ReDrawRequest(List<String> hand) {
+    private boolean permission;
+    public ReDrawRequest(List<String> hand, boolean permission) {
         super(ServerResponseType.RE_DRAW, null);
+        this.permission = permission;
         this.hand = hand;
     }
 
@@ -23,5 +25,13 @@ public class ReDrawRequest extends ServerResponse {
             hand.add(AllCards.getCardByCardName(i));
         }
         return hand;
+    }
+
+    public List<String> getHand() {
+        return hand;
+    }
+
+    public boolean isPermission() {
+        return permission;
     }
 }

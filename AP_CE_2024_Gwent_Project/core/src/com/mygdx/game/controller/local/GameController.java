@@ -5,10 +5,7 @@ import com.mygdx.game.Gwent;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.*;
 import com.mygdx.game.model.network.Client;
-import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.CardSelectionAnswer;
-import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.PassRoundRequest;
-import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.PlayCardRequest;
-import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.TurnDecideResponse;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
 
 import com.mygdx.game.view.screen.GameScreen;
 
@@ -76,12 +73,17 @@ public class GameController {
     in this method I assume that player is in select mode
     and I give you card's that is selected and you should handle it
      */
-    public void chooseCardInSelectCardMode(ArrayList<AbstractCard> cards) {
+    public void chooseCardInSelectCardMode(ArrayList<AbstractCard> cards, boolean canChooseLess) {
         ArrayList<String> cardList = new ArrayList<>();
         for(AbstractCard abstractCard: cards) {
             cardList.add(abstractCard.getName());
         }
-        Client.getInstance().sendMassage(new CardSelectionAnswer(cardList));
+        if(canChooseLess) {
+            Client.getInstance().sendMassage(new ReDrawResponse(cardList));
+        }
+        else {
+            Client.getInstance().sendMassage(new CardSelectionAnswer(cardList));
+        }
     }
 
     public void setGame(Game game) {

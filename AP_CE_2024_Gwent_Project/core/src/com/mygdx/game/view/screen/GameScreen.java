@@ -664,7 +664,7 @@ public class GameScreen implements Screen {
                             }
                             bgImage.remove();
                             closeButton.remove();
-                            controller.chooseCardInSelectCardMode(selectedCards);
+                            controller.chooseCardInSelectCardMode(selectedCards, canChooseLess);
                         }
                     }
                 });
@@ -682,7 +682,7 @@ public class GameScreen implements Screen {
                 }
                 bgImage.remove();
                 closeButton.remove();
-                controller.chooseCardInSelectCardMode(selectedCards);
+                controller.chooseCardInSelectCardMode(selectedCards, canChooseLess);
             }
         });
     }

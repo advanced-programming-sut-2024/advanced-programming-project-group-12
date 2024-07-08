@@ -147,6 +147,8 @@ public class Client extends Thread {
                 break;
             case RE_DRAW:
                 ReDrawRequest reDrawRequest = gson.fromJson(request, ReDrawRequest.class);
+                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setPermission(reDrawRequest.isPermission());
+                ((GameScreen)Gwent.singleton.getCurrentScreen()).showCardsToSelect(reDrawRequest.getHandAsCards(), 2, true);
                 break;
             case PLAY_CARD_RESPONSE:
                 PlayCardResponse playCardResponse = gson.fromJson(request, PlayCardResponse.class);
@@ -154,7 +156,7 @@ public class Client extends Thread {
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setPermission(playCardResponse.isPermission());
                 ActionResponse actionResponse = playCardResponse.getActionResponse();
                 if (actionResponse.getAction().equals(ActionResponseType.SELECTION)) {
-                    ((GameScreen)Gwent.singleton.getCurrentScreen()).showCardsToSelect(actionResponse.getAffectedCards(), actionResponse.getActionCount());
+                    ((GameScreen)Gwent.singleton.getCurrentScreen()).showCardsToSelect(actionResponse.getAffectedCards(), actionResponse.getActionCount(), false);
                 }
                 break;
             case CHAT:
