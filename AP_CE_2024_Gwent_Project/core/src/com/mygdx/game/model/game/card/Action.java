@@ -128,7 +128,6 @@ public enum Action {
     MEDIC(card -> {
         card.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.MEDIC);
         GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
-
         return new ActionResponse(ActionResponseType.SELECTION,gameBoard.getDiscardPlayableCards(card.getPlayer()) ,1);
     }),
     SPY(card -> {
@@ -166,10 +165,7 @@ public enum Action {
         Player player = card.getPlayer().getGame().getCurrentPlayer();
         LinkedList<AbstractCard> deck = player.getDeckAsCards();
         int row = card.getRow();
-        System.out.println("in musket:");
-        System.out.println("card name: " + card.getAbsName());
         for (int i = 0; i< deck.size(); i++) {
-            System.out.println(deck.get(i).getAbsName());
             AbstractCard musket = deck.get(i);
             if (musket.getAbsName().equals(card.getAbsName())) {
                 player.getDeck().remove(i);
@@ -235,6 +231,8 @@ public enum Action {
         gameBoard.clearWeather();
         for(int i = 0; i< 3; i++ ){
             Row row = gameBoard.getRowForPlayer(i, card.getPlayer());
+            Player opposition = card.player.getGame().getOpposition();
+            card.getPlayer().getGame().getGameBoard().getRowForPlayer(i, opposition).setWeatherBuffer(true);
             row.setWeatherBuffer(false);
         }
         card.getPlayer().getGame().switchTurn();
@@ -242,16 +240,22 @@ public enum Action {
     }),
     FOG(card -> {
         card.getPlayer().getGame().getGameBoard().getRowForPlayer(1, card.getPlayer()).setWeatherBuffer(true);
+        Player opposition = card.player.getGame().getOpposition();
+        card.getPlayer().getGame().getGameBoard().getRowForPlayer(1, opposition).setWeatherBuffer(true);
         card.getPlayer().getGame().switchTurn();
         return new ActionResponse(ActionResponseType.FOG);
     }),
     FROST(card -> {
         card.getPlayer().getGame().getGameBoard().getRowForPlayer(0, card.getPlayer()).setWeatherBuffer(true);
+        Player opposition = card.player.getGame().getOpposition();
+        card.getPlayer().getGame().getGameBoard().getRowForPlayer(0, opposition).setWeatherBuffer(true);
         card.getPlayer().getGame().switchTurn();
         return new ActionResponse(ActionResponseType.FROST);
     }),
     RAIN(card -> {
         card.getPlayer().getGame().getGameBoard().getRowForPlayer(2, card.getPlayer()).setWeatherBuffer(true);
+        Player opposition = card.player.getGame().getOpposition();
+        card.getPlayer().getGame().getGameBoard().getRowForPlayer(2, opposition).setWeatherBuffer(true);
         card.getPlayer().getGame().switchTurn();
         return new ActionResponse(ActionResponseType.RAIN);
     }),

@@ -89,11 +89,7 @@ public class CardTable extends Table {
     }
 
     public Texture getAbiltyTexture() {
-        if(card.getAction().equals(Action.SCORCH)) {
-            return new Texture("icons/card_ability_scorch-c.png");
-        } else if(card.getAction().equals(Action.COW)) {
-            return new Texture("icons/card_ability_cow_c.png");
-        }
+
         String path = "icons/card_ability_" + card.getAction().toString().toLowerCase() + ".png";
         try {
             return new Texture(path);

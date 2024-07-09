@@ -128,6 +128,13 @@ public class Game {
         opposition.setPassed(false);
 
         Player winner = currentRound.endRound(gameBoard);
+        if(!winner.equals(currentPlayer)) {
+            Player temp = currentPlayer;
+            currentPlayer = winner;
+            opposition = temp;
+        }
+
+
         gameBoard.reset();
         rounds.add(currentRound);
 

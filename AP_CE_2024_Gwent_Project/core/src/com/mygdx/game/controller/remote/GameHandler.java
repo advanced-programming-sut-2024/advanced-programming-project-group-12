@@ -4,6 +4,7 @@ import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.AllCards;
+import com.mygdx.game.model.game.card.CommanderCards;
 import com.mygdx.game.model.network.RequestHandler;
 import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.PlayCardRequest;
@@ -110,8 +111,12 @@ public class GameHandler {
     public ServerResponse playCard(PlayCardRequest playCardRequest, User user) {
         Player player = user.getPlayer();
         boolean isEnemyPassed = player.getGame().getOpposition().isPassed();
-        AbstractCard abstractCard = AllCards.getCardByCardName(playCardRequest.getCard());
+        AbstractCard abstractCard = CommanderCards.getCardByCardName(playCardRequest.getCard());
+        if(abstractCard == null) {
+            abstractCard = AllCards.getCardByCardName(playCardRequest.getCard());
+        }
         PlayCardResponse response = abstractCard.place(playCardRequest.getRow(), player);
+        response.setGame(game);
         if(isEnemyPassed) {
             response.setPermission(true);
         }

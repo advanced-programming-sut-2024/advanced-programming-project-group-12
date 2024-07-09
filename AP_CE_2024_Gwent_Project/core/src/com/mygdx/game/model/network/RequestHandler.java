@@ -196,7 +196,6 @@ public class RequestHandler extends Thread {
 
     public void terminate() {
         try {
-            allUsers.remove(user.getUsername());
             dataOutputStream.close();
         } catch (IOException e) {
             System.err.println("IO exception in request handler ");
@@ -209,7 +208,9 @@ public class RequestHandler extends Thread {
             unfinishedGame.schedule(new TimerTask() {
                 @Override
                 public void run() {
+                    cancel();
                     gameHandler.gameAborted(user);
+                    allUsers.remove(user.getUsername());
                     terminate();
                 }
             }, 60000);

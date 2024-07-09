@@ -163,7 +163,7 @@ public class GameBoard {
         }
 
         for(PlayableCard c: cowCards) {
-            c.doAction();
+            c.getLegacyCard().place(c.getDefaultRow(), c.getPlayer());
         }
     }
 
