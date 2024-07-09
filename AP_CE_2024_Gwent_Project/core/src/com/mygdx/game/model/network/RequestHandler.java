@@ -140,6 +140,7 @@ public class RequestHandler extends Thread {
                     break;
                 case PASS_ROUND:
                     user.getPlayer().pass();
+                    break;
                 case CHAT:
                     ChatInGame chat = gson.fromJson(request, ChatInGame.class);
                     gameHandler.handleChat(chat, user);

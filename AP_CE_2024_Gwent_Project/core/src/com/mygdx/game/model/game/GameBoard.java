@@ -11,7 +11,6 @@ public class GameBoard {
     private HashMap<String, Discard> discard;
     private HashSet<SpellCard> weatherCards;
 
-
     public GameBoard(Player player1, Player player2) {
         rows = new HashMap<>(2);
         rows.put(player1.getUsername(), new ArrayList<>(3));
@@ -111,13 +110,7 @@ public class GameBoard {
     }
 
     public int getRowStrength(Player player, int rowNumber) {
-        ArrayList<PlayableCard> cards = getRowCards(player, rowNumber);
-        Row row = rows.get(player.getUsername()).get(rowNumber);
-        int totalStrength = 0;
-        for(PlayableCard i: cards) {
-            totalStrength += row.calculatePowerOfPlayableCard(i);
-        }
-        return totalStrength;
+        return getRowStrength(rows.get(player.getUsername()).get(rowNumber));
     }
     public int getRowStrength(Row row) {
         ArrayList<PlayableCard> cards = row.getCards();
@@ -140,6 +133,9 @@ public class GameBoard {
         rows.get(player.getUsername()).get(row).increaseMorale();
     }
 
+    public Discard getDiscard(Player player) {
+        return discard.get(player.getUsername());
+    }
 
     public ArrayList<AbstractCard> getDiscardCards(Player player) {
         return discard.get(player.getUsername()).getDiscardCards();
@@ -157,6 +153,7 @@ public class GameBoard {
         for(String p: rows.keySet()) {
             for(Row r: rows.get(p)) {
                 for(PlayableCard c: r.getCards()) {
+                    discard.get(p).addCard(c);
                     if(c.getAction().equals(Action.COW)) {
                         cowCards.add(c);
                     }

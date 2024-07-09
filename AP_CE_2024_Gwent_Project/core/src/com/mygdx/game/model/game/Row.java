@@ -83,10 +83,13 @@ public class Row {
 
     public int calculatePowerOfPlayableCard(PlayableCard playableCard) {
         int power = playableCard.getPower();
+        if(playableCard instanceof Hero) {
+            return power;
+        }
         if(playableCard.getAction().equals(Action.TIGHT_BOND)) {
             int similar = 0;
             for(PlayableCard p: cards) {
-                if(p.getName().split(" ")[0].equals(playableCard.getName())) {
+                if(p.getName().split(" ")[0].equals(playableCard.getAbsName().split(" ")[0])) {
                     similar++;
                 }
             }
@@ -94,9 +97,6 @@ public class Row {
         }
         if(doubleSpyPower && playableCard.getAction().equals(Action.SPY)) {
             power *= 2;
-        }
-        if(playableCard instanceof Hero) {
-            return power;
         }
         if(hasWeatherBuffer) {
             if (halfAttrition) {

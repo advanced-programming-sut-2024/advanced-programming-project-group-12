@@ -20,6 +20,7 @@ public class PlayCardResponse extends ServerResponse {
 
     public PlayCardResponse(Game game) {
         super(ServerResponseType.PLAY_CARD_RESPONSE, null);
+        this.game = game;
         actionResponse = null;
         permission = false;
     }
@@ -28,7 +29,7 @@ public class PlayCardResponse extends ServerResponse {
         super(ServerResponseType.PLAY_CARD_RESPONSE, null);
         this.game = game;
         actionResponse = null;
-        this.permission = true;
+        this.permission = permission;
     }
 
     public Game getGame() {
@@ -49,5 +50,9 @@ public class PlayCardResponse extends ServerResponse {
 
     public boolean isPermission() {
         return permission;
+    }
+
+    public void setPermission(boolean permission) {
+        this.permission = permission;
     }
 }

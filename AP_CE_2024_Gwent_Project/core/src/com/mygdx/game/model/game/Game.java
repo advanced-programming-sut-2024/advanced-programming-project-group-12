@@ -89,11 +89,14 @@ public class Game {
     }
 
     public void switchTurn() {
-        Player temp = currentPlayer;
-        currentPlayer = opposition;
-        opposition = temp;
+        Player enemy = opposition;
+        if(!opposition.isPassed()) {
+            Player temp = currentPlayer;
+            currentPlayer = opposition;
+            opposition = temp;
+            RequestHandler.allUsers.get(enemy.getUsername()).sendMassage(new PlayCardResponse(this, !enemy.isPassed()));
+        }
 
-        RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(new PlayCardResponse(this, true));
         gameHandler.sendMassageToSpectators(new PlayCardResponse(this));
 
         if(currentPlayer.doesNotHaveGameToPlay()) {
@@ -106,9 +109,9 @@ public class Game {
 
     private void sendEndRoundMassages(Player toStartNext) {
         Player toWait = toStartNext == currentPlayer? opposition: currentPlayer;
-        RequestHandler.allUsers.get(toStartNext.getUsername()).sendMassage(new EndRoundNotify(true, rounds.getLast()));
-        RequestHandler.allUsers.get(toWait.getUsername()).sendMassage(new EndRoundNotify(false, rounds.getLast()));
-        gameHandler.sendMassageToSpectators(new EndRoundNotify(false, rounds.getLast()));
+        RequestHandler.allUsers.get(toStartNext.getUsername()).sendMassage(new EndRoundNotify(true, rounds.getLast(), this));
+        RequestHandler.allUsers.get(toWait.getUsername()).sendMassage(new EndRoundNotify(false, rounds.getLast(), this));
+        gameHandler.sendMassageToSpectators(new EndRoundNotify(false, rounds.getLast(), this));
     }
 
     private void sendEndGameMassages(EndGameNotify endGameNotify) {
@@ -121,6 +124,9 @@ public class Game {
 
 
     private void endRound() {
+        currentPlayer.setPassed(false);
+        opposition.setPassed(false);
+
         Player winner = currentRound.endRound(gameBoard);
         gameBoard.reset();
         rounds.add(currentRound);
@@ -134,10 +140,9 @@ public class Game {
             }
         }
 
-
+        sendEndRoundMassages(winner);
         if(!isOver) {
             currentRound = new Round(rounds.size() + 1, currentPlayer, opposition);
-            sendEndRoundMassages(winner);
         } else {
             User gameWinner;
             if(currentPlayer.getHealth() == 0 && opposition.getHealth() == 0) {

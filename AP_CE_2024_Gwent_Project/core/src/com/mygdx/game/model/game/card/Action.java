@@ -123,15 +123,13 @@ public enum Action {
     }),
     TIGHT_BOND(card -> {
         card.getPlayer().getGame().switchTurn();
-
         return new ActionResponse(ActionResponseType.TIGHT_BOND);
     }),
     MEDIC(card -> {
-        // should open a menu in game screen to choose from one card of the below list
-        //todo
         card.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.MEDIC);
+        GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
 
-        return new ActionResponse(ActionResponseType.SELECTION, 1);
+        return new ActionResponse(ActionResponseType.SELECTION,gameBoard.getDiscardPlayableCards(card.getPlayer()) ,1);
     }),
     SPY(card -> {
         Player player = card.getPlayer().getGame().getCurrentPlayer();
@@ -168,13 +166,17 @@ public enum Action {
         Player player = card.getPlayer().getGame().getCurrentPlayer();
         LinkedList<AbstractCard> deck = player.getDeckAsCards();
         int row = card.getRow();
+        System.out.println("in musket:");
+        System.out.println("card name: " + card.getAbsName());
         for (int i = 0; i< deck.size(); i++) {
-            if (deck.get(i).getAbsName().equals(card.getName())) {
-                deck.remove(i);
-                if (deck.get(i).getAllowableRows().contains(row)) {
-                    return deck.get(i).place(row, card.getPlayer()).getActionResponse();
+            System.out.println(deck.get(i).getAbsName());
+            AbstractCard musket = deck.get(i);
+            if (musket.getAbsName().equals(card.getAbsName())) {
+                player.getDeck().remove(i);
+                if (musket.getAllowableRows().contains(row)) {
+                    return musket.place(row, card.getPlayer()).getActionResponse();
                 } else {
-                    return deck.get(i).place(deck.get(i).getDefaultRow(), card.getPlayer()).getActionResponse();
+                    return musket.place(deck.get(i).getDefaultRow(), card.getPlayer()).getActionResponse();
                 }
             }
         }

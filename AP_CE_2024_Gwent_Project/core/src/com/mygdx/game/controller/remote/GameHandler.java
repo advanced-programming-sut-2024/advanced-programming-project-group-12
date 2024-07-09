@@ -109,9 +109,14 @@ public class GameHandler {
 
     public ServerResponse playCard(PlayCardRequest playCardRequest, User user) {
         Player player = user.getPlayer();
+        boolean isEnemyPassed = player.getGame().getOpposition().isPassed();
         AbstractCard abstractCard = AllCards.getCardByCardName(playCardRequest.getCard());
         PlayCardResponse response = abstractCard.place(playCardRequest.getRow(), player);
+        if(isEnemyPassed) {
+            response.setPermission(true);
+        }
         if(response.isPermission()) {
+            System.out.println(game);
             RequestHandler.allUsers.get(getTheOtherUser(user).getUsername()).sendMassage(new PlayCardResponse(game));
         }
         return response;

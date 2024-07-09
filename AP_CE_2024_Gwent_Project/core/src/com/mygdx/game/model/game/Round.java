@@ -36,10 +36,8 @@ public class Round {
 
     public Player endRound(GameBoard gameBoard) {
         gameBoardCopy = gameBoard.copy();
+        Player winner =null;
 
-        if(player1.getHealth() == 0 || player2.getHealth() == 0 ) {
-            player1.getGame().isOver();
-        }
 
         player1Score = gameBoard.getPlayerStrength(player1);
         player2Score = gameBoard.getPlayerStrength(player2);
@@ -47,25 +45,29 @@ public class Round {
 
         if (gameBoard.getPlayerStrength(player1) > gameBoard.getPlayerStrength(player2)) {
             handleWinCase(player1, player2);
-            return player1;
+            winner= player1;
         } else if (gameBoard.getPlayerStrength(player1) < gameBoard.getPlayerStrength(player2)) {
             handleWinCase(player2, player1);
-            return player2;
+            winner = player2;
         } else {
             if (player1.getFaction().equals(Faction.NILFGAARD) && player2.getFaction().equals(Faction.NILFGAARD)) {
                 handleWinCase(player1, player2);
-                return player1;
+                winner = player1;
             }
             else if (player2.getFaction().equals(Faction.NILFGAARD) && player1.getFaction().equals(Faction.NILFGAARD)) {
                 handleWinCase(player2, player1);
-                return player2;
+                winner = player2;
             }
             else {
                 player1.loseRound();
                 player2.loseRound();
-                return player2;
+                winner = player2;
             }
         }
+        if(player1.getHealth() == 0 || player2.getHealth() == 0 ) {
+            player1.getGame().isOver();
+        }
+        return winner;
     }
 
     private void handleWinCase(Player winner, Player loser) {

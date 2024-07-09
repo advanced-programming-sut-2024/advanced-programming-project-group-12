@@ -184,8 +184,10 @@ public class Client extends Thread {
             case END_ROUND:
                 EndRoundNotify endRoundNotify = gson.fromJson(request, EndRoundNotify.class);
                 Round round = endRoundNotify.getRound();
-                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().endRound(round.getWinnerName());
+                game = endRoundNotify.getGame();
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setPermission(endRoundNotify.isToStart());
+                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().endRound(round.getWinnerName());
+                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().update();
                 break;
             case END_GAME:
                 EndGameNotify endGameNotify = gson.fromJson(request, EndGameNotify.class);
