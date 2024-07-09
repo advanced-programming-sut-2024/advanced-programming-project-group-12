@@ -14,7 +14,8 @@ import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.RegisterMenuController;
 import com.mygdx.game.model.network.Client;
 import com.mygdx.game.model.network.email.Sender;
-import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SignUpRequest;
+import com.mygdx.game.model.network.email.UserVerificationStore;
+import com.mygdx.game.model.user.User;
 import com.mygdx.game.view.Screens;
 
 public class RegisterMenuScreen implements Screen {
@@ -112,6 +113,8 @@ public class RegisterMenuScreen implements Screen {
                 String generatedPassword = RegisterMenuController.randomPasswordGenerator();
                 passwordField.setText(generatedPassword);
                 confirmPasswordField.setText(generatedPassword);
+                RegisterMenuController.updatePasswordStrength(passwordField.getText(), passwordStateLabel);
+
             }
         });
 
@@ -139,9 +142,9 @@ public class RegisterMenuScreen implements Screen {
                     String nickname = nicknameField.getText();
                     String password = passwordField.getText();
                     String email = emailField.getText();
-                    RegisterMenuController.register(username, nickname, password, email);
+                    User.setToBeSignedUp(new User (username, nickname, password, email));
                     clearFields();
-                    Gwent.singleton.changeScreen(Screens.LOGIN);
+                    Gwent.singleton.changeScreen(Screens.CHOOSE_SECURITY_QUESTION);
                 } else {
                     showError("Invalid verification code", null);
                 }
@@ -245,28 +248,31 @@ public class RegisterMenuScreen implements Screen {
     }
 
     private void registerHandler(String username, String nickname, String password, String confirmPassword, String email) {
-        if (username.isEmpty() || nickname.isEmpty() || password.isEmpty() ||
-                confirmPassword.isEmpty() || email.isEmpty()) {
-            showError("Please fill all fields", null);
+        if (!RegisterMenuController.isUsernameValid(username)) {
+            showError("Invalid username", username);
             return;
-        } else if (!RegisterMenuController.isUsernameValid(username)) {
-            showError("Invalid username", null);
-            return;
-        } else if (!RegisterMenuController.isPasswordValid(password, confirmPassword).equals("Valid password")) {
-            showError(RegisterMenuController.isPasswordValid(password, confirmPassword), null);
-            return;
-        } else if (!RegisterMenuController.isEmailValid(email)) {
-            showError("Invalid email", null);
-            return;
-        } else if (!password.equals(confirmPassword)) {
-            showError("Passwords do not match", null);
-            return;
-        } else {
-            // Optionally, you can proceed with registration immediately or wait for verification code confirmation
-            // For demonstration, sending the registration request to the server directly
-            Client.getInstance().sendMassage(new SignUpRequest(username, password, nickname, email));
         }
+        if (!RegisterMenuController.isPasswordValid(password,confirmPassword).equals("Valid password")) {
+            showError("Invalid password", null);
+            return;
+        }
+        if (!RegisterMenuController.isEmailValid(email)) {
+            showError("Invalid email format", null);
+            return;
+        }
+        if (RegisterMenuController.isUsernameTaken(username)) {
+            showError("Username is already in use", username);
+            return;
+        }
+
+        // Create a new User object
+        User user = new User(username, nickname, password, email);
+        User.setToBeSignedUp(user); // Store the user for later use
+
+        // Transition to the next screen
+        Gwent.singleton.changeScreen(Screens.CHOOSE_SECURITY_QUESTION);
     }
+
 
     private void clearFields() {
         usernameField.setText("");

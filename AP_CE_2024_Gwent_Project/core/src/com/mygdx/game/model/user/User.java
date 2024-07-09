@@ -25,6 +25,31 @@ public class User {
     // static fields
     private static User loggedInUser;
     private static User toBeSignedUp;
+
+    public static void setUsers(ArrayList<User> users) {
+        User.users = users;
+    }
+
+    public void setSecurityQuestion(HashMap<SecurityQuestion, String> securityQuestion) {
+        this.securityQuestion = securityQuestion;
+    }
+
+    public void setAllGamePlayed(ArrayList<Game> allGamePlayed) {
+        this.allGamePlayed = allGamePlayed;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public void setLeader(String leader) {
+        this.leader = leader;
+    }
+
+    public void setSentFriendRequests(ArrayList<FriendRequest> sentFriendRequests) {
+        this.sentFriendRequests = sentFriendRequests;
+    }
+
     private static ArrayList<User> users = new ArrayList<>();
 
     // instance fields
