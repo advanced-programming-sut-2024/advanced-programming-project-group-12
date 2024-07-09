@@ -39,13 +39,9 @@ public class BroadCastScreen implements Screen {
         this.stage = new Stage(new ScreenViewport());
         this.background = new Texture("bg/board.jpg");
 
-        if (Client.getInstance().getGame().getCurrentPlayer().getUsername().equals(Client.getInstance().getUser().getUsername())) {
-            player = Client.getInstance().getGame().getCurrentPlayer();
-            opposition = Client.getInstance().getGame().getOpposition();
-        } else {
-            player = Client.getInstance().getGame().getOpposition();
-            opposition = Client.getInstance().getGame().getCurrentPlayer();
-        }
+        player = Client.getInstance().getGame().getCurrentPlayer();
+        opposition = Client.getInstance().getGame().getOpposition();
+
 
         displayInfo();
         displayLeaderCard();
