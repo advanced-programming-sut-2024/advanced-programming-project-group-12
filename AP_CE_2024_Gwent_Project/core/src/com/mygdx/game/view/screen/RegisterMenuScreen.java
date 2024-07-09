@@ -12,41 +12,52 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.RegisterMenuController;
-import com.mygdx.game.view.Screens;
 import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.network.email.Sender;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SignUpRequest;
-
+import com.mygdx.game.view.Screens;
 
 public class RegisterMenuScreen implements Screen {
     private static final float FIELD_WIDTH = 400;
     private static final float FIELD_HEIGHT = 80;
-    //
+
     private Stage stage;
     private SpriteBatch batch;
     private Table table;
-    private Window chooseSecurityQuestionWindow;
     private Window errorWindow;
+
     // Buttons
     private TextButton registerButton;
     private TextButton randomPasswordButton;
     private TextButton backButton;
     private TextButton showPasswordButton;
+    private TextButton sendVerificationCodeButton;
+    private TextButton confirmRegistrationButton;
+
     // TextFields
     private TextField usernameField;
     private TextField passwordField;
     private TextField confirmPasswordField;
     private TextField emailField;
     private TextField nicknameField;
+    private TextField verificationCodeField;
+
     // Labels
     private Label passwordStateLabel;
+    private Label verificationCodeLabel;
+
+    // Other UI elements
     private Texture background;
+
     public RegisterMenuScreen() {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
+
         buttonAndFieldInit();
+
         passwordField.addListener(new InputListener() {
             @Override
             public boolean keyTyped(InputEvent event, char character) {
@@ -54,15 +65,17 @@ public class RegisterMenuScreen implements Screen {
                 return super.keyTyped(event, character);
             }
         });
+
         batch = new SpriteBatch();
         background = new Texture(Gdx.files.internal("backgrounds/main_background.jpg"));
     }
+
     @Override
     public void show() {
         showPasswordButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(passwordField.isPasswordMode()) {
+                if (passwordField.isPasswordMode()) {
                     passwordField.setPasswordMode(false);
                     confirmPasswordField.setPasswordMode(false);
                     showPasswordButton.setText("Hide");
@@ -73,12 +86,14 @@ public class RegisterMenuScreen implements Screen {
                 }
             }
         });
+
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gwent.singleton.changeScreen(Screens.LOGIN);
             }
         });
+
         registerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -90,11 +105,46 @@ public class RegisterMenuScreen implements Screen {
                 registerHandler(username, nickname, password, confirmPassword, email);
             }
         });
+
         randomPasswordButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                passwordField.setText(RegisterMenuController.randomPasswordGenerator());
-                confirmPasswordField.setText(passwordField.getText());
+                String generatedPassword = RegisterMenuController.randomPasswordGenerator();
+                passwordField.setText(generatedPassword);
+                confirmPasswordField.setText(generatedPassword);
+            }
+        });
+
+        sendVerificationCodeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String email = emailField.getText();
+                if (RegisterMenuController.isEmailValid(email)) {
+                    String verificationCode = RegisterMenuController.generateVerificationCode();
+                    RegisterMenuController.storeTempVerificationCode(verificationCode);
+                    Sender.sendVerificationCode(email, verificationCode);
+                    verificationCodeLabel.setText("Verification code sent to your email.");
+                } else {
+                    showError("Invalid email format", null);
+                }
+            }
+        });
+
+        confirmRegistrationButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String enteredVerificationCode = verificationCodeField.getText();
+                if (RegisterMenuController.verifyVerificationCode(enteredVerificationCode)) {
+                    String username = usernameField.getText();
+                    String nickname = nicknameField.getText();
+                    String password = passwordField.getText();
+                    String email = emailField.getText();
+                    RegisterMenuController.register(username, nickname, password, email);
+                    clearFields();
+                    Gwent.singleton.changeScreen(Screens.LOGIN);
+                } else {
+                    showError("Invalid verification code", null);
+                }
             }
         });
     }
@@ -108,39 +158,37 @@ public class RegisterMenuScreen implements Screen {
         batch.end();
         stage.act();
         stage.draw();
-
     }
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-
     }
 
     @Override
     public void dispose() {
         stage.dispose();
-
     }
+
     private void buttonAndFieldInit() {
-        showPasswordButton = new TextButton("Show" , Gwent.singleton.getSkin());
+        showPasswordButton = new TextButton("Show", Gwent.singleton.getSkin());
         registerButton = new TextButton("Register", Gwent.singleton.getSkin());
         randomPasswordButton = new TextButton("Random Password", Gwent.singleton.getSkin());
         backButton = new TextButton("Back", Gwent.singleton.getSkin());
+        sendVerificationCodeButton = new TextButton("Send Verification Code", Gwent.singleton.getSkin());
+        confirmRegistrationButton = new TextButton("Confirm Registration", Gwent.singleton.getSkin());
+
         usernameField = new TextField("", Gwent.singleton.getSkin());
         usernameField.setMessageText("Username");
         nicknameField = new TextField("", Gwent.singleton.getSkin());
@@ -155,20 +203,25 @@ public class RegisterMenuScreen implements Screen {
         confirmPasswordField.setPasswordCharacter('*');
         emailField = new TextField("", Gwent.singleton.getSkin());
         emailField.setMessageText("Email");
+        verificationCodeField = new TextField("", Gwent.singleton.getSkin());
+        verificationCodeField.setMessageText("Verification Code");
+
         passwordStateLabel = new Label("", Gwent.singleton.getSkin());
-        //set color
+        verificationCodeLabel = new Label("", Gwent.singleton.getSkin());
+
+        // Set color
         usernameField.setColor(Color.ROYAL);
         nicknameField.setColor(Color.ROYAL);
         passwordField.setColor(Color.ROYAL);
         confirmPasswordField.setColor(Color.ROYAL);
         emailField.setColor(Color.ROYAL);
-        //set size
+
+        // Set size
         backButton.setSize(200, 100);
         registerButton.setSize(400, 100);
         randomPasswordButton.setSize(500, 100);
 
-
-        //set position
+        // Set position
         table.add(usernameField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.add(nicknameField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.row().pad(10);
@@ -180,45 +233,55 @@ public class RegisterMenuScreen implements Screen {
         table.row().pad(10);
         table.add(emailField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
         table.row().pad(10);
-        table.add(registerButton);
+        table.add(sendVerificationCodeButton);
+        table.add(verificationCodeField).width(FIELD_WIDTH).height(FIELD_HEIGHT);
+        table.row().pad(10);
+        table.add(confirmRegistrationButton);
         table.add(randomPasswordButton);
-        backButton.setPosition(0, Gwent.HEIGHT - 100);
+        table.row().pad(10);
 
+        backButton.setPosition(0, Gwent.HEIGHT - 100);
         stage.addActor(backButton);
     }
+
     private void registerHandler(String username, String nickname, String password, String confirmPassword, String email) {
-        if(username.isEmpty() || nickname.isEmpty() || password.isEmpty() ||
+        if (username.isEmpty() || nickname.isEmpty() || password.isEmpty() ||
                 confirmPassword.isEmpty() || email.isEmpty()) {
             showError("Please fill all fields", null);
             return;
-        } else if(!RegisterMenuController.isUsernameValid(username)) {
+        } else if (!RegisterMenuController.isUsernameValid(username)) {
             showError("Invalid username", null);
             return;
-        } else if(!RegisterMenuController.isPasswordValid(password, confirmPassword).equals("Valid password")) {
+        } else if (!RegisterMenuController.isPasswordValid(password, confirmPassword).equals("Valid password")) {
             showError(RegisterMenuController.isPasswordValid(password, confirmPassword), null);
             return;
-        } else if(!RegisterMenuController.isEmailValid(email)) {
+        } else if (!RegisterMenuController.isEmailValid(email)) {
             showError("Invalid email", null);
             return;
-        } else if(!password.equals(confirmPassword)) {
+        } else if (!password.equals(confirmPassword)) {
             showError("Passwords do not match", null);
             return;
-        }else {
+        } else {
+            // Optionally, you can proceed with registration immediately or wait for verification code confirmation
+            // For demonstration, sending the registration request to the server directly
             Client.getInstance().sendMassage(new SignUpRequest(username, password, nickname, email));
         }
     }
+
     private void clearFields() {
         usernameField.setText("");
         nicknameField.setText("");
         passwordField.setText("");
         confirmPasswordField.setText("");
         emailField.setText("");
+        verificationCodeField.setText("");
     }
+
     public void showError(String message, String oldUsername) {
-        if(oldUsername != null) {
+        if (oldUsername != null) {
             String newUsername = RegisterMenuController.generateNewUsername(oldUsername);
             usernameField.setText(newUsername);
-            message = "this username is already taken, \n you can choose " +newUsername+" instead.";
+            message = "This username is already taken. You can choose " + newUsername + " instead.";
         }
 
         errorWindow = new Window("Error", Gwent.singleton.getSkin());
@@ -226,17 +289,19 @@ public class RegisterMenuScreen implements Screen {
         errorWindow.setColor(Color.RED);
         errorWindow.setSize(800, 400);
         errorWindow.setPosition((float) Gwent.WIDTH / 2 - 300, (float) Gwent.HEIGHT / 2 - 200);
+
         Label errorLabel = new Label(message, Gwent.singleton.getSkin());
         TextButton okButton = new TextButton("OK", Gwent.singleton.getSkin());
         okButton.setSize(200, 100);
         okButton.setPosition(errorWindow.getWidth() - 50, 0);
+
         okButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 errorWindow.setVisible(false);
-
             }
         });
+
         errorWindow.add(errorLabel);
         errorWindow.add(okButton);
         stage.addActor(errorWindow);

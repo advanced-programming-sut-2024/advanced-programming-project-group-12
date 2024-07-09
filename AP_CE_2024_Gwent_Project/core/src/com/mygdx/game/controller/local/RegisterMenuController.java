@@ -128,5 +128,25 @@ public class RegisterMenuController {
         Client.getInstance().sendMassage(new SecurityQuestionRequest(User.getToBeSignedUp()));
     }
 
+    private static String tempVerificationCode;
+
+    public static void storeTempVerificationCode(String verificationCode) {
+        tempVerificationCode = verificationCode;
+    }
+
+    public static String getTempVerificationCode() {
+        return tempVerificationCode;
+    }
+
+    public static String generateVerificationCode() {
+        Random random = new Random();
+        int code = random.nextInt(900000) + 100000; // Generate 6-digit code
+        return String.valueOf(code);
+    }
+
+    public static boolean verifyVerificationCode(String enteredCode) {
+        return enteredCode.equals(tempVerificationCode);
+    }
+
 
 }
