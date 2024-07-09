@@ -48,7 +48,7 @@ public class Server extends Thread {
         gson = builder.create();
         this.socket = socket;
         clientRequests = new ArrayList<>();
-        requestHandler = new RequestHandler(this,  builder.create());
+        requestHandler = new RequestHandler(this);
         requestHandler.start();
     }
 

@@ -1,9 +1,10 @@
 package com.mygdx.game.model.network;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mygdx.game.controller.remote.*;
+import com.mygdx.game.model.game.card.AbstractElementAdapter;
 import com.mygdx.game.model.game.card.AbstractCard;
-import com.mygdx.game.model.game.card.AllCards;
 import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
@@ -12,7 +13,6 @@ import com.mygdx.game.model.network.massage.serverResponse.ChangeMenuResponse;
 import com.mygdx.game.model.network.massage.serverResponse.GetAllUsersResponse;
 import com.mygdx.game.model.network.session.InvalidSessionException;
 import com.mygdx.game.model.network.session.SessionExpiredException;
-import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponseType;
@@ -38,9 +38,11 @@ public class RequestHandler extends Thread {
     private Timer unfinishedGame;
 
 
-    public RequestHandler(Server server, Gson gson) {
+    public RequestHandler(Server server) {
         this.server = server;
-        this.gson = gson;
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(AbstractCard.class, new AbstractElementAdapter());
+        this.gson = gsonBuilder.create();
     }
 
     public void setUser(String user) {
@@ -208,7 +210,7 @@ public class RequestHandler extends Thread {
                     gameHandler.gameAborted(user);
                     terminate();
                 }
-            }, 60);
+            }, 60000);
         }
     }
 

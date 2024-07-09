@@ -12,7 +12,7 @@ import java.util.List;
 public enum AllCards {
     //special cards
     COMMANDER_HORN(new SpellCard("commander horn", "", Action.HORN, Arrays.asList(0,1,2), null, Faction.SPECIAL), 3),
-    SCORCH(new SpellCard("scorch", "", Action.SCORCH, null, null, Faction.SPECIAL), 3),
+    SCORCH(new SpellCard("scorch", "", Action.SCORCH, Arrays.asList(0,1,2), null, Faction.SPECIAL), 3),
     //decoy should be hancled seperatly so that it replaces an abstract card
     DECOY(new Decoy("decoy", "", Action.DECOY, Arrays.asList(0,1,2), null, Faction.SPECIAL), 3),
     MARDROEME(new SpellCard("mardroeme", "", Action.MUSHROOM, Arrays.asList(0,1,2), null, Faction.SPECIAL),3),

@@ -5,10 +5,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.ChatController;
+import com.mygdx.game.model.game.card.AbstractElementAdapter;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.Round;
+import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
-import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.GetAllUsersRequest;
 import com.mygdx.game.model.network.massage.serverResponse.*;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.*;
 import com.mygdx.game.model.network.session.Session;
@@ -18,8 +19,6 @@ import com.mygdx.game.model.user.User;
 import com.mygdx.game.view.screen.*;
 
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -37,7 +36,9 @@ public class Client extends Thread {
         setDaemon(true);
         clientListener = new ClientListener(this);
         clientListener.start();
-        gson = new GsonBuilder().create();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(AbstractCard.class, new AbstractElementAdapter());
+        gson = gsonBuilder.create();
         instance = this;
     }
 
@@ -173,8 +174,9 @@ public class Client extends Thread {
                 ActionResponse actionResponse = playCardResponse.getActionResponse();
                 if (actionResponse!= null && actionResponse.getAction().equals(ActionResponseType.SELECTION)) {
                     ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setShowSelectedCard(actionResponse.getAffectedCards(), actionResponse.getActionCount(), false);
+                } else {
+                    ((GameScreen) Gwent.singleton.getCurrentScreen()).getController().update();
                 }
-                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().update();
                 break;
             case CHAT:
                 ChatInGameWrapper chatWrapper = gson.fromJson(request, ChatInGameWrapper.class);

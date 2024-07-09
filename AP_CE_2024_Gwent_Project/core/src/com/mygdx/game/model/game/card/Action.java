@@ -183,7 +183,7 @@ public enum Action {
 
         LinkedList<AbstractCard> hand = player.getHandAsCards();
         for (AbstractCard i : hand) {
-            if (i.getName().equals(card.getName())) {
+            if (i.getAbsName().equals(card.getAbsName())) {
                 if (i.getAllowableRows().contains(row)) {
                     return i.place(row, card.getPlayer()).getActionResponse();
                 } else {

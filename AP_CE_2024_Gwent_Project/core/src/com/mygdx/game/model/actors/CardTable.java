@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.model.game.card.*;
 
@@ -89,7 +90,11 @@ public class CardTable extends Table {
 
     public Texture getAbiltyTexture() {
         String path = "icons/card_ability_" + card.getAction().toString().toLowerCase() + ".png";
-        return new Texture(path);
+        try {
+            return new Texture(path);
+        } catch (GdxRuntimeException e) {
+            return new Texture("icons/power_normal.png");
+        }
     }
 
     public Texture getRangeTexture() {
