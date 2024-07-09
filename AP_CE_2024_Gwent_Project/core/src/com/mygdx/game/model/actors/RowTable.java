@@ -37,24 +37,23 @@ public class RowTable extends Table {
     true : player
     false : enemy
      */
-    public RowTable(int rowNumber, boolean side, ArrayList<PlayableCard> cards, String pathToOverLayImage, HashSet<SpellCard> spellCards) {
+    public RowTable(Row row, boolean side, int rowNumber) {
         Player player;
         if(side) {
             player = Client.getInstance().getGame().getCurrentPlayer();
         } else {
             player = Client.getInstance().getGame().getOpposition();
         }
-        Row row = Client.getInstance().getGame().getGameBoard().getRowForPlayer(rowNumber, player);
         this.setSize(680, 110);
         this.cardActors = new ArrayList<>();
         this.hornArea = new HornArea();
-        for(PlayableCard card : cards) {
+        for(PlayableCard card : row.getCards()) {
             CardActor newCard = new CardActor(card);
             newCard.updatePower(row.calculatePowerOfPlayableCard(card));
             this.add(newCard.getCardTable()).size(85,130);
         }
 
-        for(SpellCard spellCard : spellCards) {
+        for(SpellCard spellCard : row.getSpellCards()) {
             hornArea.addCard(spellCard);
         }
         // Create the hornArea and set its position
@@ -80,8 +79,8 @@ public class RowTable extends Table {
         overlayImage.setPosition(0, 0);
         overlayImage.setColor(Color.CLEAR);
         this.addActor(overlayImage);
-        if(pathToOverLayImage != null) {
-            showOverLayImage(pathToOverLayImage);
+        if(row.getWeatherAssetForRow(rowNumber) != null) {
+            showOverLayImage(row.getWeatherAssetForRow(rowNumber));
         } else {
             hideOverLayImage();
         }

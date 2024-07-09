@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.ChatController;
 import com.mygdx.game.controller.local.GameController;
+import com.mygdx.game.model.game.Row;
 import com.mygdx.game.model.game.card.*;
 import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.game.card.Action;
@@ -223,11 +224,8 @@ public class GameScreen implements Screen {
         playerRows = new ArrayList<>();
         enemyRows = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            ArrayList<PlayableCard> cards = Client.getInstance().getGame().getGameBoard().getRowCards(player, i);
-            String path = Client.getInstance().getGame().getGameBoard().getWeatherAssetForRow(i);
-            HashSet<SpellCard> spellCards = Client.getInstance().getGame().
-                    getGameBoard().getRowForPlayer(i, player).getSpellCards();
-            RowTable playerRow = new RowTable(i, true, cards, path, spellCards);
+            Row row = Client.getInstance().getGame().getGameBoard().getRowForPlayer(i, player);
+            RowTable playerRow = new RowTable(row,true, i);
             playerRows.add(playerRow);
             stage.addActor(playerRow);
             playerRow.addListener(new ClickListener() {
@@ -242,19 +240,16 @@ public class GameScreen implements Screen {
             });
         }
         for (int i = 0; i < 3; i++) {
-            ArrayList<PlayableCard> cards = Client.getInstance().getGame().getGameBoard().getRowCards(opposition, i);
-            String path = Client.getInstance().getGame().getGameBoard().getWeatherAssetForRow(i);
-            HashSet<SpellCard> spellCards = Client.getInstance().getGame().
-                    getGameBoard().getRowForPlayer(i, opposition).getSpellCards();
-            RowTable enemyRow = new RowTable(i, false, cards, path, spellCards);
-            enemyRows.add(enemyRow);
-            stage.addActor(enemyRow);
-            enemyRow.addListener(new ClickListener() {
+            Row row = Client.getInstance().getGame().getGameBoard().getRowForPlayer(i, opposition);
+            RowTable oppositionRow = new RowTable(row,false, i);
+            enemyRows.add(oppositionRow);
+            stage.addActor(oppositionRow);
+            oppositionRow.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     if (controller.getSelectedCard() != null && controller.getPermission()) {
-                        if (controller.isAllowedToPlay(controller.getSelectedCard(), enemyRow.getSide(), enemyRow.getRowNumber())) {
-                            playCard(controller.getSelectedCard(), enemyRow);
+                        if (controller.isAllowedToPlay(controller.getSelectedCard(), oppositionRow.getSide(), oppositionRow.getRowNumber())) {
+                            playCard(controller.getSelectedCard(), oppositionRow);
                             selectedCardPlace.clear();
                             controller.setSelectedCard(null);
                             resetBackgroundColors();
@@ -290,7 +285,7 @@ public class GameScreen implements Screen {
                 player.getFaction().toString(), player.getHealth());
         stage.addActor(playerInfoBox.getInfoTable());
         oppositionInfoBox = new PlayerInfoBox(opposition.getHandAsCards().size(), opposition.getUsername(),
-                opposition.getFaction().toString(), player.getHealth());
+                opposition.getFaction().toString(), opposition.getHealth());
         stage.addActor(oppositionInfoBox.getInfoTable());
         playerInfoBox.setPosition(50, 260);
         oppositionInfoBox.setPosition(50, 610);
@@ -446,7 +441,7 @@ public class GameScreen implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     if (((CommanderCard) card).HasPlayedAction()) {
-                        //TODO : don't let him play and show error
+                        showError("you already played your commander card");
                         return;
                     }
                     controller.playCard(player.getLeader(), -1);
@@ -853,5 +848,11 @@ public class GameScreen implements Screen {
 
     public void setUpdate() {
         this.update = true;
+    }
+    private void showError(String message) {
+        Dialog errorDialog = new Dialog("Error", Gwent.singleton.getSkin());
+        errorDialog.text(message);
+        errorDialog.button("OK");
+        errorDialog.show(stage);
     }
 }

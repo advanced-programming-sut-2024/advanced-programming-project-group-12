@@ -179,16 +179,7 @@ public class GameBoard {
         weatherCards = new HashSet<>();
     }
 
-    public String getWeatherAssetForRow(int rowNumber) {
-        Row row = rows.get(rows.keySet().toArray()[0]).get(rowNumber);
-        if(!row.hasWeatherBuffer()) return null;
-        switch (rowNumber) {
-            case 0 : return "icons/overlay_frost.png";
-            case 1 : return "icons/overlay_fog.png";
-            case 2 : return "icons/overlay_rain.png";
-            default : return null;
-        }
-    }
+
 }
 
 

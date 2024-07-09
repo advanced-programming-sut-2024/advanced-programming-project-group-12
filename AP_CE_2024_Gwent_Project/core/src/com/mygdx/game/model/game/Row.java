@@ -120,4 +120,13 @@ public class Row {
     public HashSet<SpellCard> getSpellCards() {
         return spellCards;
     }
+    public String getWeatherAssetForRow(int rowNumber) {
+        if(!hasWeatherBuffer()) return null;
+        switch (rowNumber) {
+            case 0 : return "icons/overlay_frost.png";
+            case 1 : return "icons/overlay_fog.png";
+            case 2 : return "icons/overlay_rain.png";
+            default : return null;
+        }
+    }
 }
