@@ -168,13 +168,13 @@ public enum Action {
         Player player = card.getPlayer().getGame().getCurrentPlayer();
         LinkedList<AbstractCard> deck = player.getDeckAsCards();
         int row = card.getRow();
-        for (AbstractCard i : deck) {
-            if (i.getName().equals(card.getName())) {
+        for (int i = 0; i< deck.size(); i++) {
+            if (deck.get(i).getAbsName().equals(card.getName())) {
                 deck.remove(i);
-                if (i.getAllowableRows().contains(row)) {
-                    i.place(row, card.getPlayer());
+                if (deck.get(i).getAllowableRows().contains(row)) {
+                    return deck.get(i).place(row, card.getPlayer()).getActionResponse();
                 } else {
-                    i.place(i.getDefaultRow(), card.getPlayer());
+                    return deck.get(i).place(deck.get(i).getDefaultRow(), card.getPlayer()).getActionResponse();
                 }
             }
         }
@@ -183,9 +183,9 @@ public enum Action {
         for (AbstractCard i : hand) {
             if (i.getName().equals(card.getName())) {
                 if (i.getAllowableRows().contains(row)) {
-                    i.place(row, card.getPlayer());
+                    return i.place(row, card.getPlayer()).getActionResponse();
                 } else {
-                    i.place(i.getDefaultRow(), i.getPlayer());
+                    return i.place(i.getDefaultRow(), i.getPlayer()).getActionResponse();
                 }
             }
         }

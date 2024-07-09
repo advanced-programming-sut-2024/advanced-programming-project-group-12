@@ -32,6 +32,10 @@ public abstract class AbstractCard implements Cloneable{
         return name+typeNumber;
     }
 
+    public String getAbsName() {
+        return name;
+    }
+
     public Player getPlayer() {
         return player;
     }

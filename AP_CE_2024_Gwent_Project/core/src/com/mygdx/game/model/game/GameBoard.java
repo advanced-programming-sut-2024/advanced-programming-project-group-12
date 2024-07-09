@@ -96,7 +96,7 @@ public class GameBoard {
     }
 
     public ArrayList<Row> getAllRowsForPlayer(Player player) {
-        return rows.get(player);
+        return rows.get(player.getUsername());
     }
 
     public Row getRowForPlayer(int row, Player player) {
@@ -160,7 +160,6 @@ public class GameBoard {
                     if(c.getAction().equals(Action.COW)) {
                         cowCards.add(c);
                     }
-                    c.kill();
                 }
             }
             rows.put(p, new ArrayList<>(Arrays.asList(new Row(), new Row(), new Row())));
@@ -172,7 +171,7 @@ public class GameBoard {
     }
 
     public void resetDiscard(Player player) {
-        discard.put(player.getUsername(), new Discard(discard.get(player)));
+        discard.put(player.getUsername(), new Discard(discard.get(player.getUsername())));
     }
 
     public GameBoard copy() {
@@ -186,12 +185,12 @@ public class GameBoard {
     public String getWeatherAssetForRow(int rowNumber) {
         Row row = rows.get(rows.keySet().toArray()[0]).get(rowNumber);
         if(!row.hasWeatherBuffer()) return null;
-        switch (rowNumber) {
-            case 0: return "icons/overlay_frost.png";
-            case 1: return "icons/overlay_fog.png";
-            case 2: return "icons/overlay_rain.png";
-        }
-        return null;
+        return switch (rowNumber) {
+            case 0 -> "icons/overlay_frost.png";
+            case 1 -> "icons/overlay_fog.png";
+            case 2 -> "icons/overlay_rain.png";
+            default -> null;
+        };
     }
 }
 

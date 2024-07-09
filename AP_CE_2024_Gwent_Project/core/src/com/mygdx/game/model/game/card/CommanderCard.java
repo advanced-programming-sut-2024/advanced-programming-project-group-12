@@ -34,6 +34,7 @@ public class CommanderCard extends AbstractCard{
 
     @Override
     public PlayCardResponse place(int row, Player player) {
+        super.place(row, player);
         return new PlayCardResponse(this.player.getGame(), doAction());
     }
 

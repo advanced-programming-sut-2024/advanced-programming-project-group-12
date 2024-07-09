@@ -77,9 +77,9 @@ public class PlayableCard extends AbstractCard implements Comparable<PlayableCar
         Game game = player.getGame();
 
         if(action.equals(Action.SPY)) {
-            this.player = game.getOpposition();
+            super.player = game.getOpposition();
         }
-        player.getGame().getGameBoard().addCard(player, row, this);
+        player.getGame().getGameBoard().addCard(super.player, row, this);
         ArrayList<PlayableCard> boardRow = player.getGame().getGameBoard().getRowCards(player, row);
         boardRow.sort(null);
         return new PlayCardResponse(player.getGame(), doAction());
