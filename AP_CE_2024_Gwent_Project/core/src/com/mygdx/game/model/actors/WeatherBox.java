@@ -41,6 +41,6 @@ public class WeatherBox extends Table {
     public void addCard(SpellCard card) {
         CardActor weatherCard = new CardActor(card);
         weatherCard.setSize(85, 130);
-        add(weatherCard.getCardTable()).fill().expand();
+        add(weatherCard.getCardTable()).size(85,130).center();
     }
 }

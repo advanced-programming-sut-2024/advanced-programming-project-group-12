@@ -44,5 +44,8 @@ public class CardActor extends Actor {
         super.setSize(width, height);
         cardTable.setSize(width, height);
     }
+    public void updatePower(int newPower) {
+        cardTable.updatePowerNumber(newPower);
+    }
 }
 

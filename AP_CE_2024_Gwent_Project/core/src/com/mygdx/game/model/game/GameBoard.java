@@ -185,12 +185,12 @@ public class GameBoard {
     public String getWeatherAssetForRow(int rowNumber) {
         Row row = rows.get(rows.keySet().toArray()[0]).get(rowNumber);
         if(!row.hasWeatherBuffer()) return null;
-        return switch (rowNumber) {
-            case 0 -> "icons/overlay_frost.png";
-            case 1 -> "icons/overlay_fog.png";
-            case 2 -> "icons/overlay_rain.png";
-            default -> null;
-        };
+        switch (rowNumber) {
+            case 0 : return "icons/overlay_frost.png";
+            case 1 : return "icons/overlay_fog.png";
+            case 2 :  return "icons/overlay_rain.png";
+            default : return null;
+        }
     }
 }
 

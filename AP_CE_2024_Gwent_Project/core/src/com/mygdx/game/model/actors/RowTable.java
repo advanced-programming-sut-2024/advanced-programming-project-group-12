@@ -12,10 +12,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.Gwent;
+import com.mygdx.game.model.game.Row;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.PlayableCard;
 import com.mygdx.game.model.game.card.SpellCard;
 import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.user.Player;
 import com.mygdx.game.view.screen.GameScreen;
 
 
@@ -36,11 +38,20 @@ public class RowTable extends Table {
     false : enemy
      */
     public RowTable(int rowNumber, boolean side, ArrayList<PlayableCard> cards, String pathToOverLayImage, HashSet<SpellCard> spellCards) {
+        Player player;
+        if(side) {
+            player = Client.getInstance().getGame().getCurrentPlayer();
+        } else {
+            player = Client.getInstance().getGame().getOpposition();
+        }
+        Row row = Client.getInstance().getGame().getGameBoard().getRowForPlayer(rowNumber, player);
         this.setSize(680, 110);
         this.cardActors = new ArrayList<>();
         this.hornArea = new HornArea();
         for(PlayableCard card : cards) {
-            this.add(new CardActor(card).getCardTable()).size(85,130);
+            CardActor newCard = new CardActor(card);
+            newCard.updatePower(row.calculatePowerOfPlayableCard(card));
+            this.add(newCard.getCardTable()).size(85,130);
         }
 
         for(SpellCard spellCard : spellCards) {
