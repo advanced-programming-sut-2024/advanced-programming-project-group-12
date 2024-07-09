@@ -35,7 +35,7 @@ public enum Action {
         allPlayableCards.sort(null);
 
         ArrayList<PlayableCard> cardsToBeScorched = new ArrayList<>();
-        int maxPower = allPlayableCards.get(0).getPower();
+        int maxPower = allPlayableCards.getFirst().getPower();
         for (PlayableCard i : allPlayableCards) {
             if (i.getPower() == maxPower) {
                 cardsToBeScorched.add(i);
@@ -61,7 +61,7 @@ public enum Action {
         row.sort(null); //sort cards based on power
         ArrayList<PlayableCard> cardsToBeKilled = new ArrayList<>();
         for(PlayableCard i: row) {
-            if(i.getPower() == row.get(0).getPower()) {
+            if(i.getPower() == row.getFirst().getPower()) {
                 cardsToBeKilled.add(i);
             } else {
                 break;
@@ -84,7 +84,7 @@ public enum Action {
         row.sort(null); //sort cards based on power
         ArrayList<PlayableCard> cardsToBeKilled = new ArrayList<>();
         for(PlayableCard i: row) {
-            if(i.getPower() == row.get(0).getPower()) {
+            if(i.getPower() == row.getFirst().getPower()) {
                 cardsToBeKilled.add(i);
             } else {
                 break;
@@ -107,7 +107,7 @@ public enum Action {
         row.sort(null); //sort cards based on power
         ArrayList<PlayableCard> cardsToBeKilled = new ArrayList<>();
         for(PlayableCard i: row) {
-            if(i.getPower() == row.get(0).getPower()) {
+            if(i.getPower() == row.getFirst().getPower()) {
                 cardsToBeKilled.add(i);
             } else {
                 break;
