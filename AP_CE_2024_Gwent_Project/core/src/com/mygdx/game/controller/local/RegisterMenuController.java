@@ -3,6 +3,7 @@ package com.mygdx.game.controller.local;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.network.email.Registration;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequestType;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SecurityQuestionRequest;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SignUpRequest;
@@ -119,8 +120,12 @@ public class RegisterMenuController {
         Client.getInstance().sendMassage( new SecurityQuestionRequest(User.getToBeSignedUp(), question, answer));
     }
 
+    public static void sendVerificationEmail(String email) {
+        Registration.registerNewUser(email);
+    }
+
     public static void abortSignUp() {
-        Client.getInstance().sendMassage( new SecurityQuestionRequest(User.getToBeSignedUp()));
+        Client.getInstance().sendMassage(new SecurityQuestionRequest(User.getToBeSignedUp()));
     }
 
 

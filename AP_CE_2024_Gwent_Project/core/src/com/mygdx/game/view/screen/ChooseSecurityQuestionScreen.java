@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.RegisterMenuController;
 import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.network.email.UserVerificationStore;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.SecurityQuestionRequest;
 import com.mygdx.game.model.user.SecurityQuestion;
 import com.mygdx.game.model.user.User;
@@ -60,14 +61,31 @@ public class ChooseSecurityQuestionScreen implements Screen {
                 RegisterMenuController.abortSignUp();
             }
         });
+
         submitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (answerField.getText().isEmpty()) {
-                    showError("please enter your answer");
+                    showError("Please enter your answer");
                     return;
                 }
-                Client.getInstance().sendMassage(new SecurityQuestionRequest(User.getToBeSignedUp() ,SecurityQuestion.getQuestionByString(securityQuestionSelectBox.getSelected()), answerField.getText()));
+
+                String email = User.getToBeSignedUp().getEmail();
+                RegisterMenuController.sendVerificationEmail(email);
+                showEmailNotification();
+
+                // Polling or WebSocket setup to wait for email verification
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        if (UserVerificationStore.isUserVerified(email)) {
+                            Client.getInstance().sendMassage(new SecurityQuestionRequest(User.getToBeSignedUp(),
+                                    SecurityQuestion.getQuestionByString(securityQuestionSelectBox.getSelected()),
+                                    answerField.getText()));
+                            showWelcomeMessage();
+                        }
+                    }
+                }, 5, 5); // Check every 5 seconds
             }
         });
     }
@@ -136,6 +154,17 @@ public class ChooseSecurityQuestionScreen implements Screen {
         errorDialog.text(errorLabel);
         errorDialog.button("OK");
         errorDialog.show(stage);
+    }
+
+    private void showEmailNotification() {
+        // Show email notification dialog
+        Dialog emailDialog = new Dialog("Verification Email Sent", Gwent.singleton.getSkin());
+        emailDialog.setSize(800, 400);
+        emailDialog.setPosition((float) Gwent.WIDTH / 2 - 400, (float) Gwent.HEIGHT / 2 - 200);
+        Label emailLabel = new Label("A verification email has been sent to your email address. Please check your email to complete the registration.", Gwent.singleton.getSkin());
+        emailDialog.text(emailLabel);
+        emailDialog.button("OK", true);
+        emailDialog.show(stage);
     }
 
 }

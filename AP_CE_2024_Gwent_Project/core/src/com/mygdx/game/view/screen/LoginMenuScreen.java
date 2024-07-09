@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -14,7 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.LoginMenuController;
+import com.mygdx.game.controller.local.VerificationCodeManager;
 import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.network.email.Sender;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.LoginRequest;
 
 public class LoginMenuScreen implements Screen {
@@ -32,6 +35,12 @@ public class LoginMenuScreen implements Screen {
     // background
     private Texture background;
 
+    // Verification dialog
+    private Dialog verificationDialog;
+    private TextField verificationCodeField;
+    private String username;
+    private String password;
+
     public LoginMenuScreen() {
         stage = new Stage();
         batch = new SpriteBatch();
@@ -45,9 +54,22 @@ public class LoginMenuScreen implements Screen {
         loginButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                loginHandler();
+                username = usernameField.getText();
+                password = passwordField.getText();
+                if (LoginMenuController.doesThisUserExist(username) &&
+                        LoginMenuController.doesThisPasswordMatch(username, password)) {
+
+                    String verificationCode = VerificationCodeManager.generateVerificationCode();
+                    VerificationCodeManager.storeVerificationCode(username, verificationCode);
+                    String email = LoginMenuController.getUserEmail(username);
+                    Sender.sendVerificationCode(email, verificationCode);
+                    showVerificationDialog();
+                } else {
+                    showError("Invalid username or password");
+                }
             }
         });
+
         forgotPasswordButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -57,10 +79,63 @@ public class LoginMenuScreen implements Screen {
         donNotHaveAnAccountButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
                 LoginMenuController.goToRegisterMenu();
             }
         });
+    }
+
+    private void showVerificationDialog() {
+        verificationDialog = new Dialog("Email Verification", Gwent.singleton.getSkin());
+        verificationCodeField = new TextField("", Gwent.singleton.getSkin());
+        verificationCodeField.setMessageText("Enter 6-digit code");
+        TextButton verifyButton = new TextButton("Verify", Gwent.singleton.getSkin());
+
+        verifyButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String enteredCode = verificationCodeField.getText();
+                if (VerificationCodeManager.verifyCode(username, enteredCode)) {
+                    VerificationCodeManager.removeVerificationCode(username);
+                    // Successful login, navigate to the next screen
+                    Client.getInstance().sendMassage(new LoginRequest(username, password));
+                } else {
+                    showError("Invalid verification code");
+                }
+            }
+        });
+
+        verificationDialog.getContentTable().add(new Label("A verification code has been sent to your email.", Gwent.singleton.getSkin())).row();
+        verificationDialog.getContentTable().add(verificationCodeField).width(300).row();
+        verificationDialog.getContentTable().add(verifyButton).width(300).row();
+        verificationDialog.button("Cancel");
+        verificationDialog.show(stage);
+    }
+
+    public void showError(String message) {
+        errorDialog = new Dialog("Error", Gwent.singleton.getSkin());
+        errorDialog.text(message);
+        errorDialog.button("OK");
+        errorDialog.show(stage);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                errorDialog.hide();
+            }
+        }, 4); // Delay in seconds
+    }
+
+    private void forgotPasswordHandler() {
+        String username = usernameField.getText();
+        if (username.isEmpty()) {
+            showError("Please fill the username field");
+            return;
+        }
+        if (!LoginMenuController.doesThisUserExist(username)) {
+            showError("User does not exist");
+            return;
+        }
+        LoginMenuController.setUsernameForForgotPassword(username);
+        LoginMenuController.goToForgotPasswordScreen();
     }
 
     @Override
@@ -75,24 +150,16 @@ public class LoginMenuScreen implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) {
-
-    }
+    public void resize(int width, int height) {}
 
     @Override
-    public void pause() {
-
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() {}
 
     @Override
-    public void hide() {
-
-    }
+    public void hide() {}
 
     @Override
     public void dispose() {
@@ -101,13 +168,12 @@ public class LoginMenuScreen implements Screen {
         background.dispose();
     }
 
-    public void createFields() {
+    private void createFields() {
         table = new Table();
         table.setFillParent(true);
-        // Center the fields
-
         table.align(2);
         table.padTop(100);
+
         usernameField = new TextField("", Gwent.singleton.getSkin());
         usernameField.setMessageText("Username");
         passwordField = new TextField("", Gwent.singleton.getSkin());
@@ -126,36 +192,5 @@ public class LoginMenuScreen implements Screen {
         table.add(donNotHaveAnAccountButton).width(600).height(120).pad(10).row();
 
         stage.addActor(table);
-    }
-    public void showError(String message) {
-        errorDialog = new Dialog("Error", Gwent.singleton.getSkin());
-        errorDialog.text(message);
-        errorDialog.button("OK");
-        errorDialog.show(stage);
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                errorDialog.hide();
-            }
-        }, 4); // Delay in seconds
-    }
-    private void loginHandler() {
-        String username = usernameField.getText();
-        String password = passwordField.getText();
-        Client.getInstance().sendMassage(new LoginRequest(username, password));
-    }
-    private void forgotPasswordHandler() {
-        String username = usernameField.getText();
-        if (username.isEmpty()) {
-            showError("Please fill the username field");
-            return;
-        }
-        if(!LoginMenuController.doesThisUserExist(username)) {
-            showError("User does not exist");
-            return;
-        }
-        LoginMenuController.setUsernameForForgotPassword(username);
-
-        LoginMenuController.goToForgotPasswordScreen();
     }
 }
