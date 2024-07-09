@@ -102,7 +102,7 @@ public class GameController {
         ((GameScreen)Gwent.singleton.getCurrentScreen()).showChooseStarter();
     }
 
-    public void setShowSelectedCard(List<AbstractCard> cards, int numberOfCards, boolean canChooseLess) {
+    public void setShowSelectedCard(List<? extends AbstractCard> cards, int numberOfCards, boolean canChooseLess) {
         showSelectCardCalled = true;
         this.cardsToShow = new ArrayList<>(cards);
         this.numberOfCardsToChoose = numberOfCards;

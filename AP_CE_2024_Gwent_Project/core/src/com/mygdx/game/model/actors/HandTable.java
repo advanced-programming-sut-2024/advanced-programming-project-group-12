@@ -24,12 +24,6 @@ public class HandTable extends Table {
         }
 
     }
-    public void addCard(CardActor card) {
-        cards.add(card);
-    }
-    public void removeCard(CardActor card) {
-        cards.remove(card);
-    }
     public ArrayList<CardActor> getCards() {
         return cards;
     }
@@ -37,15 +31,14 @@ public class HandTable extends Table {
         this.clearChildren();
     }
     public void addToStageAndAddListener(Stage stage) {
-        float cardWidth = 80;
-        float padding = 10; // adjust this value to add space between cards
+        float padding = 7; // adjust this value to add space between cards
 
         // Clear the table before adding new cards
         this.clear();
 
         for (CardActor cardActor : cards) {
             // Add the card actor to the table with padding on the right
-            this.add(cardActor.getCardTable()).width(cardWidth).padRight(padding);
+            this.add(cardActor.getCardTable()).size(85, 130).padRight(padding);
 
             // Add a listener to the card actor
             cardActor.getCardTable().addListener(new InputListener() {

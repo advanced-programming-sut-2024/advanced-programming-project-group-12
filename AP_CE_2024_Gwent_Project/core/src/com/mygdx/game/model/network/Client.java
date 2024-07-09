@@ -172,7 +172,7 @@ public class Client extends Thread {
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().update();
                 ActionResponse actionResponse = playCardResponse.getActionResponse();
                 if (actionResponse!= null && actionResponse.getAction().equals(ActionResponseType.SELECTION)) {
-                    ((GameScreen)Gwent.singleton.getCurrentScreen()).showCardsToSelect(actionResponse.getAffectedCards(), actionResponse.getActionCount(), false);
+                    ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setShowSelectedCard(actionResponse.getAffectedCards(), actionResponse.getActionCount(), false);
                 }
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().update();
                 break;
