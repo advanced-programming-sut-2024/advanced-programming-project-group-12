@@ -1,6 +1,7 @@
 package com.mygdx.game.model.network;
 
 import com.google.gson.Gson;
+import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.remote.*;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.AllCards;
@@ -17,6 +18,7 @@ import com.mygdx.game.model.user.User;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponseType;
 import com.mygdx.game.model.network.session.Session;
+import com.mygdx.game.view.screen.GameScreen;
 
 import java.io.*;
 import java.util.HashMap;
@@ -140,6 +142,7 @@ public class RequestHandler extends Thread {
                     break;
                 case PASS_ROUND:
                     user.getPlayer().pass();
+                    ((GameScreen)Gwent.singleton.getCurrentScreen()).showOpponentPassedRound();
                     break;
                 case CHAT:
                     ChatInGame chat = gson.fromJson(request, ChatInGame.class);

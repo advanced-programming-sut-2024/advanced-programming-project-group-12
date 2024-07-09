@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.ChatController;
@@ -26,10 +27,28 @@ import java.util.*;
 import java.util.List;
 
 public class GameScreen implements Screen {
+    //
     private final Stage stage;
     private final Texture background;
+
+
+    //literally toffffff
     private boolean update = false;
-    //Buttons for veto, pass round, end round, end game
+    private boolean showTurn = false;
+    private boolean isRoundEnd = false;
+    private int endRoundState = -2;
+    private boolean opponentPassedRound = false;
+    private boolean isGameEnd = false;
+    private int endGameState = -2;
+
+
+
+    //Notification Queue
+    private Queue<Notification> notificationsQueue = new LinkedList<>();
+    private boolean isShowingNotification = false;
+    private boolean notificationShown = false;
+
+    //Buttons for pass round, end round, end game
     private TextButton passButton;
     private final GameController controller;
     // info boxes and Actor
@@ -62,9 +81,6 @@ public class GameScreen implements Screen {
         }
 
         initialStageObjects();
-
-        //TODO : complete this part
-        //showCards(, 2);
     }
 
     public void showChooseStarter() {
@@ -131,7 +147,7 @@ public class GameScreen implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     controller.passRound();
-                    //TODO remove it and put this in back
+                    notificationsQueue.add(new Notification("Round Passed!", "icons/notif_round_passed.png"));
                     controller.update();
 
                 }
@@ -306,6 +322,9 @@ public class GameScreen implements Screen {
         stage.getBatch().end();
         stage.act(delta);
         stage.draw();
+        if(isGameEnd) {
+            endGame(endGameState);
+        }
         if(controller.isShowSelectCardCalled()) {
             showCardsToSelect(controller.getCardsToShow(), controller.getNumberOfCardsToChoose(), controller.isCanChooseLess());
             controller.setOffShowCardToSelect();
@@ -313,6 +332,37 @@ public class GameScreen implements Screen {
         if(update) {
             this.updateStage();
             update = false;
+        }
+        if(opponentPassedRound) {
+            notificationsQueue.add(new Notification("Opponent Passed Round", "icons/notif_round_passed.png"));
+            opponentPassedRound = false;
+        }
+        if(isRoundEnd) {
+            notificationsQueue.add(new Notification("end round", "icons/notif_draw_round.png"));
+            showEndRound();
+            notificationsQueue.add(new Notification("New Round Started!" , "icons/notif_round_start.png"));
+            isRoundEnd = false;
+        }
+        if(showTurn) {
+            if(controller.getPermission()) {
+                notificationsQueue.add(new Notification("Your Turn!", "icons/notif_me_turn.png"));
+            } else {
+                notificationsQueue.add(new Notification("Opponent Turn!", "icons/notif_op_turn.png"));
+            }
+            showTurn = false;
+        }
+        if (!notificationsQueue.isEmpty()) {
+            if (!isShowingNotification) {
+                Notification currentNotification = notificationsQueue.poll();
+                showNotification(currentNotification.message, currentNotification.pathToAsset);
+                isShowingNotification = true;
+            } else {
+                // Wait for the current notification to finish showing
+                if (notificationShown) {
+                    isShowingNotification = false;
+                    notificationShown = false;
+                }
+            }
         }
     }
 
@@ -372,9 +422,9 @@ public class GameScreen implements Screen {
 
     private void showLeaderCard(AbstractCard card, boolean isPlayerLeader) {
         // Create the blur effect
-        Image blurEffect = new Image(new Texture("bg/Blur-Effect.png")); // Replace with the path to your blur effect
+        Image blurEffect = new Image(new Texture("bg/Blur-Effect.png"));// Replace with the path to your blur effect
         blurEffect.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        blurEffect.setColor(new Color(0, 0, 0, 0)); // Start with fully transparent black
+        blurEffect.setColor(new Color(1, 1, 1, 0.1f)); // Start with fully transparent black
 
         // Create the enlarged card
         InfoCardActor enlargedCard = new InfoCardActor(card);
@@ -708,6 +758,7 @@ public class GameScreen implements Screen {
             player = Client.getInstance().getGame().getOpposition();
             opposition = Client.getInstance().getGame().getCurrentPlayer();
         }
+        showTurn = true;
         stage.clear();
         initialStageObjects();
     }
@@ -776,29 +827,45 @@ public class GameScreen implements Screen {
         });
         stage.addActor(exitButton);
     }
-
     public void showNotification(String message, String pathToAsset) {
+        // Create a Table to hold the notification content
+        Table notificationTable = new Table();
+        notificationTable.setSize(Gdx.graphics.getWidth(), 200);
+        notificationTable.setPosition(0, 450);
+
+        // Create an Image as the background for the notification box
+        Image background = new Image(new Texture("bg/Blur-Effect.png"));
+        background.setColor(1, 1, 1, 1);
+        background.setFillParent(true); // Fill the entire table with the background image
+        notificationTable.setBackground(background.getDrawable()); // Set the background image
+        //Create Image for image
         Image image = new Image(new Texture(pathToAsset));
-        Label label = new Label(message, Gwent.singleton.skin);
         image.setSize(200, 200);
-        image.setPosition(580, 500);
-        label.setPosition(750, 550);
-        label.setScale(3);
 
-        // Fade in for image
-        image.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.6f)));
-        // Fade out for image
-        image.addAction(Actions.sequence(Actions.delay(1), Actions.fadeOut(0.6f), Actions.removeActor()));
-
+        // Create a Label for the message
+        Label label = new Label(message, Gwent.singleton.skin);
+        label.setFontScale(3f);
+        label.setAlignment(Align.center);
         label.setColor(Color.GOLD);
 
-        // Fade in for label
-        label.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.6f)));
-        // Fade out for label
-        label.addAction(Actions.sequence(Actions.delay(1), Actions.fadeOut(0.6f), Actions.removeActor()));
+        // Add the Label to the Table
+        notificationTable.add(image).left().expand();
+        notificationTable.add(label).center().expand();
 
-        stage.addActor(image);
-        stage.addActor(label);
+        // Add the Table to the Stage
+        stage.addActor(notificationTable);
+
+        // Fade in for the notification box
+        notificationTable.addAction(Actions.sequence(
+                Actions.alpha(0),
+                Actions.fadeIn(0.6f),
+                Actions.delay(1),
+                Actions.fadeOut(0.6f),
+                Actions.removeActor()
+        ));
+
+        notificationTable.addAction(Actions.sequence(Actions.fadeIn(0.6f), Actions.delay(1), Actions.fadeOut(0.6f), Actions.run(() -> notificationShown = true)));
+
     }
 
     public void displayStrengths() {
@@ -841,11 +908,25 @@ public class GameScreen implements Screen {
 
     }
 
-    public void endRound() {
-        //TODO : show notif
-        showNotification("end round", "notif_draw_round");
+    public void endRound(String winner) {
+        if(player.getUsername().equals(winner)) {
+            endRoundState = 1;
+        } else if(opposition.getUsername().equals(winner)) {
+            endRoundState = -1;
+        } else {
+            endRoundState = 0;
+        }
+        isRoundEnd = true;
     }
-
+    public void showEndRound() {
+        if(endRoundState == 1) {
+            notificationsQueue.add(new Notification("You Won Round!", "icons/notif_win_round.png"));
+        } else if(endRoundState == 0) {
+            notificationsQueue.add(new Notification("Round Draw!", "icons/notif_draw_round.png"));
+        } else if(endRoundState == -1) {
+            notificationsQueue.add(new Notification("You Lost Round!", "icons/notif_lose_round.png"));
+        }
+    }
     public void setUpdate() {
         this.update = true;
     }
@@ -854,5 +935,17 @@ public class GameScreen implements Screen {
         errorDialog.text(message);
         errorDialog.button("OK");
         errorDialog.show(stage);
+    }
+
+    public void showOpponentPassedRound() {
+        opponentPassedRound = true;
+    }
+    public void setGameEnd(int state) {
+        endGameState = state;
+        isGameEnd = true;
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 }
