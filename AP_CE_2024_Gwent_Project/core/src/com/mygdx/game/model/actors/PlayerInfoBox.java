@@ -24,33 +24,20 @@ public class PlayerInfoBox {
     private static final String GEM_OFF_PATH = "icons/icon_gem_off.png";
 
     private Table infoTable;
-    private Skin skin;
     private Image avatar;
-    private Image border;
     private Image cards;
     private List<Image> gems;
     private Table gemsTable;
-    private int numberOfCardsRemaining;
-    private int playerHealth;
-    private final String username;
-    private final String faction;
     private Label cardsRemainingLabel;
 
     public PlayerInfoBox(int numberOfCardsRemaining, String username, String faction, int playerHealth) {
-        skin = Gwent.singleton.skin;
         infoTable = new Table();
-
         gemsTable = new Table();
         infoTable.setColor(1, 1, 1, 0.5f);
 
         avatar = new Image(new Texture(AVATAR_TEXTURE_PATH));
-        border = new Image(new Texture(BORDER_TEXTURE_PATH));
         cards = new Image(new Texture(CARDS_TEXTURE_PATH));
         gems = new ArrayList<>();
-        this.numberOfCardsRemaining = numberOfCardsRemaining;
-        this.playerHealth = playerHealth;
-        this.username = username;
-        this.faction = faction;
 
         cardsRemainingLabel = new Label(Integer.toString(numberOfCardsRemaining), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         infoTable.add(avatar).width(80).height(80);

@@ -40,7 +40,7 @@ public class HornArea extends Table {
         background.setColor(Color.CLEAR);
     }
     public void addCard(SpellCard horn) {
-        add(new CardActor(horn).getCardTable()).fill().center();
+        add(new CardActor(horn).getCardTable()).size(85,130).center();
     }
 
 }
