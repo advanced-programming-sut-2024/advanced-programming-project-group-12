@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.Random;
 import java.util.SplittableRandom;
 
-public class ChatUI {
+public class ChatUI extends Window {
     private static ChatUI singleton;
 
     private VerticalGroup chatLogGroup;
@@ -36,10 +36,18 @@ public class ChatUI {
     private String replyToSender = null;
     private String replyToMessage = null;
     public ChatUI(Stage stage, Skin skin) {
+        super("Chat Window", skin);
         this.skin = skin;
         this.stage = stage;
         createUI();
         singleton = this;
+        setSize(600, 900);
+        setResizable(false);
+        setMovable(false);
+        add(rootTable).expand().fill();
+        pack();
+        setPosition((float) Gwent.WIDTH / 2 - getWidth() / 2, 10);
+        stage.addActor(this);
     }
     public static ChatUI getInstance() {
         return singleton;
@@ -263,9 +271,11 @@ public class ChatUI {
     }
 
     public void hide() {
-        rootTable.setVisible(false);
+        setVisible(false);
+        System.out.println("hide");
     }
     public void show() {
-        rootTable.setVisible(true);
+        setVisible(true);
+        System.out.println("show");
     }
 }

@@ -99,6 +99,7 @@ public class GameController {
     }
 
     public void goToMainMenu() {
+
         Gwent.singleton.changeScreen(Screens.MAIN_MENU);
     }
     public void chooseStarter() {
