@@ -5,11 +5,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -973,9 +975,9 @@ public class GameScreen implements Screen {
         reactionLabel.setColor(Color.WHITE);
 
         reactionLabel.addAction(Actions.sequence(
-                Actions.fadeIn(0.5f),
+                Actions.fadeIn(1f),
                 Actions.delay(5f), // wait for 5 seconds
-                Actions.fadeOut(0.5f)
+                Actions.fadeOut(0.3f)
         ));
 
         stage.addActor(reactionLabel);
@@ -983,10 +985,9 @@ public class GameScreen implements Screen {
 
     public void showReactionWindow() {
         Window reactionWindow = new Window("Show your reaction!", Gwent.singleton.skin);
-        reactionWindow.setSize(700, 600);
-        reactionWindow.setPosition((float) Gwent.WIDTH / 2 - reactionWindow.getWidth(),
-                (float) Gwent.HEIGHT / 2 - reactionWindow.getHeight());
-
+        reactionWindow.setSize(500, 400);
+        reactionWindow.setPosition((float) Gwent.WIDTH / 2 - reactionWindow.getWidth() / 2,
+                (float) Gwent.HEIGHT - reactionWindow.getHeight() - 50);
 
 
         Table table = new Table();
@@ -1006,70 +1007,75 @@ public class GameScreen implements Screen {
                     ));
                 }
             });
-            emojiTable.add(emojiButton).size(70, 70).padRight(10);
+            emojiTable.add(emojiButton).size(40, 40).padRight(10);
         }
         table.add(emojiTable).fillX().uniformX().center().row();
 
         // Message buttons
         Table messageTable = new Table();
         TextButton niceButton = new TextButton("Nice play!", Gwent.singleton.skin);
+        niceButton.setScale(0.4f);
+        niceButton.getLabel().setFontScale(0.7f);
+        niceButton.setColor(Color.GREEN); // lime green color
         niceButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ChatController.sendMessageReaction("Nice play!");
                 reactionWindow.addAction(Actions.sequence(
-                        Actions.fadeOut(0.5f), // fade out the window over 0.5 seconds
                         Actions.removeActor() // remove the window from the stage after fade out
                 ));
             }
         });
-        messageTable.add(niceButton).size(300, 150).padRight(20);
+        messageTable.add(niceButton).size(250, 80).padRight(20);
 
         TextButton tooBadButton = new TextButton("Too bad play!", Gwent.singleton.skin);
+        tooBadButton.setScale(0.4f);
+        tooBadButton.getLabel().setFontScale(0.7f);
+        tooBadButton.setColor(Color.RED); // hot pink color
         tooBadButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ChatController.sendMessageReaction("Too bad play!");
                 reactionWindow.addAction(Actions.sequence(
-                        Actions.fadeOut(0.5f), // fade out the window over 0.5 seconds
                         Actions.removeActor() // remove the window from the stage after fade out
                 ));
             }
         });
-        messageTable.add(tooBadButton).size(350, 150).padRight(20);
+        messageTable.add(tooBadButton).size(250, 80).padRight(20);
 
         table.add(messageTable).fillX().uniformX().center().row();
 
         // Short message input
         TextField shortMessage = new TextField("", Gwent.singleton.skin);
         shortMessage.setMessageText("Send your short message:");
-        table.add(shortMessage).size(350, 100).padRight(20).center().row();
+        shortMessage.setColor(Color.DARK_GRAY); // white color
+        table.add(shortMessage).size(250, 60).padRight(20).center().row();
 
         // Send button
         TextButton sendReactionButton = new TextButton("Send", Gwent.singleton.skin);
+        sendReactionButton.setColor(Color.LIGHT_GRAY);
         sendReactionButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ChatController.sendMessageReaction(shortMessage.getText());
                 reactionWindow.addAction(Actions.sequence(
-                        Actions.fadeOut(0.5f), // fade out the window over 0.5 seconds
                         Actions.removeActor() // remove the window from the stage after fade out
                 ));
             }
         });
-        table.add(sendReactionButton).size(120, 100).center();
+        table.add(sendReactionButton).size(130, 60).center();
+
+        // Add a fade effect to the window
+        reactionWindow.addAction(Actions.sequence(
+                Actions.delay(5f), // wait for 5 seconds
+                Actions.removeActor() // remove the window from the stage after fade out
+        ));
 
         // Show the reaction window
         reactionWindow.setVisible(true);
-        // Add a fade out action to the reaction window
-        SequenceAction fadeOutAction = Actions.sequence(
-                Actions.delay(5f), // wait for 5 seconds
-                Actions.fadeOut(0.5f),
-                Actions.removeActor() // remove the window from the stage
-        );
-        reactionWindow.addAction(fadeOutAction);
         stage.addActor(reactionWindow);
     }
+
     public void setReactedEmoji(Emoji emoji) {
         reactedEmoji = emoji;
     }
