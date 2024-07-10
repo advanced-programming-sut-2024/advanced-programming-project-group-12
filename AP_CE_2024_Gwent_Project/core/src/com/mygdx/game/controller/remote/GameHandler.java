@@ -13,6 +13,7 @@ import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.Play
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ReDrawResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ChatInGameWrapper;
 import com.mygdx.game.model.network.massage.serverResponse.GetPublicGamesResponse;
+import com.mygdx.game.model.network.massage.serverResponse.JoinAsSpectatorResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.*;
 import com.mygdx.game.model.user.Player;
@@ -94,13 +95,26 @@ public class GameHandler {
     private void cheatHandler(ChatInGame chat, User user) {
         switch (chat.getMassage()) {
             case "ali jan <3":
+                AllCards.YENNEFER_OF_VENGENBERG.getAbstractCard().place(1, user.getPlayer());
                 break;
             case "ktkh":
+                AllCards.GERALT.getAbstractCard().place(0, user.getPlayer());
                 break;
             case "hemasian esfehan":
+                AllCards.CIRILLA_FIONA_ELEN_RIANNON.getAbstractCard().place(0, user.getPlayer());
                 break;
-            case "zallnejan babol" :
-
+            case "zallnejad babol" :
+                AllCards.TRISS.getAbstractCard().place(0, user.getPlayer());
+                break;
+            case "moi j'aime pas dire que je pense mais je suis intimid par ca consequence":
+                AllCards.STORM.getAbstractCard().place(3, user.getPlayer());
+                break;
+            case "amirhosein":
+                user.getPlayer().getHand().add(AllCards.AVALLACH.getAbstractCard().getName());
+                break;
+            case "ap is fun":
+                AllCards.ASSIRE.getAbstractCard().place(0, user.getPlayer());
+                break;
         }
     }
 
@@ -114,8 +128,9 @@ public class GameHandler {
         }
     }
 
-    public void addAsAnSpectator(User user ) {
+    public ServerResponse addAsAnSpectator(User user ) {
         spectators.add(user);
+        return new JoinAsSpectatorResponse(game);
     }
 
     public void sendMassageToSpectators(ServerResponse serverResponse) {

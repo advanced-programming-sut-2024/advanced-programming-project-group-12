@@ -125,9 +125,6 @@ public class Client extends Thread {
                 FriendsScreen.setRequestInfoReceived(true);
                 FriendsScreen.setRequestsHashMap(serverFriendRequest.getRequests());
                 Gdx.app.log("FriendsScreen", "Friend requests received: " + serverFriendRequest.getRequests());
-
-            //todo: add receiving requests
-
                 break;
             case GET_FRIENDS:
                 ServerFriend serverFriend = gson.fromJson(request, ServerFriend.class);
@@ -199,6 +196,11 @@ public class Client extends Thread {
                 break;
             case GET_PUBLIC_GAMES:
                 GetPublicGamesResponse publicGames = gson.fromJson(request, GetPublicGamesResponse.class);
+                break;
+            case JOIN_AS_SPECTATOR:
+                JoinAsSpectatorResponse joinAsSpectatorResponse = gson.fromJson(request, JoinAsSpectatorResponse.class);
+                game = joinAsSpectatorResponse.getGame();
+                Gwent.singleton.changeScreen(Screens.GAME);
                 break;
             case GET_ALL_USERS:
                 GetAllUsersResponse getAllUsersResponse = gson.fromJson(request, GetAllUsersResponse.class);
