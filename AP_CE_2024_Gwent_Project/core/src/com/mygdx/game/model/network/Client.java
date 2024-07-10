@@ -176,6 +176,7 @@ public class Client extends Thread {
                     ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setShowSelectedCard(actionResponse.getAffectedCards(), actionResponse.getActionCount(), false);
                 } else {
                     ((GameScreen) Gwent.singleton.getCurrentScreen()).getController().update();
+                    ChatController.showReactionWindow();
                 }
                 break;
             case CHAT:
