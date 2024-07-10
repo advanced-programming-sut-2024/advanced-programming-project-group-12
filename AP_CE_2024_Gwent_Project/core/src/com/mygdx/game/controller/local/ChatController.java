@@ -10,7 +10,7 @@ import com.mygdx.game.view.screen.GameScreen;
 public class ChatController {
 
     public static void sendMessage(String sender, String messageText, String time, String replyToSender, String replyToMessage, boolean spectator) {
-        Client.getInstance().sendMassage(new ChatInGame(sender, messageText, time, replyToSender, replyToMessage, spectator));
+        Client.getInstance().sendMassage(new ChatInGame(sender, time, replyToSender, replyToMessage, messageText, spectator));
     }
     public static void receiveMassage(String sender, String messageText, String time, String replyToSender, String replyToMessage) {
         ChatUI.getInstance().addReceivedMessage(sender, messageText, time, replyToSender, replyToMessage);
