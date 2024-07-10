@@ -146,9 +146,8 @@ public class GameScreen implements Screen {
             passButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    controller.passRound();
                     notificationsQueue.add(new Notification("Round Passed!", "icons/notif_round_passed.png"));
-                    controller.update();
+                    controller.passRound();
 
                 }
             });
@@ -303,8 +302,8 @@ public class GameScreen implements Screen {
         oppositionInfoBox = new PlayerInfoBox(opposition.getHandAsCards().size(), opposition.getUsername(),
                 opposition.getFaction().toString(), opposition.getHealth());
         stage.addActor(oppositionInfoBox.getInfoTable());
-        playerInfoBox.setPosition(50, 260);
-        oppositionInfoBox.setPosition(50, 610);
+        playerInfoBox.setPosition(0, 260);
+        oppositionInfoBox.setPosition(0, 600);
     }
 
     @Override

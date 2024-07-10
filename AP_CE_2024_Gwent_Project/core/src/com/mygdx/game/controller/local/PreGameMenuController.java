@@ -2,24 +2,19 @@ package com.mygdx.game.controller.local;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Json;
+
 import com.mygdx.game.Gwent;
 import com.mygdx.game.model.game.card.AllCards;
 import com.mygdx.game.model.game.card.CommanderCard;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.Faction;
-import com.mygdx.game.model.game.Game;
-import com.mygdx.game.model.network.Client;
-import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.StartGameRequest;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
 
 import com.google.gson.Gson;
 import com.mygdx.game.view.Screens;
-import com.mygdx.game.view.screen.PreGameMenuScreen;
 
 import javax.swing.*;
-import javax.swing.event.CaretListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

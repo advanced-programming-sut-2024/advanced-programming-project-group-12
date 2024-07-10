@@ -33,7 +33,12 @@ public class PlayerInfoBox {
     public PlayerInfoBox(int numberOfCardsRemaining, String username, String faction, int playerHealth) {
         infoTable = new Table();
         gemsTable = new Table();
-        infoTable.setColor(1, 1, 1, 0.5f);
+        // Create an Image as the background for the notification box
+        Image background = new Image(new Texture("bg/Blur-Effect.png"));
+        background.setColor(1, 1, 1, 1);
+        background.setFillParent(true); // Fill the entire table with the background image
+        infoTable.setSize(370, 170);
+        infoTable.setBackground(background.getDrawable());
 
         avatar = new Image(new Texture(AVATAR_TEXTURE_PATH));
         cards = new Image(new Texture(CARDS_TEXTURE_PATH));
@@ -50,7 +55,6 @@ public class PlayerInfoBox {
         infoTable.add(new Label(username, new Label.LabelStyle(new BitmapFont(), Color.WHITE))).width(100).height(30);
         displayHealth(playerHealth);
         infoTable.add(gemsTable);
-        infoTable.setSize(300, 120);
 
     }
 
