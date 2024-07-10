@@ -256,8 +256,11 @@ public enum Action {
         return new ActionResponse(ActionResponseType.RAIN);
     }),
     STORM(card -> {
-        FOG.action.apply(card);
-        RAIN.action.apply(card);
+        for (int i = 1; i< 3; i++) {
+            card.getPlayer().getGame().getGameBoard().getRowForPlayer(2, card.getPlayer()).setWeatherBuffer(true);
+            Player opposition = card.player.getGame().getOpposition();
+            card.getPlayer().getGame().getGameBoard().getRowForPlayer(2, opposition).setWeatherBuffer(true);
+        }
         card.getPlayer().getGame().switchTurn();
         return new ActionResponse(ActionResponseType.STORM);
     }),
@@ -265,17 +268,14 @@ public enum Action {
     //leader actions,
     FOLTEST_SIEGE(card -> {
         AllCards.FOG.getAbstractCard().place(3, card.getPlayer());
-        card.getPlayer().getGame().switchTurn();
         return null;
     }),
     FOLTEST_STEEL(card -> {
         AllCards.CLEAR.getAbstractCard().place(3, card.getPlayer());
-        card.getPlayer().getGame().switchTurn();
         return null;
     }),
     FOLTEST_KING(card -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(2, card.getPlayer());
-        card.getPlayer().getGame().switchTurn();
         return null;
     }),
 
@@ -299,7 +299,7 @@ public enum Action {
         return new ActionResponse(ActionResponseType.EMHYR_EMPEROR, toBeShown);
     }),
     EMHYR_WHITEFLAME(card -> {
-        //play at the begining of the game
+        //play at the beginning of the game
        Player opponent = card.getPlayer().getGame().getOpposition();
        opponent.getLeader().setHasPlayedAction(true);
         return null;
@@ -319,7 +319,6 @@ public enum Action {
     }),
     ERIDIN_COMMANDER(abstractCard -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(0, abstractCard.getPlayer());
-        abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
     ERIDIN_BRINGER(MEDIC.action),
@@ -349,7 +348,6 @@ public enum Action {
     FRANCESCA_QUEEN(SCORCH_C::execute),
     FRANCESCA_BEAUTIFUL(abstractCard -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(1, abstractCard.getPlayer());
-        abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
     FRANCESCA_DAISY(abstractCard -> {
@@ -358,7 +356,6 @@ public enum Action {
     }),
     FRANCESCA_PUREBLOOD(abstractCard -> {
         AllCards.FROST.getAbstractCard().place(3, abstractCard.getPlayer());
-        abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
     FRANCESCA_HOPE(abstractCard -> {
