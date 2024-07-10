@@ -10,6 +10,7 @@ import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.Round;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
+import com.mygdx.game.model.network.massage.clientRequest.ReactionMassageRequest;
 import com.mygdx.game.model.network.massage.serverResponse.*;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.*;
 import com.mygdx.game.model.network.session.Session;
@@ -180,6 +181,10 @@ public class Client extends Thread {
             case CHAT:
                 ChatInGameWrapper chatWrapper = gson.fromJson(request, ChatInGameWrapper.class);
                 ChatInGame chat = chatWrapper.getChat();
+                if(chat instanceof ReactionMassageRequest) {
+                    ChatController.receiveMessageReaction((ReactionMassageRequest) chat);
+                    break;
+                }
                 ChatController.receiveMassage(chat.getSender(), chat.getMassage(), chat.getTime(), chat.getReplyToSender(), chat.getReplyToMassage());
                 break;
             case END_ROUND:
