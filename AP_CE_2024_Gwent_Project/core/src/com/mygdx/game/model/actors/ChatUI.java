@@ -157,7 +157,7 @@ public class ChatUI extends Window {
         Table messageBubble = new Table();
         messageBubble.setTransform(true);
 
-        Image background = new Image(new Texture("message-back.jpeg"));
+        Image background = new Image(new Texture("bg/message-back.jpeg"));
         if (isSender) {
             messageBubble.setColor(Color.BLUE);
         } else {

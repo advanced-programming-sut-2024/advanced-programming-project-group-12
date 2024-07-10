@@ -983,8 +983,9 @@ public class GameScreen implements Screen {
 
     public void showReactionWindow() {
         Window reactionWindow = new Window("Show your reaction!", Gwent.singleton.skin);
-        reactionWindow.setSize(1000, 800);
-        reactionWindow.setPosition(100, 100);
+        reactionWindow.setSize(700, 600);
+        reactionWindow.setPosition((float) Gwent.WIDTH / 2 - reactionWindow.getWidth(),
+                (float) Gwent.HEIGHT / 2 - reactionWindow.getHeight());
 
 
 
