@@ -24,33 +24,25 @@ public class PlayerInfoBox {
     private static final String GEM_OFF_PATH = "icons/icon_gem_off.png";
 
     private Table infoTable;
-    private Skin skin;
     private Image avatar;
-    private Image border;
     private Image cards;
     private List<Image> gems;
     private Table gemsTable;
-    private int numberOfCardsRemaining;
-    private int playerHealth;
-    private final String username;
-    private final String faction;
     private Label cardsRemainingLabel;
 
-    public PlayerInfoBox(int numberOfCardsRemaining, String username, String faction) {
-        skin = Gwent.singleton.skin;
+    public PlayerInfoBox(int numberOfCardsRemaining, String username, String faction, int playerHealth) {
         infoTable = new Table();
-
         gemsTable = new Table();
-        infoTable.setColor(1, 1, 1, 0.5f);
+        // Create an Image as the background for the notification box
+        Image background = new Image(new Texture("bg/Blur-Effect.png"));
+        background.setColor(1, 1, 1, 1);
+        background.setFillParent(true); // Fill the entire table with the background image
+        infoTable.setSize(370, 170);
+        infoTable.setBackground(background.getDrawable());
 
         avatar = new Image(new Texture(AVATAR_TEXTURE_PATH));
-        border = new Image(new Texture(BORDER_TEXTURE_PATH));
         cards = new Image(new Texture(CARDS_TEXTURE_PATH));
         gems = new ArrayList<>();
-        this.numberOfCardsRemaining = numberOfCardsRemaining;
-        this.playerHealth = 2;
-        this.username = username;
-        this.faction = faction;
 
         cardsRemainingLabel = new Label(Integer.toString(numberOfCardsRemaining), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         infoTable.add(avatar).width(80).height(80);
@@ -61,13 +53,12 @@ public class PlayerInfoBox {
         infoTable.row(); // Move to the next row
         infoTable.row(); // Move to the next row
         infoTable.add(new Label(username, new Label.LabelStyle(new BitmapFont(), Color.WHITE))).width(100).height(30);
-        updateHealth(playerHealth);
+        displayHealth(playerHealth);
         infoTable.add(gemsTable);
-        infoTable.setSize(300, 120);
 
     }
 
-    private void updateHealth(int playerHealth) {
+    private void displayHealth(int playerHealth) {
         gemsTable.clear(); // Clear the gems table
         for (int i = 0; i < playerHealth; i++) {
             Image gem = new Image(new Texture(GEM_ON_PATH));
@@ -80,25 +71,12 @@ public class PlayerInfoBox {
             gemsTable.add(gem).width(30).height(30).padRight(10);
         }
     }
-
-    public void updatePlayerInfo(int numberOfCardsRemaining) {
-        this.numberOfCardsRemaining = numberOfCardsRemaining;
-        cardsRemainingLabel.setText(Integer.toString(numberOfCardsRemaining));
-        updateHealth(playerHealth);
-    }
     public Table getInfoTable() {
         return infoTable;
     }
     public void setPosition(int x, int y) {
         infoTable.setPosition(x, y);
     }
-    public void kill() {
-        if(playerHealth > 0) {
-            playerHealth--;
-            updateHealth(playerHealth);
-        } else {
-            infoTable.addAction(Actions.fadeOut(1));
-        }
-    }
+
 
 }

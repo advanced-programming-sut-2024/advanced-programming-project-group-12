@@ -26,9 +26,7 @@ public class CommanderCard extends AbstractCard{
             hasPlayedAction = true;
             return super.doAction();
         }
-        //todo:
-        //should the method return null?
-        return new ActionResponse(null, null);
+        return null;
     }
 
     @Override
@@ -36,6 +34,7 @@ public class CommanderCard extends AbstractCard{
 
     @Override
     public PlayCardResponse place(int row, Player player) {
+        super.place(row, player);
         return new PlayCardResponse(this.player.getGame(), doAction());
     }
 

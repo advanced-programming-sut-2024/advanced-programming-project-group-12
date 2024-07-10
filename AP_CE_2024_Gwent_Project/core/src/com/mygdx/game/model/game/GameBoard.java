@@ -11,7 +11,6 @@ public class GameBoard {
     private HashMap<String, Discard> discard;
     private HashSet<SpellCard> weatherCards;
 
-
     public GameBoard(Player player1, Player player2) {
         rows = new HashMap<>(2);
         rows.put(player1.getUsername(), new ArrayList<>(3));
@@ -38,6 +37,11 @@ public class GameBoard {
         }
 
         this.weatherCards = weatherCards;
+    }
+
+    public int getCardFinalPower(PlayableCard playableCard) {
+        Row row = rows.get(playableCard.getPlayer().getUsername()).get(playableCard.getRow());
+        return row.calculatePowerOfPlayableCard(playableCard);
     }
 
     public void setDoubleSpyPower() {
@@ -91,7 +95,7 @@ public class GameBoard {
     }
 
     public ArrayList<Row> getAllRowsForPlayer(Player player) {
-        return rows.get(player);
+        return rows.get(player.getUsername());
     }
 
     public Row getRowForPlayer(int row, Player player) {
@@ -106,13 +110,7 @@ public class GameBoard {
     }
 
     public int getRowStrength(Player player, int rowNumber) {
-        ArrayList<PlayableCard> cards = getRowCards(player, rowNumber);
-        Row row = rows.get(player.getUsername()).get(rowNumber);
-        int totalStrength = 0;
-        for(PlayableCard i: cards) {
-            totalStrength += row.calculatePowerOfPlayableCard(i);
-        }
-        return totalStrength;
+        return getRowStrength(rows.get(player.getUsername()).get(rowNumber));
     }
     public int getRowStrength(Row row) {
         ArrayList<PlayableCard> cards = row.getCards();
@@ -135,6 +133,9 @@ public class GameBoard {
         rows.get(player.getUsername()).get(row).increaseMorale();
     }
 
+    public Discard getDiscard(Player player) {
+        return discard.get(player.getUsername());
+    }
 
     public ArrayList<AbstractCard> getDiscardCards(Player player) {
         return discard.get(player.getUsername()).getDiscardCards();
@@ -152,27 +153,32 @@ public class GameBoard {
         for(String p: rows.keySet()) {
             for(Row r: rows.get(p)) {
                 for(PlayableCard c: r.getCards()) {
+                    discard.get(p).addCard(c);
                     if(c.getAction().equals(Action.COW)) {
                         cowCards.add(c);
                     }
-                    c.kill();
                 }
             }
             rows.put(p, new ArrayList<>(Arrays.asList(new Row(), new Row(), new Row())));
         }
 
         for(PlayableCard c: cowCards) {
-            c.doAction();
+            c.getLegacyCard().place(c.getDefaultRow(), c.getPlayer());
         }
     }
 
     public void resetDiscard(Player player) {
-        discard.put(player.getUsername(), new Discard(discard.get(player)));
+        discard.put(player.getUsername(), new Discard(discard.get(player.getUsername())));
     }
 
     public GameBoard copy() {
         return new GameBoard(rows, discard, weatherCards);
     }
+
+    public void clearWeather() {
+        weatherCards = new HashSet<>();
+    }
+
 
 }
 

@@ -36,4 +36,9 @@ public class Discard {
         }
         return playableCards;
     }
+
+    public void removeCardFromName(String name) {
+        playableCards.remove(name);
+        cards.remove(name);
+    }
 }

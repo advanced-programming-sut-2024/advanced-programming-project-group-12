@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.mygdx.game.model.game.card.SpellCard;
 
 public class WeatherBox extends Table {
     private RepeatAction blinkAction;
@@ -35,5 +36,11 @@ public class WeatherBox extends Table {
         }
         blinkAction = Actions.forever(Actions.sequence(Actions.color(Color.MAROON, 1.5f), Actions.color(Color.CLEAR, 1.5f)));
         background.setColor(Color.CLEAR);
+    }
+
+    public void addCard(SpellCard card) {
+        CardActor weatherCard = new CardActor(card);
+        weatherCard.setSize(85, 130);
+        add(weatherCard.getCardTable()).size(85,130).center();
     }
 }

@@ -1,6 +1,5 @@
 package com.mygdx.game.model.user;
 
-import com.google.gson.annotations.Expose;
 import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.AllCards;
@@ -15,10 +14,10 @@ import java.util.LinkedList;
 public class Player {
 
     private transient final User user;
-    private CommanderCard leader;
-    private LinkedList<String> deck;
-    private LinkedList<String> hand;
-    private String username;
+    private final CommanderCard leader;
+    private final LinkedList<String> deck;
+    private final LinkedList<String> hand;
+    private final String username;
     private Faction faction;
     private int roundsLost;
     private boolean won;
@@ -29,6 +28,7 @@ public class Player {
         this.leader = user.getLeaderAsCard();
         this.faction = user.getFaction();
         this.user = user;
+        user.setPlayer(this);
         this.username = user.getUsername();
         this.hand = new LinkedList<>();
         this.roundsLost = 0;
@@ -76,14 +76,16 @@ public class Player {
     }
     public LinkedList<AbstractCard> getHandAsCards() {
         LinkedList<AbstractCard> deckCards = new LinkedList<>();
-        for (String cardName : deck) {
+        for (String cardName : hand) {
             deckCards.add(AllCards.getCardByCardName(cardName));
         }
         return deckCards;
     }
 
-    public void reDraw(int cardIndex) {
-        deck.add(hand.remove(cardIndex));
+    public void reDraw(String card) {
+        hand.remove(card);
+        deck.add(card);
+        drawCard();
     }
 
     public void setWon(boolean won) {
@@ -136,6 +138,11 @@ public class Player {
     }
     public void removeCardFromHand(AbstractCard card) {
         hand.remove(card.getName());
+    }
+
+    public void pass() {
+        isPassed = true;
+        game.switchTurn();
     }
 
     public boolean doesNotHaveGameToPlay() {

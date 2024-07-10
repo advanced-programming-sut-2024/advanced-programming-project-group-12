@@ -1,110 +1,54 @@
 package com.mygdx.game.controller.local;
 
 
-import com.mygdx.game.model.game.card.Action;
+import com.mygdx.game.Gwent;
+import com.mygdx.game.model.game.card.*;
 import com.mygdx.game.model.network.Client;
-import com.mygdx.game.model.user.Player;
-import com.mygdx.game.model.game.card.AbstractCard;
-import com.mygdx.game.model.game.card.AllCards;
-import com.mygdx.game.model.game.card.PlayableCard;
-import com.mygdx.game.model.game.card.SpellCard;
-import com.mygdx.game.model.game.GameBoard;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
+
+import com.mygdx.game.view.Screens;
+import com.mygdx.game.view.screen.GameScreen;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameController {
     private AbstractCard selectedCard;
-    private boolean permission;
+    private boolean permission = false;
+    private boolean changeTurn = false;
+    private ArrayList<AbstractCard> cardsToShow;
+    private int numberOfCardsToChoose;
+    private boolean canChooseLess;
+    private boolean showSelectCardCalled = false;
     public void setSelectedCard(AbstractCard card) {
         selectedCard = card;
     }
     public AbstractCard getSelectedCard() {
         return selectedCard;
     }
-    public void playCard(PlayableCard card) {
-        // Play a card
-
-    }
-    public void vetoCard(int cardNumber) {
-        // Veto a card
-    }
-
-    public void inHandDeck(int cardNumber) {
-
-    }
-
-    public void remainingCardsToPlay() {
-
-    }
-
-    public void outOfPlayCards() {
-
-    }
-
-    public void cardsInRow(int rowNumber) {
-
-    }
-
-    public void spellsInPlay() {
-
-    }
-
-    public void putCard(int cardNumber, int rowNumber) {
-
-    }
-
-    public void CommanderInfo() {
-
-    }
-
-    public void PlayersInfo() {
-
-    }
-
-    public void PlayersLivesInfo() {
-
-    }
-
-    public void NumberOfCardsInHand() {
-
-    }
-
-    public void TurnInfo() {
-
-    }
-
-    public void totalScore() {
-
-    }
-
-    public void totalScoreOfRow(int rowNumber) {
-
-    }
 
     public void passRound() {
+        Client.getInstance().sendMassage(new PassRoundRequest());
+    }
+
+    public void endRound(String winner) {
+        ((GameScreen)Gwent.singleton.getCurrentScreen()).endRound(winner);
 
     }
 
-    public void endRound() {
-
-    }
-
-    public void endGame() {
-
+    public void endGame(String winnerName, boolean hasWinner) {
+        int state = 0;
+        if(hasWinner) {
+            if(Client.getInstance().getUser().getUsername().equals(winnerName))
+                state = 1;
+             else state = -1;
+        }
+        ((GameScreen)Gwent.singleton.getCurrentScreen()).setGameEnd(state);
     }
 
     public void playCard(AbstractCard card, int row) {
-        //todo
-        Player currentPlayer = Client.getInstance().getUser().getPlayer();
-        GameBoard gameBoard = Client.getInstance().getUser().getPlayer().getGame().getGameBoard();
-        if(card instanceof PlayableCard) {
-            gameBoard.addCard(currentPlayer, row, (PlayableCard)card);
-        } else {
-            gameBoard.addCard(currentPlayer, row,(SpellCard)card);
-        }
-        currentPlayer.removeCardFromHand(card);
+        Client.getInstance().sendMassage(new PlayCardRequest(row, card.getName()));
     }
-
 
     /*
      this method has two inputs
@@ -122,8 +66,7 @@ public class GameController {
     }
 
     public boolean isHorn(AbstractCard card) {
-        //TODO :
-        return card.equals(AllCards.COMMANDER_HORN.getAbstractCard());
+        return card.equals(AllCards.COMMANDER_HORN.getAbstractCard()) || card.equals(AllCards.MARDROEME.getAbstractCard());
     }
     public boolean getPermission() {
         return permission;
@@ -133,11 +76,66 @@ public class GameController {
     }
 
     /*
-    in this method i assume that player is in select mode
-    and i give you card's that is selected and you should handle it
+    in this method I assume that player is in select mode
+    and I give you card's that is selected and you should handle it
      */
-    public void chooseCardInSelectCardMode(ArrayList<AbstractCard> cards) {
-        //TODO :
+    public void chooseCardInSelectCardMode(ArrayList<AbstractCard> cards, boolean canChooseLess) {
+        ArrayList<String> cardList = new ArrayList<>();
+        for(AbstractCard abstractCard: cards) {
+            cardList.add(abstractCard.getName());
+        }
+        if(canChooseLess) {
+            Client.getInstance().sendMassage(new ReDrawResponse(cardList));
+        }
+        else {
+            Client.getInstance().sendMassage(new CardSelectionAnswer(cardList));
+        }
     }
+
+    public void chooseWhichPlayerStartFirst(String username) {
+        Client.getInstance().sendMassage(new TurnDecideResponse(username));
+    }
+
+    public void goToMainMenu() {
+
+        Gwent.singleton.changeScreen(Screens.MAIN_MENU);
+    }
+    public void chooseStarter() {
+        ((GameScreen)Gwent.singleton.getCurrentScreen()).showChooseStarter();
+    }
+
+    public void setShowSelectedCard(List<? extends AbstractCard> cards, int numberOfCards, boolean canChooseLess) {
+        showSelectCardCalled = true;
+        this.cardsToShow = new ArrayList<>(cards);
+        this.numberOfCardsToChoose = numberOfCards;
+        this.canChooseLess = canChooseLess;
+    }
+    public void setOffShowCardToSelect() {
+        this.cardsToShow = null;
+        this.numberOfCardsToChoose = -1;
+        this.canChooseLess = false;
+        showSelectCardCalled = false;
+    }
+    public boolean isShowSelectCardCalled() {
+        return showSelectCardCalled;
+    }
+
+    public ArrayList<AbstractCard> getCardsToShow() {
+        return cardsToShow;
+    }
+
+    public int getNumberOfCardsToChoose() {
+        return numberOfCardsToChoose;
+    }
+
+    public boolean isCanChooseLess() {
+        return canChooseLess;
+    }
+
+    public void update() {
+        ((GameScreen)Gwent.singleton.getCurrentScreen()).setUpdate();
+    }
+
+
 
 }

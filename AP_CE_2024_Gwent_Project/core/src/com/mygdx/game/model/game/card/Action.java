@@ -35,7 +35,7 @@ public enum Action {
         allPlayableCards.sort(null);
 
         ArrayList<PlayableCard> cardsToBeScorched = new ArrayList<>();
-        int maxPower = allPlayableCards.get(0).getPower();
+        int maxPower = allPlayableCards.getFirst().getPower();
         for (PlayableCard i : allPlayableCards) {
             if (i.getPower() == maxPower) {
                 cardsToBeScorched.add(i);
@@ -61,7 +61,7 @@ public enum Action {
         row.sort(null); //sort cards based on power
         ArrayList<PlayableCard> cardsToBeKilled = new ArrayList<>();
         for(PlayableCard i: row) {
-            if(i.getPower() == row.get(0).getPower()) {
+            if(i.getPower() == row.getFirst().getPower()) {
                 cardsToBeKilled.add(i);
             } else {
                 break;
@@ -84,7 +84,7 @@ public enum Action {
         row.sort(null); //sort cards based on power
         ArrayList<PlayableCard> cardsToBeKilled = new ArrayList<>();
         for(PlayableCard i: row) {
-            if(i.getPower() == row.get(0).getPower()) {
+            if(i.getPower() == row.getFirst().getPower()) {
                 cardsToBeKilled.add(i);
             } else {
                 break;
@@ -107,7 +107,7 @@ public enum Action {
         row.sort(null); //sort cards based on power
         ArrayList<PlayableCard> cardsToBeKilled = new ArrayList<>();
         for(PlayableCard i: row) {
-            if(i.getPower() == row.get(0).getPower()) {
+            if(i.getPower() == row.getFirst().getPower()) {
                 cardsToBeKilled.add(i);
             } else {
                 break;
@@ -123,16 +123,12 @@ public enum Action {
     }),
     TIGHT_BOND(card -> {
         card.getPlayer().getGame().switchTurn();
-
         return new ActionResponse(ActionResponseType.TIGHT_BOND);
     }),
     MEDIC(card -> {
-        // should open a menu in game screen to choose from one card of the below list
-        //todo
         card.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.MEDIC);
-        RequestHandler.allUsers.get(card.getPlayer().getUsername()).sendMassage(new PlayTurnPermission(card.getPlayer().getGame()));
-
-        return new ActionResponse(ActionResponseType.SELECTION, 1);
+        GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
+        return new ActionResponse(ActionResponseType.SELECTION,gameBoard.getDiscardPlayableCards(card.getPlayer()) ,1);
     }),
     SPY(card -> {
         Player player = card.getPlayer().getGame().getCurrentPlayer();
@@ -169,24 +165,25 @@ public enum Action {
         Player player = card.getPlayer().getGame().getCurrentPlayer();
         LinkedList<AbstractCard> deck = player.getDeckAsCards();
         int row = card.getRow();
-        for (AbstractCard i : deck) {
-            if (i.getName().equals(card.getName())) {
-                deck.remove(i);
-                if (i.getAllowableRows().contains(row)) {
-                    i.place(row, card.getPlayer());
+        for (int i = 0; i< deck.size(); i++) {
+            AbstractCard musket = deck.get(i);
+            if (musket.getAbsName().split(" ")[0].equals(card.getAbsName().split(" ")[0])) {
+                player.getDeck().remove(i);
+                if (musket.getAllowableRows().contains(row)) {
+                    return musket.place(row, card.getPlayer()).getActionResponse();
                 } else {
-                    i.place(i.getDefaultRow(), card.getPlayer());
+                    return musket.place(deck.get(i).getDefaultRow(), card.getPlayer()).getActionResponse();
                 }
             }
         }
 
         LinkedList<AbstractCard> hand = player.getHandAsCards();
         for (AbstractCard i : hand) {
-            if (i.getName().equals(card.getName())) {
+            if (i.getAbsName().split(" ")[0].equals(card.getAbsName().split(" ")[0])) {
                 if (i.getAllowableRows().contains(row)) {
-                    i.place(row, card.getPlayer());
+                    return i.place(row, card.getPlayer()).getActionResponse();
                 } else {
-                    i.place(i.getDefaultRow(), i.getPlayer());
+                    return i.place(i.getDefaultRow(), card.getPlayer()).getActionResponse();
                 }
             }
         }
@@ -222,17 +219,16 @@ public enum Action {
 
         return new ActionResponse(ActionResponseType.MUSHROOM);
     }),
-    DECOY(abstractCard -> {
-        //todo
-        abstractCard.getPlayer().getGame().switchTurn();
-        return null;
-    }),
+    DECOY(abstractCard -> new ActionResponse(ActionResponseType.DECOY)),
 
     //weather actions
     CLEAR(card -> {
         GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
+        gameBoard.clearWeather();
         for(int i = 0; i< 3; i++ ){
             Row row = gameBoard.getRowForPlayer(i, card.getPlayer());
+            Player opposition = card.player.getGame().getOpposition();
+            card.getPlayer().getGame().getGameBoard().getRowForPlayer(i, opposition).setWeatherBuffer(false);
             row.setWeatherBuffer(false);
         }
         card.getPlayer().getGame().switchTurn();
@@ -240,22 +236,31 @@ public enum Action {
     }),
     FOG(card -> {
         card.getPlayer().getGame().getGameBoard().getRowForPlayer(1, card.getPlayer()).setWeatherBuffer(true);
+        Player opposition = card.player.getGame().getOpposition();
+        card.getPlayer().getGame().getGameBoard().getRowForPlayer(1, opposition).setWeatherBuffer(true);
         card.getPlayer().getGame().switchTurn();
         return new ActionResponse(ActionResponseType.FOG);
     }),
     FROST(card -> {
         card.getPlayer().getGame().getGameBoard().getRowForPlayer(0, card.getPlayer()).setWeatherBuffer(true);
+        Player opposition = card.player.getGame().getOpposition();
+        card.getPlayer().getGame().getGameBoard().getRowForPlayer(0, opposition).setWeatherBuffer(true);
         card.getPlayer().getGame().switchTurn();
         return new ActionResponse(ActionResponseType.FROST);
     }),
     RAIN(card -> {
         card.getPlayer().getGame().getGameBoard().getRowForPlayer(2, card.getPlayer()).setWeatherBuffer(true);
+        Player opposition = card.player.getGame().getOpposition();
+        card.getPlayer().getGame().getGameBoard().getRowForPlayer(2, opposition).setWeatherBuffer(true);
         card.getPlayer().getGame().switchTurn();
         return new ActionResponse(ActionResponseType.RAIN);
     }),
     STORM(card -> {
-        FOG.action.apply(card);
-        RAIN.action.apply(card);
+        for (int i = 1; i< 3; i++) {
+            card.getPlayer().getGame().getGameBoard().getRowForPlayer(2, card.getPlayer()).setWeatherBuffer(true);
+            Player opposition = card.player.getGame().getOpposition();
+            card.getPlayer().getGame().getGameBoard().getRowForPlayer(2, opposition).setWeatherBuffer(true);
+        }
         card.getPlayer().getGame().switchTurn();
         return new ActionResponse(ActionResponseType.STORM);
     }),
@@ -263,17 +268,14 @@ public enum Action {
     //leader actions,
     FOLTEST_SIEGE(card -> {
         AllCards.FOG.getAbstractCard().place(3, card.getPlayer());
-        card.getPlayer().getGame().switchTurn();
         return null;
     }),
     FOLTEST_STEEL(card -> {
         AllCards.CLEAR.getAbstractCard().place(3, card.getPlayer());
-        card.getPlayer().getGame().switchTurn();
         return null;
     }),
     FOLTEST_KING(card -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(2, card.getPlayer());
-        card.getPlayer().getGame().switchTurn();
         return null;
     }),
 
@@ -297,7 +299,7 @@ public enum Action {
         return new ActionResponse(ActionResponseType.EMHYR_EMPEROR, toBeShown);
     }),
     EMHYR_WHITEFLAME(card -> {
-        //play at the begining of the game
+        //play at the beginning of the game
        Player opponent = card.getPlayer().getGame().getOpposition();
        opponent.getLeader().setHasPlayedAction(true);
         return null;
@@ -307,7 +309,6 @@ public enum Action {
         List<PlayableCard> enemyDiscard = opponent.getGame().getGameBoard().getDiscardPlayableCards(opponent);
         //sent to secket a request to ask for the choosing card interface
         abstractCard.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.ENEMY_MEDIC);
-        RequestHandler.allUsers.get(abstractCard.getPlayer().getUsername()).sendMassage(new PlayTurnPermission(abstractCard.getPlayer().getGame()));
         return new ActionResponse(ActionResponseType.SELECTION, enemyDiscard, 1);
     }),
     EMHYR_INVADER(abstractCard -> {
@@ -318,7 +319,6 @@ public enum Action {
     }),
     ERIDIN_COMMANDER(abstractCard -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(0, abstractCard.getPlayer());
-        abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
     ERIDIN_BRINGER(MEDIC.action),
@@ -326,7 +326,6 @@ public enum Action {
         //discard two cards
         //draw one card of choice from deck
         abstractCard.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.ERIDIN_DESTROYER_DISCARD);
-        RequestHandler.allUsers.get(abstractCard.getPlayer().getUsername()).sendMassage(new PlayTurnPermission(abstractCard.getPlayer().getGame()));
         return new ActionResponse(ActionResponseType.SELECTION, abstractCard.getPlayer().getHandAsCards(), 2);
     }),
     ERIDIN_KING(abstractCard -> {
@@ -338,7 +337,6 @@ public enum Action {
         selectionList.add(AllCards.STORM.getAbstractCard());
 
         abstractCard.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.ERIDIN_KING);
-        RequestHandler.allUsers.get(abstractCard.getPlayer().getUsername()).sendMassage(new PlayTurnPermission(abstractCard.getPlayer().getGame()));
 
         return new ActionResponse(ActionResponseType.SELECTION, selectionList);
     }),
@@ -350,7 +348,6 @@ public enum Action {
     FRANCESCA_QUEEN(SCORCH_C::execute),
     FRANCESCA_BEAUTIFUL(abstractCard -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(1, abstractCard.getPlayer());
-        abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
     FRANCESCA_DAISY(abstractCard -> {
@@ -359,7 +356,6 @@ public enum Action {
     }),
     FRANCESCA_PUREBLOOD(abstractCard -> {
         AllCards.FROST.getAbstractCard().place(3, abstractCard.getPlayer());
-        abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
     FRANCESCA_HOPE(abstractCard -> {

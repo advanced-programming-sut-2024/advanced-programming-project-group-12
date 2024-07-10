@@ -14,10 +14,7 @@ public class CardActor extends Actor {
         cardTable = new CardTable(card);
 
         // Set the size of the card
-        cardTable.setSize(100, 150);
-        //Add click listener to the card
-
-
+        setSize(85, 130);
     }
 
 
@@ -41,6 +38,14 @@ public class CardActor extends Actor {
     @Override
     public void setPosition(float x, float y) {
         cardTable.setPosition(x, y);
+    }
+    @Override
+    public void setSize(float width , float height) {
+        super.setSize(width, height);
+        cardTable.setSize(width, height);
+    }
+    public void updatePower(int newPower) {
+        cardTable.updatePowerNumber(newPower);
     }
 }
 

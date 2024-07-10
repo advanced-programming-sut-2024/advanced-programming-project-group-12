@@ -13,12 +13,13 @@ public class SpellCard extends AbstractCard {
 
     @Override
     public PlayCardResponse place(int row, Player player) {
-        doAction();
-        player.getGame().getGameBoard().addCard(player, row, this);
+        super.place(row, player);
+        if(!action.equals(Action.SCORCH)) {
+            player.getGame().getGameBoard().addCard(player, row, this);
+        }
         return new PlayCardResponse(this.player.getGame(), doAction());
     }
 
     @Override
-    public void kill() {
-    }
+    public void kill() {}
 }

@@ -1,9 +1,11 @@
 package com.mygdx.game.model.network;
 
 import com.google.gson.Gson;
+import com.mygdx.game.Gwent;
+import com.google.gson.GsonBuilder;
 import com.mygdx.game.controller.remote.*;
+import com.mygdx.game.model.game.card.AbstractElementAdapter;
 import com.mygdx.game.model.game.card.AbstractCard;
-import com.mygdx.game.model.game.card.AllCards;
 import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
@@ -12,14 +14,16 @@ import com.mygdx.game.model.network.massage.serverResponse.ChangeMenuResponse;
 import com.mygdx.game.model.network.massage.serverResponse.GetAllUsersResponse;
 import com.mygdx.game.model.network.session.InvalidSessionException;
 import com.mygdx.game.model.network.session.SessionExpiredException;
-import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponseType;
 import com.mygdx.game.model.network.session.Session;
+import com.mygdx.game.view.screen.GameScreen;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class RequestHandler extends Thread {
     public static HashMap<String, RequestHandler> allUsers = new HashMap<>();
@@ -32,11 +36,15 @@ public class RequestHandler extends Thread {
 
     private Session session;
     private GameHandler gameHandler;
+    private User user;
+    private Timer unfinishedGame;
 
 
-    public RequestHandler(Server server, Gson gson) {
+    public RequestHandler(Server server) {
         this.server = server;
-        this.gson = gson;
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(AbstractCard.class, new AbstractElementAdapter());
+        this.gson = gsonBuilder.create();
     }
 
     public void setUser(String user) {
@@ -47,12 +55,20 @@ public class RequestHandler extends Thread {
         return gameHandler;
     }
 
+    public boolean hasUnfinishedGame() {
+        return unfinishedGame != null;
+    }
+
     public void setGameHandler(GameHandler gameHandler) {
         this.gameHandler = gameHandler;
     }
 
     public void setDataOutputStream(DataOutputStream dataOutputStream) {
         this.dataOutputStream = dataOutputStream;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
@@ -78,7 +94,6 @@ public class RequestHandler extends Thread {
         ServerResponse serverResponse = null;
         try {
             session = clientRequest.getSession();
-            User user = null;
             if(session != null) {
                 user = Session.getUser(session);
             }
@@ -119,15 +134,24 @@ public class RequestHandler extends Thread {
                     TurnDecideResponse turnDecideResponse = gson.fromJson(request, TurnDecideResponse.class);
                     gameHandler.letCurrentPlayerPlay(turnDecideResponse.getPlayerToPlay());
                     break;
+                case RE_DRAW:
+                    ReDrawResponse response = gson.fromJson(request, ReDrawResponse.class);
+                    gameHandler.reDraw(user.getPlayer(), response);
+                    break;
                 case PLAY_CARD_REQUEST:
                     PlayCardRequest playCardRequest = gson.fromJson(request, PlayCardRequest.class);
-                    Player player = user.getPlayer();
-                    AbstractCard abstractCard = AllCards.getCardByCardName(playCardRequest.getCard());
-                    serverResponse = abstractCard.place(playCardRequest.getRow(), player);
+                    serverResponse = gameHandler.playCard(playCardRequest, user);
+                    break;
+                case PLAY_DECOY:
+                    PlayDecoyRequest playDecoyRequest = gson.fromJson(request, PlayDecoyRequest.class);
+                    serverResponse = gameHandler.playDecoy(playDecoyRequest, user);
                     break;
                 case CARD_SELECT_ANSWER:
                     CardSelectionAnswer answer = gson.fromJson(request, CardSelectionAnswer.class);
                     serverResponse = user.getPlayer().getGame().getCardSelectHandler().handle(answer, user.getPlayer());
+                    break;
+                case PASS_ROUND:
+                    user.getPlayer().pass();
                     break;
                 case CHAT:
                     ChatInGame chat = gson.fromJson(request, ChatInGame.class);
@@ -143,7 +167,7 @@ public class RequestHandler extends Thread {
                 case JOIN_AS_SPECTATOR:
                     JoinPublicGame joinPublicGame = gson.fromJson(request, JoinPublicGame.class);
                     String username = joinPublicGame.getServerName().split(" ")[0];
-                    allUsers.get(username).gameHandler.addAsAnSpectator(user);
+                    serverResponse = allUsers.get(username).gameHandler.addAsAnSpectator(user);
                     break;
                 case GET_ALL_USERS:
                     serverResponse = new GetAllUsersResponse(User.getAllUsers());
@@ -163,6 +187,7 @@ public class RequestHandler extends Thread {
             dataOutputStream.writeUTF(gson.toJson(serverResponse));
         } catch (IOException e) {
             System.err.println("IO exception in request handler");
+            terminate();
         }
     }
 
@@ -182,6 +207,44 @@ public class RequestHandler extends Thread {
             dataOutputStream.close();
         } catch (IOException e) {
             System.err.println("IO exception in request handler ");
+        } catch (NullPointerException ignored) {}
+    }
+
+    public void connectionLost() {
+        if(gameHandler != null) {
+            System.out.println("connection lost with user: " + user.getUsername());
+            unfinishedGame = new Timer();
+            unfinishedGame.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    cancel();
+                    gameHandler.gameAborted(user);
+                    allUsers.remove(user.getUsername());
+                    terminate();
+                }
+            }, 60000);
+        }
+    }
+
+    public void connectionReturned() {
+        unfinishedGame.cancel();
+        terminate();
+    }
+
+    private void writeLog(String string) {
+        File file = new File("Data/Users/" + user.getUsername() + "/gameLog/friendRequests.json");
+        Gson gson = new Gson();
+        if(file.exists()) {
+            file.delete();
+        } else {
+            file.getParentFile().mkdirs();
+        }
+        try {
+            FileWriter writer = new FileWriter(file, true);
+            gson.toJson(string, writer);
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

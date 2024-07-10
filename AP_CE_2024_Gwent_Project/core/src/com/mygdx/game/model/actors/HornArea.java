@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.mygdx.game.model.game.card.AbstractCard;
+import com.mygdx.game.model.game.card.SpellCard;
 
 public class HornArea extends Table {
     private RepeatAction blinkAction;
@@ -30,13 +32,15 @@ public class HornArea extends Table {
             background.addAction(blinkAction);
         }
     }
-
     public void unhighlight() {
         if (blinkAction != null && background.hasActions()) {
             background.removeAction(blinkAction);
         }
         blinkAction = Actions.forever(Actions.sequence(Actions.color(Color.CYAN, 1.5f), Actions.color(Color.CLEAR, 1.5f)));
         background.setColor(Color.CLEAR);
+    }
+    public void addCard(SpellCard horn) {
+        add(new CardActor(horn).getCardTable()).size(85,130).center();
     }
 
 }

@@ -17,7 +17,7 @@ public abstract class AbstractCard implements Cloneable{
     protected String  typeNumber;
     private Faction faction;
 
-    protected Player player;
+    protected transient Player player;
 
     public AbstractCard(String name, String description, Action action, List<Integer> rows, Integer typeNumber, Faction faction) {
         allowableRows = rows;
@@ -30,6 +30,10 @@ public abstract class AbstractCard implements Cloneable{
 
     public String getName() {
         return name+typeNumber;
+    }
+
+    public String getAbsName() {
+        return name;
     }
 
     public Player getPlayer() {
@@ -66,7 +70,7 @@ public abstract class AbstractCard implements Cloneable{
 
     public PlayCardResponse place(int row, Player player) {
         this.player = player;
-        player.getHandAsCards().remove(this);
+        player.getHand().remove(this.getName());
         this.row = row;
         return null;
     }

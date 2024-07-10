@@ -38,6 +38,9 @@ public class Gwent extends Game implements ApplicationListener {
 			currentScreen = typeScreen.createScreen();
 			Gwent.singleton.setScreen(currentScreen);
 			pendingScreenChange = false;
+			synchronized (Client.getInstance()) {
+				Client.getInstance().notify();
+			}
 		}
 	}
 	

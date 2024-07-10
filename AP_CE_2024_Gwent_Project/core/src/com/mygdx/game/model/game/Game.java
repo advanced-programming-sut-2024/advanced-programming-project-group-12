@@ -7,7 +7,7 @@ import com.mygdx.game.model.network.RequestHandler;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.EndGameNotify;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.EndRoundNotify;
-import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayTurnPermission;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.PlayCardResponse;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
 
@@ -80,13 +80,24 @@ public class Game {
         return gameBoard;
     }
 
-    public void switchTurn() {
-        Player temp = currentPlayer;
-        currentPlayer = opposition;
-        opposition = temp;
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
 
-        RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(new PlayTurnPermission(this));
-        gameHandler.sendMassageToSpectators(new PlayTurnPermission(this));
+    public void setOpposition(Player opposition) {
+        this.opposition = opposition;
+    }
+
+    public void switchTurn() {
+        Player enemy = opposition;
+        if(!opposition.isPassed()) {
+            Player temp = currentPlayer;
+            currentPlayer = opposition;
+            opposition = temp;
+            RequestHandler.allUsers.get(enemy.getUsername()).sendMassage(new PlayCardResponse(this, !enemy.isPassed()));
+        }
+
+        gameHandler.sendMassageToSpectators(new PlayCardResponse(this));
 
         if(currentPlayer.doesNotHaveGameToPlay()) {
             currentPlayer.setPassed(true);
@@ -98,20 +109,28 @@ public class Game {
 
     private void sendEndRoundMassages(Player toStartNext) {
         Player toWait = toStartNext == currentPlayer? opposition: currentPlayer;
-        RequestHandler.allUsers.get(toStartNext.getUsername()).sendMassage(new EndRoundNotify(true));
-        RequestHandler.allUsers.get(toWait.getUsername()).sendMassage(new EndRoundNotify(false));
-        gameHandler.sendMassageToSpectators(new EndRoundNotify(false));
+        currentPlayer = toStartNext == null? currentPlayer :toStartNext;
+        opposition = toWait;
+        RequestHandler.allUsers.get(toStartNext.getUsername()).sendMassage(new EndRoundNotify(true, rounds.getLast(), this));
+        RequestHandler.allUsers.get(toWait.getUsername()).sendMassage(new EndRoundNotify(false, rounds.getLast(), this));
+        gameHandler.sendMassageToSpectators(new EndRoundNotify(false, rounds.getLast(), this));
     }
 
     private void sendEndGameMassages(EndGameNotify endGameNotify) {
-        RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(endGameNotify);
-        RequestHandler.allUsers.get(opposition.getUsername()).sendMassage(endGameNotify);
+        if(RequestHandler.allUsers.get(currentPlayer.getUsername()) != null)
+            RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(endGameNotify);
+        if(RequestHandler.allUsers.get(opposition.getUsername()) != null)
+            RequestHandler.allUsers.get(opposition.getUsername()).sendMassage(endGameNotify);
         gameHandler.sendMassageToSpectators(endGameNotify);
     }
 
 
     private void endRound() {
+        currentPlayer.setPassed(false);
+        opposition.setPassed(false);
+
         Player winner = currentRound.endRound(gameBoard);
+
         gameBoard.reset();
         rounds.add(currentRound);
 
@@ -120,28 +139,25 @@ public class Game {
                 ArrayList<PlayableCard> cardsList = currentRound.gameBoardCopy.allPlayerPlayableCards(p);
                 //the deep copied gameBoard means that the card remains in discard and can be revived again
                 PlayableCard playableCard = cardsList.remove((int) (Math.random() * cardsList.size()));
+                System.out.println("monsters ability triggered keeping card: " + playableCard.getAbsName());
                 playableCard.place(playableCard.getRow(), p);
             }
         }
 
-
         if(!isOver) {
             currentRound = new Round(rounds.size() + 1, currentPlayer, opposition);
-            sendEndRoundMassages(winner);
         } else {
-            finishGame();
-            String gameWinner;
+            User gameWinner;
             if(currentPlayer.getHealth() == 0 && opposition.getHealth() == 0) {
                 gameWinner = null;
             }
             else if(currentPlayer.getHealth() == 0) {
-                gameWinner = currentPlayer.getUsername();
+                gameWinner = currentPlayer.getUser();
             }
             else {
-                gameWinner = opposition.getUsername();
+                gameWinner = opposition.getUser();
             }
-
-            sendEndGameMassages(new EndGameNotify(gameWinner != null, gameWinner));
+            finishGame(gameWinner);
             return;
         }
 
@@ -154,13 +170,18 @@ public class Game {
                 }
             }
         }
+        sendEndRoundMassages(winner);
     }
 
-    private void finishGame() {
+    public void finishGame(User winner) {
         for(User u: allUsers) {
             u.addGame(this);
+            u.save();
         }
-        //todo
+        if(winner != null) {
+            winner.addToWin();
+        }
+        sendEndGameMassages(new EndGameNotify(winner != null, winner == null? null:winner.getUsername()));
     }
 
     public void isOver() {
