@@ -210,9 +210,9 @@ public enum Action {
         Row row = gameBoard.getRowForPlayer(rowNumber, card.getPlayer());
         row.setHasMushroom();
         ArrayList<PlayableCard> rowCards = row.getCards();
-        for(PlayableCard i : rowCards) {
-            if(i.getAction().equals(Action.BEAR)) {
-                i.doAction();
+        for(int i = 0; i< rowCards.size(); i++) {
+            if(rowCards.get(i).getAction().equals(Action.BEAR)) {
+                rowCards.get(i).doAction();
             }
         }
         card.getPlayer().getGame().switchTurn();

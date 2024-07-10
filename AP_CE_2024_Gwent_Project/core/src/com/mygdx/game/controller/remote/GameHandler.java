@@ -104,9 +104,9 @@ public class GameHandler {
                 AllCards.CIRILLA_FIONA_ELEN_RIANNON.getAbstractCard().place(0, user.getPlayer());
                 break;
             case "zallnejad babol" :
-                AllCards.TRISS.getAbstractCard().place(0, user.getPlayer());
+                AllCards.BLUE_STRIPES_COMMANDO.getAbstractCard().place(0, user.getPlayer());
                 break;
-            case "moi j'aime pas dire que je pense mais je suis intimid par ca consequence":
+            case "moi j'aime dire que je pense mais je suis intimid par ca consequence":
                 AllCards.STORM.getAbstractCard().place(3, user.getPlayer());
                 break;
             case "amirhosein":
