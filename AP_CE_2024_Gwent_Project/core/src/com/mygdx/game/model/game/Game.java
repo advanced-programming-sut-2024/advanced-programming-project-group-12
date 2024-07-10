@@ -97,14 +97,14 @@ public class Game {
             RequestHandler.allUsers.get(enemy.getUsername()).sendMassage(new PlayCardResponse(this, !enemy.isPassed()));
         }
 
-        gameHandler.sendMassageToSpectators(new PlayCardResponse(this));
-
-        if(currentPlayer.doesNotHaveGameToPlay()) {
-            currentPlayer.setPassed(true);
+        if(opposition.doesNotHaveGameToPlay()) {
+            opposition.setPassed(true);
         }
         if(currentPlayer.isPassed() && opposition.isPassed()) {
             endRound();
         }
+
+        gameHandler.sendMassageToSpectators(new PlayCardResponse(this));
     }
 
     private void sendEndRoundMassages(Player toStartNext) {
@@ -163,9 +163,11 @@ public class Game {
 
         for(Player p: players) {
             if(p.getFaction().equals(Faction.SKELLIGE)) {
+                System.out.println("skellige action triggered: reviving cards :");
                 ArrayList<PlayableCard> cardsList = gameBoard.getDiscardPlayableCards(p);
                 for(int i = 0; i< 2 ; i++) {
                     PlayableCard playableCard = cardsList.remove((int) (Math.random() * cardsList.size()));
+                    System.out.println(playableCard.getName());
                     playableCard.place(playableCard.getRow(), p);
                 }
             }
