@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.ChatController;
 import com.mygdx.game.controller.local.GameController;
+import com.mygdx.game.model.game.Row;
 import com.mygdx.game.model.game.card.Action;
 import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.network.Client;
@@ -43,7 +44,6 @@ public class BroadCastScreen implements Screen {
     private Player player;
     private Player opposition;
     //chat parts
-    private ChatBox chatBox;
     private TextButton chatButton;
 
     public BroadCastScreen() {
@@ -59,14 +59,9 @@ public class BroadCastScreen implements Screen {
         }
         selectedCardPlace = new Container<>();
         stage.addActor(selectedCardPlace);
-//        passButton = new TextButton("Pass", Gwent.singleton.skin);
-//        passButton.setPosition(220, 120);
-//        passButton.setSize(150, 80);
+
         weatherBox = new WeatherBox();
 
-        chatBox = new ChatBox(Gwent.singleton.skin);
-        chatBox.setPosition(400, 500); // set the position of the chat box
-        stage.addActor(chatBox);
 
         chatButton = new TextButton("Chat", Gwent.singleton.skin);
         chatButton.setPosition(1440, 60); // set the position of the chat button
@@ -75,11 +70,7 @@ public class BroadCastScreen implements Screen {
         chatButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (chatBox.isVisible()) {
-                    chatBox.hide();
-                } else {
-                    chatBox.show();
-                }
+
             }
         });
 
@@ -107,83 +98,41 @@ public class BroadCastScreen implements Screen {
         playerRows = new ArrayList<>();
         enemyRows = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            RowTable playerRow = new RowTable(i, true);
+            Row row = Client.getInstance().getGame().getGameBoard().getRowForPlayer(i, player);
+            RowTable playerRow = new RowTable(row,true, i);
             playerRows.add(playerRow);
             stage.addActor(playerRow);
-//            playerRow.addListener(new ClickListener() {
-//                @Override
-//                public void clicked(InputEvent event, float x, float y) {
-//                    if (controller.getSelectedCard() != null) {
-//                        if (controller.isAllowedToPlay(controller.getSelectedCard(), playerRow.getSide(), playerRow.getRowNumber())) {
-//                            playCard(controller.getSelectedCard() ,playerRow);
-//                        }
-//                    }
-//                }
-//            });
+
         }
         for (int i = 0; i < 3; i++) {
-            RowTable enemyRow = new RowTable(i, false);
+            Row row = Client.getInstance().getGame().getGameBoard().getRowForPlayer(i, opposition);
+            RowTable enemyRow = new RowTable(row,true, i);
             enemyRows.add(enemyRow);
             stage.addActor(enemyRow);
-//            enemyRow.addListener(new ClickListener() {
-//                @Override
-//                public void clicked(InputEvent event, float x, float y) {
-//                    if (controller.getSelectedCard() != null) {
-//                        if (controller.isAllowedToPlay(controller.getSelectedCard(), enemyRow.getSide(), enemyRow.getRowNumber())) {
-//                            playCard(controller.getSelectedCard(), enemyRow);
-//                        }
-//                    }
-//                }
-//            });
+
         }
     }
 
     private void weatherBoxListener() {
         weatherBox.setTouchable(Touchable.disabled);
-//        weatherBox.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                AbstractCard selectedCard = controller.getSelectedCard();
-//                if (selectedCard != null && selectedCard.getFaction().equals(Faction.WEATHER)) {
-//                    playWeatherCard(new CardActor(controller.getSelectedCard()));
-//                    // Add the card to the weather box
-//                    // Remove the card from the player's hand
-//                    controller.playCard(selectedCard, 3);
-//                    selectedCardPlace.clear();
-//                    // Unselect the card
-//                    // Redraw the player's hand
-//                    resetBackgroundColors();
-//                    hand.clear();
-//                    displayHand();
-//                }
-//            }
-//        });
+
     }
 
     private void displayInfo() {
         playerInfoBox = new PlayerInfoBox(player.getHandAsCards().size(), player.getUsername(),
-                player.getFaction().toString());
+                player.getFaction().toString(), player.getHealth());
         stage.addActor(playerInfoBox.getInfoTable());
         oppositionInfoBox = new PlayerInfoBox(opposition.getHandAsCards().size(), opposition.getUsername(),
-                opposition.getFaction().toString());
+                opposition.getFaction().toString(), opposition.getHealth());
         stage.addActor(oppositionInfoBox.getInfoTable());
-        playerInfoBox.setPosition(50, 260);
-        oppositionInfoBox.setPosition(50, 610);
+        playerInfoBox.setPosition(0, 260);
+        oppositionInfoBox.setPosition(0, 600);
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        chatBox.getSendButton().addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                String message = chatBox.getInputText();
-                if(message.isEmpty()) return true;
-                ChatController.sendMessage(Client.getInstance().getUser().getUsername(), message);
-                chatBox.clearInput();
-                return true;
-            }
-        });
+
     }
 
     @Override
@@ -477,7 +426,6 @@ public class BroadCastScreen implements Screen {
                             }
                             bgImage.remove();
                             closeButton.remove();
-                            controller.chooseCardInSelectCardMode(selectedCards);
                         }
                     }
                 });
@@ -498,9 +446,5 @@ public class BroadCastScreen implements Screen {
             }
         });
 
-    }
-
-    public void addMessageToMessageLog(String message, String username) {
-        chatBox.addMessage(username, message);
     }
 }
