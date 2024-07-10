@@ -121,9 +121,6 @@ public class RequestHandler extends Thread {
                 case GET_FRIEND_REQUESTS:
                     serverResponse = new FriendRequestHandler(request, gson).getFriendRequests(user);
                     break;
-//                case GET_FRIENDS:
-//                    serverResponse = new FriendRequestHandler(request, gson).getFriends(user);
-//                    break;
                 case START_GAME:
                     new InviteHandler(request, gson).handle(this, user);
                    break;
@@ -136,7 +133,7 @@ public class RequestHandler extends Thread {
                     break;
                 case RE_DRAW:
                     ReDrawResponse response = gson.fromJson(request, ReDrawResponse.class);
-                    gameHandler.reDraw(user.getPlayer(), response);
+                    serverResponse = gameHandler.reDraw(user.getPlayer(), response);
                     break;
                 case PLAY_CARD_REQUEST:
                     PlayCardRequest playCardRequest = gson.fromJson(request, PlayCardRequest.class);

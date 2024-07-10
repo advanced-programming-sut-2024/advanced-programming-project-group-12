@@ -93,7 +93,7 @@ public class GameHandler {
     }
 
     private void cheatHandler(ChatInGame chat, User user) {
-        switch (chat.getMassage()) {
+        switch (chat.getMassageReaction()) {
             case "ali jan <3":
                 AllCards.YENNEFER_OF_VENGENBERG.getAbstractCard().place(1, user.getPlayer());
                 break;
@@ -193,4 +193,5 @@ public class GameHandler {
     public ServerResponse playDecoy(PlayDecoyRequest playDecoyRequest, User user) {
         return ((Decoy) AllCards.DECOY.getAbstractCard()).place(playDecoyRequest.getRow(),playDecoyRequest.getToBeReplace(), user.getPlayer());
     }
+
 }

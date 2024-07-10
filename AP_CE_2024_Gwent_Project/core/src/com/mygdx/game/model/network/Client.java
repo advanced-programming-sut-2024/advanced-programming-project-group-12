@@ -183,10 +183,11 @@ public class Client extends Thread {
                 ChatInGameWrapper chatWrapper = gson.fromJson(request, ChatInGameWrapper.class);
                 ChatInGame chat = chatWrapper.getChat();
                 if(chat instanceof ReactionMassageRequest) {
-                    ChatController.receiveMessageReaction((ReactionMassageRequest) chat);
+                    ReactionMassageRequest reactionMassageRequest = gson.fromJson(request, ReactionMassageRequest.class);
+                    ChatController.receiveMessageReaction(reactionMassageRequest);
                     break;
                 }
-                ChatController.receiveMassage(chat.getSender(), chat.getMassage(), chat.getTime(), chat.getReplyToSender(), chat.getReplyToMassage());
+                ChatController.receiveMassage(chat.getSender(), chat.getMassageReaction(), chat.getTime(), chat.getReplyToSender(), chat.getReplyToMassage());
                 break;
             case END_ROUND:
                 EndRoundNotify endRoundNotify = gson.fromJson(request, EndRoundNotify.class);
