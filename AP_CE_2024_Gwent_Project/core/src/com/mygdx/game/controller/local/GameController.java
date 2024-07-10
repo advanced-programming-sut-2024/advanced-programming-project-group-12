@@ -2,8 +2,6 @@ package com.mygdx.game.controller.local;
 
 
 import com.mygdx.game.Gwent;
-import com.mygdx.game.model.actors.ChatUI;
-import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.*;
 import com.mygdx.game.model.network.Client;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
@@ -16,7 +14,7 @@ import java.util.List;
 
 public class GameController {
     private AbstractCard selectedCard;
-    private boolean permission;
+    private boolean permission = false;
     private boolean changeTurn = false;
     private ArrayList<AbstractCard> cardsToShow;
     private int numberOfCardsToChoose;

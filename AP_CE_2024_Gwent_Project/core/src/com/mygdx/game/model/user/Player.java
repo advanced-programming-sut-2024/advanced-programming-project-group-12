@@ -1,6 +1,5 @@
 package com.mygdx.game.model.user;
 
-import com.google.gson.annotations.Expose;
 import com.mygdx.game.model.game.Faction;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.AllCards;

@@ -74,7 +74,7 @@ public class GameScreen implements Screen {
     public GameScreen() {
         controller = new GameController();
         stage = new Stage(new ScreenViewport());
-        new ChatUI(stage, Gwent.singleton.skin);
+        new ChatUI(stage, Gwent.singleton.skin, true);
         ChatUI.getInstance().hide();
         background = new Texture("bg/board.jpg");
         if (Client.getInstance().getGame().getCurrentPlayer().getUsername().equals(Client.getInstance().getUser().getUsername())) {
@@ -365,6 +365,9 @@ public class GameScreen implements Screen {
         if(showReactionWindow) {
             showReactionWindow();
             showReactionWindow = true;
+        }
+        if(ChatUI.getInstance().getNewMessage() != null) {
+            ChatUI.getInstance().putNewMessage();
         }
     }
 
