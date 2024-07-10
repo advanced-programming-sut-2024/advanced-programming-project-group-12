@@ -80,7 +80,6 @@ public class ChooseSecurityQuestionScreen implements Screen {
         Gwent.singleton.getBatch().end();
         stage.act();
         stage.draw();
-
     }
 
     @Override
