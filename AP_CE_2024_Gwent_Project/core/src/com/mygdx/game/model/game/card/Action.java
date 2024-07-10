@@ -167,7 +167,7 @@ public enum Action {
         int row = card.getRow();
         for (int i = 0; i< deck.size(); i++) {
             AbstractCard musket = deck.get(i);
-            if (musket.getAbsName().equals(card.getAbsName())) {
+            if (musket.getAbsName().split(" ")[0].equals(card.getAbsName().split(" ")[0])) {
                 player.getDeck().remove(i);
                 if (musket.getAllowableRows().contains(row)) {
                     return musket.place(row, card.getPlayer()).getActionResponse();
@@ -179,11 +179,11 @@ public enum Action {
 
         LinkedList<AbstractCard> hand = player.getHandAsCards();
         for (AbstractCard i : hand) {
-            if (i.getAbsName().equals(card.getAbsName())) {
+            if (i.getAbsName().split(" ")[0].equals(card.getAbsName().split(" ")[0])) {
                 if (i.getAllowableRows().contains(row)) {
                     return i.place(row, card.getPlayer()).getActionResponse();
                 } else {
-                    return i.place(i.getDefaultRow(), i.getPlayer()).getActionResponse();
+                    return i.place(i.getDefaultRow(), card.getPlayer()).getActionResponse();
                 }
             }
         }
@@ -219,11 +219,7 @@ public enum Action {
 
         return new ActionResponse(ActionResponseType.MUSHROOM);
     }),
-    DECOY(abstractCard -> {
-        //todo
-        abstractCard.getPlayer().getGame().switchTurn();
-        return null;
-    }),
+    DECOY(abstractCard -> new ActionResponse(ActionResponseType.DECOY)),
 
     //weather actions
     CLEAR(card -> {
@@ -232,7 +228,7 @@ public enum Action {
         for(int i = 0; i< 3; i++ ){
             Row row = gameBoard.getRowForPlayer(i, card.getPlayer());
             Player opposition = card.player.getGame().getOpposition();
-            card.getPlayer().getGame().getGameBoard().getRowForPlayer(i, opposition).setWeatherBuffer(true);
+            card.getPlayer().getGame().getGameBoard().getRowForPlayer(i, opposition).setWeatherBuffer(false);
             row.setWeatherBuffer(false);
         }
         card.getPlayer().getGame().switchTurn();
@@ -260,8 +256,11 @@ public enum Action {
         return new ActionResponse(ActionResponseType.RAIN);
     }),
     STORM(card -> {
-        FOG.action.apply(card);
-        RAIN.action.apply(card);
+        for (int i = 1; i< 3; i++) {
+            card.getPlayer().getGame().getGameBoard().getRowForPlayer(2, card.getPlayer()).setWeatherBuffer(true);
+            Player opposition = card.player.getGame().getOpposition();
+            card.getPlayer().getGame().getGameBoard().getRowForPlayer(2, opposition).setWeatherBuffer(true);
+        }
         card.getPlayer().getGame().switchTurn();
         return new ActionResponse(ActionResponseType.STORM);
     }),
@@ -269,17 +268,14 @@ public enum Action {
     //leader actions,
     FOLTEST_SIEGE(card -> {
         AllCards.FOG.getAbstractCard().place(3, card.getPlayer());
-        card.getPlayer().getGame().switchTurn();
         return null;
     }),
     FOLTEST_STEEL(card -> {
         AllCards.CLEAR.getAbstractCard().place(3, card.getPlayer());
-        card.getPlayer().getGame().switchTurn();
         return null;
     }),
     FOLTEST_KING(card -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(2, card.getPlayer());
-        card.getPlayer().getGame().switchTurn();
         return null;
     }),
 
@@ -303,7 +299,7 @@ public enum Action {
         return new ActionResponse(ActionResponseType.EMHYR_EMPEROR, toBeShown);
     }),
     EMHYR_WHITEFLAME(card -> {
-        //play at the begining of the game
+        //play at the beginning of the game
        Player opponent = card.getPlayer().getGame().getOpposition();
        opponent.getLeader().setHasPlayedAction(true);
         return null;
@@ -323,7 +319,6 @@ public enum Action {
     }),
     ERIDIN_COMMANDER(abstractCard -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(0, abstractCard.getPlayer());
-        abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
     ERIDIN_BRINGER(MEDIC.action),
@@ -353,7 +348,6 @@ public enum Action {
     FRANCESCA_QUEEN(SCORCH_C::execute),
     FRANCESCA_BEAUTIFUL(abstractCard -> {
         AllCards.COMMANDER_HORN.getAbstractCard().place(1, abstractCard.getPlayer());
-        abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
     FRANCESCA_DAISY(abstractCard -> {
@@ -362,7 +356,6 @@ public enum Action {
     }),
     FRANCESCA_PUREBLOOD(abstractCard -> {
         AllCards.FROST.getAbstractCard().place(3, abstractCard.getPlayer());
-        abstractCard.getPlayer().getGame().switchTurn();
         return null;
     }),
     FRANCESCA_HOPE(abstractCard -> {

@@ -15,7 +15,8 @@ public class PlayCardResponse extends ServerResponse {
         super(ServerResponseType.PLAY_CARD_RESPONSE, null);
         this.game = game;
         this.actionResponse = actionResponse;
-        permission = actionResponse != null && actionResponse.getAction().equals(ActionResponseType.SELECTION);
+        permission = actionResponse != null && actionResponse.getAction().equals(ActionResponseType.SELECTION) &&
+                     actionResponse.getAction().equals(ActionResponseType.DECOY);
     }
 
     public PlayCardResponse(Game game) {

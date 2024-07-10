@@ -129,4 +129,15 @@ public class Row {
             default : return null;
         }
     }
+
+    public void replaceByDecoy(String name) {
+        PlayableCard decoy =(PlayableCard) AllCards.DECOY.getAbstractCard();
+        for(int i = 0; i< cards.size(); i++) {
+            PlayableCard card = cards.get(i);
+            if(card.getName().equals(name) && !card.getName().equals(decoy.getName())) {
+                cards.set(i, decoy);
+                return;
+            };
+        }
+    }
 }

@@ -109,6 +109,8 @@ public class Game {
 
     private void sendEndRoundMassages(Player toStartNext) {
         Player toWait = toStartNext == currentPlayer? opposition: currentPlayer;
+        currentPlayer = toStartNext == null? currentPlayer :toStartNext;
+        opposition = toWait;
         RequestHandler.allUsers.get(toStartNext.getUsername()).sendMassage(new EndRoundNotify(true, rounds.getLast(), this));
         RequestHandler.allUsers.get(toWait.getUsername()).sendMassage(new EndRoundNotify(false, rounds.getLast(), this));
         gameHandler.sendMassageToSpectators(new EndRoundNotify(false, rounds.getLast(), this));
@@ -128,12 +130,6 @@ public class Game {
         opposition.setPassed(false);
 
         Player winner = currentRound.endRound(gameBoard);
-        if(!winner.equals(currentPlayer)) {
-            Player temp = currentPlayer;
-            currentPlayer = winner;
-            opposition = temp;
-        }
-
 
         gameBoard.reset();
         rounds.add(currentRound);
@@ -143,11 +139,11 @@ public class Game {
                 ArrayList<PlayableCard> cardsList = currentRound.gameBoardCopy.allPlayerPlayableCards(p);
                 //the deep copied gameBoard means that the card remains in discard and can be revived again
                 PlayableCard playableCard = cardsList.remove((int) (Math.random() * cardsList.size()));
+                System.out.println("monsters ability triggered keeping card: " + playableCard.getAbsName());
                 playableCard.place(playableCard.getRow(), p);
             }
         }
 
-        sendEndRoundMassages(winner);
         if(!isOver) {
             currentRound = new Round(rounds.size() + 1, currentPlayer, opposition);
         } else {
@@ -174,6 +170,7 @@ public class Game {
                 }
             }
         }
+        sendEndRoundMassages(winner);
     }
 
     public void finishGame(User winner) {
