@@ -117,6 +117,8 @@ public class Client extends Thread {
                 break;
             case RETURN_TO_GAME:
                 ReturnToGameResponse returnToGameResponse = gson.fromJson(request, ReturnToGameResponse.class);
+                game = returnToGameResponse.getGame();
+                Gwent.singleton.changeScreen(Screens.GAME);
                 break;
             case FRIEND_REQUEST:
                 ServerFriendRequest serverFriendRequest = gson.fromJson(request, ServerFriendRequest.class);
@@ -181,7 +183,7 @@ public class Client extends Thread {
             case CHAT:
                 ChatInGameWrapper chatWrapper = gson.fromJson(request, ChatInGameWrapper.class);
                 ChatInGame chat = chatWrapper.getChat();
-                ChatController.receiveMassage(chat.getMassage(), chat.getUsername());
+                ChatController.receiveMassage(chat.getSender(), chat.getMassage(), chat.getTime(), chat.getReplyToSender(), chat.getReplyToMassage());
                 break;
             case END_ROUND:
                 EndRoundNotify endRoundNotify = gson.fromJson(request, EndRoundNotify.class);
