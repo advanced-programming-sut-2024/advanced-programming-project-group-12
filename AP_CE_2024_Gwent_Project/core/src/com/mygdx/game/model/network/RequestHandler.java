@@ -167,7 +167,7 @@ public class RequestHandler extends Thread {
                 case JOIN_AS_SPECTATOR:
                     JoinPublicGame joinPublicGame = gson.fromJson(request, JoinPublicGame.class);
                     String username = joinPublicGame.getServerName().split(" ")[0];
-                    allUsers.get(username).gameHandler.addAsAnSpectator(user);
+                    serverResponse = allUsers.get(username).gameHandler.addAsAnSpectator(user);
                     break;
                 case GET_ALL_USERS:
                     serverResponse = new GetAllUsersResponse(User.getAllUsers());

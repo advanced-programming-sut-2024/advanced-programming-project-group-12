@@ -10,6 +10,7 @@ import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.Round;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
+import com.mygdx.game.model.network.massage.clientRequest.ReactionMassageRequest;
 import com.mygdx.game.model.network.massage.serverResponse.*;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.*;
 import com.mygdx.game.model.network.session.Session;
@@ -125,9 +126,6 @@ public class Client extends Thread {
                 FriendsScreen.setRequestInfoReceived(true);
                 FriendsScreen.setRequestsHashMap(serverFriendRequest.getRequests());
                 Gdx.app.log("FriendsScreen", "Friend requests received: " + serverFriendRequest.getRequests());
-
-            //todo: add receiving requests
-
                 break;
             case GET_FRIENDS:
                 ServerFriend serverFriend = gson.fromJson(request, ServerFriend.class);
@@ -183,6 +181,10 @@ public class Client extends Thread {
             case CHAT:
                 ChatInGameWrapper chatWrapper = gson.fromJson(request, ChatInGameWrapper.class);
                 ChatInGame chat = chatWrapper.getChat();
+                if(chat instanceof ReactionMassageRequest) {
+                    ChatController.receiveMessageReaction((ReactionMassageRequest) chat);
+                    break;
+                }
                 ChatController.receiveMassage(chat.getSender(), chat.getMassage(), chat.getTime(), chat.getReplyToSender(), chat.getReplyToMassage());
                 break;
             case END_ROUND:
@@ -199,6 +201,11 @@ public class Client extends Thread {
                 break;
             case GET_PUBLIC_GAMES:
                 GetPublicGamesResponse publicGames = gson.fromJson(request, GetPublicGamesResponse.class);
+                break;
+            case JOIN_AS_SPECTATOR:
+                JoinAsSpectatorResponse joinAsSpectatorResponse = gson.fromJson(request, JoinAsSpectatorResponse.class);
+                game = joinAsSpectatorResponse.getGame();
+                Gwent.singleton.changeScreen(Screens.GAME);
                 break;
             case GET_ALL_USERS:
                 GetAllUsersResponse getAllUsersResponse = gson.fromJson(request, GetAllUsersResponse.class);

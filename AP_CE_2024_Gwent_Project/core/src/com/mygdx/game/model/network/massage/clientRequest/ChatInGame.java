@@ -15,6 +15,10 @@ public class ChatInGame extends ClientRequest {
         this.replyToSender = replyToSender;
         this.replyToMassage = replyToMassage;
         this.massage = massage;
+        if(massage.startsWith("\\")) {
+            isCheat = true;
+            this.massage = massage.substring(1);
+        }
     }
 
     public String getMassage() {
