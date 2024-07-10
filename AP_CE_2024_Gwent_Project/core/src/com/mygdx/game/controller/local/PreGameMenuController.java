@@ -61,7 +61,7 @@ public class PreGameMenuController {
         String deckJson = gson.toJson(User.getLoggedInUser().getDeck());
 
         // Write the JSON string to a file
-        try (FileWriter file = new FileWriter("/Users/alinr/Desktop/deck.json")) {
+        try (FileWriter file = new FileWriter("/home/radical-1/Desktop/deck.json")) {
             file.write(deckJson);
             System.out.println("Deck successfully downloaded to deck.json");
         } catch (IOException e) {
