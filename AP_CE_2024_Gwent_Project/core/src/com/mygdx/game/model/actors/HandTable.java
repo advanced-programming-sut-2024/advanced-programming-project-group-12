@@ -38,9 +38,8 @@ public class HandTable extends Table {
         this.clearChildren();
     }
     public void addToStageAndAddListener(Stage stage) {
-        //this.setDebug(true);
         float cardWidth = 80;
-        float padding = 10; // adjust this value to add space between cards
+        float padding = 10;
 
         // Clear the table before adding new cards
         this.clear();
@@ -69,6 +68,8 @@ public class HandTable extends Table {
         // Center the table in the stage
         this.center();
     }
-
+    public void setEnemyPosition() {
+        setPosition(500, 750);
+    }
 
 }

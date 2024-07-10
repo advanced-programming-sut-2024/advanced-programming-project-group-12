@@ -29,11 +29,9 @@ public class BroadCastScreen implements Screen {
     private final Stage stage;
     private final Texture background;
     //Buttons for veto, pass round, end round, end game
-    private final TextButton passButton;
     private final GameController controller;
     // info boxes and Actor
     private final WeatherBox weatherBox;
-    private HandTable hand;
     private ArrayList<RowTable> playerRows;
     private ArrayList<RowTable> enemyRows;
 
@@ -97,7 +95,8 @@ public class BroadCastScreen implements Screen {
         displayInfo();
 
         displayLeaderCard();
-        displayHand();
+        displayHand(true);
+        displayHand(false);
         displayPlayerDeckStack(player, 97);
         displayPlayerDeckStack(opposition, 785);
         //TODO : complete this part
@@ -175,13 +174,6 @@ public class BroadCastScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        passButton.setVisible(true);
-        passButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                controller.passRound();
-            }
-        });
         chatBox.getSendButton().addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -327,58 +319,25 @@ public class BroadCastScreen implements Screen {
     }
 
 
-    public void displayHand() {
-
-        LinkedList<AbstractCard> handCards = player.getHandAsCards();
-        hand = new HandTable(handCards);
-        hand.addToStageAndAddListener(stage);
-        for (CardActor cardActor : hand.getCards()) {
-            AbstractCard card = cardActor.getCard();
-            cardActor.getCardTable().addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    AbstractCard selectedCard = controller.getSelectedCard();
-                    if (selectedCard != null && selectedCard.equals(card)) {
-                        // If the clicked card is already the selected card, unselect it
-                        controller.setSelectedCard(null);
-                        selectedCardPlace.setActor(null);
-                        resetBackgroundColors();
-                    } else {
-                        // Otherwise, select the clicked card
-                        controller.setSelectedCard(card);
-                        selectedCardPlace.setActor(null);
-                        InfoCardActor showCard = new InfoCardActor(card);
-                        selectedCardPlace.setActor(showCard);
-                        showCard.setSize(200, 300);
-                        showCard.setPosition(1300, 400);
-                        selectedCardPlace.setPosition(1300, 400);
-
-                        resetBackgroundColors();
-                        highlightAllowablePlaces(card);
-                    }
-                }
-            });
+    public void displayHand(boolean side) {
+        HandTable hand;
+        LinkedList<AbstractCard> handCards;
+        if(side) {
+            handCards = player.getHandAsCards();
+        } else {
+            handCards = opposition.getHandAsCards();
         }
+        hand = new HandTable(handCards);
+        if(!side) {
+            hand.setEnemyPosition();
+        }
+        hand.addToStageAndAddListener(stage);
+
     }
 
 
-    private void playCard(AbstractCard card, RowTable row) {
-        // Get the card from the CardActor
 
-        controller.playCard(card, row.getRowNumber());
 
-        // Unselect the card
-        resetBackgroundColors();
-        hand.clear();
-        // Redraw the player's hand
-        displayHand();
-
-        playerInfoBox.updatePlayerInfo(player.getHandAsCards().size());
-    }
-
-    private void playWeatherCard(CardActor card) {
-        weatherBox.add(card.getCardTable()).size(80, 110).expand().fill();
-    }
 
     private void highlightAllowablePlaces(AbstractCard card) {
         if (card.getAllowableRows() == null) return;
