@@ -18,10 +18,10 @@ public enum AllCards {
     MARDROEME(new SpellCard("mardroeme", "", Action.MUSHROOM, Arrays.asList(0,1,2), null, Faction.SPECIAL),3),
 
     //weather cards
-    CLEAR(new SpellCard("clear", "", Action.CLEAR, Arrays.asList(3), null, Faction.WEATHER), 2),
+    CLEAR(new SpellCard("clear", "", Action.CLEAR, Arrays.asList(3), null, Faction.WEATHER), 3),
     FOG(new SpellCard("fog", "", Action.FOG, Arrays.asList(3), null, Faction.WEATHER), 3),
     FROST(new SpellCard("frost", "", Action.FROST, Arrays.asList(3), null, Faction.WEATHER), 3),
-    RAIN(new SpellCard("rain", "", Action.RAIN, Arrays.asList(3), null, Faction.WEATHER), 2),
+    RAIN(new SpellCard("rain", "", Action.RAIN, Arrays.asList(3), null, Faction.WEATHER), 3),
     STORM(new SpellCard("storm", "", Action.STORM, Arrays.asList(3), null, Faction.WEATHER), 3),
 
 
@@ -285,6 +285,7 @@ public enum AllCards {
     }
 
     public static AbstractCard getCardByCardName(String cardName) {
+        cardName = cardName.trim();
         for(AllCards i: AllCards.values()) {
             if(i.getCard().getName().equals(cardName)) {
                 return i.getCard();

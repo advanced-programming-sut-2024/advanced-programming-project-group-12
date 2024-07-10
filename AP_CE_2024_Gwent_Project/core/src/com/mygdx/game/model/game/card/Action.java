@@ -232,7 +232,7 @@ public enum Action {
         for(int i = 0; i< 3; i++ ){
             Row row = gameBoard.getRowForPlayer(i, card.getPlayer());
             Player opposition = card.player.getGame().getOpposition();
-            card.getPlayer().getGame().getGameBoard().getRowForPlayer(i, opposition).setWeatherBuffer(true);
+            card.getPlayer().getGame().getGameBoard().getRowForPlayer(i, opposition).setWeatherBuffer(false);
             row.setWeatherBuffer(false);
         }
         card.getPlayer().getGame().switchTurn();

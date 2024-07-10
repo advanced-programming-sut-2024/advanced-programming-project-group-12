@@ -50,18 +50,17 @@ public class Round {
             handleWinCase(player2, player1);
             winner = player2;
         } else {
-            if (player1.getFaction().equals(Faction.NILFGAARD) && player2.getFaction().equals(Faction.NILFGAARD)) {
+            if (player1.getFaction().equals(Faction.NILFGAARD) && !player2.getFaction().equals(Faction.NILFGAARD)) {
                 handleWinCase(player1, player2);
                 winner = player1;
             }
-            else if (player2.getFaction().equals(Faction.NILFGAARD) && player1.getFaction().equals(Faction.NILFGAARD)) {
+            else if (player2.getFaction().equals(Faction.NILFGAARD) && !player1.getFaction().equals(Faction.NILFGAARD)) {
                 handleWinCase(player2, player1);
                 winner = player2;
             }
             else {
                 player1.loseRound();
                 player2.loseRound();
-                winner = player2;
             }
         }
         if(player1.getHealth() == 0 || player2.getHealth() == 0 ) {
