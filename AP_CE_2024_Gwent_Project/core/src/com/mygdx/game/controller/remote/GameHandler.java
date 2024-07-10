@@ -5,9 +5,11 @@ import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.game.card.AllCards;
 import com.mygdx.game.model.game.card.CommanderCards;
+import com.mygdx.game.model.game.card.Decoy;
 import com.mygdx.game.model.network.RequestHandler;
 import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.PlayCardRequest;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.PlayDecoyRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ReDrawResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ChatInGameWrapper;
 import com.mygdx.game.model.network.massage.serverResponse.GetPublicGamesResponse;
@@ -80,10 +82,28 @@ public class GameHandler {
     }
 
     public void handleChat(ChatInGame chat, User user) {
-        User toUser = user.equals(user1)? user2: user1;
-        RequestHandler.allUsers.get(toUser.getUsername()).sendMassage(new ChatInGameWrapper(chat));
-        sendMassageToSpectators(new ChatInGameWrapper(chat));
+        if(chat.isCheat()) {
+            cheatHandler(chat, user);
+        } else {
+            User toUser = getTheOtherUser(user);
+            RequestHandler.allUsers.get(toUser.getUsername()).sendMassage(new ChatInGameWrapper(chat));
+            sendMassageToSpectators(new ChatInGameWrapper(chat));
+        }
     }
+
+    private void cheatHandler(ChatInGame chat, User user) {
+        switch (chat.getMassage()) {
+            case "ali jan <3":
+                break;
+            case "ktkh":
+                break;
+            case "hemasian esfehan":
+                break;
+            case "zallnejan babol" :
+
+        }
+    }
+
     public void spectatorChatHandle(ChatInGame chat, User user) {
         ChatInGameWrapper wrapper = new ChatInGameWrapper(chat);
         RequestHandler.allUsers.get(user1.getUsername()).sendMassage(wrapper);
@@ -153,5 +173,9 @@ public class GameHandler {
 
     public Game getGame() {
         return game;
+    }
+
+    public ServerResponse playDecoy(PlayDecoyRequest playDecoyRequest, User user) {
+        return ((Decoy) AllCards.DECOY.getAbstractCard()).place(playDecoyRequest.getRow(),playDecoyRequest.getToBeReplace(), user.getPlayer());
     }
 }

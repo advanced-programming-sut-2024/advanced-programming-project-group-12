@@ -14,7 +14,7 @@ public enum AllCards {
     COMMANDER_HORN(new SpellCard("commander horn", "", Action.HORN, Arrays.asList(0,1,2), null, Faction.SPECIAL), 3),
     SCORCH(new SpellCard("scorch", "", Action.SCORCH, Arrays.asList(0,1,2), null, Faction.SPECIAL), 3),
     //decoy should be hancled seperatly so that it replaces an abstract card
-    DECOY(new Decoy("decoy", "", Action.DECOY, Arrays.asList(0,1,2), null, Faction.SPECIAL), 3),
+    DECOY(new Decoy("decoy", "", Action.DECOY, Arrays.asList(0,1,2), 0, null, Faction.SPECIAL), 3),
     MARDROEME(new SpellCard("mardroeme", "", Action.MUSHROOM, Arrays.asList(0,1,2), null, Faction.SPECIAL),3),
 
     //weather cards
@@ -65,7 +65,7 @@ public enum AllCards {
     COW(new PlayableCard("cow", "", Action.COW, Arrays.asList(1), 0, null, Faction.NEUTRAL,(PlayableCard) BOVINE_DEFENSE_FORCE.getCard())),
     DANDELION(new PlayableCard("dandelion", "", Action.HORN, Arrays.asList(0), 2, null, Faction.NEUTRAL)),
     EMIEL(new PlayableCard("emiel", "", Action.NO_ACTION, Arrays.asList(0), 5, null, Faction.NEUTRAL)),
-    GAUNTER_ODIMM_DARKNESS(new PlayableCard("gaunter odimm", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.NEUTRAL), 3),
+    GAUNTER_ODIMM_DARKNESS(new PlayableCard("gaunter odimm darkness", "", Action.MUSKET, Arrays.asList(0), 4, null, Faction.NEUTRAL), 3),
     GAUNTER_ODIMM(new PlayableCard("gaunter odimm", "", Action.MUSKET, Arrays.asList(2), 2, null, Faction.NEUTRAL)),
     GERALT(new PlayableCard("geralt", "", Action.NO_ACTION, Arrays.asList(0), 15, null, Faction.NEUTRAL)),
     OLGIERD(new PlayableCard("olgierd", "", Action.MORALE, Arrays.asList(0,1), 6, null, Faction.NEUTRAL)),

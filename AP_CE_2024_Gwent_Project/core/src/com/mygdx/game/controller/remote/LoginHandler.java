@@ -27,15 +27,16 @@ public class LoginHandler {
         String response = loginHandler(username, password);
         if(response.equals("accept")) {
             User user = User.getUserByUsername(username);
+            requestHandler.setUser(user);
             if(user == null) {
-                System.err.println("no such user to be loggend in");
+                System.err.println("no such user to be logged in");
                 return new LoginResponse(ServerResponseType.LOGIN_DENY, "denied");
             }
 
-            RequestHandler.allUsers.put(user.getUsername(), requestHandler);
             if(checkForUnfinishedGame(username, requestHandler)) {
                 return new ReturnToGameResponse(user, requestHandler.getGameHandler().getGame());
             }
+            RequestHandler.allUsers.put(user.getUsername(), requestHandler);
 
             return new LoginResponse(ServerResponseType.LOGIN_CONFIRM , user);
         } else {

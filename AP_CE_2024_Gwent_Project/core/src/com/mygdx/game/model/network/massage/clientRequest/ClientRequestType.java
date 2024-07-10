@@ -20,6 +20,6 @@ public enum ClientRequestType {
     SPECTATOR_CHAT, GET_PUBLIC_GAMES, JOIN_AS_SPECTATOR, GET_ALL_USERS,
     RE_DRAW,
     PASS_ROUND,
-    CHAT
+    PLAY_DECOY, CHAT
 
 }

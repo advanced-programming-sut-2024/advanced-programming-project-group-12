@@ -67,6 +67,10 @@ public class RequestHandler extends Thread {
         this.dataOutputStream = dataOutputStream;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public void run() {
         while(true) {
@@ -138,6 +142,10 @@ public class RequestHandler extends Thread {
                     PlayCardRequest playCardRequest = gson.fromJson(request, PlayCardRequest.class);
                     serverResponse = gameHandler.playCard(playCardRequest, user);
                     break;
+                case PLAY_DECOY:
+                    PlayDecoyRequest playDecoyRequest = gson.fromJson(request, PlayDecoyRequest.class);
+                    serverResponse = gameHandler.playDecoy(playDecoyRequest, user);
+                    break;
                 case CARD_SELECT_ANSWER:
                     CardSelectionAnswer answer = gson.fromJson(request, CardSelectionAnswer.class);
                     serverResponse = user.getPlayer().getGame().getCardSelectHandler().handle(answer, user.getPlayer());
@@ -204,6 +212,7 @@ public class RequestHandler extends Thread {
 
     public void connectionLost() {
         if(gameHandler != null) {
+            System.out.println("connection lost with user: " + user.getUsername());
             unfinishedGame = new Timer();
             unfinishedGame.schedule(new TimerTask() {
                 @Override

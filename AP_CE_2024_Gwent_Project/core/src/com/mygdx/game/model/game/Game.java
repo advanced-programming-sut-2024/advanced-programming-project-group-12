@@ -139,6 +139,7 @@ public class Game {
                 ArrayList<PlayableCard> cardsList = currentRound.gameBoardCopy.allPlayerPlayableCards(p);
                 //the deep copied gameBoard means that the card remains in discard and can be revived again
                 PlayableCard playableCard = cardsList.remove((int) (Math.random() * cardsList.size()));
+                System.out.println("monsters ability triggered keeping card: " + playableCard.getAbsName());
                 playableCard.place(playableCard.getRow(), p);
             }
         }

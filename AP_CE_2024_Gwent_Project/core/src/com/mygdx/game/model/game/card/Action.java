@@ -167,7 +167,7 @@ public enum Action {
         int row = card.getRow();
         for (int i = 0; i< deck.size(); i++) {
             AbstractCard musket = deck.get(i);
-            if (musket.getAbsName().equals(card.getAbsName())) {
+            if (musket.getAbsName().split(" ")[0].equals(card.getAbsName().split(" ")[0])) {
                 player.getDeck().remove(i);
                 if (musket.getAllowableRows().contains(row)) {
                     return musket.place(row, card.getPlayer()).getActionResponse();
@@ -179,11 +179,11 @@ public enum Action {
 
         LinkedList<AbstractCard> hand = player.getHandAsCards();
         for (AbstractCard i : hand) {
-            if (i.getAbsName().equals(card.getAbsName())) {
+            if (i.getAbsName().split(" ")[0].equals(card.getAbsName().split(" ")[0])) {
                 if (i.getAllowableRows().contains(row)) {
                     return i.place(row, card.getPlayer()).getActionResponse();
                 } else {
-                    return i.place(i.getDefaultRow(), i.getPlayer()).getActionResponse();
+                    return i.place(i.getDefaultRow(), card.getPlayer()).getActionResponse();
                 }
             }
         }
@@ -219,11 +219,7 @@ public enum Action {
 
         return new ActionResponse(ActionResponseType.MUSHROOM);
     }),
-    DECOY(abstractCard -> {
-        //todo
-        abstractCard.getPlayer().getGame().switchTurn();
-        return null;
-    }),
+    DECOY(abstractCard -> new ActionResponse(ActionResponseType.DECOY)),
 
     //weather actions
     CLEAR(card -> {
