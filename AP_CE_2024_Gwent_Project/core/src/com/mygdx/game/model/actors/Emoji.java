@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 public enum Emoji {
     LAUGH("laugh"),
     CRY("cry"),
-    TOMB_UP("tombs-up"),
+    THUMBS_UP("thumbs-up"),
     KISS("kiss"),
     HEART("heart"),
     ;
@@ -17,3 +17,4 @@ public enum Emoji {
         return new Texture(path);
     }
 }
+

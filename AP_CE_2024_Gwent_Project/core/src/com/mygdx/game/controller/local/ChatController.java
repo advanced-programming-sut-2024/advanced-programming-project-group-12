@@ -37,8 +37,7 @@ public class ChatController {
             receiveEmojiReaction(reactionMassageRequest.getEmoji());
         }
     }
-    private static void showReactionWindow() {
-        //TODO : call it when we should show reaction window
+    public static void showReactionWindow() {
         ((GameScreen) Gwent.singleton.getCurrentScreen()).setShowReactionWindow();
     }
 }

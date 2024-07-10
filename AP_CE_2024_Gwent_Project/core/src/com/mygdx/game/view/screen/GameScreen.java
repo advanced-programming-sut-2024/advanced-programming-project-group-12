@@ -364,7 +364,7 @@ public class GameScreen implements Screen {
         }
         if(showReactionWindow) {
             showReactionWindow();
-            showReactionWindow = true;
+            showReactionWindow = false;
         }
         if(ChatUI.getInstance().getNewMessage() != null) {
             ChatUI.getInstance().putNewMessage();
@@ -980,23 +980,24 @@ public class GameScreen implements Screen {
 
         stage.addActor(reactionLabel);
     }
+
     public void showReactionWindow() {
-        Window reactionWindow = new Window("show  your reaction!", Gwent.singleton.skin);
-        reactionWindow.setSize(800, 700);
-        // Add a fade out action to the reaction window
-        SequenceAction fadeOutAction = Actions.sequence(
-                Actions.delay(7f), // wait for 7 seconds
-                Actions.fadeOut(0.5f),
-                Actions.removeActor() // remove the window from the stage
-        );
-        reactionWindow.addAction(fadeOutAction);
-        for(Emoji emoji : Emoji.values()) {
+        Window reactionWindow = new Window("Show your reaction!", Gwent.singleton.skin);
+        reactionWindow.setSize(1000, 800);
+        reactionWindow.setPosition(100, 100);
+
+
+
+        Table table = new Table();
+        reactionWindow.add(table).fill().expand();
+
+        // Emoji buttons
+        Table emojiTable = new Table();
+        for (Emoji emoji : Emoji.values()) {
             ImageButton emojiButton = new ImageButton(new Image(emoji.getTexture()).getDrawable());
-            emojiButton.setSize(30, 30);
-            reactionWindow.add(emojiButton).padRight(10);
             emojiButton.addListener(new ClickListener() {
                 @Override
-                public void clicked(InputEvent event , float x, float y) {
+                public void clicked(InputEvent event, float x, float y) {
                     ChatController.sendEmojiReaction(emoji);
                     reactionWindow.addAction(Actions.sequence(
                             Actions.fadeOut(0.5f), // fade out the window over 0.5 seconds
@@ -1004,42 +1005,50 @@ public class GameScreen implements Screen {
                     ));
                 }
             });
+            emojiTable.add(emojiButton).size(70, 70).padRight(10);
         }
-        reactionWindow.row();
-        TextButton niceButton = new TextButton("nice play!", Gwent.singleton.skin);
-        niceButton.setSize(100, 50);
-        reactionWindow.add(niceButton).pad(20);
+        table.add(emojiTable).fillX().uniformX().center().row();
+
+        // Message buttons
+        Table messageTable = new Table();
+        TextButton niceButton = new TextButton("Nice play!", Gwent.singleton.skin);
         niceButton.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event , float x, float y) {
-                ChatController.sendMessageReaction("nice play!");
+            public void clicked(InputEvent event, float x, float y) {
+                ChatController.sendMessageReaction("Nice play!");
                 reactionWindow.addAction(Actions.sequence(
                         Actions.fadeOut(0.5f), // fade out the window over 0.5 seconds
                         Actions.removeActor() // remove the window from the stage after fade out
                 ));
             }
         });
-        TextButton tooBadButton = new TextButton("too bad play!", Gwent.singleton.skin);
-        tooBadButton.setSize(100, 50);
-        tooBadButton.add(niceButton).pad(20);
+        messageTable.add(niceButton).size(300, 150).padRight(20);
+
+        TextButton tooBadButton = new TextButton("Too bad play!", Gwent.singleton.skin);
         tooBadButton.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event , float x, float y) {
-                ChatController.sendMessageReaction("too bad play!");
+            public void clicked(InputEvent event, float x, float y) {
+                ChatController.sendMessageReaction("Too bad play!");
                 reactionWindow.addAction(Actions.sequence(
                         Actions.fadeOut(0.5f), // fade out the window over 0.5 seconds
                         Actions.removeActor() // remove the window from the stage after fade out
                 ));
             }
         });
-        reactionWindow.row();
-        TextField shortMessage = new TextField("send your short message :",Gwent.singleton.skin);
-        shortMessage.setSize(150, 50);
-        TextButton sendReactionButton = new TextButton("send", Gwent.singleton.skin);
-        sendReactionButton.setSize(60, 50);
+        messageTable.add(tooBadButton).size(350, 150).padRight(20);
+
+        table.add(messageTable).fillX().uniformX().center().row();
+
+        // Short message input
+        TextField shortMessage = new TextField("", Gwent.singleton.skin);
+        shortMessage.setMessageText("Send your short message:");
+        table.add(shortMessage).size(350, 100).padRight(20).center().row();
+
+        // Send button
+        TextButton sendReactionButton = new TextButton("Send", Gwent.singleton.skin);
         sendReactionButton.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event , float x, float y) {
+            public void clicked(InputEvent event, float x, float y) {
                 ChatController.sendMessageReaction(shortMessage.getText());
                 reactionWindow.addAction(Actions.sequence(
                         Actions.fadeOut(0.5f), // fade out the window over 0.5 seconds
@@ -1047,8 +1056,17 @@ public class GameScreen implements Screen {
                 ));
             }
         });
+        table.add(sendReactionButton).size(120, 100).center();
+
         // Show the reaction window
         reactionWindow.setVisible(true);
+        // Add a fade out action to the reaction window
+        SequenceAction fadeOutAction = Actions.sequence(
+                Actions.delay(5f), // wait for 5 seconds
+                Actions.fadeOut(0.5f),
+                Actions.removeActor() // remove the window from the stage
+        );
+        reactionWindow.addAction(fadeOutAction);
         stage.addActor(reactionWindow);
     }
     public void setReactedEmoji(Emoji emoji) {
