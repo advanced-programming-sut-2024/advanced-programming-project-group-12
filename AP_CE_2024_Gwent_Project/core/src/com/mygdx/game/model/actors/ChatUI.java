@@ -2,30 +2,24 @@ package com.mygdx.game.model.actors;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.ChatController;
-import com.mygdx.game.controller.local.GameController;
 import com.mygdx.game.model.network.Client;
-import com.mygdx.game.view.screen.GameScreen;
-
-import javax.swing.plaf.ScrollPaneUI;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
-import java.util.SplittableRandom;
+
 
 public class ChatUI extends Window {
     private static ChatUI singleton;
 
+    private Message newMessage = null;
     private VerticalGroup chatLogGroup;
-    private Table inputTable;
     private TextField messageField;
     private TextButton sendButton;
     private ScrollPane scrollPane;
@@ -35,13 +29,15 @@ public class ChatUI extends Window {
     private boolean isReplyMode = false;
     private String replyToSender = null;
     private String replyToMessage = null;
-    public ChatUI(Stage stage, Skin skin) {
+    private boolean spectator;
+    public ChatUI(Stage stage, Skin skin, boolean spectator) {
         super("Chat Window", skin);
         this.skin = skin;
+        this.spectator = spectator;
         this.stage = stage;
         createUI();
         singleton = this;
-        setSize(600, 900);
+        setSize(700, 900);
         setResizable(false);
         setMovable(false);
         add(rootTable).expand().fill();
@@ -53,7 +49,7 @@ public class ChatUI extends Window {
         return singleton;
     }
     public void returnToStage(Stage stage) {
-        stage.addActor(rootTable);
+        stage.addActor(this);
     }
     private void createUI() {
         // Create the chat log group
@@ -92,8 +88,6 @@ public class ChatUI extends Window {
         stage.addActor(rootTable);
     }
 
-
-
     private void openReplyMode(String senderName, String messageText) {
         // Set the reply mode
         isReplyMode = true;
@@ -105,20 +99,20 @@ public class ChatUI extends Window {
     private void sendMessage() {
         // Get the message text
         String messageText = messageField.getText();
-        String sender = Client.getInstance().getName();
+        String sender = Client.getInstance().getUser().getUsername();
         String time = getTimestamp();
         if (isReplyMode) {
             // Add the reply to the chat log
 
             ChatController.sendMessage(sender, messageText, time,
-                    replyToSender, replyToMessage);
+                    replyToSender, replyToMessage, spectator);
             isReplyMode = false;
             replyToSender = null;
             replyToMessage = null;
         } else {
             // Add the message to the chat log
             ChatController.sendMessage(sender, messageText, time,
-                    null, null);
+                    null, null, spectator);
 
         }
 
@@ -136,17 +130,8 @@ public class ChatUI extends Window {
 
     public void addReceivedMessage(String senderName, String messageText, String timestamp, String replyToSender, String replyToMessage) {
         boolean isSender;
-        //TODO : here check if he send that message
-        if(Client.getInstance().getName().equals(senderName)) {
-            isSender = true;
-        } else {
-            isSender = false;
-        }
-        if(replyToSender == null) {
-            addMessageToChatLog(senderName, messageText, timestamp, isSender);
-        } else {
-            addMessageToChatLog(senderName, messageText, timestamp, isSender, replyToSender, replyToMessage);
-        }
+        isSender = Client.getInstance().getUser().getUsername().equals(senderName);
+        newMessage = new Message(isSender, senderName, messageText, timestamp, replyToSender, replyToMessage);
     }
 
 
@@ -224,7 +209,7 @@ public class ChatUI extends Window {
         Table messageBubble = new Table();
         messageBubble.setTransform(true);
 
-        Image background = new Image(new Texture("message-back.jpeg"));
+        Image background = new Image(new Texture("bg/message-back.jpeg"));
         if (isSender) {
             messageBubble.setColor(Color.BLUE);
         } else {
@@ -266,10 +251,20 @@ public class ChatUI extends Window {
         scrollPane.scrollTo(0, 0, 0, 0);
     }
 
-    public Table getRootTable() {
-        return rootTable;
+    public void putNewMessage() {
+        if(newMessage.getReplyToSender() == null) {
+            addMessageToChatLog(newMessage.getSender(), newMessage.getMessage()
+                    , newMessage.getTime(), newMessage.isSender());
+        } else {
+            addMessageToChatLog(newMessage.getSender(), newMessage.getMessage(), newMessage.getTime(),
+                    newMessage.isSender(), newMessage.getReplyToSender(), newMessage.getReplyToMessage());
+        }
+        newMessage = null;
     }
 
+    public Message getNewMessage() {
+        return newMessage;
+    }
     public void hide() {
         setVisible(false);
         System.out.println("hide");
@@ -278,4 +273,5 @@ public class ChatUI extends Window {
         setVisible(true);
         System.out.println("show");
     }
+
 }
