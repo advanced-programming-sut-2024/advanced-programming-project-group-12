@@ -88,8 +88,7 @@ public class CardTable extends Table {
         }
     }
 
-    public Texture getAbiltyTexture() {
-
+    public synchronized Texture getAbiltyTexture() {
         String path = "icons/card_ability_" + card.getAction().toString().toLowerCase() + ".png";
         try {
             return new Texture(path);

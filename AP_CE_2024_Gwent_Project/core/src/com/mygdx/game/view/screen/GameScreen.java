@@ -65,12 +65,12 @@ public class GameScreen implements Screen {
     private Player player;
     private Player opposition;
     //chat parts
-    private ChatBox chatBox;
     private TextButton chatButton;
 
     public GameScreen() {
         controller = new GameController();
         stage = new Stage(new ScreenViewport());
+        new ChatUI(stage, Gwent.singleton.skin);
         background = new Texture("bg/board.jpg");
         if (Client.getInstance().getGame().getCurrentPlayer().getUsername().equals(Client.getInstance().getUser().getUsername())) {
             player = Client.getInstance().getGame().getCurrentPlayer();
@@ -146,9 +146,8 @@ public class GameScreen implements Screen {
             passButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    controller.passRound();
                     notificationsQueue.add(new Notification("Round Passed!", "icons/notif_round_passed.png"));
-                    controller.update();
+                    controller.passRound();
 
                 }
             });
@@ -159,10 +158,10 @@ public class GameScreen implements Screen {
         chatButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (chatBox.isVisible()) {
-                    chatBox.hide();
+                if (ChatUI.getInstance().getRootTable().isVisible()) {
+                    ChatUI.getInstance().hide();
                 } else {
-                    chatBox.show();
+                    ChatUI.getInstance().show();
                 }
             }
         });
@@ -177,20 +176,6 @@ public class GameScreen implements Screen {
         displayWeatherBox();
         stage.addActor(weatherBox);
 
-        //chat box
-        chatBox = new ChatBox(Gwent.singleton.skin);
-        chatBox.setPosition(400, 500); // set the position of the chat box
-        chatBox.getSendButton().addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                String message = chatBox.getInputText();
-                if (message.isEmpty()) return true;
-                ChatController.sendMessage(Client.getInstance().getUser().getUsername(), message);
-                chatBox.clearInput();
-                return true;
-            }
-        });
-        stage.addActor(chatBox);
 
         //discards
         playerDiscards = new Container<Actor>();
@@ -303,8 +288,8 @@ public class GameScreen implements Screen {
         oppositionInfoBox = new PlayerInfoBox(opposition.getHandAsCards().size(), opposition.getUsername(),
                 opposition.getFaction().toString(), opposition.getHealth());
         stage.addActor(oppositionInfoBox.getInfoTable());
-        playerInfoBox.setPosition(50, 260);
-        oppositionInfoBox.setPosition(50, 610);
+        playerInfoBox.setPosition(0, 260);
+        oppositionInfoBox.setPosition(0, 600);
     }
 
     @Override
@@ -761,6 +746,7 @@ public class GameScreen implements Screen {
         showTurn = true;
         stage.clear();
         initialStageObjects();
+        ChatUI.getInstance().returnToStage(stage);
     }
 
     public void endGame(int state) {

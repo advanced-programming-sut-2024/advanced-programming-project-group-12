@@ -2,6 +2,7 @@ package com.mygdx.game.controller.local;
 
 
 import com.mygdx.game.Gwent;
+import com.mygdx.game.model.actors.ChatUI;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.card.*;
 import com.mygdx.game.model.network.Client;
@@ -135,6 +136,7 @@ public class GameController {
     public void update() {
         ((GameScreen)Gwent.singleton.getCurrentScreen()).setUpdate();
     }
+
 
 
 }

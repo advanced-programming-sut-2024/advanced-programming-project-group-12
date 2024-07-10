@@ -167,10 +167,10 @@ public class Client extends Thread {
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setShowSelectedCard(reDrawRequest.getHandAsCards(), 2, true);
                 break;
             case PLAY_CARD_RESPONSE:
+
                 PlayCardResponse playCardResponse = gson.fromJson(request, PlayCardResponse.class);
                 this.game = playCardResponse.getGame();
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setPermission(playCardResponse.isPermission());
-                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().update();
                 ActionResponse actionResponse = playCardResponse.getActionResponse();
                 if (actionResponse!= null && actionResponse.getAction().equals(ActionResponseType.SELECTION)) {
                     ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setShowSelectedCard(actionResponse.getAffectedCards(), actionResponse.getActionCount(), false);
@@ -193,7 +193,7 @@ public class Client extends Thread {
                 break;
             case END_GAME:
                 EndGameNotify endGameNotify = gson.fromJson(request, EndGameNotify.class);
-                //((GameScreen)Gwent.singleton.getCurrentScreen()).getController().endGame(endGameNotify.getWinner(), endGameNotify.isHasWinner());
+                ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().endGame(endGameNotify.getWinner(), endGameNotify.isHasWinner());
                 break;
             case GET_PUBLIC_GAMES:
                 GetPublicGamesResponse publicGames = gson.fromJson(request, GetPublicGamesResponse.class);
