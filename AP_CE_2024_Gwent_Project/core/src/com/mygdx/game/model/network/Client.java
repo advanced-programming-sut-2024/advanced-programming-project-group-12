@@ -5,9 +5,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.ChatController;
-import com.mygdx.game.controller.local.GameRequestController;
-import com.mygdx.game.controller.local.TournamentController;
-import com.mygdx.game.model.game.Tournament;
 import com.mygdx.game.model.game.card.AbstractElementAdapter;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.Round;
@@ -248,6 +245,7 @@ public class Client extends Thread {
                 break;
             case GET_ALL_USERS:
                 GetAllUsersResponse getAllUsersResponse = gson.fromJson(request, GetAllUsersResponse.class);
+                LeaderBoardMenuController.setUsers(getAllUsersResponse.getAllUsers());
                 break;
         }
     }

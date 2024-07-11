@@ -54,4 +54,8 @@ public class LoginMenuController {
     public static void removeUsernameForForgotPassword() {
         usernameForForgotPassword = null;
     }
+    public static String getUserEmail(String username) {
+        User user = User.getUserByUsername(username);
+        return user != null ? user.getEmail() : null;
+    }
 }

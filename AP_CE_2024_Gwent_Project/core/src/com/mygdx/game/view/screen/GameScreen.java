@@ -5,15 +5,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.ChatController;
@@ -77,7 +73,7 @@ public class GameScreen implements Screen {
     public GameScreen() {
         controller = new GameController();
         stage = new Stage(new ScreenViewport());
-        new ChatUI(stage, Gwent.singleton.skin, true);
+        new ChatUI(stage, Gwent.singleton.skin, false);
         ChatUI.getInstance().hide();
         background = new Texture("bg/board.jpg");
         if (Client.getInstance().getGame().getCurrentPlayer().getUsername().equals(Client.getInstance().getUser().getUsername())) {

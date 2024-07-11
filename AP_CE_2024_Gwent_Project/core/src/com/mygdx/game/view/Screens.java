@@ -66,7 +66,7 @@ public enum Screens {
                 screen = new LiveStreamMenuScreen();
                 break;
             case BROAD_CAST:
-                //screen = new BroadCastScreen();
+                screen = new BroadCastScreen();
                 break;
         }
         return screen;

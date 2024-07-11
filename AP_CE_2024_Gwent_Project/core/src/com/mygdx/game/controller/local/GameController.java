@@ -33,7 +33,6 @@ public class GameController {
 
     public void endRound(String winner) {
         ((GameScreen)Gwent.singleton.getCurrentScreen()).endRound(winner);
-
     }
 
     public void endGame(String winnerName, boolean hasWinner) {

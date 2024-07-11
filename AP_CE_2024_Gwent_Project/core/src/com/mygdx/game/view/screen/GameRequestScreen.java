@@ -98,7 +98,18 @@ public class GameRequestScreen implements Screen {
         sendAGameRequestButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!requestSent) {
+                String username = nameField.getText();
+                if (!userIsMyFriend(username)) {
+                    Dialog dialog = new Dialog("Error", Gwent.singleton.skin) {
+                        public void result(Object obj) {
+                        }
+                    };
+                    dialog.row();
+                    dialog.text("You can only send game requests to you friends").row();
+                    dialog.button("OK", true);
+                    dialog.show(stage);
+                }
+                else if (!requestSent) {
                     String name = nameField.getText();
                     if (controller.userExists(name)) {
                         String sender = User.getLoggedInUser().getUsername();

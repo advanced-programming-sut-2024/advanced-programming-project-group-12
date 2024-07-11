@@ -1,16 +1,14 @@
 buildscript {
-    
-
     repositories {
         mavenLocal()
         mavenCentral()
         gradlePluginPortal()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         google()
+
     }
     dependencies {
-        
-
+        // classpath dependencies here, if any
     }
 }
 
@@ -42,24 +40,20 @@ allprojects {
 project(":desktop") {
     apply plugin: "java-library"
 
-
     dependencies {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
-        implementation 'javax.mail:javax.mail-api:1.6.2'
-        implementation 'com.sun.mail:javax.mail:1.6.2'
-
     }
 }
 
 project(":core") {
     apply plugin: "java-library"
 
-
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        
+        implementation 'javax.mail:javax.mail-api:1.6.2'
+        implementation 'com.sun.mail:javax.mail:1.6.2'
     }
 }

@@ -60,6 +60,8 @@ public class HandTable extends Table {
         // Center the table in the stage
         this.center();
     }
-
+    public void setEnemyPosition() {
+        setPosition(500, 750);
+    }
 
 }

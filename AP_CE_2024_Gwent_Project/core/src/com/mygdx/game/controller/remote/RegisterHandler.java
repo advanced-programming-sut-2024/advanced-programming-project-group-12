@@ -29,7 +29,7 @@ public class RegisterHandler {
         }
     }
 
-    static boolean isUsernameTaken(String username) {
+    public static boolean isUsernameTaken(String username) {
         return User.getUserByUsername(username) != null;
     }
 
