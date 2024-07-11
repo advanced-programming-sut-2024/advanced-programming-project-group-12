@@ -37,10 +37,17 @@ public class GameRequestScreen implements Screen {
     private final Button backButton;
     private Button acceptGameRequestButton;
     private Button rejectGameRequestButton;
+    private Button randoGameButton;
+    private Button listOfRandomGamesButton;
     // labels
     private final Label requestSentLabel;
     private final Label errorLabel;
     private final Label requestListLabel;
+
+    private String gameType;
+    private SelectBox<String> gameTypeSelectBox;
+    public ArrayList<String> listOfRandomGames = null;
+
 
     public GameRequestScreen() {
         this.controller = new GameRequestController();
@@ -52,6 +59,8 @@ public class GameRequestScreen implements Screen {
 
         this.nameField = new TextField("", skin);
         this.sendAGameRequestButton = new TextButton("Play Game", skin);
+        this.randoGameButton = new TextButton("Start Random Game", skin);
+        this.listOfRandomGamesButton = new TextButton("List of Random Games", skin);
         this.requestSentLabel = new Label("", skin);
         this.errorLabel = new Label("", skin);
         this.backButton = new TextButton("Back", skin);
@@ -69,6 +78,14 @@ public class GameRequestScreen implements Screen {
         table.add(nameField).width(500).height(80).pad(10);
         table.add(sendAGameRequestButton).width(350).height(80);
         table.row();
+        // Add a select box to the table
+        gameTypeSelectBox = new SelectBox<>(skin);
+        gameTypeSelectBox.setItems("Public", "Private");
+        table.add(gameTypeSelectBox).width(300).height(80).pad(10);
+        table.row();
+        table.add(randoGameButton).width(500).height(100).pad(10);
+        table.add(listOfRandomGamesButton).width(600).height(100).pad(10);
+        table.row();
         table.add(requestSentLabel);
         table.row();
         table.add(errorLabel);
@@ -85,7 +102,8 @@ public class GameRequestScreen implements Screen {
                     String name = nameField.getText();
                     if (controller.userExists(name)) {
                         String sender = User.getLoggedInUser().getUsername();
-                        controller.sendGameRequest(name);
+                        gameType = gameTypeSelectBox.getSelected();
+                        controller.sendGameRequest(name, gameType.equals("Public"));
                         requestSent = true;
                         requestSentLabel.setText("Request sent to " + name);
                         errorLabel.setText("");
@@ -94,6 +112,18 @@ public class GameRequestScreen implements Screen {
                         errorLabel.setText("User not found.");
                     }
                 }
+            }
+        });
+        listOfRandomGamesButton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        controller.sendListOfRandomGamesRequest();
+                    }
+                });
+        randoGameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.sendRandomGameRequest();
             }
         });
         backButton.addListener(new ClickListener() {
@@ -158,6 +188,10 @@ public class GameRequestScreen implements Screen {
 
         stage.act(delta);
         stage.draw();
+        if(listOfRandomGames != null) {
+            showListOfRandomGames();
+            listOfRandomGames = null;
+        }
     }
 
     @Override
@@ -181,5 +215,45 @@ public class GameRequestScreen implements Screen {
         stage.dispose();
         batch.dispose();
         background.dispose();
+    }
+    public void showListOfRandomGames() {
+        Window listOfRandomGamesWindow = new Window("List of Random Games", skin);
+        listOfRandomGamesWindow.setSize(800, 600);
+        listOfRandomGamesWindow.setPosition(Gdx.graphics.getWidth() / 2f - 400, Gdx.graphics.getHeight() / 2f - 300);
+        listOfRandomGamesWindow.setVisible(false);
+        stage.addActor(listOfRandomGamesWindow);
+
+        Table table = new Table();
+        table.setFillParent(true);
+
+        for (String game : listOfRandomGames) {
+            Label gameLabel = new Label(game, skin);
+            Button playButton = new TextButton("Play", skin);
+            table.add(gameLabel).width(300).height(90).pad(10);
+            table.add(playButton).width(200).height(90).pad(10);
+            table.row();
+
+            playButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    // Join the selected game
+                    controller.joinRandomGame(game);
+                    listOfRandomGamesWindow.setVisible(false);
+                }
+            });
+        }
+        Button closeButton = new TextButton("close", skin);
+        table.add(closeButton).width(200).height(100);
+        closeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Join the selected game
+                listOfRandomGamesWindow.setVisible(false);
+            }
+        });
+
+        listOfRandomGamesWindow.add(table);
+        listOfRandomGamesWindow.setVisible(true);
+
     }
 }

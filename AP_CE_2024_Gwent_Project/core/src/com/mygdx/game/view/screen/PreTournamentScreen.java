@@ -35,12 +35,12 @@ public class PreTournamentScreen implements Screen {
 
         backButton = new TextButton("Back", Gwent.singleton.skin);
         backButton.setSize(200, 120);
-        backButton.setPosition((float) Gwent.WIDTH / 2 - backButton.getWidth() / 2, 100);
+        backButton.setPosition((float) Gwent.WIDTH / 2 - backButton.getWidth() / 2, 300);
         stage.addActor(backButton);
 
-        joinTournamentButton = new TextButton("Join Existing Tournament", Gwent.singleton.skin);
-        joinTournamentButton.setSize(700, 120);
-        joinTournamentButton.setPosition((float) Gwent.WIDTH / 2 - joinTournamentButton.getWidth() / 2, 300);
+        joinTournamentButton = new TextButton("Join Tournament", Gwent.singleton.skin);
+        joinTournamentButton.setSize(500, 120);
+        joinTournamentButton.setPosition((float) Gwent.WIDTH / 2 - joinTournamentButton.getWidth() / 2, 600);
         stage.addActor(joinTournamentButton);
 
         Gdx.input.setInputProcessor(stage);
@@ -52,7 +52,7 @@ public class PreTournamentScreen implements Screen {
         joinTournamentButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                joinTournament();
+                TournamentController.getInstance().joinTournament();
             }
         });
 
@@ -65,13 +65,7 @@ public class PreTournamentScreen implements Screen {
         });
     }
 
-    private void joinTournament() {
-        if (TournamentController.getInstance().isPlayerAlreadyAdded(Client.getInstance().getUser().getUsername())) {
-            TournamentController.getInstance().joinTournament();
-        } else {
-            showError("you are not in any tournament!");
-        }
-    }
+
 
 
     @Override
@@ -83,6 +77,10 @@ public class PreTournamentScreen implements Screen {
 
         stage.act(delta);
         stage.draw();
+        if(TournamentController.getInstance().getJoinResponse() != null) {
+            showError(TournamentController.getInstance().getJoinResponse());
+            TournamentController.getInstance().setJoinResponseNull();
+        }
     }
 
     @Override
