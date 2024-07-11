@@ -108,14 +108,14 @@ public class Round {
         return winnerName;
     }
     public boolean isWinner(String usernmame) {
-        if(player1.getUsername().equals(usernmame)) {
+        if(player1Name.equals(usernmame)) {
             return player1Score > player2Score;
         } else {
             return player2Score > player1Score;
         }
     }
     public int getScoreByUsername(String username) {
-        if(player1.getUsername().equals(username)) {
+        if(player1Name.equals(username)) {
             return player1Score;
         } else return player2Score;
     }

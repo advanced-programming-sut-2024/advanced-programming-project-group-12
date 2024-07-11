@@ -737,9 +737,7 @@ public class GameScreen implements Screen {
                         if (selectedCards.contains(card)) {
                             cardImage.addAction(Actions.scaleTo(1.0f, 1.0f, 0.2f));
                             selectedCards.remove(card);
-                        } else {
-                            System.out.println("herer");
-                            cardImage.addAction(Actions.scaleBy(0.1f, 0.1f, 0.2f));
+                        } else {cardImage.addAction(Actions.scaleBy(0.1f, 0.1f, 0.2f));
                             selectedCards.add(card);
                         }
                         if (finalNumberOfCards == selectedCards.size()) {
@@ -821,17 +819,18 @@ public class GameScreen implements Screen {
         ;
         status.setSize(800, 600);
         status.setPosition(400, 400);
+        status.setVisible(true);
         stage.addActor(status);
         status.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.8f)));
         Table endGameInfo = new Table();
         endGameInfo.add(new Label("players", Gwent.singleton.skin)).align(Align.center).padLeft(40);
 
-        for (int i = 1; i <= 3; i++) {
-            endGameInfo.add(new Label("Round " + i, Gwent.singleton.skin)).align(Align.center).padLeft(40);
+        for (int i = 0; i < Client.getInstance().getGame().getRounds().size(); i++) {
+            endGameInfo.add(new Label("Round " + (i+1), Gwent.singleton.skin)).align(Align.center).padLeft(40);
         }
         endGameInfo.row().padTop(50);
         endGameInfo.add(new Label(player.getUsername(), Gwent.singleton.skin)).align(Align.center).padLeft(40);
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 0; i < Client.getInstance().getGame().getRounds().size(); i++) {
             int score = Client.getInstance().getGame().getRounds().get(i).getScoreByUsername(player.getUsername());
             Label label = new Label(Integer.toString(score), Gwent.singleton.skin);
             if(Client.getInstance().getGame().getRounds().get(i).isWinner(player.getUsername())) {
@@ -843,7 +842,7 @@ public class GameScreen implements Screen {
         }
         endGameInfo.row().padTop(40);
         endGameInfo.add(new Label(opposition.getUsername(), Gwent.singleton.skin)).align(Align.center).padLeft(40);
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 0; i < Client.getInstance().getGame().getRounds().size(); i++) {
             int score = Client.getInstance().getGame().getRounds().get(i).getScoreByUsername(opposition.getUsername());
             Label label = new Label(Integer.toString(score), Gwent.singleton.skin);
             if(Client.getInstance().getGame().getRounds().get(i).isWinner(opposition.getUsername())) {
@@ -1002,17 +1001,7 @@ public class GameScreen implements Screen {
         stage.addActor(reactionImage);
     }
     public void showReactionMessage(String message) {
-        Label reactionLabel = new Label(message, Gwent.singleton.skin);
-        reactionLabel.setFontScale(2f);
-        reactionLabel.setColor(Color.WHITE);
-
-        reactionLabel.addAction(Actions.sequence(
-                Actions.fadeIn(1f),
-                Actions.delay(5f), // wait for 5 seconds
-                Actions.fadeOut(0.3f)
-        ));
-
-        stage.addActor(reactionLabel);
+        showError(message);
     }
 
     public void showReactionWindow() {
@@ -1100,7 +1089,7 @@ public class GameScreen implements Screen {
 
         // Add a fade effect to the window
         reactionWindow.addAction(Actions.sequence(
-                Actions.delay(5f), // wait for 5 seconds
+                Actions.delay(4f), // wait for 5 seconds
                 Actions.removeActor() // remove the window from the stage after fade out
         ));
 
@@ -1110,6 +1099,7 @@ public class GameScreen implements Screen {
     }
 
     public void setReactedEmoji(Emoji emoji) {
+        System.out.println("gere");
         reactedEmoji = emoji;
     }
 
