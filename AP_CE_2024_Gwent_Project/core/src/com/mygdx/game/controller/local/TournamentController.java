@@ -8,11 +8,9 @@ public class TournamentController {
     private static TournamentController singleton;
     private ArrayList<User> tournamentParticipants;
     private boolean newRoundStarted = false;
-    private ArrayList<User> winners;
 
     private TournamentController() {
         this.tournamentParticipants = new ArrayList<>();
-        this.winners = new ArrayList<>();
     }
 
     public static TournamentController getInstance() {
