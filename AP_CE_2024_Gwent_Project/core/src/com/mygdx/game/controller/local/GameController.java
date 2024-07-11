@@ -97,7 +97,7 @@ public class GameController {
     }
 
     public void goToMainMenu() {
-
+        //TODO : check if it is a winner of a tournament game go to waiting screen
         Gwent.singleton.changeScreen(Screens.MAIN_MENU);
     }
     public void chooseStarter() {

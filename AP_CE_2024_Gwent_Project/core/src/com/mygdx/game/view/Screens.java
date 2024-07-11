@@ -1,7 +1,6 @@
 package com.mygdx.game.view;
 
 import com.badlogic.gdx.Screen;
-import com.mygdx.game.model.network.Client;
 import com.mygdx.game.view.screen.*;
 
 public enum Screens {
@@ -15,8 +14,10 @@ public enum Screens {
     REGISTER,
     CHOOSE_SECURITY_QUESTION,
     FORGET_PASSWORD,
+    TOURNAMENT,
+    TOURNAMENT_SELECTION,
     GAME_REQUEST;
-    ;
+
     public Screen createScreen() {
         Screen screen = null;
         switch (this) {
@@ -52,6 +53,13 @@ public enum Screens {
                 break;
             case GAME_REQUEST:
                 screen = new GameRequestScreen();
+                break;
+            case TOURNAMENT:
+                screen = new TournamentScreen();
+                break;
+            case TOURNAMENT_SELECTION:
+                screen = new PreTournamentScreen();
+                break;
         }
         return screen;
     }

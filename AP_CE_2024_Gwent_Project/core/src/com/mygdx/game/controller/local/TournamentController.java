@@ -1,0 +1,64 @@
+package com.mygdx.game.controller.local;
+
+import com.mygdx.game.model.user.User;
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class TournamentController {
+    private static TournamentController singleton;
+    private ArrayList<User> tournamentParticipants;
+    private boolean newRoundStarted = false;
+    private ArrayList<User> winners;
+
+    private TournamentController() {
+        this.tournamentParticipants = new ArrayList<>();
+        this.winners = new ArrayList<>();
+    }
+
+    public static TournamentController getInstance() {
+        if (singleton == null) {
+            singleton = new TournamentController();
+        }
+        return singleton;
+    }
+    public void addToParticipants(User user) {
+        tournamentParticipants.add(user);
+    }
+
+    public boolean isParticipantsCompleted() {
+        return tournamentParticipants.size() == 8;
+    }
+    public boolean isPlayerAlreadyAdded(String newUser) {
+        for(User user : tournamentParticipants) {
+            if(user.getUsername().equals(newUser)) return true;
+        }
+        return false;
+    }
+    public ArrayList<User> getTournamentParticipants() {
+        return tournamentParticipants;
+    }
+    public void updateTournamentParticipants(ArrayList<User> users) {
+        tournamentParticipants = users;
+    }
+    public void startTournament() {
+        //TODO receive arrayList of players -> tournamentParticipants
+    }
+    public void draw() {
+        Collections.shuffle(tournamentParticipants);
+    }
+
+    public boolean isNewRoundStarted() {
+        return newRoundStarted;
+    }
+    public void startNewRound() {
+        newRoundStarted = true;
+    }
+    public void setNewRoundStarted() {
+        newRoundStarted = false;
+    }
+
+    public void startGameInTournament(User player1, User player2, int round) {
+        //TODO : create a game in tournament here
+    }
+
+}

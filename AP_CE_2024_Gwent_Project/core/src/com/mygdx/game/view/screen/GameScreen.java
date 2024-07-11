@@ -93,7 +93,6 @@ public class GameScreen implements Screen {
 
     public void showChooseStarter() {
         Window window = new Window("", Gwent.singleton.skin);
-        window.setSize(900, 700);
         window.setPosition((float) Gwent.WIDTH / 2 - (float) Gwent.WIDTH / 4, (float) Gwent.HEIGHT / 2 - (float) Gwent.HEIGHT / 4);
         Label label = new Label("choose which player start game :", Gwent.singleton.skin);
         label.setColor(Color.SKY);
@@ -1008,9 +1007,10 @@ public class GameScreen implements Screen {
 
     public void showReactionWindow() {
         Window reactionWindow = new Window("Show your reaction!", Gwent.singleton.skin);
+        reactionWindow.setBackground(new NinePatchDrawable(new NinePatch(new Texture("bg/Designer.jpeg"))));
         reactionWindow.setSize(500, 400);
-        reactionWindow.setPosition((float) Gwent.WIDTH / 2 - reactionWindow.getWidth() / 2,
-                (float) Gwent.HEIGHT - reactionWindow.getHeight() - 50);
+        reactionWindow.setPosition((float) Gwent.WIDTH - reactionWindow.getWidth(),
+                (float) Gwent.HEIGHT - reactionWindow.getHeight());
 
 
         Table table = new Table();
