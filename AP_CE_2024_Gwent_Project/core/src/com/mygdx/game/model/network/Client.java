@@ -118,6 +118,7 @@ public class Client extends Thread {
                 break;
             case RETURN_TO_GAME:
                 ReturnToGameResponse returnToGameResponse = gson.fromJson(request, ReturnToGameResponse.class);
+                user = returnToGameResponse.getUser();
                 game = returnToGameResponse.getGame();
                 Gwent.singleton.changeScreen(Screens.GAME);
                 break;

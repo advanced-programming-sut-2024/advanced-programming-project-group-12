@@ -219,7 +219,7 @@ public class RequestHandler extends Thread {
                     allUsers.remove(user.getUsername());
                     terminate();
                 }
-            }, 60000);
+            }, 120000);
         }
     }
 

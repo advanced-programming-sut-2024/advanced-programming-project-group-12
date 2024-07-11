@@ -30,6 +30,7 @@ public class InviteHandler {
         user.setDeck(new ArrayList<>(startGameRequest.getDeck()));
         user.setLeader(startGameRequest.getCommanderCard());
         user.setFaction(startGameRequest.getFaction());
+        user.save();
 
         if(startGameRequest.isRandomOpponent()) {
             if(queGameHandler == null) {

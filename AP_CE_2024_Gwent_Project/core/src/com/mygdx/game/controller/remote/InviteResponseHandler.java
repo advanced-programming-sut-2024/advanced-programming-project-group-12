@@ -32,6 +32,7 @@ public class InviteResponseHandler {
             user.setFaction(clientInviteResponse.getFaction());
             user.setLeader(clientInviteResponse.getCommanderCard());
             user.setDeck(new ArrayList<>(clientInviteResponse.getDeck()));
+            user.save();
 
             requestHandler.setGameHandler(targetHandler.getGameHandler());
             requestHandler.getGameHandler().addUserAndStart(user);
