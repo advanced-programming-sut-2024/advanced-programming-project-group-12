@@ -8,7 +8,7 @@ public class TournamentController {
     private static TournamentController singleton;
     private ArrayList<User> tournamentParticipants;
     private boolean newRoundStarted = false;
-
+    private String joinResponse = null;
     private TournamentController() {
         this.tournamentParticipants = new ArrayList<>();
     }
@@ -23,9 +23,7 @@ public class TournamentController {
         tournamentParticipants.add(user);
     }
 
-    public boolean isParticipantsCompleted() {
-        return tournamentParticipants.size() == 8;
-    }
+
     public boolean isPlayerAlreadyAdded(String newUser) {
         for(User user : tournamentParticipants) {
             if(user.getUsername().equals(newUser)) return true;
@@ -38,13 +36,6 @@ public class TournamentController {
     public void updateTournamentParticipants(ArrayList<User> users) {
         tournamentParticipants = users;
     }
-    public void startTournament() {
-        //TODO receive arrayList of players -> tournamentParticipants
-    }
-    public void draw() {
-        Collections.shuffle(tournamentParticipants);
-    }
-
     public boolean isNewRoundStarted() {
         return newRoundStarted;
     }
@@ -59,4 +50,10 @@ public class TournamentController {
         //TODO : create a game in tournament here
     }
 
+    public void joinTournament() {
+        //TODO :
+    }
+    public void getJoinResponse() {
+
+    }
 }

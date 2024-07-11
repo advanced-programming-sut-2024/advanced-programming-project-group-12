@@ -26,10 +26,8 @@ public class PreTournamentScreen implements Screen {
     private Texture background;
 
     private TextButton joinTournamentButton;
-    private TextButton startButton;
-    private TextButton addPlayerTextButton;
     private TextButton backButton;
-    private TextField playerTextField;
+
     public PreTournamentScreen() {
         this.stage = new Stage(new ScreenViewport());
         this.batch = new SpriteBatch();
@@ -37,62 +35,28 @@ public class PreTournamentScreen implements Screen {
 
         backButton = new TextButton("Back", Gwent.singleton.skin);
         backButton.setSize(200, 120);
-        backButton.setPosition((float) Gwent.WIDTH /2 - backButton.getWidth() / 2, 100);
+        backButton.setPosition((float) Gwent.WIDTH / 2 - backButton.getWidth() / 2, 100);
         stage.addActor(backButton);
 
-        TournamentController.getInstance().addToParticipants(Client.getInstance().getUser());
-        if(TournamentController.getInstance().isPlayerAlreadyAdded(Client.getInstance().getUser().getUsername())) {
-            joinTournamentButton = new TextButton("Join Existing Tournament", Gwent.singleton.skin);
-            joinTournamentButton.setSize(700, 120);
-            joinTournamentButton.setPosition((float) Gwent.WIDTH /2 - joinTournamentButton.getWidth() / 2, 300);
-            stage.addActor(joinTournamentButton);
-        } else {
-            startButton = new TextButton("Start New Tournament", Gwent.singleton.skin);
-            startButton.setSize(700, 120);
-            startButton.setPosition((float) Gwent.WIDTH /2 - startButton.getWidth() / 2, 500);
-            stage.addActor(startButton);
+        joinTournamentButton = new TextButton("Join Existing Tournament", Gwent.singleton.skin);
+        joinTournamentButton.setSize(700, 120);
+        joinTournamentButton.setPosition((float) Gwent.WIDTH / 2 - joinTournamentButton.getWidth() / 2, 300);
+        stage.addActor(joinTournamentButton);
 
-
-            playerTextField = new TextField("", Gwent.singleton.skin);
-            playerTextField.setMessageText("player username");
-            playerTextField.setSize(600, 120);
-            playerTextField.setPosition((float) Gwent.WIDTH /2 - 1 * playerTextField.getWidth() , 700);
-            stage.addActor(playerTextField);
-
-
-            addPlayerTextButton = new TextButton("Add Player", Gwent.singleton.skin);
-            addPlayerTextButton.setSize(300, 120);
-            addPlayerTextButton.setPosition((float) Gwent.WIDTH /2 +  addPlayerTextButton.getWidth(), 700);
-            stage.addActor(addPlayerTextButton);
-        }
         Gdx.input.setInputProcessor(stage);
 
     }
+
     @Override
     public void show() {
-        if(TournamentController.getInstance().isPlayerAlreadyAdded(Client.getInstance().getUser().getUsername())) {
-            joinTournamentButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    joinTournament();
-                }
-            });
-        }
-        else {
-            startButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    handleStart();
-                }
-            });
-            addPlayerTextButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    String newPlayerUsername = playerTextField.getText();
-                    addNewPlayer(newPlayerUsername);
-                }
-            });
-        }
+        joinTournamentButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                joinTournament();
+            }
+        });
+
+
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -102,35 +66,13 @@ public class PreTournamentScreen implements Screen {
     }
 
     private void joinTournament() {
-        if(TournamentController.getInstance().isPlayerAlreadyAdded(Client.getInstance().getUser().getUsername())) {
-            Gwent.singleton.changeScreen(Screens.TOURNAMENT);
+        if (TournamentController.getInstance().isPlayerAlreadyAdded(Client.getInstance().getUser().getUsername())) {
+            TournamentController.getInstance().joinTournament();
         } else {
             showError("you are not in any tournament!");
         }
     }
 
-    private void addNewPlayer(String newPlayerUsername) {
-        User user = User.getUserByUsername(newPlayerUsername);
-        if(TournamentController.getInstance().isParticipantsCompleted()) {
-            showError("players are now completed please start game!");
-        } else if(user == null) {
-            showError("This user does not exist!");
-        } else if(TournamentController.getInstance().isPlayerAlreadyAdded(newPlayerUsername)) {
-          showError("User is Already in Tournament!");
-        } else {
-            TournamentController.getInstance().addToParticipants(user);
-            showError("user added to tournament successfully!");
-        }
-    }
-
-    private void handleStart() {
-        if(TournamentController.getInstance().isParticipantsCompleted()) {
-            TournamentController.getInstance().startTournament();
-            TournamentController.getInstance().startTournament();
-        } else {
-            showError("you should choose 8 players to start a tournament!");
-        }
-    }
 
     @Override
     public void render(float delta) {
@@ -167,6 +109,7 @@ public class PreTournamentScreen implements Screen {
     public void dispose() {
 
     }
+
     private void showError(String message) {
         Dialog errorDialog = new Dialog("Error", Gwent.singleton.getSkin());
         errorDialog.setColor(Color.RED);
