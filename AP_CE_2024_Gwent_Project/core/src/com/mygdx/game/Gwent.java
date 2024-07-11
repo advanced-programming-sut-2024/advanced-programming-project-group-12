@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.game.view.Screens;
 import com.mygdx.game.model.network.Client;
+import com.mygdx.game.view.screen.LiveStreamMenuScreen;
 import com.mygdx.game.view.screen.LoginMenuScreen;
 import com.mygdx.game.view.screen.PreTournamentScreen;
 
@@ -26,7 +27,7 @@ public class Gwent extends Game implements ApplicationListener {
 		singleton = this;
         skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
 		batch = new SpriteBatch();
-		currentScreen = new LoginMenuScreen();
+		currentScreen = new LiveStreamMenuScreen();
 		Gwent.singleton.setScreen(currentScreen);
         new Client().start();
     }

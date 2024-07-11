@@ -22,4 +22,9 @@ public class MainMenuController {
     public void showLeaderBoard() {
         Gwent.singleton.changeScreen(Screens.LEADER_BOARD_MENU);
     }
+
+    public void showLiveStream() {
+        //TODO : first set games for user here after that change screen
+        Gwent.singleton.changeScreen(Screens.LIVE_STREAM_MENU);
+    }
 }

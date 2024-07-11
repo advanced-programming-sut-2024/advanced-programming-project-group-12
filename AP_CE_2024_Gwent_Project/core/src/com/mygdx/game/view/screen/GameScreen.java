@@ -93,6 +93,7 @@ public class GameScreen implements Screen {
 
     public void showChooseStarter() {
         Window window = new Window("", Gwent.singleton.skin);
+        window.setSize(800, 500);
         window.setPosition((float) Gwent.WIDTH / 2 - (float) Gwent.WIDTH / 4, (float) Gwent.HEIGHT / 2 - (float) Gwent.HEIGHT / 4);
         Label label = new Label("choose which player start game :", Gwent.singleton.skin);
         label.setColor(Color.SKY);
@@ -100,10 +101,10 @@ public class GameScreen implements Screen {
         window.row();
         String playerUsername = Client.getInstance().getGame().getCurrentPlayer().getUsername();
         TextButton playerButton = new TextButton(playerUsername, Gwent.singleton.skin);
-        playerButton.setSize(200, 100);
+        playerButton.setSize(400, 200);
         String oppositionUsername = Client.getInstance().getGame().getOpposition().getUsername();
         TextButton oppositionButton = new TextButton(oppositionUsername, Gwent.singleton.skin);
-        oppositionButton.setSize(200, 100);
+        oppositionButton.setSize(400, 200);
         window.setMovable(false);
         window.add(playerButton);
         window.padRight(20);

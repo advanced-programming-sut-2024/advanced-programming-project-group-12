@@ -23,6 +23,7 @@ public class MainMenuScreen implements Screen {
     private Texture background;
     // Buttons
     private TextButton startGameButton;
+    private TextButton liveStreamButton;
     private TextButton showProfileButton;
     private TextButton exitButton;
     private TextButton leaderBoardButton;
@@ -41,6 +42,12 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 controller.startGame();
+            }
+        });
+        liveStreamButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                controller.showLiveStream();
             }
         });
         showProfileButton.addListener(new ClickListener() {
@@ -67,6 +74,10 @@ public class MainMenuScreen implements Screen {
         startGameButton = new TextButton("PreGame Menu", Gwent.singleton.skin);
         startGameButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
         table.add(startGameButton).padBottom(20);
+        table.row();
+        liveStreamButton = new TextButton("Live Games", Gwent.singleton.skin);
+        liveStreamButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
+        table.add(liveStreamButton).padBottom(20);
         table.row();
         showProfileButton = new TextButton("Show Profile", Gwent.singleton.skin);
         showProfileButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);

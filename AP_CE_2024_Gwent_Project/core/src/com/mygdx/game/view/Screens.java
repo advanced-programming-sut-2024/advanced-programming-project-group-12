@@ -16,7 +16,8 @@ public enum Screens {
     FORGET_PASSWORD,
     TOURNAMENT,
     PRE_TOURNAMENT,
-    GAME_REQUEST;
+    GAME_REQUEST,
+    LIVE_STREAM_MENU;
 
     public Screen createScreen() {
         Screen screen = null;
@@ -59,6 +60,9 @@ public enum Screens {
                 break;
             case PRE_TOURNAMENT:
                 screen = new PreTournamentScreen();
+                break;
+            case LIVE_STREAM_MENU:
+                screen = new LiveStreamMenuScreen();
                 break;
         }
         return screen;
