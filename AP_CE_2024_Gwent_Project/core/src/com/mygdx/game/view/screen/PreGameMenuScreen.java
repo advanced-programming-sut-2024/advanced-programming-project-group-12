@@ -213,6 +213,7 @@ public class PreGameMenuScreen implements Screen {
         northernRealmsButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 controller.setFaction(Faction.NORTHERN_REALMS.getName());
+                User.getLoggedInUser().setLeader("foltest the siegemaster");
                 updateCurrentFactionLabel();
                 factionWindow.setVisible(false);
             }
@@ -223,6 +224,7 @@ public class PreGameMenuScreen implements Screen {
         nilfgaardianButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 controller.setFaction(Faction.NILFGAARD.getName());
+                User.getLoggedInUser().setLeader("emhyr emperor of nilfgaard");
                 updateCurrentFactionLabel();
                 factionWindow.setVisible(false);
             }
@@ -233,6 +235,7 @@ public class PreGameMenuScreen implements Screen {
         scoiataelButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 controller.setFaction(Faction.SCOIATAEL.getName());
+                User.getLoggedInUser().setLeader("francesca queen of dol blathanna");
                 updateCurrentFactionLabel();
                 factionWindow.setVisible(false);
             }
@@ -243,6 +246,7 @@ public class PreGameMenuScreen implements Screen {
         monstersButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 controller.setFaction(Faction.MONSTERS.getName());
+                User.getLoggedInUser().setLeader("eredin commander of the red riders");
                 updateCurrentFactionLabel();
                 factionWindow.setVisible(false);
             }
@@ -253,6 +257,7 @@ public class PreGameMenuScreen implements Screen {
         skelligeButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 controller.setFaction(Faction.SKELLIGE.getName());
+                User.getLoggedInUser().setLeader("crach an craite");
                 updateCurrentFactionLabel();
                 factionWindow.setVisible(false);
             }

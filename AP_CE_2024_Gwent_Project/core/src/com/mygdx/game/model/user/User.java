@@ -383,4 +383,9 @@ public class User {
 
     public void addToWin() {
     }
+    public static void resetUsers() {
+        users.clear();
+        loggedInUser = null;
+        toBeSignedUp = null;
+    }
 }

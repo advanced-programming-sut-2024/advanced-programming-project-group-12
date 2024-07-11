@@ -2,6 +2,7 @@ package com.mygdx.game.controller.local;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.mygdx.game.Gwent;
 import com.mygdx.game.model.network.Client;
 import com.mygdx.game.model.network.email.Registration;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequestType;
@@ -19,6 +20,7 @@ public class RegisterMenuController {
     private static String tempPassword;
     private static String tempEmail;
     private static String verificationCode;
+
     public static void register(String username, String nickname, String password, String email) {
         new User(username, nickname, password, email);
     }
