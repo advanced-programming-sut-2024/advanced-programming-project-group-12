@@ -40,6 +40,7 @@ public class InviteHandler {
             }
             else {
                 queGameHandler.addUserAndStart(user);
+                requestHandler.setGameHandler(queGameHandler);
                 queGameHandler = null;
             }
             return null;

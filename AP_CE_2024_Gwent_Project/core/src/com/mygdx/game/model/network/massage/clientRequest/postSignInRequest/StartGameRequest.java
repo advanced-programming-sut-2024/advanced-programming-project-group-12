@@ -29,13 +29,13 @@ public class StartGameRequest extends ClientRequest {
         super(ClientRequestType.START_GAME, null);
         this.toBeInvited = toBeInvited;
         this.invitor = invitor;
-        randomOpponent = false;
+        this.randomOpponent = randomOpponent;
 
         this.faction = user.getFaction();
         this.deck = new LinkedList<>(user.getDeck());
         this.commanderCard = user.getLeaderAsCard();
         isTournament = false;
-        isPrivate = false;
+        this.isPrivate = isPrivate;
     }
 
     public StartGameRequest(String toBeInvited, String invitor, User user, boolean isPrivate) {
