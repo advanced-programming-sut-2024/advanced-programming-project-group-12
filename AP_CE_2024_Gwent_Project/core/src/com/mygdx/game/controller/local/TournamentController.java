@@ -21,17 +21,8 @@ public class TournamentController {
         }
         return singleton;
     }
-    public void addToParticipants(User user) {
-        tournamentParticipants.add(user);
-    }
 
 
-    public boolean isPlayerAlreadyAdded(String newUser) {
-        for(User user : tournamentParticipants) {
-            if(user.getUsername().equals(newUser)) return true;
-        }
-        return false;
-    }
     public ArrayList<User> getTournamentParticipants() {
         return tournamentParticipants;
     }
@@ -56,6 +47,13 @@ public class TournamentController {
         Client.getInstance().sendMassage(new TournamentStartRequest());
     }
     public void getJoinResponse(String error) {
+        joinResponse = error;
+    }
+    public String getJoinResponse() {
+        return joinResponse;
+    }
 
+    public void setJoinResponseNull() {
+        joinResponse = null;
     }
 }

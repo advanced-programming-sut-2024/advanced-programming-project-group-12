@@ -28,7 +28,6 @@ public class TournamentScreen implements Screen {
         this.stage = new Stage(new ScreenViewport());
         this.batch = new SpriteBatch();
         this.background = new Texture(Gdx.files.internal("bg/tournament.jpg"));
-        TournamentController.getInstance().draw();
         createQuarterFinal();
         Gdx.input.setInputProcessor(stage);
     }
@@ -136,7 +135,7 @@ public class TournamentScreen implements Screen {
             } else if(TournamentController.getInstance().getTournamentParticipants().size() == 1) {
                 showWinnerScreen();
             }
-            TournamentController.getInstance().setNewRoundStarted();
+            TournamentController.getInstance().startNewRound();
         }
 
 
