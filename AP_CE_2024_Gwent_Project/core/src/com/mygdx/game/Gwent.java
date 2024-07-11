@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.game.view.Screens;
@@ -19,7 +20,9 @@ public class Gwent extends Game implements ApplicationListener {
 	public Skin skin;
 	public static final int WIDTH = 1600;
 	public static final int HEIGHT = 980;
-	
+	private Music backgroundMusic;
+
+
 	@Override
 	public void create () {
 		singleton = this;
@@ -28,6 +31,10 @@ public class Gwent extends Game implements ApplicationListener {
 		currentScreen = new LoginMenuScreen();
 		Gwent.singleton.setScreen(currentScreen);
         new Client().start();
+
+		backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sfx/gwent.mp3"));
+		backgroundMusic.setLooping(true);
+		backgroundMusic.play();
     }
 
 	@Override
@@ -43,9 +50,11 @@ public class Gwent extends Game implements ApplicationListener {
 			}
 		}
 	}
-	
+
 	@Override
-	public void dispose () {}
+	public void dispose () {
+
+	}
 	public SpriteBatch getBatch() {
 		return batch;
 	}
