@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.FriendsController;
+import com.mygdx.game.controller.local.GameRequestController;
 import com.mygdx.game.model.user.FriendRequest;
 import com.mygdx.game.model.user.User;
 import com.mygdx.game.view.Screens;
@@ -85,7 +86,7 @@ public class FriendsScreen implements Screen {
         viewRequestsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                controller.getFriendRequests();
+                refreshRequests();
             }
         });
 
@@ -170,26 +171,29 @@ public class FriendsScreen implements Screen {
         return profileTable;
     }
 
-    private Table showPendingRequests() {
+    private Table showAllRequests() {
         Table requestsTable = new Table();
 
         if (requestsHashMap == null || requestsHashMap.isEmpty()) {
-            Gdx.app.log("FriendsScreen", "No pending friend requests.");
+            Gdx.app.log("FriendsScreen", "No friend requests.");
+            requestsTable.add(new Label("No friend requests.", skin)).colspan(4).center().row();
             return requestsTable;
         }
 
         for (Map<String, FriendRequest> requestMap : requestsHashMap.values()) {
             for (FriendRequest request : requestMap.values()) {
-                if ("pending".equals(request.getStatus())) {
-                    Table requestRow = new Table();
-                    if (request.getFromUser().getUsername().equals(loggedInUser.getUsername())) {
-                        // If logged-in user is the sender, show "Pending"
-                        requestRow.add(new Label("To: " + request.getToUsername(), skin)).padRight(20);
-                        requestRow.add(new Label("Pending", skin));
-                    } else {
-                        // If logged-in user is the receiver, show accept/reject buttons
-                        requestRow.add(new Label("From: " + request.getFromUsername(), skin)).padRight(20);
+                Table requestRow = new Table();
+                if (request.getFromUser().getUsername().equals(loggedInUser.getUsername())) {
+                    // If logged-in user is the sender, show the status
+                    requestRow.add(new Label("To: " + request.getToUsername(), skin)).padRight(20);
+                    requestRow.add(new Label("Status: " + request.getStatus(), skin));
+                } else {
+                    // If logged-in user is the receiver, show the status
+                    requestRow.add(new Label("From: " + request.getFromUsername(), skin)).padRight(20);
+                    requestRow.add(new Label("Status: " + request.getStatus(), skin));
 
+                    if ("pending".equals(request.getStatus())) {
+                        // If the request is pending, show accept/reject buttons
                         TextButton acceptButton = new TextButton("Accept", skin);
                         TextButton rejectButton = new TextButton("Reject", skin);
 
@@ -197,7 +201,7 @@ public class FriendsScreen implements Screen {
                             @Override
                             public void changed(ChangeEvent event, Actor actor) {
                                 controller.acceptFriendRequest(loggedInUser, request);
-                                refreshPendingRequests();
+                                refreshRequests();
                             }
                         });
 
@@ -205,26 +209,26 @@ public class FriendsScreen implements Screen {
                             @Override
                             public void changed(ChangeEvent event, Actor actor) {
                                 controller.rejectFriendRequest(loggedInUser, request);
-                                refreshPendingRequests();
+                                refreshRequests();
                             }
                         });
 
                         requestRow.add(acceptButton).padRight(10);
                         requestRow.add(rejectButton);
                     }
-
-                    requestsTable.add(requestRow).padBottom(10).row();
                 }
+
+                requestsTable.add(requestRow).padBottom(10).row();
             }
         }
 
         return requestsTable;
     }
 
-    private void refreshPendingRequests() {
+    private void refreshRequests() {
         table.clear();
         addSearchUI();
-        table.add(showPendingRequests()).expand().fill().colspan(4).row();
+        table.add(showAllRequests()).expand().fill().colspan(4).row();
     }
 
     private void showFriendsList() {
@@ -240,6 +244,7 @@ public class FriendsScreen implements Screen {
         for (String friend : friends) {
             Table friendRow = new Table();
             friendRow.add(new Label(friend + " a.k.a " + User.getUserByUsername(friend).getNickname(), skin)).padRight(20);
+
             TextButton viewProfileButton = new TextButton("View Profile", skin);
             viewProfileButton.addListener(new ChangeListener() {
                 @Override
@@ -249,10 +254,22 @@ public class FriendsScreen implements Screen {
                     table.add(showUserProfile(User.getUserByUsername(friend))).colspan(4).expand().fill();
                 }
             });
-            friendRow.add(viewProfileButton);
+
+            TextButton playButton = new TextButton("Play", skin);
+            playButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    GameRequestController controller1 = new GameRequestController();
+                    controller1.sendGameRequest(friend);
+                    Gdx.app.log("FriendsScreen", "Play button clicked for " + friend);
+                }
+            });
+
+            friendRow.add(viewProfileButton).padRight(10);
+            friendRow.add(playButton);
             table.add(friendRow).padBottom(10).row();
         }
-        }
+    }
 
     @Override
     public void show() {}
@@ -267,7 +284,7 @@ public class FriendsScreen implements Screen {
         stage.act();
         stage.draw();
         if (requestInfoReceived) {
-            refreshPendingRequests();
+            refreshRequests();
             setRequestInfoReceived(false);
         }
     }
