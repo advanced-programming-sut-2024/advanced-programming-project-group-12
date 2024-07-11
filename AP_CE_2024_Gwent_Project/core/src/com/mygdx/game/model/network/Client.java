@@ -14,6 +14,7 @@ import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.Round;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
+import com.mygdx.game.model.network.massage.clientRequest.ClientRequestType;
 import com.mygdx.game.model.network.massage.clientRequest.ReactionMassageRequest;
 import com.mygdx.game.model.network.massage.serverResponse.*;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.*;
@@ -142,6 +143,7 @@ public class Client extends Thread {
                 break;
             case INVITE_TO_PLAY:
                 ServerPlayInvite serverPlayInvite = gson.fromJson(request, ServerPlayInvite.class);
+                Gwent.singleton.changeScreen(Screens.GAME_REQUEST);
                 GameRequestScreen.showRequestWindow(serverPlayInvite.getClientRequest().getInvitor());
                 break;
             case START_GAME_ERROR:
@@ -190,7 +192,7 @@ public class Client extends Thread {
             case CHAT:
                 ChatInGameWrapper chatWrapper = gson.fromJson(request, ChatInGameWrapper.class);
                 ChatInGame chat = chatWrapper.getChat();
-                if(chat instanceof ReactionMassageRequest) {
+                if(chat.getType().equals(ClientRequestType.REACTION_REQUEST)) {
                     ReactionMassageRequest reactionMassageRequest = gson.fromJson(request, ReactionMassageRequest.class);
                     ChatController.receiveMessageReaction(reactionMassageRequest);
                     break;

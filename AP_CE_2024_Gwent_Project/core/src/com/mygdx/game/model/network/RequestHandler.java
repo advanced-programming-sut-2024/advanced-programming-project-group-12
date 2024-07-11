@@ -8,6 +8,7 @@ import com.mygdx.game.model.game.card.AbstractElementAdapter;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
+import com.mygdx.game.model.network.massage.clientRequest.ReactionMassageRequest;
 import com.mygdx.game.model.network.massage.clientRequest.TournamentStartRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.ChangeMenuRequest;
@@ -163,6 +164,10 @@ public class RequestHandler extends Thread {
                 case START_TOURNAMENT_GAME:
                     StartTournamentGameRequest startTournamentGameRequest = gson.fromJson(request, StartTournamentGameRequest.class);
                     TournamentHandler.startGame(startTournamentGameRequest, this);
+                    break;
+                case REACTION_REQUEST:
+                    ReactionMassageRequest reactionMassageRequest = gson.fromJson(request, ReactionMassageRequest.class);
+                    gameHandler.handleChat(reactionMassageRequest, user);
                     break;
                 case CHAT:
                     ChatInGame chat = gson.fromJson(request, ChatInGame.class);

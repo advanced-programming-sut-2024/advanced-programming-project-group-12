@@ -21,6 +21,10 @@ public class ChatInGame extends ClientRequest {
         }
     }
 
+    public ChatInGame() {
+        super(ClientRequestType.REACTION_REQUEST);
+    }
+
     public String getMassageReaction() {
         return massage;
     }
