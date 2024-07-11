@@ -41,6 +41,7 @@ public class Player {
         }
 
         if(CommanderCards.FRANCESCA_DAISY.getAbstractCard().equals(leader)) {
+            drawCard();
             leader.doAction();
         }
     }

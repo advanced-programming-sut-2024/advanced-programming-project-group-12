@@ -355,7 +355,6 @@ public enum Action {
         return null;
     }),
     FRANCESCA_DAISY(abstractCard -> {
-        //send a response that action has been triggered
         return null;
     }),
     FRANCESCA_PUREBLOOD(abstractCard -> {
