@@ -34,9 +34,9 @@ public class Gwent extends Game implements ApplicationListener {
 		Gwent.singleton.setScreen(currentScreen);
         new Client().start();
 
-		backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sfx/gwent.mp3"));
-		backgroundMusic.setLooping(true);
-		backgroundMusic.play();
+//		backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sfx/gwent.mp3"));
+//		backgroundMusic.setLooping(true);
+//		backgroundMusic.play();
     }
 
 
