@@ -23,6 +23,7 @@ public class ChatInGame extends ClientRequest {
 
     public ChatInGame() {
         super(ClientRequestType.REACTION_REQUEST);
+        isCheat = false;
     }
 
     public String getMassageReaction() {

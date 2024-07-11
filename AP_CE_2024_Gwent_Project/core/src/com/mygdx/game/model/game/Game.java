@@ -22,7 +22,7 @@ public class Game {
     private transient CardSelectHandler cardSelectHandler;
 //    private final LocalDate date;
 
-    private transient final ArrayList<Round> rounds;
+    private final ArrayList<Round> rounds;
     private transient GameHandler gameHandler;
     private Round currentRound;
 

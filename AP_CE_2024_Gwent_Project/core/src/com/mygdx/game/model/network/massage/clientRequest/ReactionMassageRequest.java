@@ -6,7 +6,7 @@ public class ReactionMassageRequest extends ChatInGame{
     Emoji emoji;
     String massageReaction;
     public ReactionMassageRequest(Emoji emoji, String massageReaction) {
-        super("", "", "", "", "", false);
+        super();
         this.emoji = emoji;
         this.massageReaction = massageReaction;
     }
