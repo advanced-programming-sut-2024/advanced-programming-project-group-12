@@ -804,6 +804,7 @@ public class GameScreen implements Screen {
         lose : -1
          */
         Image status;
+        System.out.println(state);
         switch (state) {
             case 1:
                 status = new Image(new Texture("icons/end_win.png"));
@@ -815,7 +816,7 @@ public class GameScreen implements Screen {
                 status = new Image(new Texture("icons/end_lose.png"));
                 break;
             default:
-                status = new Image(new Texture("icons/"));
+                status = new Image(new Texture("icons/end_draw.png"));
         }
         ;
         status.setSize(800, 600);
@@ -831,15 +832,25 @@ public class GameScreen implements Screen {
         endGameInfo.row().padTop(50);
         endGameInfo.add(new Label(player.getUsername(), Gwent.singleton.skin)).align(Align.center).padLeft(40);
         for (int i = 1; i <= 3; i++) {
-            Label label = new Label("hichi", Gwent.singleton.skin);
-            label.setColor(Color.GOLD);
+            int score = Client.getInstance().getGame().getRounds().get(i).getScoreByUsername(player.getUsername());
+            Label label = new Label(Integer.toString(score), Gwent.singleton.skin);
+            if(Client.getInstance().getGame().getRounds().get(i).isWinner(player.getUsername())) {
+                label.setColor(Color.GOLD);
+            } else {
+                label.setColor(Color.LIGHT_GRAY);
+            }
             endGameInfo.add(label).align(Align.center).padLeft(40);
         }
         endGameInfo.row().padTop(40);
         endGameInfo.add(new Label(opposition.getUsername(), Gwent.singleton.skin)).align(Align.center).padLeft(40);
         for (int i = 1; i <= 3; i++) {
-            Label label = new Label("hichi", Gwent.singleton.skin);
-            label.setColor(Color.LIGHT_GRAY);
+            int score = Client.getInstance().getGame().getRounds().get(i).getScoreByUsername(opposition.getUsername());
+            Label label = new Label(Integer.toString(score), Gwent.singleton.skin);
+            if(Client.getInstance().getGame().getRounds().get(i).isWinner(opposition.getUsername())) {
+                label.setColor(Color.GOLD);
+            } else {
+                label.setColor(Color.LIGHT_GRAY);
+            }
             endGameInfo.add(label).align(Align.center).padLeft(40);
         }
         endGameInfo.row().padBottom(40);

@@ -27,6 +27,7 @@ public class Game {
     private Round currentRound;
 
 
+
     private final GameBoard gameBoard;
     private Player currentPlayer;
 
@@ -193,5 +194,8 @@ public class Game {
 
     public void isOver() {
         isOver = true;
+    }
+    public ArrayList<Round> getRounds() {
+        return rounds;
     }
 }
