@@ -42,6 +42,7 @@ public class PreGameMenuScreen implements Screen {
     // Buttons
     private Button backButton;
     private Button startGameButton;
+    private Button tournamentButton;
     private Button changeFactionButton;
     private Button deckButton;
     private Button saveDeckButton;
@@ -124,6 +125,17 @@ public class PreGameMenuScreen implements Screen {
                 else {
                 Gwent.singleton.changeScreen(Screens.GAME_REQUEST);
                 }
+            }
+        });
+        dashboard.row();
+
+        tournamentButton = new TextButton("Tournament", Gwent.singleton.getSkin());
+        tournamentButton.setSize(FIELD_WIDTH, FIELD_HEIGHT);
+        dashboard.add(tournamentButton).padBottom(20).center();
+        tournamentButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                    Gwent.singleton.changeScreen(Screens.PRE_TOURNAMENT);
             }
         });
         dashboard.row();

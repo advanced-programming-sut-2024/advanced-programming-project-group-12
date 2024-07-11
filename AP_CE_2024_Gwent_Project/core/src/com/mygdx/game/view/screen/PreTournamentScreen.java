@@ -27,18 +27,22 @@ public class PreTournamentScreen implements Screen {
 
     private TextButton joinTournamentButton;
     private TextButton startButton;
-    private TextField playerTextField;
     private TextButton addPlayerTextButton;
+    private TextButton backButton;
+    private TextField playerTextField;
     public PreTournamentScreen() {
         this.stage = new Stage(new ScreenViewport());
         this.batch = new SpriteBatch();
-        this.background = new Texture(Gdx.files.internal("bg/tournament.jpg"));
+        this.background = new Texture(Gdx.files.internal("bg/pre-tournament-background.png"));
 
-
+        backButton = new TextButton("Back", Gwent.singleton.skin);
+        backButton.setSize(200, 120);
+        backButton.setPosition((float) Gwent.WIDTH /2 - backButton.getWidth() / 2, 100);
+        stage.addActor(backButton);
 
         joinTournamentButton = new TextButton("Join Existing Tournament", Gwent.singleton.skin);
         joinTournamentButton.setSize(700, 120);
-        joinTournamentButton.setPosition((float) Gwent.WIDTH /2 - joinTournamentButton.getWidth() / 2, 200);
+        joinTournamentButton.setPosition((float) Gwent.WIDTH /2 - joinTournamentButton.getWidth() / 2, 300);
         stage.addActor(joinTournamentButton);
 
 
@@ -83,6 +87,13 @@ public class PreTournamentScreen implements Screen {
                 joinTournament();
             }
         });
+        backButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gwent.singleton.changeScreen(Screens.PRE_GAME_MENU);
+            }
+        });
+
 
     }
 

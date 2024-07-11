@@ -15,7 +15,7 @@ public enum Screens {
     CHOOSE_SECURITY_QUESTION,
     FORGET_PASSWORD,
     TOURNAMENT,
-    TOURNAMENT_SELECTION,
+    PRE_TOURNAMENT,
     GAME_REQUEST;
 
     public Screen createScreen() {
@@ -57,7 +57,7 @@ public enum Screens {
             case TOURNAMENT:
                 screen = new TournamentScreen();
                 break;
-            case TOURNAMENT_SELECTION:
+            case PRE_TOURNAMENT:
                 screen = new PreTournamentScreen();
                 break;
         }
