@@ -2,7 +2,11 @@ package com.mygdx.game.controller.local;
 
 
 import com.mygdx.game.Gwent;
+import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.GetPublicGamesRequest;
 import com.mygdx.game.view.Screens;
+
+import java.util.ArrayList;
 
 public class MainMenuController {
 
@@ -24,7 +28,7 @@ public class MainMenuController {
     }
 
     public void showLiveStream() {
-        //TODO : first set games for user here after that change screen
+        Client.getInstance().sendMassage(new GetPublicGamesRequest());
         Gwent.singleton.changeScreen(Screens.LIVE_STREAM_MENU);
     }
 }

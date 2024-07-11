@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.ChatController;
 import com.mygdx.game.controller.local.LeaderBoardMenuController;
+import com.mygdx.game.controller.local.LiveStreamMenuController;
 import com.mygdx.game.controller.local.TournamentController;
 import com.mygdx.game.model.game.Tournament;
 import com.mygdx.game.model.game.card.AbstractElementAdapter;
@@ -26,6 +27,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Client extends Thread {
@@ -240,6 +242,10 @@ public class Client extends Thread {
                 break;
             case GET_PUBLIC_GAMES:
                 GetPublicGamesResponse publicGames = gson.fromJson(request, GetPublicGamesResponse.class);
+                LiveStreamMenuController.setGames(publicGames.getGames());
+                synchronized (Screens.lock) {
+                    Screens.lock.notify();
+                }
                 break;
             case JOIN_AS_SPECTATOR:
                 JoinAsSpectatorResponse joinAsSpectatorResponse = gson.fromJson(request, JoinAsSpectatorResponse.class);

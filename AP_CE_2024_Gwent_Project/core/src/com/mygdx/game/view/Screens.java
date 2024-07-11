@@ -3,6 +3,8 @@ package com.mygdx.game.view;
 import com.badlogic.gdx.Screen;
 import com.mygdx.game.view.screen.*;
 
+import java.util.Objects;
+
 public enum Screens {
     LOGIN,
     MAIN_MENU,
@@ -19,6 +21,8 @@ public enum Screens {
     GAME_REQUEST,
     BROAD_CAST,
     LIVE_STREAM_MENU;
+
+    public static final Object lock = new Object();
 
     public Screen createScreen() {
         Screen screen = null;
@@ -63,6 +67,13 @@ public enum Screens {
                 screen = new PreTournamentScreen();
                 break;
             case LIVE_STREAM_MENU:
+                synchronized (lock) {
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
                 screen = new LiveStreamMenuScreen();
                 break;
             case BROAD_CAST:
