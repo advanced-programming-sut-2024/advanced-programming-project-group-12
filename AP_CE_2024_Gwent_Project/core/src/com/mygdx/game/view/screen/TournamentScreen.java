@@ -29,11 +29,11 @@ public class TournamentScreen implements Screen {
         this.batch = new SpriteBatch();
         this.background = new Texture(Gdx.files.internal("bg/tournament.jpg"));
         TournamentController.getInstance().draw();
-        createFinalGame();
+        createQuarterFinal();
         Gdx.input.setInputProcessor(stage);
     }
 
-    private void createRoundOneGames() {
+    private void createQuarterFinal() {
         createGameInfoTable(TournamentController.getInstance().getTournamentParticipants().get(0),
                 TournamentController.getInstance().getTournamentParticipants().get(1), 220, 760, 1);
         createGameInfoTable(TournamentController.getInstance().getTournamentParticipants().get(2),
@@ -133,10 +133,16 @@ public class TournamentScreen implements Screen {
                 createSemiFinalGames();
             } else if(TournamentController.getInstance().getTournamentParticipants().size() == 2) {
                 createFinalGame();
+            } else if(TournamentController.getInstance().getTournamentParticipants().size() == 1) {
+                showWinnerScreen();
             }
             TournamentController.getInstance().setNewRoundStarted();
         }
 
+
+    }
+
+    private void showWinnerScreen() {
 
     }
 
