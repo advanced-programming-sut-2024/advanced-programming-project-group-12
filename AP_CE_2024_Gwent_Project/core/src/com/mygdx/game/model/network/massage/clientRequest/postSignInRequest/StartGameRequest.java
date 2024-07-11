@@ -22,6 +22,9 @@ public class StartGameRequest extends ClientRequest {
     private LinkedList<String> deck;
     private CommanderCard commanderCard;
 
+    private boolean isPrivate;
+    private boolean isTournament;
+
     public StartGameRequest(String toBeInvited, String invitor, User user) {
         super(ClientRequestType.START_GAME, null);
         this.toBeInvited = toBeInvited;
@@ -31,6 +34,34 @@ public class StartGameRequest extends ClientRequest {
         this.faction = user.getFaction();
         this.deck = new LinkedList<>(user.getDeck());
         this.commanderCard = user.getLeaderAsCard();
+        isTournament = false;
+        isPrivate = false;
+    }
+
+    public StartGameRequest(String toBeInvited, String invitor, User user, boolean isPrivate) {
+        super(ClientRequestType.START_GAME, null);
+        this.toBeInvited = toBeInvited;
+        this.invitor = invitor;
+        randomOpponent = false;
+
+        this.faction = user.getFaction();
+        this.deck = new LinkedList<>(user.getDeck());
+        this.commanderCard = user.getLeaderAsCard();
+        this.isTournament = false;
+        this.isPrivate = isPrivate;
+    }
+
+    public StartGameRequest(String toBeInvited, String invitor, User user, boolean isTournament, boolean isPrivate) {
+        super(ClientRequestType.START_GAME, null);
+        this.toBeInvited = toBeInvited;
+        this.invitor = invitor;
+        randomOpponent = false;
+
+        this.faction = user.getFaction();
+        this.deck = new LinkedList<>(user.getDeck());
+        this.commanderCard = user.getLeaderAsCard();
+        this.isTournament = isTournament;
+        isPrivate = false;
     }
 
     public String getUserToBeInvited() {
@@ -55,5 +86,13 @@ public class StartGameRequest extends ClientRequest {
 
     public boolean isRandomOpponent() {
         return randomOpponent;
+    }
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public boolean isTournament() {
+        return isTournament;
     }
 }

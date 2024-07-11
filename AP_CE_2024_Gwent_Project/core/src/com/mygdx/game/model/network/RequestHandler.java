@@ -8,6 +8,7 @@ import com.mygdx.game.model.game.card.AbstractElementAdapter;
 import com.mygdx.game.model.game.card.AbstractCard;
 import com.mygdx.game.model.network.massage.clientRequest.ChatInGame;
 import com.mygdx.game.model.network.massage.clientRequest.ClientRequest;
+import com.mygdx.game.model.network.massage.clientRequest.TournamentStartRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.ChangeMenuRequest;
 import com.mygdx.game.model.network.massage.serverResponse.ChangeMenuResponse;
@@ -36,6 +37,7 @@ public class RequestHandler extends Thread {
 
     private Session session;
     private GameHandler gameHandler;
+    public TournamentHandler tournamentHandler;
     private User user;
     private Timer unfinishedGame;
 
@@ -150,6 +152,10 @@ public class RequestHandler extends Thread {
                 case PASS_ROUND:
                     user.getPlayer().pass();
                     break;
+                case START_TOURNAMENT:
+                    TournamentStartRequest tournamentStartRequest = gson.fromJson(request, TournamentStartRequest.class);
+                    tournamentHandler = new TournamentHandler(tournamentStartRequest);
+                    break;
                 case CHAT:
                     ChatInGame chat = gson.fromJson(request, ChatInGame.class);
                     gameHandler.handleChat(chat, user);
@@ -210,7 +216,6 @@ public class RequestHandler extends Thread {
     public void connectionLost() {
         gameHandler.connectionLost(user);
         if(gameHandler != null) {
-            System.out.println("connection lost with user: " + user.getUsername());
             unfinishedGame = new Timer();
             unfinishedGame.schedule(new TimerTask() {
                 @Override
@@ -220,7 +225,7 @@ public class RequestHandler extends Thread {
                     allUsers.remove(user.getUsername());
                     terminate();
                 }
-            }, 60000);
+            }, 120000);
         }
     }
 
@@ -231,7 +236,7 @@ public class RequestHandler extends Thread {
     }
 
     private void writeLog(String string) {
-        File file = new File("Data/gameLog/");
+        File file = new File("");
         Gson gson = new Gson();
         if(file.exists()) {
             file.delete();
