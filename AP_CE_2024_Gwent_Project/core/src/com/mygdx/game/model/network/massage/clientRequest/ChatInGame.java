@@ -21,7 +21,7 @@ public class ChatInGame extends ClientRequest {
         }
     }
 
-    public String getMassage() {
+    public String getMassageReaction() {
         return massage;
     }
 

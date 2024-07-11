@@ -136,5 +136,13 @@ public class GameController {
     }
 
 
-
+    public void playDecoy(AbstractCard card, int rowNumber) {
+        Client.getInstance().sendMassage(new PlayDecoyRequest(rowNumber, card.getName()));
+    }
+    public void setOppositionDisconnect() {
+        ((GameScreen)Gwent.singleton.getCurrentScreen()).setOppositionDisconnect();
+    }
+    public void setOppositionReconnect() {
+        ((GameScreen)Gwent.singleton.getCurrentScreen()).setOppositionReconnect();
+    }
 }

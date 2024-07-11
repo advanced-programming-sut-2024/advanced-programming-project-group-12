@@ -29,6 +29,9 @@ public class GameHandler {
     private User user2;
     private Game game;
 
+    private boolean connectionLost;
+    private boolean gameEnded;
+
     private ArrayList<User> spectators;
 
     public static ServerResponse sendAllGamesList() {
@@ -44,6 +47,8 @@ public class GameHandler {
 
     public GameHandler(User user1) {
         this.user1 = user1;
+        connectionLost = false;
+        gameEnded = false;
     }
 
     public void addUserAndStart(User user) {
@@ -93,7 +98,7 @@ public class GameHandler {
     }
 
     private void cheatHandler(ChatInGame chat, User user) {
-        switch (chat.getMassage()) {
+        switch (chat.getMassageReaction()) {
             case "ali jan <3":
                 AllCards.YENNEFER_OF_VENGENBERG.getAbstractCard().place(1, user.getPlayer());
                 break;
@@ -104,9 +109,9 @@ public class GameHandler {
                 AllCards.CIRILLA_FIONA_ELEN_RIANNON.getAbstractCard().place(0, user.getPlayer());
                 break;
             case "zallnejad babol" :
-                AllCards.TRISS.getAbstractCard().place(0, user.getPlayer());
+                AllCards.BLUE_STRIPES_COMMANDO.getAbstractCard().place(0, user.getPlayer());
                 break;
-            case "moi j'aime pas dire que je pense mais je suis intimid par ca consequence":
+            case "moi j'aime dire que je pense mais je suis intimid par ca consequence":
                 AllCards.STORM.getAbstractCard().place(3, user.getPlayer());
                 break;
             case "amirhosein":
@@ -180,17 +185,33 @@ public class GameHandler {
         }
     }
 
-    public void gameAborted(User user) {
-        User otherUser = getTheOtherUser(user);
-        if(RequestHandler.allUsers.get(otherUser.getUsername()) == null) return;
-        game.finishGame(otherUser);
-    }
-
     public Game getGame() {
         return game;
     }
 
     public ServerResponse playDecoy(PlayDecoyRequest playDecoyRequest, User user) {
         return ((Decoy) AllCards.DECOY.getAbstractCard()).place(playDecoyRequest.getRow(),playDecoyRequest.getToBeReplace(), user.getPlayer());
+    }
+
+    public void gameAborted(User user) {
+        if(!gameEnded){
+            User otherUser = getTheOtherUser(user);
+            if (RequestHandler.allUsers.get(otherUser.getUsername()) == null) return;
+            game.finishGame(otherUser);
+        }
+    }
+
+    public void connectionLost(User user) {
+        if(connectionLost) {
+            gameEnded = true;
+        }else {
+            RequestHandler.allUsers.get(getTheOtherUser(user).getUsername()).sendMassage(new ConnectionLostNotify(true));
+            connectionLost = true;
+        }
+    }
+
+    public void connectionReturned(User user) {
+        RequestHandler.allUsers.get(getTheOtherUser(user).getUsername()).sendMassage(new ConnectionLostNotify(false));
+        connectionLost = false;
     }
 }

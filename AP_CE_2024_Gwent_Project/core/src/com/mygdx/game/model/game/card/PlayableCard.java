@@ -65,7 +65,7 @@ public class PlayableCard extends AbstractCard implements Comparable<PlayableCar
     public void kill() {
         Row row = player.getGame().getGameBoard().getRowForPlayer(super.row, player);
         row.removeCard(this);
-        player.getGame().getGameBoard().getDiscard(player).addCard(this);
+        discard();
         isDead = true;
     }
 

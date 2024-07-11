@@ -121,11 +121,8 @@ public class RequestHandler extends Thread {
                 case GET_FRIEND_REQUESTS:
                     serverResponse = new FriendRequestHandler(request, gson).getFriendRequests(user);
                     break;
-//                case GET_FRIENDS:
-//                    serverResponse = new FriendRequestHandler(request, gson).getFriends(user);
-//                    break;
                 case START_GAME:
-                    new InviteHandler(request, gson).handle(this, user);
+                    serverResponse = new InviteHandler(request, gson).handle(this, user);
                    break;
                 case INVITE_ANSWER:
                     new InviteResponseHandler(request, gson).handle(this, user);
@@ -136,7 +133,7 @@ public class RequestHandler extends Thread {
                     break;
                 case RE_DRAW:
                     ReDrawResponse response = gson.fromJson(request, ReDrawResponse.class);
-                    gameHandler.reDraw(user.getPlayer(), response);
+                    serverResponse = gameHandler.reDraw(user.getPlayer(), response);
                     break;
                 case PLAY_CARD_REQUEST:
                     PlayCardRequest playCardRequest = gson.fromJson(request, PlayCardRequest.class);
@@ -211,6 +208,7 @@ public class RequestHandler extends Thread {
     }
 
     public void connectionLost() {
+        gameHandler.connectionLost(user);
         if(gameHandler != null) {
             System.out.println("connection lost with user: " + user.getUsername());
             unfinishedGame = new Timer();
@@ -227,12 +225,13 @@ public class RequestHandler extends Thread {
     }
 
     public void connectionReturned() {
+        gameHandler.connectionReturned(user);
         unfinishedGame.cancel();
         terminate();
     }
 
     private void writeLog(String string) {
-        File file = new File("Data/Users/" + user.getUsername() + "/gameLog/friendRequests.json");
+        File file = new File("Data/gameLog/");
         Gson gson = new Gson();
         if(file.exists()) {
             file.delete();

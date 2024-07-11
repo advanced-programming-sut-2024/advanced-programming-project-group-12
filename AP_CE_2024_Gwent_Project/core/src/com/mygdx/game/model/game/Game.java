@@ -89,22 +89,25 @@ public class Game {
     }
 
     public void switchTurn() {
-        Player enemy = opposition;
         if(!opposition.isPassed()) {
             Player temp = currentPlayer;
             currentPlayer = opposition;
             opposition = temp;
-            RequestHandler.allUsers.get(enemy.getUsername()).sendMassage(new PlayCardResponse(this, !enemy.isPassed()));
+            RequestHandler.allUsers.get(currentPlayer.getUsername()).sendMassage(new PlayCardResponse(this, true));
         }
 
-        gameHandler.sendMassageToSpectators(new PlayCardResponse(this));
+        if(opposition.isPassed()) {
+            RequestHandler.allUsers.get(opposition.getUsername()).sendMassage(new PlayCardResponse(this, false));
+        }
 
-        if(currentPlayer.doesNotHaveGameToPlay()) {
-            currentPlayer.setPassed(true);
+        if(opposition.doesNotHaveGameToPlay()) {
+            opposition.setPassed(true);
         }
         if(currentPlayer.isPassed() && opposition.isPassed()) {
             endRound();
         }
+
+        gameHandler.sendMassageToSpectators(new PlayCardResponse(this));
     }
 
     private void sendEndRoundMassages(Player toStartNext) {
@@ -162,10 +165,13 @@ public class Game {
         }
 
         for(Player p: players) {
-            if(p.getFaction().equals(Faction.SKELLIGE)) {
+            System.out.println(p.getFaction());
+            if(p.getFaction().equals(Faction.SKELLIGE) && currentRound.getRoundNumber() == 3) {
+                System.out.println("skellige action triggered: reviving cards :");
                 ArrayList<PlayableCard> cardsList = gameBoard.getDiscardPlayableCards(p);
                 for(int i = 0; i< 2 ; i++) {
                     PlayableCard playableCard = cardsList.remove((int) (Math.random() * cardsList.size()));
+                    System.out.println(playableCard.getName());
                     playableCard.place(playableCard.getRow(), p);
                 }
             }
@@ -181,7 +187,7 @@ public class Game {
         if(winner != null) {
             winner.addToWin();
         }
-        sendEndGameMassages(new EndGameNotify(winner != null, winner == null? null:winner.getUsername()));
+        sendEndGameMassages(new EndGameNotify(winner != null, winner == null? null:winner.getUsername(), rounds));
     }
 
     public void isOver() {

@@ -3,6 +3,8 @@ package com.mygdx.game.controller.remote;
 import com.google.gson.Gson;
 import com.mygdx.game.model.network.RequestHandler;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.StartGameRequest;
+import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
+import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ServerInviteResponse;
 import com.mygdx.game.model.network.massage.serverResponse.gameResponse.ServerPlayInvite;
 import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.model.user.User;
@@ -19,7 +21,7 @@ public class InviteHandler {
         this.gson = gson;
     }
 
-    public void handle(RequestHandler requestHandler, User user) {
+    public ServerResponse handle(RequestHandler requestHandler, User user) {
         StartGameRequest startGameRequest = gson.fromJson(request, StartGameRequest.class);
 
         //updating user in remote
@@ -37,16 +39,20 @@ public class InviteHandler {
                 queGameHandler.addUserAndStart(user);
                 queGameHandler = null;
             }
-            return;
+            return null;
         }
-
-        requestHandler.setGameHandler(new GameHandler(user));
 
         if(!RequestHandler.allUsers.containsKey(startGameRequest.getUserToBeInvited())) {
-            //handle the case
+            return new ServerInviteResponse("user not online");
         }
-
         RequestHandler targetHandler = RequestHandler.allUsers.get(startGameRequest.getUserToBeInvited());
+        if(targetHandler.getGameHandler() != null) {
+            return new ServerInviteResponse("user already in game");
+        }
+        requestHandler.setGameHandler(new GameHandler(user));
+
+
         targetHandler.sendMassage(new ServerPlayInvite(startGameRequest));
+        return null;
     }
 }

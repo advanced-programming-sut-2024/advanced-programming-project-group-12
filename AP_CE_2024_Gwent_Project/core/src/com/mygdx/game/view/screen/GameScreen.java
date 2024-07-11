@@ -42,7 +42,8 @@ public class GameScreen implements Screen {
     private int endGameState = -2;
     private Emoji reactedEmoji = null;
     private String reactedMessage = null;
-
+    private boolean oppositionDisconnect = false;
+    private boolean oppositionReconnect = false;
 
 
     //Notification Queue
@@ -232,12 +233,18 @@ public class GameScreen implements Screen {
             RowTable playerRow = new RowTable(row,true, i);
             playerRows.add(playerRow);
             stage.addActor(playerRow);
+            int finalI = i;
             playerRow.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     if (controller.getSelectedCard() != null && controller.getPermission()) {
-                        if (controller.isAllowedToPlay(controller.getSelectedCard(), playerRow.getSide(), playerRow.getRowNumber())) {
+                        if(controller.getSelectedCard().equals(AllCards.DECOY.getAbstractCard())) {
+                            if(Client.getInstance().getGame().getGameBoard().getRowCards(player, finalI).isEmpty()) return;
+                            showCardsToSelect(Client.getInstance().getGame().getGameBoard().getRowCards(player, finalI), finalI, false);
+                        }else if (controller.isAllowedToPlay(controller.getSelectedCard(), playerRow.getSide(), playerRow.getRowNumber())) {
                             playCard(controller.getSelectedCard(), playerRow);
+                            controller.setSelectedCard(null);
+                            resetBackgroundColors();
                         }
                     }
                 }
@@ -366,6 +373,14 @@ public class GameScreen implements Screen {
         }
         if(ChatUI.getInstance().getNewMessage() != null) {
             ChatUI.getInstance().putNewMessage();
+        }
+        if(oppositionDisconnect) {
+            showOpponentDisconnectedMessage();
+            oppositionDisconnect = false;
+        }
+        if(oppositionReconnect) {
+            showOpponentReconnectedMessage();
+            oppositionReconnect = false;
         }
     }
 
@@ -677,7 +692,11 @@ public class GameScreen implements Screen {
     }
 
     public void showCardsToSelect(List<? extends AbstractCard> cards, int numberOfCards, boolean canChooseLess) {
-
+        int rowNumber = numberOfCards;
+        if(controller.getSelectedCard() != null && controller.getSelectedCard().equals(AllCards.DECOY.getAbstractCard())) {
+            System.out.println("i am here");
+            numberOfCards = 1;
+        }
         ArrayList<AbstractCard> selectedCards = new ArrayList<>();
         Image bgImage = new Image(new Texture("bg/black.jpg"));
         bgImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -709,6 +728,7 @@ public class GameScreen implements Screen {
                 x = 200;
             }
             if (numberOfCards > 0) {
+                int finalNumberOfCards = numberOfCards;
                 cardImage.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
@@ -716,10 +736,11 @@ public class GameScreen implements Screen {
                             cardImage.addAction(Actions.scaleTo(1.0f, 1.0f, 0.2f));
                             selectedCards.remove(card);
                         } else {
+                            System.out.println("herer");
                             cardImage.addAction(Actions.scaleBy(0.1f, 0.1f, 0.2f));
                             selectedCards.add(card);
                         }
-                        if (numberOfCards == selectedCards.size()) {
+                        if (finalNumberOfCards == selectedCards.size()) {
                             for (Image cardImage : cardImages) {
                                 cardImage.remove();
                             }
@@ -728,7 +749,9 @@ public class GameScreen implements Screen {
                             }
                             bgImage.remove();
                             closeButton.remove();
-                            controller.chooseCardInSelectCardMode(selectedCards, canChooseLess);
+                            if(controller.getSelectedCard() != null && controller.getSelectedCard().equals(AllCards.DECOY.getAbstractCard())) {
+                                controller.playDecoy(selectedCards.getFirst(), rowNumber);
+                            } else controller.chooseCardInSelectCardMode(selectedCards, canChooseLess);
                         }
                     }
                 });
@@ -1081,5 +1104,61 @@ public class GameScreen implements Screen {
     }
     public void setShowReactionWindow() {
         showReactionWindow = true;
+    }
+    public void showOpponentDisconnectedMessage() {
+        // Create a label to display the message
+        Label messageLabel = new Label("Opposition lost connection!", Gwent.singleton.skin);
+        messageLabel.setFontScale(2f);
+        messageLabel.setColor(Color.RED);
+
+        // Create a window to display the message
+        Window messageWindow = new Window("", Gwent.singleton.skin);
+        messageWindow.add(messageLabel);
+        messageWindow.pack();
+        messageWindow.setPosition((Gdx.graphics.getWidth() - messageWindow.getWidth()) / 2, (Gdx.graphics.getHeight() - messageWindow.getHeight()) / 2);
+        messageWindow.setVisible(true);
+        stage.addActor(messageWindow);
+
+        // Disable touchability of all actors in the stage
+        for (Actor actor : stage.getActors()) {
+            actor.setTouchable(Touchable.disabled);
+        }
+
+        // Remove the message window after 5 seconds
+        messageWindow.addAction(Actions.sequence(
+                Actions.delay(5f),
+                Actions.removeActor()
+        ));
+    }
+    public void showOpponentReconnectedMessage() {
+        // Create a label to display the message
+        Label messageLabel = new Label("Opposition is back in the game!", Gwent.singleton.skin);
+        messageLabel.setFontScale(2f);
+        messageLabel.setColor(Color.GREEN);
+
+        // Create a window to display the message
+        Window messageWindow = new Window("", Gwent.singleton.skin);
+        messageWindow.add(messageLabel);
+        messageWindow.pack();
+        messageWindow.setPosition((Gdx.graphics.getWidth() - messageWindow.getWidth()) / 2, (Gdx.graphics.getHeight() - messageWindow.getHeight()) / 2);
+        messageWindow.setVisible(true);
+        stage.addActor(messageWindow);
+
+        // Enable touchability of all actors in the stage
+        for (Actor actor : stage.getActors()) {
+            actor.setTouchable(Touchable.enabled);
+        }
+
+        // Remove the message window after 5 seconds
+        messageWindow.addAction(Actions.sequence(
+                Actions.delay(5f),
+                Actions.removeActor()
+        ));
+    }
+    public void setOppositionDisconnect() {
+        oppositionDisconnect = true;
+    }
+    public void setOppositionReconnect() {
+        oppositionReconnect = true;
     }
 }

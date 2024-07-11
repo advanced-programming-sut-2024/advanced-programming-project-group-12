@@ -128,7 +128,12 @@ public enum Action {
     MEDIC(card -> {
         card.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.MEDIC);
         GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
-        return new ActionResponse(ActionResponseType.SELECTION,gameBoard.getDiscardPlayableCards(card.getPlayer()) ,1);
+        if(!gameBoard.getDiscardPlayableCards(card.getPlayer()).isEmpty()) {
+            return new ActionResponse(ActionResponseType.SELECTION, gameBoard.getDiscardPlayableCards(card.getPlayer()), 1);
+        } else{
+            card.getPlayer().getGame().switchTurn();
+            return null;
+        }
     }),
     SPY(card -> {
         Player player = card.getPlayer().getGame().getCurrentPlayer();
@@ -210,9 +215,9 @@ public enum Action {
         Row row = gameBoard.getRowForPlayer(rowNumber, card.getPlayer());
         row.setHasMushroom();
         ArrayList<PlayableCard> rowCards = row.getCards();
-        for(PlayableCard i : rowCards) {
-            if(i.getAction().equals(Action.BEAR)) {
-                i.doAction();
+        for(int i = 0; i< rowCards.size(); i++) {
+            if(rowCards.get(i).getAction().equals(Action.BEAR)) {
+                rowCards.get(i).doAction();
             }
         }
         card.getPlayer().getGame().switchTurn();

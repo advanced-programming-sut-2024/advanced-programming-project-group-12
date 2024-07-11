@@ -51,10 +51,12 @@ public class Round {
             winner = player2;
         } else {
             if (player1.getFaction().equals(Faction.NILFGAARD) && !player2.getFaction().equals(Faction.NILFGAARD)) {
+                System.out.println("nilfgaard action triggered");
                 handleWinCase(player1, player2);
                 winner = player1;
             }
             else if (player2.getFaction().equals(Faction.NILFGAARD) && !player1.getFaction().equals(Faction.NILFGAARD)) {
+                System.out.println("nilfgaard action triggered");
                 handleWinCase(player2, player1);
                 winner = player2;
             }

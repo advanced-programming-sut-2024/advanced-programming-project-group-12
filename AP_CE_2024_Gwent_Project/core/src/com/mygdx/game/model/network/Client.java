@@ -128,17 +128,13 @@ public class Client extends Thread {
                 FriendsScreen.setRequestsHashMap(serverFriendRequest.getRequests());
                 Gdx.app.log("FriendsScreen", "Friend requests received: " + serverFriendRequest.getRequests());
                 break;
-            case GET_FRIENDS:
-                ServerFriend serverFriend = gson.fromJson(request, ServerFriend.class);
-                User.getLoggedInUser().setFriends(serverFriend.getFriends());
-                //let friends screen know the shit so they can proceed
-                break;
             case INVITE_TO_PLAY:
                 ServerPlayInvite serverPlayInvite = gson.fromJson(request, ServerPlayInvite.class);
                 GameRequestScreen.showRequestWindow(serverPlayInvite.getClientRequest().getInvitor());
                 break;
             case INVITE_TO_PLAY_RESPONSE:
-                System.out.println("nothing");
+                ServerInviteResponse serverInviteResponse = gson.fromJson(request, ServerInviteResponse.class);
+                //show error masages
                 break;
             case START_GAME:
                 SetGameToStart setGameToStart = gson.fromJson(request, SetGameToStart.class);
@@ -184,10 +180,11 @@ public class Client extends Thread {
                 ChatInGameWrapper chatWrapper = gson.fromJson(request, ChatInGameWrapper.class);
                 ChatInGame chat = chatWrapper.getChat();
                 if(chat instanceof ReactionMassageRequest) {
-                    ChatController.receiveMessageReaction((ReactionMassageRequest) chat);
+                    ReactionMassageRequest reactionMassageRequest = gson.fromJson(request, ReactionMassageRequest.class);
+                    ChatController.receiveMessageReaction(reactionMassageRequest);
                     break;
                 }
-                ChatController.receiveMassage(chat.getSender(), chat.getMassage(), chat.getTime(), chat.getReplyToSender(), chat.getReplyToMassage());
+                ChatController.receiveMassage(chat.getSender(), chat.getMassageReaction(), chat.getTime(), chat.getReplyToSender(), chat.getReplyToMassage());
                 break;
             case END_ROUND:
                 EndRoundNotify endRoundNotify = gson.fromJson(request, EndRoundNotify.class);
@@ -196,6 +193,15 @@ public class Client extends Thread {
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setPermission(endRoundNotify.isToStart());
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().endRound(round.getWinnerName());
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().update();
+                break;
+            case CONNECTION_LOST:
+                ConnectionLostNotify connectionLostNotify = gson.fromJson(request, ConnectionLostNotify.class);
+                if(connectionLostNotify.isLost()) {
+                    ((GameScreen) Gwent.singleton.getCurrentScreen()).getController().setOppositionDisconnect();
+                }
+                else {
+                    ((GameScreen) Gwent.singleton.getCurrentScreen()).getController().setOppositionReconnect();
+                }
                 break;
             case END_GAME:
                 EndGameNotify endGameNotify = gson.fromJson(request, EndGameNotify.class);

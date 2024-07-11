@@ -31,7 +31,7 @@ public class ChatController {
     }
     public static void receiveMessageReaction(ReactionMassageRequest reactionMassageRequest) {
         if(reactionMassageRequest.getEmoji() == null) {
-            receiveMessageReaction(reactionMassageRequest.getMassage());
+            receiveMessageReaction(reactionMassageRequest.getMassageReaction());
         }
         else {
             receiveEmojiReaction(reactionMassageRequest.getEmoji());
