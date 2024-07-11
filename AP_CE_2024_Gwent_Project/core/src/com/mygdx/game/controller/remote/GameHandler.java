@@ -29,6 +29,9 @@ public class GameHandler {
     private User user2;
     private Game game;
 
+    private boolean connectionLost;
+    private boolean gameEnded;
+
     private ArrayList<User> spectators;
 
     public static ServerResponse sendAllGamesList() {
@@ -44,6 +47,8 @@ public class GameHandler {
 
     public GameHandler(User user1) {
         this.user1 = user1;
+        connectionLost = false;
+        gameEnded = false;
     }
 
     public void addUserAndStart(User user) {
@@ -180,12 +185,6 @@ public class GameHandler {
         }
     }
 
-    public void gameAborted(User user) {
-        User otherUser = getTheOtherUser(user);
-        if(RequestHandler.allUsers.get(otherUser.getUsername()) == null) return;
-        game.finishGame(otherUser);
-    }
-
     public Game getGame() {
         return game;
     }
@@ -194,4 +193,25 @@ public class GameHandler {
         return ((Decoy) AllCards.DECOY.getAbstractCard()).place(playDecoyRequest.getRow(),playDecoyRequest.getToBeReplace(), user.getPlayer());
     }
 
+    public void gameAborted(User user) {
+        if(!gameEnded){
+            User otherUser = getTheOtherUser(user);
+            if (RequestHandler.allUsers.get(otherUser.getUsername()) == null) return;
+            game.finishGame(otherUser);
+        }
+    }
+
+    public void connectionLost(User user) {
+        if(connectionLost) {
+            gameEnded = true;
+        }else {
+            RequestHandler.allUsers.get(getTheOtherUser(user).getUsername()).sendMassage(new ConnectionLostNotify(true));
+            connectionLost = true;
+        }
+    }
+
+    public void connectionReturned(User user) {
+        RequestHandler.allUsers.get(getTheOtherUser(user).getUsername()).sendMassage(new ConnectionLostNotify(false));
+        connectionLost = false;
+    }
 }

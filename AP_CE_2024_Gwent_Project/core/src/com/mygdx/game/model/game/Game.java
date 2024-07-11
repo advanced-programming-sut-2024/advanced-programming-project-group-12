@@ -187,7 +187,7 @@ public class Game {
         if(winner != null) {
             winner.addToWin();
         }
-        sendEndGameMassages(new EndGameNotify(winner != null, winner == null? null:winner.getUsername()));
+        sendEndGameMassages(new EndGameNotify(winner != null, winner == null? null:winner.getUsername(), rounds));
     }
 
     public void isOver() {

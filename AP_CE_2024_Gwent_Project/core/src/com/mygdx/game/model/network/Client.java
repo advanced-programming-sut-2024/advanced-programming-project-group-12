@@ -137,7 +137,7 @@ public class Client extends Thread {
                 GameRequestScreen.showRequestWindow(serverPlayInvite.getClientRequest().getInvitor());
                 break;
             case INVITE_TO_PLAY_RESPONSE:
-                System.out.println("nothing");
+                ServerInviteResponse serverInviteResponse = gson.fromJson(request, ServerInviteResponse.class);
                 break;
             case START_GAME:
                 SetGameToStart setGameToStart = gson.fromJson(request, SetGameToStart.class);
@@ -196,6 +196,15 @@ public class Client extends Thread {
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setPermission(endRoundNotify.isToStart());
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().endRound(round.getWinnerName());
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().update();
+                break;
+            case CONNECTION_LOST:
+                ConnectionLostNotify connectionLostNotify = gson.fromJson(request, ConnectionLostNotify.class);
+                if(connectionLostNotify.isLost()) {
+                    ((GameScreen) Gwent.singleton.getCurrentScreen()).getController();
+                }
+                else {
+
+                }
                 break;
             case END_GAME:
                 EndGameNotify endGameNotify = gson.fromJson(request, EndGameNotify.class);

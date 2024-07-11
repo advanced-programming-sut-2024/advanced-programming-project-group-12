@@ -128,7 +128,12 @@ public enum Action {
     MEDIC(card -> {
         card.getPlayer().getGame().setCardSelectHandler(CardSelectHandler.MEDIC);
         GameBoard gameBoard = card.getPlayer().getGame().getGameBoard();
-        return new ActionResponse(ActionResponseType.SELECTION,gameBoard.getDiscardPlayableCards(card.getPlayer()) ,1);
+        if(!gameBoard.getDiscardPlayableCards(card.getPlayer()).isEmpty()) {
+            return new ActionResponse(ActionResponseType.SELECTION, gameBoard.getDiscardPlayableCards(card.getPlayer()), 1);
+        } else{
+            card.getPlayer().getGame().switchTurn();
+            return null;
+        }
     }),
     SPY(card -> {
         Player player = card.getPlayer().getGame().getCurrentPlayer();
