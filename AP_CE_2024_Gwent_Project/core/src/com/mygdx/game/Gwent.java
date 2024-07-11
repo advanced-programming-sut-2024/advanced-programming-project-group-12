@@ -27,7 +27,7 @@ public class Gwent extends Game implements ApplicationListener {
 		singleton = this;
         skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
 		batch = new SpriteBatch();
-		currentScreen = new LiveStreamMenuScreen();
+		currentScreen = new LoginMenuScreen();
 		Gwent.singleton.setScreen(currentScreen);
         new Client().start();
     }

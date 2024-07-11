@@ -17,6 +17,7 @@ public enum Screens {
     TOURNAMENT,
     PRE_TOURNAMENT,
     GAME_REQUEST,
+    BROAD_CAST,
     LIVE_STREAM_MENU;
 
     public Screen createScreen() {
@@ -63,6 +64,9 @@ public enum Screens {
                 break;
             case LIVE_STREAM_MENU:
                 screen = new LiveStreamMenuScreen();
+                break;
+            case BROAD_CAST:
+                //screen = new BroadCastScreen();
                 break;
         }
         return screen;
