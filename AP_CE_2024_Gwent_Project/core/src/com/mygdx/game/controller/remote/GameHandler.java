@@ -19,15 +19,18 @@ import com.mygdx.game.model.network.massage.serverResponse.gameResponse.*;
 import com.mygdx.game.model.user.Player;
 import com.mygdx.game.model.user.User;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class GameHandler {
     private static final ArrayList<GameHandler> allGames = new ArrayList<>();
+
     private final boolean isPrivate = false;
 
-    private User user1;
+    private final User user1;
     private User user2;
     private Game game;
+    private String gameName;
 
     private boolean connectionLost;
     private boolean gameEnded;
@@ -58,7 +61,24 @@ public class GameHandler {
         start();
     }
 
+    public User getUser1() {
+        return user1;
+    }
+
+    public String getGameName() {
+        return gameName;
+    }
+
+    public void setGameName() {
+        int gameNumber  =1;
+        do {
+            gameName = user1.getUsername() + " : " + user2.getUsername() + " (" + gameNumber++ + ")";
+
+        } while(new File("Data/gameLog/" + gameName).exists());
+    }
+
     private void start() {
+        setGameName();
         user1.setPlayer(new Player(user1));
         user2.setPlayer(new Player(user2));
         game = new Game(user1.getPlayer(), user2.getPlayer(), this);
@@ -144,10 +164,6 @@ public class GameHandler {
         }
     }
 
-    public void updateOpponent() {
-        RequestHandler.allUsers.get(game.getOpposition().getUsername()).sendMassage(new PlayCardResponse(game));
-    }
-
     public ServerResponse playCard(PlayCardRequest playCardRequest, User user) {
         Player player = user.getPlayer();
         boolean isEnemyPassed = player.getGame().getOpposition().isPassed();
@@ -213,5 +229,15 @@ public class GameHandler {
     public void connectionReturned(User user) {
         RequestHandler.allUsers.get(getTheOtherUser(user).getUsername()).sendMassage(new ConnectionLostNotify(false));
         connectionLost = false;
+    }
+
+    public void endGame() {
+        allGames.remove(this);
+        try {
+            RequestHandler.allUsers.get(user1.getUsername()).setGameHandler(null);
+        } catch (NullPointerException ignored) {}
+        try {
+            RequestHandler.allUsers.get(user1.getUsername()).setGameHandler(null);
+        } catch (NullPointerException ignored) {}
     }
 }

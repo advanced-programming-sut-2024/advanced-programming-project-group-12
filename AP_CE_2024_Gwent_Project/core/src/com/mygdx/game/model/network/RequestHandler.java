@@ -210,7 +210,6 @@ public class RequestHandler extends Thread {
     public void connectionLost() {
         gameHandler.connectionLost(user);
         if(gameHandler != null) {
-            System.out.println("connection lost with user: " + user.getUsername());
             unfinishedGame = new Timer();
             unfinishedGame.schedule(new TimerTask() {
                 @Override
@@ -231,7 +230,7 @@ public class RequestHandler extends Thread {
     }
 
     private void writeLog(String string) {
-        File file = new File("Data/gameLog/");
+        File file = new File("");
         Gson gson = new Gson();
         if(file.exists()) {
             file.delete();

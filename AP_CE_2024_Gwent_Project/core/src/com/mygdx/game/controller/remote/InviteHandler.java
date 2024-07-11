@@ -10,6 +10,7 @@ import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.model.user.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InviteHandler {
     private static GameHandler queGameHandler = null;
@@ -49,10 +50,21 @@ public class InviteHandler {
         if(targetHandler.getGameHandler() != null) {
             return new ServerInviteResponse("user already in game");
         }
+        if(targetHandler == requestHandler) {
+            return new ServerInviteResponse("dash gerefty maro?");
+        }
         requestHandler.setGameHandler(new GameHandler(user));
 
 
         targetHandler.sendMassage(new ServerPlayInvite(startGameRequest));
         return null;
+    }
+
+    public ServerResponse getRandomGameList() {
+        List<String> randomGames = new ArrayList<>();
+        if(queGameHandler != null) {
+            randomGames.add(queGameHandler.getUser1().getUsername() + " : ");
+        }
+        return new ServerInviteResponse(randomGames);
     }
 }
