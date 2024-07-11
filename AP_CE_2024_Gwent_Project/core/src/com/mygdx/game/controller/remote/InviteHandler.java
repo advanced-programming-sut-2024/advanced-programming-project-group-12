@@ -10,6 +10,7 @@ import com.mygdx.game.model.network.session.Session;
 import com.mygdx.game.model.user.User;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class InviteHandler {
@@ -61,8 +62,8 @@ public class InviteHandler {
         return null;
     }
 
-    public ServerResponse getRandomGameList() {
-        List<String> randomGames = new ArrayList<>();
+    public static ServerResponse getRandomGameList() {
+        ArrayList<String> randomGames = new ArrayList<>();
         if(queGameHandler != null) {
             randomGames.add(queGameHandler.getUser1().getUsername() + " : ");
         }

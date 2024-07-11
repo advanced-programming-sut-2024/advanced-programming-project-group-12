@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.ChatController;
+import com.mygdx.game.controller.local.GameRequestController;
 import com.mygdx.game.controller.local.TournamentController;
 import com.mygdx.game.model.game.Tournament;
 import com.mygdx.game.model.game.card.AbstractElementAdapter;
@@ -23,6 +24,7 @@ import com.mygdx.game.view.screen.*;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -133,7 +135,8 @@ public class Client extends Thread {
                 break;
             case RANDOM_GAMES_LIST:
                 ServerInviteResponse serverInviteResponse = gson.fromJson(request, ServerInviteResponse.class);
-                List<String> randomGames = serverInviteResponse.getRandomGames();
+                ArrayList<String> randomGames = serverInviteResponse.getRandomGames();
+                ((GameRequestScreen) Gwent.singleton.getCurrentScreen()).getController().setListOfRandomGames(randomGames);
                 break;
             case INVITE_TO_PLAY:
                 ServerPlayInvite serverPlayInvite = gson.fromJson(request, ServerPlayInvite.class);

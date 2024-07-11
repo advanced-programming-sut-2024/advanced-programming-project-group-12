@@ -13,6 +13,7 @@ import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.*;
 import com.mygdx.game.model.network.massage.clientRequest.preSignInRequest.ChangeMenuRequest;
 import com.mygdx.game.model.network.massage.serverResponse.ChangeMenuResponse;
 import com.mygdx.game.model.network.massage.serverResponse.GetAllUsersResponse;
+import com.mygdx.game.model.network.massage.serverResponse.preGameRosponse.InviteUserToPlay;
 import com.mygdx.game.model.network.session.InvalidSessionException;
 import com.mygdx.game.model.network.session.SessionExpiredException;
 import com.mygdx.game.model.user.User;
@@ -126,6 +127,9 @@ public class RequestHandler extends Thread {
                 case START_GAME:
                     serverResponse = new InviteHandler(request, gson).handle(this, user);
                    break;
+                case GET_RANDOM_GAMES:
+                    serverResponse = InviteHandler.getRandomGameList();
+                    break;
                 case INVITE_ANSWER:
                     new InviteResponseHandler(request, gson).handle(this, user);
                     break;

@@ -25,7 +25,7 @@ public class StartGameRequest extends ClientRequest {
     private boolean isPrivate;
     private boolean isTournament;
 
-    public StartGameRequest(String toBeInvited, String invitor, User user) {
+    public StartGameRequest(String toBeInvited, String invitor, User user, boolean randomOpponent, boolean isPrivate) {
         super(ClientRequestType.START_GAME, null);
         this.toBeInvited = toBeInvited;
         this.invitor = invitor;
@@ -49,19 +49,6 @@ public class StartGameRequest extends ClientRequest {
         this.commanderCard = user.getLeaderAsCard();
         this.isTournament = false;
         this.isPrivate = isPrivate;
-    }
-
-    public StartGameRequest(String toBeInvited, String invitor, User user, boolean isTournament, boolean isPrivate) {
-        super(ClientRequestType.START_GAME, null);
-        this.toBeInvited = toBeInvited;
-        this.invitor = invitor;
-        randomOpponent = false;
-
-        this.faction = user.getFaction();
-        this.deck = new LinkedList<>(user.getDeck());
-        this.commanderCard = user.getLeaderAsCard();
-        this.isTournament = isTournament;
-        isPrivate = false;
     }
 
     public String getUserToBeInvited() {

@@ -256,4 +256,8 @@ public class GameRequestScreen implements Screen {
         listOfRandomGamesWindow.setVisible(true);
 
     }
+
+    public GameRequestController getController() {
+        return controller;
+    }
 }

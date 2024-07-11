@@ -4,10 +4,11 @@ import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.Clie
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponse;
 import com.mygdx.game.model.network.massage.serverResponse.ServerResponseType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ServerInviteResponse extends ServerResponse {
-    private List<String> randomGames;
+    private ArrayList<String> randomGames;
     String error;
 
     public ServerInviteResponse(String string) {
@@ -15,12 +16,12 @@ public class ServerInviteResponse extends ServerResponse {
         this.error = string;
     }
 
-    public ServerInviteResponse(List<String> randomGames) {
+    public ServerInviteResponse(ArrayList<String> randomGames) {
         super(ServerResponseType.RANDOM_GAMES_LIST, null);
         this.randomGames = randomGames;
     }
 
-    public List<String> getRandomGames() {
+    public ArrayList<String> getRandomGames() {
         return randomGames;
     }
 

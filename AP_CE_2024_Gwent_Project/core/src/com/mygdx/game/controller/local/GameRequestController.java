@@ -2,6 +2,7 @@ package com.mygdx.game.controller.local;
 
 import com.mygdx.game.Gwent;
 import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.network.massage.clientRequest.GetRandomGamesRequest;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.ClientInviteResponse;
 import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.StartGameRequest;
 import com.mygdx.game.model.user.User;
@@ -11,9 +12,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class GameRequestController {
-    public void sendGameRequest(String to, boolean type) {
+    public void sendGameRequest(String to, boolean isPublic) {
         //public : true & private : false
-        Client.getInstance().sendMassage(new StartGameRequest(to, User.getLoggedInUser().getUsername(), User.getLoggedInUser()));
+        boolean isPrivate = !isPublic;
+        Client.getInstance().sendMassage(new StartGameRequest(to, User.getLoggedInUser().getUsername(), User.getLoggedInUser(), isPrivate));
     }
 
     public void requestTimedOut() {
@@ -34,18 +36,17 @@ public class GameRequestController {
     }
 
     public void sendRandomGameRequest() {
-        //TODO :
+        Client.getInstance().sendMassage(new StartGameRequest(null, User.getLoggedInUser().getUsername(), User.getLoggedInUser(), true, false));
     }
 
     public void sendListOfRandomGamesRequest() {
-        //TODO :
-
+        Client.getInstance().sendMassage(new GetRandomGamesRequest());
     }
     public void setListOfRandomGames(ArrayList<String> list) {
         ((GameRequestScreen) Gwent.singleton.getCurrentScreen()).listOfRandomGames  = list;
     }
 
     public void joinRandomGame(String game) {
-        //TODO :
+        sendRandomGameRequest();
     }
 }
