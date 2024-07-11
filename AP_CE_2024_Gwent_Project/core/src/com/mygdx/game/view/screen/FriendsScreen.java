@@ -260,7 +260,7 @@ public class FriendsScreen implements Screen {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     GameRequestController controller1 = new GameRequestController();
-                    controller1.sendGameRequest(friend);
+                    controller1.sendGameRequest(friend, false);
                     Gdx.app.log("FriendsScreen", "Play button clicked for " + friend);
                 }
             });
