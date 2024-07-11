@@ -39,6 +39,7 @@ public class Gwent extends Game implements ApplicationListener {
 		backgroundMusic.play();
     }
 
+
 	@Override
 	public void render () {
 		super.render();
