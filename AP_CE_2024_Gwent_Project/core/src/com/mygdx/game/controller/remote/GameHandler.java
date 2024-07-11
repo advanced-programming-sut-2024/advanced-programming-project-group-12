@@ -244,7 +244,9 @@ public class GameHandler {
         } catch (NullPointerException ignored) {}
 
         if(isTournament) {
-            TournamentHandler.getCurrentTournament().gameWon(winner);
+            ServerResponse serverResponse = TournamentHandler.getCurrentTournament().gameWon(winner);
+            RequestHandler.allUsers.get(getTheOtherUser(user1).getUsername()).sendMassage(serverResponse);
+            RequestHandler.allUsers.get(getTheOtherUser(user2).getUsername()).sendMassage(serverResponse);
         }
     }
 }

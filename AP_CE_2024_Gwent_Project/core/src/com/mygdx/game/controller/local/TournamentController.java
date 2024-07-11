@@ -1,8 +1,10 @@
 package com.mygdx.game.controller.local;
 
+import com.mygdx.game.model.network.Client;
+import com.mygdx.game.model.network.massage.clientRequest.TournamentStartRequest;
+import com.mygdx.game.model.network.massage.clientRequest.postSignInRequest.StartTournamentGameRequest;
 import com.mygdx.game.model.user.User;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class TournamentController {
     private static TournamentController singleton;
@@ -47,13 +49,13 @@ public class TournamentController {
     }
 
     public void startGameInTournament(User player1, User player2, int round) {
-        //TODO : create a game in tournament here
+        Client.getInstance().sendMassage(new StartTournamentGameRequest(player1, player2));
     }
 
     public void joinTournament() {
-        //TODO :
+        Client.getInstance().sendMassage(new TournamentStartRequest());
     }
-    public void getJoinResponse() {
+    public void getJoinResponse(String error) {
 
     }
 }

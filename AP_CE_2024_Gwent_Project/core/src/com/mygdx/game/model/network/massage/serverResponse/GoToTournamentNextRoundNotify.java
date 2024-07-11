@@ -9,4 +9,8 @@ public class GoToTournamentNextRoundNotify extends ServerResponse {
         super(ServerResponseType.GOTO_TOURNAMENT_NEXT_ROUND, null);
         this.tournament = tournament;
     }
+
+    public Tournament getTournament() {
+        return tournament;
+    }
 }

@@ -154,7 +154,11 @@ public class RequestHandler extends Thread {
                     break;
                 case START_TOURNAMENT:
                     TournamentStartRequest tournamentStartRequest = gson.fromJson(request, TournamentStartRequest.class);
-                    tournamentHandler = new TournamentHandler(tournamentStartRequest);
+                    serverResponse = TournamentHandler.getCurrentTournament().addUser(user);
+                    break;
+                case START_TOURNAMENT_GAME:
+                    StartTournamentGameRequest startTournamentGameRequest = gson.fromJson(request, StartTournamentGameRequest.class);
+                    TournamentHandler.startGame(startTournamentGameRequest, this);
                     break;
                 case CHAT:
                     ChatInGame chat = gson.fromJson(request, ChatInGame.class);

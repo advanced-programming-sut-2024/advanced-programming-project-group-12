@@ -5,6 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mygdx.game.Gwent;
 import com.mygdx.game.controller.local.ChatController;
+import com.mygdx.game.controller.local.TournamentController;
+import com.mygdx.game.model.game.Tournament;
 import com.mygdx.game.model.game.card.AbstractElementAdapter;
 import com.mygdx.game.model.game.Game;
 import com.mygdx.game.model.game.Round;
@@ -215,6 +217,24 @@ public class Client extends Thread {
                 break;
             case GOTO_TOURNAMENT_NEXT_ROUND:
                 GoToTournamentNextRoundNotify notify = gson.fromJson(request, GoToTournamentNextRoundNotify.class);
+                Tournament tournament = notify.getTournament();
+                if(tournament.isInStage(tournament.getWinner())) {
+                    TournamentController.getInstance().updateTournamentParticipants(tournament.getWinner());
+                }
+                else if(tournament.isInStage(tournament.getFinalGame())){
+                    TournamentController.getInstance().updateTournamentParticipants(tournament.getFinalGame());
+                }
+                else if(tournament.isInStage(tournament.getSemi())) {
+                    TournamentController.getInstance().updateTournamentParticipants(tournament.getSemi());
+                }
+                else {
+                    TournamentController.getInstance().updateTournamentParticipants(tournament.getQuarter());
+                    Gwent.singleton.changeScreen(Screens.TOURNAMENT);
+                }
+                break;
+            case JOIN_TOURNAMENT_ERROR:
+                TournamentStartError tournamentStartError = gson.fromJson(request, TournamentStartError.class);
+                TournamentController.getInstance().getJoinResponse(tournamentStartError.getError());
                 break;
             case GET_PUBLIC_GAMES:
                 GetPublicGamesResponse publicGames = gson.fromJson(request, GetPublicGamesResponse.class);
