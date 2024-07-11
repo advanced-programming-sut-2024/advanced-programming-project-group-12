@@ -205,6 +205,7 @@ public class Client extends Thread {
                 break;
             case END_GAME:
                 EndGameNotify endGameNotify = gson.fromJson(request, EndGameNotify.class);
+                game = endGameNotify.getGame();
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().endGame(endGameNotify.getWinner(), endGameNotify.isHasWinner());
                 break;
             case GET_PUBLIC_GAMES:

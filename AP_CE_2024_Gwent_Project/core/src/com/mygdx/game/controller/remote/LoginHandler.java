@@ -34,7 +34,9 @@ public class LoginHandler {
             }
 
             if(checkForUnfinishedGame(username, requestHandler)) {
-                return new ReturnToGameResponse(user, requestHandler.getGameHandler().getGame());
+                ServerResponse serverResponse =  new ReturnToGameResponse(user, requestHandler.getGameHandler().getGame());
+                RequestHandler.allUsers.put(user.getUsername(), requestHandler);
+                return serverResponse;
             }
             RequestHandler.allUsers.put(user.getUsername(), requestHandler);
 
@@ -53,7 +55,6 @@ public class LoginHandler {
     }
 
     public String loginHandler(String username, String password) {
-        //TODO: remove it
         if(User.getUserByUsername(username) != null || username.equals("admin")) {
             return "accept";
         }
