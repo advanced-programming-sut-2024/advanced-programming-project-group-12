@@ -208,7 +208,6 @@ public class ProfileMenuScreen implements Screen {
         tvButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gwent.singleton.changeScreen(Screens.BROADCAST);
             }
         });
     }

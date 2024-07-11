@@ -267,7 +267,9 @@ public class GameRequestScreen implements Screen {
         listOfRandomGamesWindow.setVisible(true);
 
     }
-
+    public static boolean userIsMyFriend(String user) {
+        return User.getLoggedInUser().getFriends().contains(user);
+    }
     public GameRequestController getController() {
         return controller;
     }
