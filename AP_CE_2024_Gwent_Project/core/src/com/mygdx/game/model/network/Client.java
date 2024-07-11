@@ -22,6 +22,7 @@ import com.mygdx.game.view.screen.*;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 public class Client extends Thread {
     private static Client instance;
@@ -128,12 +129,17 @@ public class Client extends Thread {
                 FriendsScreen.setRequestsHashMap(serverFriendRequest.getRequests());
                 Gdx.app.log("FriendsScreen", "Friend requests received: " + serverFriendRequest.getRequests());
                 break;
+            case RANDOM_GAMES_LIST:
+                ServerInviteResponse serverInviteResponse = gson.fromJson(request, ServerInviteResponse.class);
+                List<String> randomGames = serverInviteResponse.getRandomGames();
+                break;
             case INVITE_TO_PLAY:
                 ServerPlayInvite serverPlayInvite = gson.fromJson(request, ServerPlayInvite.class);
                 GameRequestScreen.showRequestWindow(serverPlayInvite.getClientRequest().getInvitor());
                 break;
-            case INVITE_TO_PLAY_RESPONSE:
-                ServerInviteResponse serverInviteResponse = gson.fromJson(request, ServerInviteResponse.class);
+            case START_GAME_ERROR:
+                ServerInviteResponse startGameError = gson.fromJson(request, ServerInviteResponse.class);
+                String error = startGameError.getError();
                 //show error masages
                 break;
             case START_GAME:
@@ -150,7 +156,6 @@ public class Client extends Thread {
                 }
                 break;
             case GAME_TURN_DECIDE:
-                TurnDecideRequest turnDecideRequest = gson.fromJson(request, TurnDecideRequest.class);
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().chooseStarter();
                 break;
             case RE_DRAW:
@@ -207,6 +212,9 @@ public class Client extends Thread {
                 EndGameNotify endGameNotify = gson.fromJson(request, EndGameNotify.class);
                 game = endGameNotify.getGame();
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().endGame(endGameNotify.getWinner(), endGameNotify.isHasWinner());
+                break;
+            case GOTO_TOURNAMENT_NEXT_ROUND:
+                GoToTournamentNextRoundNotify notify = gson.fromJson(request, GoToTournamentNextRoundNotify.class);
                 break;
             case GET_PUBLIC_GAMES:
                 GetPublicGamesResponse publicGames = gson.fromJson(request, GetPublicGamesResponse.class);

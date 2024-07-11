@@ -74,12 +74,6 @@ public class FriendRequestHandler {
         return new ServerFriendRequest(requests);
     }
 
-    public ServerResponse getFriends(User user) {
-        GetFriends getFriends = gson.fromJson(request, GetFriends.class);
-        User.getUserByUsername(user.getUsername());
-        return new ServerFriend(user.getFriends());
-    }
-
     private static Map<String , Map<String , FriendRequest>> loadFriendRequests(String username) {
 
         File file = new File("Data/Users/" + username + "/friendRequests.json");

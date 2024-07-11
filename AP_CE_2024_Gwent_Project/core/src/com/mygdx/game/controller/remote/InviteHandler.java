@@ -34,7 +34,7 @@ public class InviteHandler {
 
         if(startGameRequest.isRandomOpponent()) {
             if(queGameHandler == null) {
-                queGameHandler = new GameHandler(user);
+                queGameHandler = new GameHandler(user, false, false);
                 requestHandler.setGameHandler(queGameHandler);
             }
             else {
@@ -54,7 +54,7 @@ public class InviteHandler {
         if(targetHandler == requestHandler) {
             return new ServerInviteResponse("dash gerefty maro?");
         }
-        requestHandler.setGameHandler(new GameHandler(user));
+        requestHandler.setGameHandler(new GameHandler(user, startGameRequest.isPrivate(), startGameRequest.isTournament()));
 
 
         targetHandler.sendMassage(new ServerPlayInvite(startGameRequest));

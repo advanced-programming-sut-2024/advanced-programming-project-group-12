@@ -26,7 +26,6 @@ public class InviteResponseHandler {
             //handle the case
         }
         RequestHandler targetHandler = RequestHandler.allUsers.get(invitor.getUsername());
-        targetHandler.sendMassage(new ServerInviteResponse(clientInviteResponse));
 
         if(clientInviteResponse.getResponse().equals("accept")) {
             user.setFaction(clientInviteResponse.getFaction());

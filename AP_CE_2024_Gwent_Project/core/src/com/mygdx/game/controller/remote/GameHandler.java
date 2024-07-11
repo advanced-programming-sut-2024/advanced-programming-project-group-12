@@ -25,7 +25,8 @@ import java.util.ArrayList;
 public class GameHandler {
     private static final ArrayList<GameHandler> allGames = new ArrayList<>();
 
-    private final boolean isPrivate = false;
+    private final boolean isTournament;
+    private boolean isPrivate = false;
 
     private final User user1;
     private User user2;
@@ -48,10 +49,12 @@ public class GameHandler {
         //
     }
 
-    public GameHandler(User user1) {
+    public GameHandler(User user1, boolean isPrivate, boolean isTournament) {
         this.user1 = user1;
         connectionLost = false;
         gameEnded = false;
+        this.isPrivate = isPrivate;
+        this.isTournament = isTournament;
     }
 
     public void addUserAndStart(User user) {
@@ -231,7 +234,7 @@ public class GameHandler {
         connectionLost = false;
     }
 
-    public void endGame() {
+    public void endGame(User winner) {
         allGames.remove(this);
         try {
             RequestHandler.allUsers.get(user1.getUsername()).setGameHandler(null);
@@ -239,5 +242,9 @@ public class GameHandler {
         try {
             RequestHandler.allUsers.get(user1.getUsername()).setGameHandler(null);
         } catch (NullPointerException ignored) {}
+
+        if(isTournament) {
+            TournamentHandler.getCurrentTournament().gameWon(winner);
+        }
     }
 }
