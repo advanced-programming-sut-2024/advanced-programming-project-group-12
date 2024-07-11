@@ -174,7 +174,6 @@ public class Client extends Thread {
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setShowSelectedCard(reDrawRequest.getHandAsCards(), 2, true);
                 break;
             case PLAY_CARD_RESPONSE:
-
                 PlayCardResponse playCardResponse = gson.fromJson(request, PlayCardResponse.class);
                 this.game = playCardResponse.getGame();
                 ((GameScreen)Gwent.singleton.getCurrentScreen()).getController().setPermission(playCardResponse.isPermission());

@@ -130,8 +130,7 @@ public class Row {
         }
     }
 
-    public void replaceByDecoy(String name) {
-        PlayableCard decoy =(PlayableCard) AllCards.DECOY.getAbstractCard();
+    public void replaceByDecoy(String name, Decoy decoy) {
         for(int i = 0; i< cards.size(); i++) {
             PlayableCard card = cards.get(i);
             if(card.getName().equals(name) && !card.getName().equals(decoy.getName())) {

@@ -13,9 +13,11 @@ public class Decoy extends PlayableCard{
     }
 
     public PlayCardResponse place(int row, String toBeReplaced , Player player) {
-        super.place(row, player);
+        this.player = player;
+        player.getHand().remove(this.getName());
+        this.row = row;
         GameBoard gameBoard = player.getGame().getGameBoard();
-        gameBoard.getRowForPlayer(row, player).replaceByDecoy(toBeReplaced);
+        gameBoard.getRowForPlayer(row, player).replaceByDecoy(toBeReplaced, this);
         return new PlayCardResponse(player.getGame(), doAction());
     }
 }
