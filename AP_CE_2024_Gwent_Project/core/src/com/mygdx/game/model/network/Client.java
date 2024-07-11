@@ -127,17 +127,13 @@ public class Client extends Thread {
                 FriendsScreen.setRequestsHashMap(serverFriendRequest.getRequests());
                 Gdx.app.log("FriendsScreen", "Friend requests received: " + serverFriendRequest.getRequests());
                 break;
-            case GET_FRIENDS:
-                ServerFriend serverFriend = gson.fromJson(request, ServerFriend.class);
-                User.getLoggedInUser().setFriends(serverFriend.getFriends());
-                //let friends screen know the shit so they can proceed
-                break;
             case INVITE_TO_PLAY:
                 ServerPlayInvite serverPlayInvite = gson.fromJson(request, ServerPlayInvite.class);
                 GameRequestScreen.showRequestWindow(serverPlayInvite.getClientRequest().getInvitor());
                 break;
             case INVITE_TO_PLAY_RESPONSE:
                 ServerInviteResponse serverInviteResponse = gson.fromJson(request, ServerInviteResponse.class);
+                //show error masages
                 break;
             case START_GAME:
                 SetGameToStart setGameToStart = gson.fromJson(request, SetGameToStart.class);
@@ -200,10 +196,10 @@ public class Client extends Thread {
             case CONNECTION_LOST:
                 ConnectionLostNotify connectionLostNotify = gson.fromJson(request, ConnectionLostNotify.class);
                 if(connectionLostNotify.isLost()) {
-                    ((GameScreen) Gwent.singleton.getCurrentScreen()).getController();
+                    ((GameScreen) Gwent.singleton.getCurrentScreen()).getController().setOppositionDisconnect();
                 }
                 else {
-
+                    ((GameScreen) Gwent.singleton.getCurrentScreen()).getController().setOppositionReconnect();
                 }
                 break;
             case END_GAME:
